@@ -41,7 +41,7 @@ const readingTime = estimateReadingTime(data.content);
     <h1>{data.title}</h1>
     <p>
       <time class="published-case-date" datetime={data.publishedDate.toISOString()}>
-        {data.publishedDate.toLocaleDateString('pt-BR')}
+        {data.publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
       </time>
       <span class="estimated-time">{readingTime} min de leitura</span>
     </p>

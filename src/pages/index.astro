@@ -24,7 +24,9 @@ const cases = await getCollection('cases');
           )}
           <h3>{caseEntry.data.title}</h3>
           <p>{caseEntry.data.shortDescription}</p>
-          <Button href={`/cases/${caseEntry.id}`}>Ler case</Button>
+          {caseEntry.data.status !== 'coming-soon' && (
+            <Button href={`/cases/${caseEntry.id}`}>Ler case</Button>
+          )}
         </li>
       ))}
     </ul>
