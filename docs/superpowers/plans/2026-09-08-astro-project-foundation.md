@@ -1719,6 +1719,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Tag from '../../components/ui/Tag.astro';
 import TestResultBadge from '../../components/ui/TestResultBadge.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import { estimateReadingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
@@ -1771,12 +1772,7 @@ const readingTime = estimateReadingTime(data.content);
     <section id="context">
       <h2>Contexto</h2>
       <p>{data.content.context.description}</p>
-      <img
-        src={data.content.context.image.src}
-        width={data.content.context.image.width}
-        height={data.content.context.image.height}
-        alt={data.content.context.caption}
-      />
+      <Image src={data.content.context.image} alt={data.content.context.caption} />
       <figcaption>{data.content.context.caption}</figcaption>
     </section>
   )}
@@ -1804,6 +1800,30 @@ const readingTime = estimateReadingTime(data.content);
     </section>
   )}
 
+  {data.content.exploration && (
+    <section id="exploration">
+      <h2>{data.content.exploration.title}</h2>
+      <p>{data.content.exploration.description}</p>
+      <ul>
+        {data.content.exploration.images.map((img) => (
+          <li><Image src={img} alt={data.content.exploration!.title} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {data.content.pd && (
+    <section id="pd">
+      <h2>{data.content.pd.title}</h2>
+      <p>{data.content.pd.description}</p>
+      <ul>
+        {data.content.pd.images.map((img) => (
+          <li><Image src={img} alt={data.content.pd!.title} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
   {data.content.tests && (
     <section>
       <h2>Testes</h2>
@@ -1825,6 +1845,26 @@ const readingTime = estimateReadingTime(data.content);
       <h2>Entrega</h2>
       <h3>{data.content.delivery.myRole.title}</h3>
       <p>{data.content.delivery.myRole.description}</p>
+
+      <h3>{data.content.delivery.designSystem.title}</h3>
+      <p>{data.content.delivery.designSystem.description}</p>
+      {data.content.delivery.designSystem.images && (
+        <ul>
+          {data.content.delivery.designSystem.images.map((img) => (
+            <li><Image src={img} alt={data.content.delivery!.designSystem.title} /></li>
+          ))}
+        </ul>
+      )}
+
+      <h3>{data.content.delivery.home.title}</h3>
+      <p>{data.content.delivery.home.description}</p>
+      {data.content.delivery.home.images && (
+        <ul>
+          {data.content.delivery.home.images.map((img) => (
+            <li><Image src={img} alt={data.content.delivery!.home.title} /></li>
+          ))}
+        </ul>
+      )}
     </section>
   )}
 
@@ -1863,9 +1903,13 @@ pnpm build
 ls dist/cases/exemplo-case/index.html
 grep -o 'min de leitura' dist/cases/exemplo-case/index.html
 grep -o 'Case de exemplo' dist/index.html
+grep -o 'Exploração' dist/cases/exemplo-case/index.html
+grep -o 'Prototipação' dist/cases/exemplo-case/index.html
+grep -o 'Design system' dist/cases/exemplo-case/index.html
+grep -o 'Tela inicial' dist/cases/exemplo-case/index.html
 ```
 
-Esperado: o arquivo existe, e ambos os `grep` encontram uma ocorrência.
+Esperado: o arquivo existe, e todos os `grep` encontram uma ocorrência (os últimos quatro confirmam que `exploration`, `pd`, `delivery.designSystem` e `delivery.home` — que o schema da Tarefa 7 permite mas uma versão anterior desta rota deixava de renderizar — estão de fato presentes no HTML).
 
 - [ ] **Step 4: Commit**
 
