@@ -40,7 +40,7 @@ Cada case é um arquivo de dados estruturado (YAML) em `src/content/cases/`, val
 - `tags`: `string[]` sem enum fechado — lista aberta para não travar quando Artigos/Projetos (V2) reaproveitarem o mesmo padrão de metadados (PRD seção 5)
 - `publishedDate`: data
 
-**Conteúdo da página dedicada**, cada bloco opcional (nem todo case precisa ter todas as seções):
+**Conteúdo da página dedicada**, cada bloco opcional (nem todo case precisa ter todas as seções). Campos de imagem usam o helper `image()` do `astro:content` (não `z.string()`), para entrar validados e otimizados pelo pipeline `astro:assets` — ver seção 7:
 - `summary`: texto de resumo
 - `context`: `{ description, image, caption }`
 - `problems`: `{ description }`
@@ -82,7 +82,15 @@ src/layouts/
 
 Os elementos clicáveis seguem a convenção do design-notes (`clickable-link-internal-*`, `clickable-link-external-*`, `clickable-anchor-*`, `clickable-mailto-*`, `clickable-download-*`). Cada variante tem uma responsabilidade distinta (navegação interna vs. externa vs. scroll-to-anchor vs. abrir cliente de e-mail vs. disparar download) — os componentes/props do código refletem essa distinção explicitamente, em vez de um único componente `Link` genérico, evitando a inferência ambígua que o design-notes pede para prevenir.
 
-## 7. Analytics e SEO (infraestrutura cross-cutting)
+## 7. Performance — fontes e imagens (PRD 6.1)
+
+**Fontes:** self-hospedadas, não via Google Fonts CDN — evita uma requisição/DNS lookup de terceiro no carregamento e dá controle total sobre `font-display`. As 3 famílias do Figma (`Plus Jakarta Sans`, `DM Sans`, `JetBrains Mono`) têm versão **variable font** disponível no Google Fonts — baixar o `.woff2` variable de cada uma (um arquivo cobre todos os pesos usados por aquela família, em vez de um arquivo por peso) e declarar via `@font-face` com `font-display: swap` em `src/styles/tokens/fonts.css`. O subset `latin` do Google Fonts já cobre os caracteres acentuados do português (ã, ç, á etc.) — não é necessário `latin-ext`. Os pesos exatos por família (já visíveis nos tokens lidos do Figma: `DM Sans` usa 400/500/600, `Plus Jakarta Sans` usa 700/800, `JetBrains Mono` usa 700) orientam, na implementação, se vale a pena baixar a variable font completa ou só um estático (ex.: `JetBrains Mono`, com um único peso, pode não precisar da variable).
+
+**Imagens:** usar o pipeline nativo `astro:assets` (`<Image />`/`<Picture />`) em vez de `<img>` cru ou arquivos em `public/` — converte automaticamente para formatos modernos (WebP/AVIF), gera tamanhos responsivos e aplica lazy loading por padrão. Vale tanto para imagens da Home (ex.: avatar do hero) quanto para as galerias dos cases (`context.image`, `exploration.images`, `pd.images` — seção 3). No schema Zod da content collection, esses campos usam o helper `image()` do `astro:content` em vez de `z.string()`, para já entrar validado e otimizado pelo pipeline nativo desde a fundação. Exceção: o CV em PDF (PRD 4.4) continua servido cru de `public/`, fora desse pipeline — não é imagem, não deve ser processado.
+
+Imagem acima da dobra (ex.: avatar do hero) recebe `loading="eager"` explícito — o padrão `lazy` do `astro:assets` vale para o restante.
+
+## 8. Analytics e SEO (infraestrutura cross-cutting)
 
 `BaseLayout.astro` centraliza, desde a fundação:
 - Meta tags e Open Graph (título, descrição, imagem de preview) — PRD 6.6
@@ -92,4 +100,5 @@ Os elementos clicáveis seguem a convenção do design-notes (`clickable-link-in
 
 - A integração Astro-Angular (para a migração UaiUI DS) é mantida pela comunidade, não pelo core do Astro (PRD 6.5) — não afeta esta fundação, é um risco a reavaliar só no momento da migração.
 - Os valores exatos de `line-height`/`list-spacing` e as animações de hover/active dos botões dependem de leitura seção-a-seção do `get_design_context` — tratados na etapa de implementação visual, não nesta fundação.
+- Escolha entre variable font completa vs. arquivo estático por família (seção 7) é refinada na implementação, depois de levantar o conjunto final de pesos usados em todas as telas — não só `desktop-home`/`desktop-case`.
 - 3 famílias tipográficas (título/corpo/label) — confirmado com o usuário que não fere a restrição do PRD 7.2, mas fica registrado aqui para referência futura.
