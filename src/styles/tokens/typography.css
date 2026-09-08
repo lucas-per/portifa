@@ -1,0 +1,75 @@
+/*
+  Classes utilitárias de texto — uma para cada estilo "Desktop/*" lido do
+  Figma. Nomes de família em src/styles/tokens/fonts.css (Tarefa 4).
+*/
+.text-title-display {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x16);
+  line-height: var(--line-height-compact);
+  letter-spacing: var(--letter-spacing-compact);
+}
+
+.text-title-h2 {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-800);
+  font-size: var(--scale-x9);
+  line-height: var(--line-height-compact);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+.text-title-h3 {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-800);
+  font-size: var(--scale-x8);
+  line-height: var(--line-height-compact);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+.text-body-md {
+  font-family: var(--font-family-body);
+  font-weight: var(--weight-400);
+  font-size: var(--scale-x5);
+  line-height: var(--line-height-regular);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+.text-body-lg-strong {
+  font-family: var(--font-family-body);
+  font-weight: var(--weight-600);
+  font-size: var(--scale-x6);
+  line-height: var(--line-height-regular);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+.text-body-sm {
+  font-family: var(--font-family-body);
+  font-weight: var(--weight-400);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-comfortable);
+  letter-spacing: var(--letter-spacing-comfortable);
+}
+
+.text-body-caption {
+  font-family: var(--font-family-body);
+  font-weight: var(--weight-500);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-regular);
+  letter-spacing: var(--letter-spacing-comfortable);
+}
+
+.text-label-md {
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x5);
+  line-height: var(--line-height-none);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+.text-label-sm {
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-none);
+  letter-spacing: var(--letter-spacing-regular);
+}
