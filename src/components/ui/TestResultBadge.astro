@@ -1,0 +1,35 @@
+---
+interface Props {
+  status: 'verified' | 'warning' | 'unavailable';
+  label: string;
+}
+
+const { status, label } = Astro.props;
+const icon = { verified: '✓', warning: '△', unavailable: '—' }[status];
+---
+
+<span class={`test-result-badge test-result-badge--${status}`}>
+  <span aria-hidden="true">{icon}</span>
+  {label}
+</span>
+
+<style>
+  .test-result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--scale-base);
+    font-family: var(--font-family-body);
+  }
+
+  .test-result-badge--verified {
+    color: var(--text-body-accent-regular);
+  }
+
+  .test-result-badge--warning {
+    color: var(--text-label-on-bg-complementary);
+  }
+
+  .test-result-badge--unavailable {
+    color: var(--text-body-neutral-strong);
+  }
+</style>
