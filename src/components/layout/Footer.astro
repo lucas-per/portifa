@@ -1,0 +1,21 @@
+---
+import Button from '../ui/Button.astro';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer>
+  <a href="mailto:contato@lucaspereira.dev" class="clickable-mailto-footer">contato@lucaspereira.dev</a>
+  <Button href="/cv-lucas-pereira.pdf" variant="outline-accent" download>
+    Baixar CV
+  </Button>
+  <a
+    href="https://www.linkedin.com/in/lucasvalimpereira/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="clickable-link-external-linkedin"
+  >
+    LinkedIn
+  </a>
+  <p>&copy; {currentYear} Lucas Pereira</p>
+</footer>
