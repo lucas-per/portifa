@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../../assets/fonts/plus-jakarta-sans-variable.woff2') format('woff2-variations');
+  font-weight: 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../../assets/fonts/dm-sans-variable.woff2') format('woff2-variations');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../../assets/fonts/jetbrains-mono-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family-title: 'Plus Jakarta Sans';
+  --font-family-body: 'DM Sans';
+  --font-family-label: 'JetBrains Mono';
+}
