@@ -70,15 +70,11 @@ const {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* min-width:0 permanece por segurança (default é 'auto', que impede
-       encolher abaixo do min-content do texto) mesmo com flex-shrink:0
-       aplicado em .cases-preview__grid > .case-card. */
+    /* Fill (flex: 1 1 0% em .cases-preview__grid) — min-width:0 é
+       essencial aqui: o default 'auto' impede o card de encolher abaixo
+       do min-content do texto, vazando em telas estreitas em vez de
+       encolher graciosamente. */
     min-width: 0;
-    /* box-sizing:border-box é obrigatório aqui — .cases-preview__grid
-       define flex-basis em px fixo (394.667px, largura do Figma) pro
-       card inteiro, incluindo padding+border; sem isso o flex-basis
-       cobre só o content-box e padding+border somam por cima,
-       estourando a largura real pra 448.667px. */
     box-sizing: border-box;
     padding: var(--scale-x6);
     background-color: var(--surface-bg-off-white-primary);

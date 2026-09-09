@@ -38,12 +38,10 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
 
   .cases-preview__grid {
     display: flex;
-    /* gap funciona como piso mínimo (nunca menor que scale-x6/24px) quando
-       combinado com justify-content: space-between — o space-between
-       distribui qualquer espaço adicional entre os cards; os cards (sem
-       flex-grow) mantêm largura própria em vez de absorver esse espaço. */
-    gap: var(--scale-x6);
-    justify-content: space-between;
+    /* Gap fixo (itemSpacing: 40 no Figma, node 31:704) — não é um piso
+       mínimo, os cards é que preenchem (Fill) o espaço restante
+       igualmente entre si via flex: 1 1 0% abaixo. */
+    gap: var(--scale-x10);
     /* Altura igual entre os 3 cards, dinâmica: a linha assume a altura do
        card com mais conteúdo (sem height fixa) e align-items: stretch
        estica os demais até ela — recalcula sozinho quando o conteúdo de
@@ -52,14 +50,9 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
   }
 
   .cases-preview__grid > :global(.case-card) {
-    /* Largura fixa e igual entre os 3 cards (Figma, node 31:704:
-       394.667px cada), independente da quantidade de texto — flex-grow
-       e flex-shrink em 0 pra não depender do conteúdo nem ser absorvida
-       pelo space-between. Não usa calc((100% - gaps) / 3): isso
-       consumiria 100% do espaço disponível, sempre deixando exatamente
-       o gap mínimo (24px) e nunca sobra pro space-between distribuir —
-       com largura fixa, qualquer espaço além da soma dos 3 cards +
-       gaps mínimos fica livre pro gap crescer. */
-    flex: 0 0 394.667px;
+    /* Fill: os 3 cards crescem/encolhem igualmente com a largura da
+       tela, dividindo o espaço disponível (descontado o gap fixo acima)
+       — não dependem do próprio conteúdo nem têm largura fixa em px. */
+    flex: 1 1 0%;
   }
 </style>
