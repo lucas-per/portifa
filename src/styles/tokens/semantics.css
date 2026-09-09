@@ -10,10 +10,10 @@
 :root {
   /* Superfícies */
   --surface-bg-neutral-strong: var(--neutral-800);
-  --surface-bg-neutral-subtle: var(--neutral-200);
-  --surface-bg-off-white-primary: var(--neutral-0);
+  --surface-bg-neutral-subtle: var(--neutral-150);
+  --surface-bg-off-white-primary: var(--yellow-50);
   --surface-bg-off-white-secondary: var(--neutral-25);
-  --surface-bg-off-white-tertiary: var(--yellow-100);
+  --surface-bg-off-white-tertiary: var(--yellow-200);
   --surface-bg-primary-subtle: var(--primary-100);
   --surface-bg-accent-strong: var(--accent-300);
   --surface-bg-complementary-subtle: var(--green-100);
@@ -42,7 +42,7 @@
   /* Botão */
   --button-bg-primary-filled-pressed: var(--primary-800);
   --button-bg-accent-filled-regular: var(--accent-700);
-  --button-bg-accent-outline-regular: var(--neutral-0);
+  --button-bg-accent-outline-regular: var(--yellow-50);
   --button-border-neutral-strong: var(--neutral-800);
   --button-border-neutral-subtle: var(--neutral-50);
   --button-border-accent-strong: var(--accent-600);

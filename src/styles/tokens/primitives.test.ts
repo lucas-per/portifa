@@ -16,6 +16,7 @@ describe('primitives.css', () => {
     expectDeclares('neutral-800', 'oklch(29.23% 0.0044 17.41)');
     expectDeclares('neutral-500', 'oklch(52.00% 0.0038 17.28)');
     expectDeclares('neutral-200', 'oklch(89.30% 0.0022 17.20)');
+    expectDeclares('neutral-150', 'oklch(94.16% 0.0021 15.19)');
     expectDeclares('neutral-50', 'oklch(98.74% 0.0032 17.21)');
     expectDeclares('neutral-25', 'oklch(99.14% 0.0044 359.99)');
     expectDeclares('neutral-0', 'oklch(99.65% 0.0170 106.70)');
@@ -47,7 +48,9 @@ describe('primitives.css', () => {
   });
 
   it('declara amarelo e verde de apoio em OKLCH', () => {
+    expectDeclares('yellow-50', 'oklch(97.98% 0.0044 78.21)');
     expectDeclares('yellow-100', 'oklch(96.21% 0.0619 95.40)');
+    expectDeclares('yellow-200', 'oklch(93.30% 0.1107 95.78)');
     expectDeclares('green-100', 'oklch(95.71% 0.0210 147.64)');
   });
 

@@ -9,6 +9,7 @@
   --neutral-800: oklch(29.23% 0.0044 17.41); /* #2e2b2b */
   --neutral-500: oklch(52.00% 0.0038 17.28); /* #6b6868 */
   --neutral-200: oklch(89.30% 0.0022 17.20); /* #dddbdb */
+  --neutral-150: oklch(94.16% 0.0021 15.19); /* #edebeb — color/grey/2 no Figma */
   --neutral-50: oklch(98.74% 0.0032 17.21); /* #fdfafa */
   --neutral-25: oklch(99.14% 0.0044 359.99); /* #fffbfc */
   --neutral-0: oklch(99.65% 0.0170 106.70); /* #fffff2 */
@@ -31,7 +32,9 @@
   --red-100: oklch(93.22% 0.0343 17.78); /* #ffe0e0 */
 
   /* Cores de apoio (um único tom cada, sem escala) */
+  --yellow-50: oklch(97.98% 0.0044 78.21); /* #faf8f5 — color/yellow/1 no Figma */
   --yellow-100: oklch(96.21% 0.0619 95.40); /* #fff3c4 */
+  --yellow-200: oklch(93.30% 0.1107 95.78); /* #ffe991 — color/yellow/5 no Figma */
   --green-100: oklch(95.71% 0.0210 147.64); /* #e8f5e9 */
 
   /* Escala numérica (espaçamento e tamanho de fonte), base 4px = 0.25rem */
