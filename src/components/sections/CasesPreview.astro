@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import CaseCard from './CaseCard.astro';
+
+const cases = await getCollection('cases', (entry) => entry.id !== 'exemplo-case');
+---
+
+<div class="cases-preview">
+  <h2 class="text-title-h2">Cases selecionados</h2>
+  <div class="cases-preview__grid">
+    {cases.map((caseEntry) => (
+      <CaseCard
+        title={caseEntry.data.title}
+        shortDescription={caseEntry.data.shortDescription}
+        status={caseEntry.data.status}
+        tags={caseEntry.data.tags}
+        highlights={caseEntry.data.highlights}
+        shadow={caseEntry.id === 'redesign' ? 'accent' : 'neutral'}
+      />
+    ))}
+  </div>
+</div>
+
+<style>
+  .cases-preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x11);
+    width: 100%;
+    color: var(--text-body-primary-strong);
+  }
+
+  .cases-preview__grid {
+    display: flex;
+    gap: var(--scale-x10);
+    align-items: stretch;
+  }
+
+  .cases-preview__grid > :global(.case-card) {
+    flex: 1;
+  }
+</style>
