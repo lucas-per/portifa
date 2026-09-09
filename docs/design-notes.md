@@ -151,12 +151,12 @@ Exemplo (baseado no PRD do site pessoal):
 
 ### clickable-mailto-header
 **Contexto:** botão que abre o cliente de e-mail padrão do usuário
-**Decisão:** ao clicar, abre o cliente de e-mail padrão do usuário, com o e-mail para contato já preenchido
+**Decisão:** ao clicar, abre o cliente de e-mail padrão do usuário, com o e-mail para contato já preenchido → oi@lpereira.me
 **Motivo:** facilitar o contato por parte do usuário
 
 ### clickable-mailto-footer
 **Contexto:** botão que abre o cliente de e-mail padrão do usuário
-**Decisão:** ao clicar, abre o cliente de e-mail padrão do usuário, com o e-mail para contato já preenchido
+**Decisão:** ao clicar, abre o cliente de e-mail padrão do usuário, com o e-mail para contato já preenchido → oi@lpereira.me
 **Motivo:** facilitar o contato por parte do usuário
 
 ### clickable-download-cv
