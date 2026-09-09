@@ -16,6 +16,7 @@
   font-size: var(--scale-x9);
   line-height: var(--line-height-compact);
   letter-spacing: var(--letter-spacing-regular);
+  text-transform: uppercase;
 }
 
 .text-title-h3 {
@@ -64,6 +65,7 @@
   font-size: var(--scale-x5);
   line-height: var(--line-height-none);
   letter-spacing: var(--letter-spacing-regular);
+  text-transform: uppercase;
 }
 
 .text-label-sm {
@@ -72,4 +74,5 @@
   font-size: var(--scale-x4);
   line-height: var(--line-height-none);
   letter-spacing: var(--letter-spacing-regular);
+  text-transform: uppercase;
 }

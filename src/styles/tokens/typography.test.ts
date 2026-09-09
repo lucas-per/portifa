@@ -26,4 +26,22 @@ describe('typography.css', () => {
     expect(block).toContain(`line-height: ${lineHeight}`);
     expect(block).toContain(`letter-spacing: ${letterSpacing}`);
   });
+
+  describe('text-transform em labels e títulos H2', () => {
+    it.each(['.text-label-md', '.text-label-sm', '.text-title-h2'])(
+      '%s usa uppercase',
+      (selector) => {
+        const escapedSelector = selector.replace('.', '\\.');
+        const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+        expect(blockMatch, `seletor ${selector} não encontrado`).not.toBeNull();
+        expect(blockMatch![1]).toContain('text-transform: uppercase');
+      }
+    );
+
+    it('.text-title-h3 não usa uppercase', () => {
+      const blockMatch = css.match(/\.text-title-h3\s*\{([^}]*)\}/);
+      expect(blockMatch).not.toBeNull();
+      expect(blockMatch![1]).not.toContain('text-transform');
+    });
+  });
 });
