@@ -1,6 +1,11 @@
 /*
   Classes utilitárias de texto — uma para cada estilo "Desktop/*" lido do
   Figma. Nomes de família em src/styles/tokens/fonts.css (Tarefa 4).
+
+  margin: 0 em todas — o browser aplica margin default (ex: 1em) a
+  <p>/<h2>/<h3>, que soma com o gap explícito do container flex/grid e
+  infla qualquer espaçamento calculado. Espaçamento vem só do gap do
+  elemento pai, nunca do margin do texto.
 */
 .text-title-display {
   font-family: var(--font-family-title);
@@ -8,6 +13,7 @@
   font-size: var(--scale-x16);
   line-height: var(--line-height-compact);
   letter-spacing: var(--letter-spacing-compact);
+  margin: 0;
 }
 
 .text-title-h2 {
@@ -17,6 +23,7 @@
   line-height: var(--line-height-compact);
   letter-spacing: var(--letter-spacing-regular);
   text-transform: uppercase;
+  margin: 0;
 }
 
 .text-title-h3 {
@@ -25,6 +32,7 @@
   font-size: var(--scale-x8);
   line-height: var(--line-height-compact);
   letter-spacing: var(--letter-spacing-regular);
+  margin: 0;
 }
 
 .text-body-md {
@@ -33,6 +41,7 @@
   font-size: var(--scale-x5);
   line-height: var(--line-height-regular);
   letter-spacing: var(--letter-spacing-regular);
+  margin: 0;
 }
 
 .text-body-lg-strong {
@@ -41,6 +50,7 @@
   font-size: var(--scale-x6);
   line-height: var(--line-height-regular);
   letter-spacing: var(--letter-spacing-regular);
+  margin: 0;
 }
 
 .text-body-sm {
@@ -49,6 +59,7 @@
   font-size: var(--scale-x4);
   line-height: var(--line-height-comfortable);
   letter-spacing: var(--letter-spacing-comfortable);
+  margin: 0;
 }
 
 .text-body-caption {
@@ -57,6 +68,7 @@
   font-size: var(--scale-x3);
   line-height: var(--line-height-regular);
   letter-spacing: var(--letter-spacing-comfortable);
+  margin: 0;
 }
 
 .text-label-md {
@@ -66,6 +78,7 @@
   line-height: var(--line-height-none);
   letter-spacing: var(--letter-spacing-regular);
   text-transform: uppercase;
+  margin: 0;
 }
 
 .text-label-sm {
@@ -75,4 +88,5 @@
   line-height: var(--line-height-none);
   letter-spacing: var(--letter-spacing-regular);
   text-transform: uppercase;
+  margin: 0;
 }

@@ -44,4 +44,23 @@ describe('typography.css', () => {
       expect(blockMatch![1]).not.toContain('text-transform');
     });
   });
+
+  describe('margin zerado (espaçamento vem só do gap do container, nunca do margin default do browser)', () => {
+    it.each([
+      '.text-title-display',
+      '.text-title-h2',
+      '.text-title-h3',
+      '.text-body-md',
+      '.text-body-lg-strong',
+      '.text-body-sm',
+      '.text-body-caption',
+      '.text-label-md',
+      '.text-label-sm',
+    ])('%s zera margin', (selector) => {
+      const escapedSelector = selector.replace('.', '\\.');
+      const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+      expect(blockMatch, `seletor ${selector} não encontrado`).not.toBeNull();
+      expect(blockMatch![1]).toContain('margin: 0');
+    });
+  });
 });
