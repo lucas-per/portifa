@@ -50,4 +50,16 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
        qualquer card mudar, sem precisar de um card "de referência". */
     align-items: stretch;
   }
+
+  .cases-preview__grid > :global(.case-card) {
+    /* Largura fixa e igual entre os 3 cards (Figma, node 31:704:
+       394.667px cada), independente da quantidade de texto — flex-grow
+       e flex-shrink em 0 pra não depender do conteúdo nem ser absorvida
+       pelo space-between. Não usa calc((100% - gaps) / 3): isso
+       consumiria 100% do espaço disponível, sempre deixando exatamente
+       o gap mínimo (24px) e nunca sobra pro space-between distribuir —
+       com largura fixa, qualquer espaço além da soma dos 3 cards +
+       gaps mínimos fica livre pro gap crescer. */
+    flex: 0 0 394.667px;
+  }
 </style>
