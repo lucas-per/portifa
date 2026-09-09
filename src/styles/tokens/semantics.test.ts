@@ -89,4 +89,8 @@ describe('semantics.css', () => {
   it('tem um bloco de dark mode (mesmo que ainda repita os valores do claro)', () => {
     expect(css).toMatch(/\[data-theme=["']dark["']\]|prefers-color-scheme:\s*dark/);
   });
+
+  it('mapeia a moldura do avatar pro primitivo correto', () => {
+    expectDeclares('surface-bg-avatar-frame', 'var(--neutral-100)');
+  });
 });

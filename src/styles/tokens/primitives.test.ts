@@ -75,4 +75,8 @@ describe('primitives.css', () => {
     expectDeclares('weight-700', '700');
     expectDeclares('weight-800', '800');
   });
+
+  it('declara o primitivo da moldura do avatar em OKLCH', () => {
+    expectDeclares('neutral-100', 'oklch(95.69% 0.0120 78.40)');
+  });
 });

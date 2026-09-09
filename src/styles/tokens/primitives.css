@@ -12,6 +12,7 @@
   --neutral-50: oklch(98.74% 0.0032 17.21); /* #fdfafa */
   --neutral-25: oklch(99.14% 0.0044 359.99); /* #fffbfc */
   --neutral-0: oklch(99.65% 0.0170 106.70); /* #fffff2 */
+  --neutral-100: oklch(95.69% 0.0120 78.40); /* #f5f0e8 — não é variable no Figma, fill direto do wrap-avatar-frame */
 
   /* Primária (roxo/ameixa da marca) */
   --primary-800: oklch(32.54% 0.0336 315.88); /* #3b2f40 */

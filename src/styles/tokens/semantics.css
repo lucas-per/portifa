@@ -19,6 +19,7 @@
   --surface-bg-complementary-subtle: var(--green-100);
   --surface-bg-tertiary-subtle: var(--red-100);
   --surface-bg-tertiary-strong: var(--red-500);
+  --surface-bg-avatar-frame: var(--neutral-100);
 
   /* Bordas */
   --border-neutral-strong: var(--neutral-800);
