@@ -6,16 +6,14 @@ interface Props {
 const { variant = 'primary' } = Astro.props;
 ---
 
-<span class={`tag tag--${variant}`}><slot /></span>
+<span class={`tag tag--${variant} text-label-sm`}><slot /></span>
 
 <style>
   .tag {
     display: inline-block;
     padding: var(--scale-base) var(--scale-x2);
-    border-width: 2px;
+    border-width: 3px;
     border-style: solid;
-    font-family: var(--font-family-label);
-    font-weight: var(--weight-700);
   }
 
   .tag--primary {
@@ -27,6 +25,6 @@ const { variant = 'primary' } = Astro.props;
   .tag--secondary {
     background-color: var(--tag-bg-secondary);
     border-color: var(--tag-border-strong);
-    color: var(--text-body-neutral-strong);
+    color: var(--text-label-on-bg-complementary);
   }
 </style>
