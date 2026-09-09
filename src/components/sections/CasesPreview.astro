@@ -2,7 +2,13 @@
 import { getCollection } from 'astro:content';
 import CaseCard from './CaseCard.astro';
 
-const cases = await getCollection('cases', (entry) => entry.id !== 'exemplo-case');
+// Ordem visual da Home no Figma (esquerda -> direita), não a ordem
+// alfabética dos arquivos: Redesign, Jornada de Pagamentos, GoSafe DS.
+const homeCaseOrder = ['redesign', 'jornada-pagamentos', 'gosafe-ds'];
+
+const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-case')).sort(
+  (a, b) => homeCaseOrder.indexOf(a.id) - homeCaseOrder.indexOf(b.id)
+);
 ---
 
 <div class="cases-preview">
