@@ -1,0 +1,86 @@
+---
+interface Block {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  challenge: Block;
+  solution: Block;
+  results: Block;
+}
+
+const { challenge, solution, results } = Astro.props;
+---
+
+<section class="case-summary" id="resumo">
+  <h2 class="text-title-h3">Resumo</h2>
+  <div class="case-summary__grid">
+    <div class="case-summary__col">
+      <h3 class="case-summary__col-title case-summary__col-title--challenge text-title-h4">
+        {challenge.title}
+      </h3>
+      <p class="case-summary__col-desc text-body-md">{challenge.description}</p>
+    </div>
+    <div class="case-summary__col">
+      <h3 class="case-summary__col-title case-summary__col-title--solution text-title-h4">
+        {solution.title}
+      </h3>
+      <p class="case-summary__col-desc text-body-md">{solution.description}</p>
+    </div>
+    <div class="case-summary__col">
+      <h3 class="case-summary__col-title case-summary__col-title--results text-title-h4">
+        {results.title}
+      </h3>
+      <p class="case-summary__col-desc text-body-md">{results.description}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .case-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x6);
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-summary__grid {
+    display: flex;
+    gap: var(--scale-x10);
+    align-items: stretch;
+  }
+
+  .case-summary__col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-bg-off-white-primary);
+    border: 3px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-neutral);
+  }
+
+  .case-summary__col-title {
+    margin: 0;
+    padding: var(--scale-x6);
+    border-bottom: 3px solid var(--border-neutral-strong);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-summary__col-title--challenge {
+    background-color: var(--surface-bg-tertiary-subtle);
+  }
+
+  .case-summary__col-title--solution {
+    background-color: var(--surface-bg-off-white-tertiary);
+  }
+
+  .case-summary__col-title--results {
+    background-color: var(--surface-bg-primary-subtle);
+  }
+
+  .case-summary__col-desc {
+    padding: var(--scale-x6);
+    color: var(--text-body-neutral-strong);
+  }
+</style>
