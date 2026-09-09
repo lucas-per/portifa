@@ -39,15 +39,11 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
   .cases-preview__grid {
     display: flex;
     gap: var(--scale-x10);
+    /* Altura igual entre os 3 cards, dinâmica: a linha assume a altura do
+       card com mais conteúdo (sem height fixa) e align-items: stretch
+       estica os demais até ela — recalcula sozinho quando o conteúdo de
+       qualquer card mudar, sem precisar de um card "de referência". */
     align-items: stretch;
-    /* Altura fixa do frame row-cases no Figma (node 31:704): 475px,
-       dimensionada pelo conteúdo do card do Redesign incluindo o botão
-       "Ler case" (que hoje não renderizamos, já que os 3 cases estão
-       coming-soon) — sem essa altura explícita, align-items: stretch
-       deriva a altura da linha só do conteúdo visível, que é mais baixo
-       que o Figma, e some com o espaço que o justify-content:
-       space-between do CaseCard distribui antes do bloco de highlights. */
-    height: 29.6875rem;
   }
 
   .cases-preview__grid > :global(.case-card) {
