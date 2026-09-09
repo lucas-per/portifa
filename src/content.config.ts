@@ -6,14 +6,14 @@ const testResultSchema = z.object({
   label: z.string(),
 });
 
-const highlightSchema = z.object({
+const titleDescriptionSchema = z.object({
   title: z.string(),
   description: z.string(),
 });
 
-const titleDescriptionSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+const valueLabelSchema = z.object({
+  value: z.string(),
+  label: z.string(),
 });
 
 const cases = defineCollection({
@@ -28,22 +28,34 @@ const cases = defineCollection({
       // Métricas de resultado exibidas no card da Home (ex: "+15%" / "Boletos
       // pagos") — distinto de content.impact.highlights, que é o bloco da
       // página dedicada de case.
-      highlights: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+      highlights: z.array(valueLabelSchema).optional(),
       publishedDate: z.coerce.date(),
 
-      // Conteúdo da página dedicada — espelha as seções do frame
-      // desktop-case no Figma. Cada bloco (exceto summary) é opcional:
-      // nem todo case precisa ter todas as seções.
+      // Conteúdo da página dedicada — espelha as 7 seções do frame
+      // desktop-case no Figma (Resumo, Contexto, Problema & Desafios,
+      // Discovery, Delivery, Impacto, Visão de futuro). Cada bloco (exceto
+      // summary) é opcional: nem todo case precisa ter todas as seções.
       content: z.object({
-        summary: z.string(),
+        summary: z.object({
+          challenge: titleDescriptionSchema,
+          solution: titleDescriptionSchema,
+          results: titleDescriptionSchema,
+        }),
         context: z
           .object({
-            description: z.string(),
+            description: z.array(z.string()),
             image: image(),
             caption: z.string(),
           })
           .optional(),
-        problems: z.object({ description: z.string() }).optional(),
+        problems: z
+          .object({
+            intro: z.string(),
+            hypothesis: z.string(),
+            risks: z.array(z.string()),
+            kpis: z.string(),
+          })
+          .optional(),
         discovery: z
           .object({
             intro: z.string(),
@@ -54,30 +66,30 @@ const cases = defineCollection({
                 description: z.string(),
               })
             ),
-          })
-          .optional(),
-        exploration: z
-          .object({
-            title: z.string(),
-            description: z.string(),
-            images: z.array(image()),
-          })
-          .optional(),
-        pd: z
-          .object({
-            title: z.string(),
-            description: z.string(),
-            images: z.array(image()),
-          })
-          .optional(),
-        tests: z
-          .object({
-            groups: z.array(
-              z.object({
-                title: z.string(),
-                results: z.array(testResultSchema),
-              })
-            ),
+            exploration: z.object({
+              title: z.string(),
+              description: z.string(),
+              images: z.array(image()),
+            }),
+            pd: z.object({
+              title: z.string(),
+              description: z.string(),
+              images: z.array(image()),
+            }),
+            tests: z.object({
+              intro: z.string(),
+              groups: z.array(
+                z.object({
+                  title: z.string(),
+                  results: z.array(testResultSchema),
+                })
+              ),
+              outro: z.string(),
+            }),
+            consolidation: z.object({
+              title: z.string(),
+              description: z.string(),
+            }),
           })
           .optional(),
         delivery: z
@@ -93,8 +105,8 @@ const cases = defineCollection({
           .optional(),
         impact: z
           .object({
-            highlights: z.array(highlightSchema),
-            description: z.string(),
+            highlights: z.array(valueLabelSchema),
+            description: z.array(z.string()),
           })
           .optional(),
         plansAhead: z

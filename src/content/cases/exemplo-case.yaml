@@ -10,13 +10,29 @@ tags:
 publishedDate: "2026-01-01"
 
 content:
-  summary: "Resumo fictício do case de exemplo, usado só para testar o pipeline de conteúdo."
+  summary:
+    challenge:
+      title: "Desafio"
+      description: "Desafio fictício do case de exemplo, usado só para testar o pipeline de conteúdo."
+    solution:
+      title: "Solução"
+      description: "Solução fictícia do case de exemplo."
+    results:
+      title: "Resultado"
+      description: "Resultado fictício do case de exemplo."
   context:
-    description: "Descrição de contexto fictícia para validar o bloco context."
+    description:
+      - "Primeiro parágrafo fictício de contexto, usado para validar o bloco context."
+      - "Segundo parágrafo fictício de contexto."
     image: "../../assets/cases/placeholder.png"
     caption: "Legenda de exemplo da imagem de contexto."
   problems:
-    description: "Descrição fictícia dos problemas e desafios do case de exemplo."
+    intro: "Introdução fictícia dos problemas e desafios do case de exemplo."
+    hypothesis: "Hipótese fictícia do case de exemplo."
+    risks:
+      - "Risco fictício 1"
+      - "Risco fictício 2"
+    kpis: "KPIs fictícios do case de exemplo."
   discovery:
     intro: "Introdução fictícia da etapa de descoberta."
     phases:
@@ -32,26 +48,31 @@ content:
       - title: "Fase 4"
         subtitle: "Priorização"
         description: "Descrição fictícia da fase 4."
-  exploration:
-    title: "Exploração"
-    description: "Descrição fictícia da etapa de exploração."
-    images:
-      - "../../assets/cases/placeholder.png"
-  pd:
-    title: "Prototipação"
-    description: "Descrição fictícia da etapa de prototipação."
-    images:
-      - "../../assets/cases/placeholder.png"
-  tests:
-    groups:
-      - title: "Teste comparativo"
-        results:
-          - status: "verified"
-            label: "Resultado positivo de exemplo"
-          - status: "warning"
-            label: "Resultado de atenção de exemplo"
-          - status: "unavailable"
-            label: "Resultado indisponível de exemplo"
+    exploration:
+      title: "Exploração"
+      description: "Descrição fictícia da etapa de exploração."
+      images:
+        - "../../assets/cases/placeholder.png"
+    pd:
+      title: "Prototipação"
+      description: "Descrição fictícia da etapa de prototipação."
+      images:
+        - "../../assets/cases/placeholder.png"
+    tests:
+      intro: "Introdução fictícia dos testes de usabilidade."
+      groups:
+        - title: "Teste comparativo"
+          results:
+            - status: "verified"
+              label: "Resultado positivo de exemplo"
+            - status: "warning"
+              label: "Resultado de atenção de exemplo"
+            - status: "unavailable"
+              label: "Resultado indisponível de exemplo"
+      outro: "Conclusão fictícia dos testes de usabilidade."
+    consolidation:
+      title: "Consolidação"
+      description: "Descrição fictícia da consolidação dos resultados."
   delivery:
     myRole:
       title: "Meu papel"
@@ -64,9 +85,11 @@ content:
       description: "Descrição fictícia da entrega da tela inicial."
   impact:
     highlights:
-      - title: "-00%"
-        description: "Métrica fictícia de impacto."
-    description: "Narrativa fictícia do impacto gerado pelo case de exemplo."
+      - value: "-00%"
+        label: "Métrica fictícia de impacto"
+    description:
+      - "Primeiro parágrafo fictício de impacto."
+      - "Segundo parágrafo fictício de impacto."
   plansAhead:
     privacy:
       title: "Privacidade"
