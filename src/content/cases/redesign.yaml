@@ -1,13 +1,39 @@
 title: "Redesign de produto"
 shortDescription: "Como recriamos do zero um app de cibersegurança com código legado instável, mudamos o modelo de negócio e levamos a base de pagantes de zero a 24 mil em um ano."
-status: "coming-soon"
+status: "coming-soon" # vira "published" na Task 18, depois de tudo pronto
 tags:
   - "discovery"
   - "delivery"
   - "gestão"
   - "b2b"
   - "b2c"
-publishedDate: "2026-09-08" # provisória — o case ainda não foi publicado
+publishedDate: "2026-09-09"
 
 content:
-  summary: "Como recriamos do zero um app de cibersegurança com código legado instável, mudamos o modelo de negócio e levamos a base de pagantes de zero a 24 mil em um ano."
+  summary:
+    challenge:
+      title: "Desafio"
+      description: "Seis meses, equipe enxuta, um app legado carregando 100 mil usuários e mais de R$ 100 milhões em receita"
+    solution:
+      title: "Solução"
+      description: "Discovery completo, redesenho de jornada e home screen, e mudança de modelo de negócio com apoio de consultoria"
+    results:
+      title: "Resultado"
+      description: "Em um ano, a nota da loja saiu de 3.4 para 4.7, a base ativa dobrou e 24 mil pessoas passaram a contratar um plano pago"
+
+  context:
+    description:
+      - "O app nasceu focado só em cibersegurança, com o antivírus como funcionalidade mais usada, mirando o mercado B2B. Com o tempo, consolidou uma base e tanto: mais de 100 mil usuários, R$ 100 milhões em receita. Só que por trás desses números morava um código legado instável, do tipo que rende reclamação de usuário e de parceiro em doses parecidas."
+      - "O prazo pra resolver era curto, seis meses, com uma equipe enxuta, o que torna qualquer decisão errada mais cara do que o normal. O objetivo ia além de modernizar a experiência, exigia também mitigar risco e proteger a receita existente."
+    image: "../../assets/cases/redesign/legacy-app.png"
+    caption: "Home screen legada"
+
+  problems:
+    intro: "Reestruturar um produto já em pé, usado todos os dias, sem derrubar nada no processo (e com um time pequeno) significa equilibrar duas forças que raramente cooperam: velocidade de entrega e decisões bem fundamentadas."
+    hypothesis: "Hipótese principal: se o app comunicasse com clareza o valor das suas funcionalidades e simplificasse a jornada de entrada, os usuários entenderiam melhor os benefícios, se engajariam mais com os recursos disponíveis, e isso se traduziria em retenção e conversão para planos pagos."
+    risks:
+      - "A complexidade do onboarding, que podia levar ao abandono por excesso de informação logo na porta de entrada"
+      - "O baixo uso de funcionalidades, sintoma de uma proposta de valor mal comunicada"
+      - "A fricção nas permissões solicitadas ao usuário, com risco real de soar invasivo e quebrar confiança no primeiro contato"
+      - "O mais traiçoeiro dos quatro: negligenciar funcionalidades essenciais em nome de uma simplificação bem-intencionada"
+    kpis: "Objetivos e KPIs, definidos com o time em três frentes: aumentar o reconhecimento da marca junto ao público-alvo, entender melhor o comportamento dos usuários pra entregar valor de forma mais clara, e acompanhar isso por métricas de crescimento da base ativa, nota nas lojas e conversão para pagantes."
