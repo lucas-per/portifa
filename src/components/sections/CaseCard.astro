@@ -70,6 +70,11 @@ const {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    /* Piso mínimo (48px) entre o bloco de texto e .case-card__highlights
+       — sem isso, o espaço vinha 100% do space-between, que colapsa
+       quase a zero em cards estreitos quando o texto quebra em mais
+       linhas e consome a altura que sobraria pro espaçamento. */
+    gap: var(--scale-x12);
     /* Fill (flex: 1 1 0% em .cases-preview__grid) — min-width:0 é
        essencial aqui: o default 'auto' impede o card de encolher abaixo
        do min-content do texto, vazando em telas estreitas em vez de
