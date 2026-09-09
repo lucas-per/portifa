@@ -1,0 +1,17 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class={['divider', className].filter(Boolean).join(' ')}></div>
+
+<style>
+  .divider {
+    width: 100%;
+    height: 5px;
+    background-color: var(--surface-bg-accent-strong);
+  }
+</style>
