@@ -25,6 +25,10 @@ const cases = defineCollection({
       shortDescription: z.string(),
       status: z.enum(['published', 'coming-soon']),
       tags: z.array(z.string()),
+      // Métricas de resultado exibidas no card da Home (ex: "+15%" / "Boletos
+      // pagos") — distinto de content.impact.highlights, que é o bloco da
+      // página dedicada de case.
+      highlights: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
       publishedDate: z.coerce.date(),
 
       // Conteúdo da página dedicada — espelha as seções do frame
