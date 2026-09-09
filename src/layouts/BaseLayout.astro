@@ -31,6 +31,20 @@ const { title, description = 'Portfólio de Lucas Pereira, Product Designer.' } 
         data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
       ></script>
     )}
+    <style>
+      /*
+        Figma (desktop-home) é um frame fixo de 1440px, com todo o conteúdo
+        interno (row-headline, col-cases, row-skills etc.) sempre a 1264px
+        (1440 - 88px de padding de cada lado). Sem esse teto, telas mais
+        largas que 1440px esticam o conteúdo além do design — quebrando
+        menos linha de texto do que no Figma e distorcendo qualquer gap
+        calculado via justify-content: space-between.
+      */
+      body {
+        max-width: 1440px;
+        margin-inline: auto;
+      }
+    </style>
   </head>
   <body>
     <Header />
