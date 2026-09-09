@@ -1,0 +1,79 @@
+---
+import Tag from '../../ui/Tag.astro';
+import calendarIcon from '../../../assets/icons/case/calendar.svg';
+import clockIcon from '../../../assets/icons/case/clock.svg';
+
+interface Props {
+  title: string;
+  status: 'published' | 'coming-soon';
+  tags: string[];
+  publishedDate: Date;
+  readingTime: number;
+}
+
+const { title, status, tags, publishedDate, readingTime } = Astro.props;
+---
+
+<header class="case-header" id="top">
+  <nav class="case-header__breadcrumb" aria-label="breadcrumb">
+    <a href="/" class="clickable-link-internal-previous-page-title text-body-caption">Início</a>
+    <span aria-hidden="true">/</span>
+    <span class="non-clickable-active-page-title text-body-caption">{title}</span>
+  </nav>
+
+  {status === 'published' && (
+    <ul class="case-header__tags">
+      {tags.map((tag) => (
+        <li><Tag variant="primary">{tag}</Tag></li>
+      ))}
+    </ul>
+  )}
+
+  <h1 class="case-header__title text-title-h2">{title}</h1>
+
+  <p class="case-header__meta text-body-caption">
+    <img src={calendarIcon.src} width="16" height="16" alt="" />
+    <time class="published-case-date" datetime={publishedDate.toISOString()}>
+      {publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+    </time>
+    <span aria-hidden="true">·</span>
+    <img src={clockIcon.src} width="16" height="16" alt="" />
+    <span class="estimated-time">{readingTime} minutos</span>
+  </p>
+</header>
+
+<style>
+  .case-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+    padding: var(--scale-x6) var(--scale-x20) 0;
+  }
+
+  .case-header__breadcrumb {
+    display: flex;
+    gap: var(--scale-base);
+    align-items: center;
+    color: var(--text-body-neutral-subtle, var(--text-body-neutral-strong));
+  }
+
+  .case-header__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--scale-x3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .case-header__title {
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-header__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--scale-x2);
+    color: var(--text-body-neutral-subtle, var(--text-body-neutral-strong));
+  }
+</style>
