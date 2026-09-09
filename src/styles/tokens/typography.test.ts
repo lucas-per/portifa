@@ -64,9 +64,13 @@ describe('typography.css', () => {
     });
   });
 
-  it('.text-title-h3 quebra palavra isolada mais larga que o container (overflow-wrap)', () => {
-    const blockMatch = css.match(/\.text-title-h3\s*\{([^}]*)\}/);
-    expect(blockMatch).not.toBeNull();
-    expect(blockMatch![1]).toContain('overflow-wrap: break-word');
-  });
+  it.each(['.text-title-display', '.text-title-h2', '.text-title-h3'])(
+    '%s quebra palavra isolada mais larga que o container (overflow-wrap)',
+    (selector) => {
+      const escapedSelector = selector.replace('.', '\\.');
+      const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+      expect(blockMatch, `seletor ${selector} não encontrado`).not.toBeNull();
+      expect(blockMatch![1]).toContain('overflow-wrap: break-word');
+    }
+  );
 });
