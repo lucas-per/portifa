@@ -38,6 +38,16 @@
   overflow-wrap: break-word;
 }
 
+.text-title-h4 {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x7);
+  line-height: var(--line-height-compact);
+  letter-spacing: var(--letter-spacing-regular);
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
 .text-body-md {
   font-family: var(--font-family-body);
   font-weight: var(--weight-400);
