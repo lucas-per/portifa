@@ -41,6 +41,10 @@ describe('semantics.css', () => {
     expectDeclares('border-accent-subtle', 'var(--accent-300)');
   });
 
+  it('mapeia surface-bg-neutral-medium (divisores de lista) pro primitivo correto', () => {
+    expectDeclares('surface-bg-neutral-medium', 'var(--neutral-600)');
+  });
+
   it('mapeia texto e ícones para os primitivos corretos', () => {
     expectDeclares('text-label-on-bg-accent', 'var(--accent-700)');
     expectDeclares('text-label-on-bg-strong', 'var(--neutral-50)');

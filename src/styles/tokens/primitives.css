@@ -8,6 +8,7 @@
   --neutral-900: oklch(25.11% 0.0046 17.46); /* #242121 */
   --neutral-800: oklch(29.23% 0.0044 17.41); /* #2e2b2b */
   --neutral-500: oklch(52.00% 0.0038 17.28); /* #6b6868 */
+  --neutral-600: oklch(44.34% 0.0066 17.10); /* #575252 — color/grey/6 no Figma */
   --neutral-200: oklch(89.30% 0.0022 17.20); /* #dddbdb */
   --neutral-150: oklch(94.16% 0.0021 15.19); /* #edebeb — color/grey/2 no Figma */
   --neutral-50: oklch(98.74% 0.0032 17.21); /* #fdfafa */

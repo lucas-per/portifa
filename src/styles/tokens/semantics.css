@@ -11,6 +11,7 @@
   /* Superfícies */
   --surface-bg-neutral-strong: var(--neutral-800);
   --surface-bg-neutral-subtle: var(--neutral-150);
+  --surface-bg-neutral-medium: var(--neutral-600);
   --surface-bg-off-white-primary: var(--yellow-50);
   --surface-bg-off-white-secondary: var(--neutral-25);
   --surface-bg-off-white-tertiary: var(--yellow-200);
