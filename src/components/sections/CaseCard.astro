@@ -70,6 +70,10 @@ const {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    /* item flex de .cases-preview__grid (flex: 1) — sem isso, min-width
+       default (auto) impede o card de encolher abaixo do min-content do
+       texto, vazando pra fora da largura alocada em telas/colunas estreitas. */
+    min-width: 0;
     padding: var(--scale-x6);
     background-color: var(--surface-bg-off-white-secondary);
     border: 3px solid var(--border-neutral-strong);
@@ -87,6 +91,7 @@ const {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x6);
+    min-width: 0;
   }
 
   .case-card__tags {
@@ -102,6 +107,7 @@ const {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x4);
+    min-width: 0;
     color: var(--text-body-neutral-strong);
   }
 
