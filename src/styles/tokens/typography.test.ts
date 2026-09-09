@@ -63,4 +63,10 @@ describe('typography.css', () => {
       expect(blockMatch![1]).toContain('margin: 0');
     });
   });
+
+  it('.text-title-h3 quebra palavra isolada mais larga que o container (overflow-wrap)', () => {
+    const blockMatch = css.match(/\.text-title-h3\s*\{([^}]*)\}/);
+    expect(blockMatch).not.toBeNull();
+    expect(blockMatch![1]).toContain('overflow-wrap: break-word');
+  });
 });
