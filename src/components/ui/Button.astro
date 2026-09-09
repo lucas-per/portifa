@@ -1,24 +1,37 @@
 ---
 interface Props {
   href?: string;
-  variant?: 'filled-accent' | 'outline-accent';
+  variant?: 'filled-accent' | 'outline-accent' | 'ghost-accent';
   external?: boolean;
   download?: boolean;
+  class?: string;
 }
 
-const { href, variant = 'filled-accent', external = false, download = false } = Astro.props;
+const {
+  href,
+  variant = 'filled-accent',
+  external = false,
+  download = false,
+  class: className,
+} = Astro.props;
 const Tag = href ? 'a' : 'button';
+const hasIcon = Astro.slots.has('icon');
 ---
 
 <Tag
-  class={`button button--${variant}`}
+  class={['button', `button--${variant}`, className].filter(Boolean).join(' ')}
   href={href}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener noreferrer' : undefined}
   download={download ? true : undefined}
   type={href ? undefined : 'button'}
 >
-  <slot />
+  <span class="button__label text-label-md"><slot /></span>
+  {hasIcon && (
+    <span class="button__icon">
+      <slot name="icon" />
+    </span>
+  )}
 </Tag>
 
 <style>
@@ -26,26 +39,56 @@ const Tag = href ? 'a' : 'button';
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--scale-x2) var(--scale-x4);
-    border-width: 2px;
+    gap: var(--scale-x3);
+    padding: var(--scale-x3) var(--scale-x6);
+    border-width: 3px;
     border-style: solid;
-    font-family: var(--font-family-label);
-    font-weight: var(--weight-700);
     text-decoration: none;
     cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  .button__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
   }
 
   .button--filled-accent {
     background-color: var(--button-bg-accent-filled-regular);
-    border-color: var(--button-border-accent-strong);
+    border-color: var(--button-border-neutral-strong);
     color: var(--text-label-on-bg-strong);
-    box-shadow: var(--shadow-comp-accent);
+    box-shadow: var(--shadow-comp-neutral);
   }
 
   .button--outline-accent {
     background-color: var(--button-bg-accent-outline-regular);
-    border-color: var(--button-border-neutral-strong);
-    color: var(--text-body-neutral-strong);
-    box-shadow: var(--shadow-comp-neutral);
+    border-color: var(--button-border-accent-strong);
+    color: var(--text-label-on-bg-accent);
+    box-shadow: var(--shadow-comp-accent);
+  }
+
+  .button--ghost-accent {
+    background-color: var(--button-bg-accent-outline-regular);
+    border-color: var(--button-border-neutral-subtle);
+    color: var(--text-label-on-bg-accent);
+    padding: var(--scale-x3) var(--scale-none);
+  }
+
+  .button:hover {
+    transform: translate(-2px, -2px);
+  }
+
+  .button:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+  }
+
+  .button:focus-visible {
+    outline: 2px solid var(--border-accent-strong);
+    outline-offset: 2px;
   }
 </style>

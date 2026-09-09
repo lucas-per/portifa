@@ -1,0 +1,140 @@
+---
+import Tag from '../ui/Tag.astro';
+import Button from '../ui/Button.astro';
+import arrowRightIcon from '../../assets/icons/arrow-right.svg';
+
+interface Highlight {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  shortDescription: string;
+  status: 'published' | 'coming-soon';
+  tags: string[];
+  highlights?: Highlight[];
+  href?: string;
+  shadow?: 'accent' | 'neutral';
+}
+
+const {
+  title,
+  shortDescription,
+  status,
+  tags,
+  highlights,
+  href,
+  shadow = 'neutral',
+} = Astro.props;
+---
+
+<article class={`case-card case-card--shadow-${shadow}`}>
+  <div class="case-card__content">
+    <ul class="case-card__tags">
+      {status === 'coming-soon' ? (
+        <li><Tag variant="secondary">Em breve</Tag></li>
+      ) : (
+        tags.map((tag) => (
+          <li><Tag variant="primary">{tag}</Tag></li>
+        ))
+      )}
+    </ul>
+    <div class="case-card__texts">
+      <h3 class="text-title-h3">{title}</h3>
+      <p class="text-body-md">{shortDescription}</p>
+    </div>
+  </div>
+  {highlights && highlights.length > 0 && (
+    <div class="case-card__highlights">
+      {highlights.map((highlight) => (
+        <div class="case-card__highlight">
+          <p class="text-body-lg-strong">{highlight.value}</p>
+          <p class="text-body-sm">{highlight.label}</p>
+        </div>
+      ))}
+    </div>
+  )}
+  {href && (
+    <Button href={href} variant="outline-accent" class="clickable-link-internal-case">
+      Ler case
+      <Fragment slot="icon">
+        <img src={arrowRightIcon.src} width="24" height="24" alt="" />
+      </Fragment>
+    </Button>
+  )}
+</article>
+
+<style>
+  .case-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Piso mínimo (48px) entre o bloco de texto e .case-card__highlights
+       — sem isso, o espaço vinha 100% do space-between, que colapsa
+       quase a zero em cards estreitos quando o texto quebra em mais
+       linhas e consome a altura que sobraria pro espaçamento. */
+    gap: var(--scale-x12);
+    /* Fill (flex: 1 1 0% em .cases-preview__grid) — min-width:0 é
+       essencial aqui: o default 'auto' impede o card de encolher abaixo
+       do min-content do texto, vazando em telas estreitas em vez de
+       encolher graciosamente. */
+    min-width: 0;
+    box-sizing: border-box;
+    padding: var(--scale-x6);
+    background-color: var(--surface-bg-off-white-primary);
+    border: 3px solid var(--border-neutral-strong);
+  }
+
+  .case-card--shadow-neutral {
+    box-shadow: var(--shadow-layout-neutral);
+  }
+
+  .case-card--shadow-accent {
+    box-shadow: var(--shadow-layout-accent);
+  }
+
+  .case-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x6);
+    min-width: 0;
+  }
+
+  .case-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--scale-x3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .case-card__texts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+    min-width: 0;
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-card__highlights {
+    display: flex;
+    flex-direction: column;
+    border: 3px solid var(--border-neutral-medium);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-card__highlight {
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-base);
+    padding: var(--scale-x2) var(--scale-x4);
+  }
+
+  .case-card__highlight:not(:last-child) {
+    border-bottom: 3px solid var(--border-neutral-medium);
+  }
+</style>

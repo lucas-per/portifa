@@ -1,0 +1,13 @@
+title: "Jornada de Pagamentos"
+shortDescription: "Reestruturação da jornada e implementação de design system em um app com mais de 100 mil usuários."
+status: "coming-soon"
+tags: []
+publishedDate: "2026-09-08" # provisória — o case ainda não foi publicado
+highlights:
+  - value: "+15%"
+    label: "Boletos pagos"
+  - value: "+20%"
+    label: "Pagamentos"
+
+content:
+  summary: "Reestruturação da jornada e implementação de design system em um app com mais de 100 mil usuários."

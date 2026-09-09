@@ -8,10 +8,13 @@
   --neutral-900: oklch(25.11% 0.0046 17.46); /* #242121 */
   --neutral-800: oklch(29.23% 0.0044 17.41); /* #2e2b2b */
   --neutral-500: oklch(52.00% 0.0038 17.28); /* #6b6868 */
+  --neutral-600: oklch(44.34% 0.0066 17.10); /* #575252 — color/grey/6 no Figma */
   --neutral-200: oklch(89.30% 0.0022 17.20); /* #dddbdb */
+  --neutral-150: oklch(94.16% 0.0021 15.19); /* #edebeb — color/grey/2 no Figma */
   --neutral-50: oklch(98.74% 0.0032 17.21); /* #fdfafa */
   --neutral-25: oklch(99.14% 0.0044 359.99); /* #fffbfc */
   --neutral-0: oklch(99.65% 0.0170 106.70); /* #fffff2 */
+  --neutral-100: oklch(95.69% 0.0120 78.40); /* #f5f0e8 — não é variable no Figma, fill direto do wrap-avatar-frame */
 
   /* Primária (roxo/ameixa da marca) */
   --primary-800: oklch(32.54% 0.0336 315.88); /* #3b2f40 */
@@ -30,7 +33,9 @@
   --red-100: oklch(93.22% 0.0343 17.78); /* #ffe0e0 */
 
   /* Cores de apoio (um único tom cada, sem escala) */
+  --yellow-50: oklch(97.98% 0.0044 78.21); /* #faf8f5 — color/yellow/1 no Figma */
   --yellow-100: oklch(96.21% 0.0619 95.40); /* #fff3c4 */
+  --yellow-200: oklch(93.30% 0.1107 95.78); /* #ffe991 — color/yellow/5 no Figma */
   --green-100: oklch(95.71% 0.0210 147.64); /* #e8f5e9 */
 
   /* Escala numérica (espaçamento e tamanho de fonte), base 4px = 0.25rem */
@@ -41,6 +46,7 @@
   --scale-x4: 1rem; /* 16px */
   --scale-x5: 1.25rem; /* 20px */
   --scale-x6: 1.5rem; /* 24px */
+  --scale-x7: 1.75rem; /* 28px */
   --scale-x8: 2rem; /* 32px */
   --scale-x9: 2.25rem; /* 36px */
   --scale-x10: 2.5rem; /* 40px */

@@ -1,19 +1,42 @@
 ---
-import { getEnabledSections } from '../../config/navigation';
-
-const sections = getEnabledSections();
+import Button from '../ui/Button.astro';
+import logo from '../../assets/icons/logo.svg';
+import mailIcon from '../../assets/icons/mail-on-accent.svg';
 ---
 
-<header>
-  <a href="/" class="clickable-link-internal-home">Lucas Pereira</a>
-  <nav>
-    <ul>
-      {sections.map((section) => (
-        <li>
-          <a href={section.path}>{section.label}</a>
-        </li>
-      ))}
-    </ul>
-  </nav>
-  <a href="mailto:oi@lpereira.me" class="clickable-mailto-header">Contato</a>
+<header class="site-header">
+  <a href="/" class="site-header__logo clickable-link-internal-home">
+    <img src={logo.src} width="304" height="54" alt="Lucas Pereira" />
+  </a>
+  <div class="site-header__cta">
+    <Button href="#sobre-mim" variant="ghost-accent" class="clickable-anchor-aboutme">
+      Sobre mim
+    </Button>
+    <Button href="mailto:oi@lpereira.me" variant="filled-accent" class="clickable-mailto-header">
+      Contato
+      <Fragment slot="icon">
+        <img src={mailIcon.src} width="24" height="24" alt="" />
+      </Fragment>
+    </Button>
+  </div>
 </header>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--scale-x8);
+    padding: var(--scale-x8) var(--scale-x20);
+  }
+
+  .site-header__logo {
+    display: inline-flex;
+  }
+
+  .site-header__cta {
+    display: flex;
+    gap: var(--scale-x12);
+    align-items: center;
+  }
+</style>

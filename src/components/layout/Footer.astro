@@ -1,21 +1,90 @@
 ---
 import Button from '../ui/Button.astro';
+import mailIcon from '../../assets/icons/mail.svg';
+import downloadIcon from '../../assets/icons/download.svg';
+import externalLinkIcon from '../../assets/icons/external-link.svg';
 
 const currentYear = new Date().getFullYear();
+const dividerLines = Array.from({ length: 5 });
 ---
 
-<footer>
-  <a href="mailto:oi@lpereira.me" class="clickable-mailto-footer">oi@lpereira.me</a>
-  <Button href="/cv-lucas-pereira.pdf" variant="outline-accent" download>
-    Baixar CV
-  </Button>
-  <a
-    href="https://www.linkedin.com/in/lucasvalimpereira/"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="clickable-link-external-linkedin"
-  >
-    LinkedIn
-  </a>
-  <p>&copy; {currentYear} Lucas Pereira</p>
+<footer class="site-footer">
+  <div class="site-footer__buttons">
+    <div class="site-footer__dividers" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    </div>
+    <Button href="mailto:oi@lpereira.me" variant="outline-accent" class="clickable-mailto-footer">
+      oi@lpereira.me
+      <Fragment slot="icon">
+        <img src={mailIcon.src} width="24" height="24" alt="" />
+      </Fragment>
+    </Button>
+    <div class="site-footer__dividers" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    </div>
+    <Button
+      href="/cv-lucas-pereira.pdf"
+      variant="outline-accent"
+      download
+      class="clickable-download-cv"
+    >
+      Baixar CV
+      <Fragment slot="icon">
+        <img src={downloadIcon.src} width="24" height="24" alt="" />
+      </Fragment>
+    </Button>
+    <div class="site-footer__dividers" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    </div>
+    <Button
+      href="https://www.linkedin.com/in/lucasvalimpereira/"
+      variant="outline-accent"
+      external
+      class="clickable-link-external-linkedin"
+    >
+      LinkedIn
+      <Fragment slot="icon">
+        <img src={externalLinkIcon.src} width="24" height="24" alt="" />
+      </Fragment>
+    </Button>
+    <div class="site-footer__dividers" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    </div>
+  </div>
+  <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
 </footer>
+
+<style>
+  .site-footer {
+    display: flex;
+    flex-direction: column;
+    border-top: 5px solid var(--border-accent-strong);
+    background-color: var(--surface-bg-off-white-primary);
+  }
+
+  .site-footer__buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--scale-x6);
+    padding: var(--scale-x4) var(--scale-x20);
+    border-bottom: 3px solid var(--border-accent-subtle);
+  }
+
+  .site-footer__dividers {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x2);
+  }
+
+  .site-footer__divider-line {
+    height: 3px;
+    background-color: var(--border-accent-strong);
+  }
+
+  .site-footer__copyright {
+    text-align: center;
+    padding: var(--scale-base) 0;
+    color: var(--text-body-accent-regular);
+  }
+</style>

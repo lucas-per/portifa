@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import CaseCard from './CaseCard.astro';
+
+// Ordem visual da Home no Figma (esquerda -> direita), não a ordem
+// alfabética dos arquivos: Redesign, Jornada de Pagamentos, GoSafe DS.
+const homeCaseOrder = ['redesign', 'jornada-pagamentos', 'gosafe-ds'];
+
+const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-case')).sort(
+  (a, b) => homeCaseOrder.indexOf(a.id) - homeCaseOrder.indexOf(b.id)
+);
+---
+
+<div class="cases-preview">
+  <h2 class="text-title-h2">Cases selecionados</h2>
+  <div class="cases-preview__grid">
+    {cases.map((caseEntry) => (
+      <CaseCard
+        title={caseEntry.data.title}
+        shortDescription={caseEntry.data.shortDescription}
+        status={caseEntry.data.status}
+        tags={caseEntry.data.tags}
+        highlights={caseEntry.data.highlights}
+        shadow={caseEntry.id === 'redesign' ? 'accent' : 'neutral'}
+      />
+    ))}
+  </div>
+</div>
+
+<style>
+  .cases-preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x11);
+    width: 100%;
+    color: var(--text-body-primary-strong);
+  }
+
+  .cases-preview__grid {
+    display: flex;
+    /* Gap fixo (itemSpacing: 40 no Figma, node 31:704) — não é um piso
+       mínimo, os cards é que preenchem (Fill) o espaço restante
+       igualmente entre si via flex: 1 1 0% abaixo. */
+    gap: var(--scale-x10);
+    /* Altura igual entre os 3 cards, dinâmica: a linha assume a altura do
+       card com mais conteúdo (sem height fixa) e align-items: stretch
+       estica os demais até ela — recalcula sozinho quando o conteúdo de
+       qualquer card mudar, sem precisar de um card "de referência". */
+    align-items: stretch;
+  }
+
+  .cases-preview__grid > :global(.case-card) {
+    /* Fill: os 3 cards crescem/encolhem igualmente com a largura da
+       tela, dividindo o espaço disponível (descontado o gap fixo acima)
+       — não dependem do próprio conteúdo nem têm largura fixa em px. */
+    flex: 1 1 0%;
+  }
+</style>

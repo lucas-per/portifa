@@ -1,0 +1,175 @@
+---
+import figmaIcon from '../../assets/icons/tools/figma.svg';
+import claudeCodeIcon from '../../assets/icons/tools/claude-code.svg';
+import claudeIcon from '../../assets/icons/tools/claude.svg';
+import geminiIcon from '../../assets/icons/tools/gemini.svg';
+import notebookIcon from '../../assets/icons/tools/notebook.svg';
+import mazeIcon from '../../assets/icons/tools/maze.svg';
+import tsIcon from '../../assets/icons/tools/ts.svg';
+import paperIcon from '../../assets/icons/tools/paper.svg';
+import spIcon from '../../assets/icons/tools/sp.svg';
+import sbIcon from '../../assets/icons/tools/sb.svg';
+import githubIcon from '../../assets/icons/tools/github.svg';
+import orIcon from '../../assets/icons/tools/or.svg';
+import jamoviIcon from '../../assets/icons/tools/jamovi.svg';
+
+const strategySkills = [
+  'Product Strategy',
+  'Product Discovery',
+  'Product Research',
+  'Prototipação',
+  'Priorização',
+];
+const designSystemSkills = [
+  'Design System Agêntico',
+  'Design Tokens',
+  'Governança de DS',
+  'Documentações',
+  'Acessibilidade (WCAG)',
+];
+const collabSkills = [
+  'Design Ops',
+  'Facilitação de workshops',
+  'Metodologias Ágeis',
+  'Design Handoff',
+  'Design Systems',
+];
+const tools = [
+  { icon: figmaIcon, width: 20, height: 32, alt: 'Figma' },
+  { icon: claudeCodeIcon, width: 51, height: 32, alt: 'Claude Code' },
+  { icon: claudeIcon, width: 32, height: 32, alt: 'Claude' },
+  { icon: geminiIcon, width: 32, height: 32, alt: 'Gemini' },
+  { icon: notebookIcon, width: 45, height: 32, alt: 'Notebook' },
+  { icon: mazeIcon, width: 32, height: 30, alt: 'Maze' },
+  { icon: tsIcon, width: 41, height: 32, alt: 'TypeScript' },
+  { icon: paperIcon, width: 32, height: 32, alt: 'Paper' },
+  { icon: spIcon, width: 32, height: 32, alt: 'SP' },
+  { icon: sbIcon, width: 26, height: 32, alt: 'SB' },
+  { icon: githubIcon, width: 32, height: 31, alt: 'GitHub' },
+  { icon: orIcon, width: 45, height: 32, alt: 'OR' },
+  { icon: jamoviIcon, width: 32, height: 32, alt: 'jamovi' },
+];
+---
+
+<section class="skills">
+  <h2 class="text-title-h2">Skills & Expertise</h2>
+  <div class="skills__grid">
+    <div class="skills__column">
+      <h3 class="skills__column-title skills__column-title--strategy text-title-h3">
+        Estratégia & Discovery
+      </h3>
+      <ul class="skills__list">
+        {strategySkills.map((skill) => (
+          <li class="text-body-md">{skill}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="skills__column">
+      <h3 class="skills__column-title skills__column-title--ds text-title-h3">
+        Design Systems
+      </h3>
+      <ul class="skills__list">
+        {designSystemSkills.map((skill) => (
+          <li class="text-body-md">{skill}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="skills__column">
+      <h3 class="skills__column-title skills__column-title--colab text-title-h3">
+        Execução e Colaboração
+      </h3>
+      <ul class="skills__list">
+        {collabSkills.map((skill) => (
+          <li class="text-body-md">{skill}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="skills__column">
+      <h3 class="skills__column-title skills__column-title--tools text-title-h3">
+        Ferramentas que uso
+      </h3>
+      <div class="skills__tools">
+        {tools.map((tool) => (
+          <img src={tool.icon.src} width={tool.width} height={tool.height} alt={tool.alt} />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x11);
+    padding: var(--scale-x12) var(--scale-x20);
+    color: var(--text-body-primary-strong);
+  }
+
+  .skills__grid {
+    display: flex;
+    gap: var(--scale-x10);
+    align-items: stretch;
+  }
+
+  .skills__column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-bg-neutral-subtle);
+    border: 3px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-neutral);
+  }
+
+  .skills__column-title {
+    margin: 0;
+    padding: var(--scale-x6);
+    border-bottom: 3px solid var(--border-neutral-strong);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .skills__column-title--strategy {
+    background-color: var(--surface-bg-tertiary-subtle);
+  }
+
+  .skills__column-title--ds {
+    background-color: var(--surface-bg-off-white-tertiary);
+  }
+
+  .skills__column-title--colab {
+    background-color: var(--surface-bg-primary-subtle);
+  }
+
+  .skills__column-title--tools {
+    background-color: var(--surface-bg-complementary-subtle);
+  }
+
+  .skills__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--scale-x6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x2);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .skills__list li {
+    padding-bottom: var(--scale-x2);
+    border-bottom: 2px solid var(--surface-bg-neutral-medium);
+  }
+
+  .skills__list li:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .skills__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--scale-x8);
+    padding: var(--scale-x6);
+    align-content: flex-start;
+    flex: 1;
+  }
+</style>

@@ -9,6 +9,7 @@ describe('typography.css', () => {
     ['.text-title-display', 'var(--font-family-title)', 'var(--weight-700)', 'var(--scale-x16)', 'var(--line-height-compact)', 'var(--letter-spacing-compact)'],
     ['.text-title-h2', 'var(--font-family-title)', 'var(--weight-800)', 'var(--scale-x9)', 'var(--line-height-compact)', 'var(--letter-spacing-regular)'],
     ['.text-title-h3', 'var(--font-family-title)', 'var(--weight-800)', 'var(--scale-x8)', 'var(--line-height-compact)', 'var(--letter-spacing-regular)'],
+    ['.text-title-h4', 'var(--font-family-title)', 'var(--weight-700)', 'var(--scale-x7)', 'var(--line-height-compact)', 'var(--letter-spacing-regular)'],
     ['.text-body-md', 'var(--font-family-body)', 'var(--weight-400)', 'var(--scale-x5)', 'var(--line-height-regular)', 'var(--letter-spacing-regular)'],
     ['.text-body-lg-strong', 'var(--font-family-body)', 'var(--weight-600)', 'var(--scale-x6)', 'var(--line-height-regular)', 'var(--letter-spacing-regular)'],
     ['.text-body-sm', 'var(--font-family-body)', 'var(--weight-400)', 'var(--scale-x4)', 'var(--line-height-comfortable)', 'var(--letter-spacing-comfortable)'],
@@ -26,4 +27,53 @@ describe('typography.css', () => {
     expect(block).toContain(`line-height: ${lineHeight}`);
     expect(block).toContain(`letter-spacing: ${letterSpacing}`);
   });
+
+  describe('text-transform em labels e títulos H2', () => {
+    it.each(['.text-label-md', '.text-label-sm', '.text-title-h2'])(
+      '%s usa uppercase',
+      (selector) => {
+        const escapedSelector = selector.replace('.', '\\.');
+        const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+        expect(blockMatch, `seletor ${selector} não encontrado`).not.toBeNull();
+        expect(blockMatch![1]).toContain('text-transform: uppercase');
+      }
+    );
+
+    it.each(['.text-title-h3', '.text-title-h4'])('%s não usa uppercase', (selector) => {
+      const escapedSelector = selector.replace('.', '\\.');
+      const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+      expect(blockMatch).not.toBeNull();
+      expect(blockMatch![1]).not.toContain('text-transform');
+    });
+  });
+
+  describe('margin zerado (espaçamento vem só do gap do container, nunca do margin default do browser)', () => {
+    it.each([
+      '.text-title-display',
+      '.text-title-h2',
+      '.text-title-h3',
+      '.text-title-h4',
+      '.text-body-md',
+      '.text-body-lg-strong',
+      '.text-body-sm',
+      '.text-body-caption',
+      '.text-label-md',
+      '.text-label-sm',
+    ])('%s zera margin', (selector) => {
+      const escapedSelector = selector.replace('.', '\\.');
+      const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+      expect(blockMatch, `seletor ${selector} não encontrado`).not.toBeNull();
+      expect(blockMatch![1]).toContain('margin: 0');
+    });
+  });
+
+  it.each(['.text-title-display', '.text-title-h2', '.text-title-h3', '.text-title-h4'])(
+    '%s quebra palavra isolada mais larga que o container (overflow-wrap)',
+    (selector) => {
+      const escapedSelector = selector.replace('.', '\\.');
+      const blockMatch = css.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`));
+      expect(blockMatch, `seletor ${selector} não encontrado`).not.toBeNull();
+      expect(blockMatch![1]).toContain('overflow-wrap: break-word');
+    }
+  );
 });

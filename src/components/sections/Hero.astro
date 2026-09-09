@@ -1,0 +1,58 @@
+---
+import { Image } from 'astro:assets';
+import CasesPreview from './CasesPreview.astro';
+import avatar from '../../assets/home/avatar.png';
+---
+
+<section class="hero">
+  <div class="hero__headline">
+    <p class="hero__title text-title-display">
+      Já há alguns anos transformando{' '}
+      <span class="hero__title--accent">produtos complexos</span> em experiências
+      de <span class="hero__title--accent">alto impacto</span>
+    </p>
+    <div class="hero__avatar-frame">
+      <Image src={avatar} alt="Foto de Lucas Pereira" width={256} height={256} loading="eager" />
+    </div>
+  </div>
+  <CasesPreview />
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x16);
+    padding: var(--scale-x12) var(--scale-x20);
+    background-color: var(--surface-bg-neutral-subtle);
+  }
+
+  .hero__headline {
+    display: flex;
+    gap: var(--scale-x12);
+    align-items: flex-start;
+  }
+
+  .hero__title {
+    flex: 1;
+    /* .text-title-display tem line-height 1.24 > 1, então o line-box do
+       browser inclui um "leading" acima do cap-height que o Figma não conta
+       no bounding box do texto — compensa pra alinhar com o topo do avatar. */
+    margin-top: calc((1 - var(--line-height-compact)) / 2 * 1em);
+    color: var(--text-body-primary-strong);
+  }
+
+  .hero__title--accent {
+    color: var(--text-body-accent-regular);
+  }
+
+  .hero__avatar-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: var(--surface-bg-avatar-frame);
+    border: 3px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-img);
+  }
+</style>
