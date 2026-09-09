@@ -1,34 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Tag from '../components/ui/Tag.astro';
-import Button from '../components/ui/Button.astro';
-import { getCollection } from 'astro:content';
-
-const cases = await getCollection('cases');
+import Hero from '../components/sections/Hero.astro';
+import SkillsExpertise from '../components/sections/SkillsExpertise.astro';
+import AboutMe from '../components/sections/AboutMe.astro';
 ---
 
 <BaseLayout title="Lucas Pereira — Product Designer">
-  <section aria-labelledby="cases-selecionados-title">
-    <h2 id="cases-selecionados-title">Cases selecionados</h2>
-    <ul>
-      {cases.map((caseEntry) => (
-        <li>
-          {caseEntry.data.status === 'coming-soon' ? (
-            <span>Em breve</span>
-          ) : (
-            <ul>
-              {caseEntry.data.tags.map((tag) => (
-                <li><Tag>{tag}</Tag></li>
-              ))}
-            </ul>
-          )}
-          <h3>{caseEntry.data.title}</h3>
-          <p>{caseEntry.data.shortDescription}</p>
-          {caseEntry.data.status !== 'coming-soon' && (
-            <Button href={`/cases/${caseEntry.id}`}>Ler case</Button>
-          )}
-        </li>
-      ))}
-    </ul>
-  </section>
+  <Hero />
+  <SkillsExpertise />
+  <AboutMe />
 </BaseLayout>
