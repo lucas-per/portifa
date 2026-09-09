@@ -1,15 +1,19 @@
 ---
+import verifiedIcon from '../../assets/icons/status/verified.svg';
+import warningIcon from '../../assets/icons/status/warning.svg';
+import unavailableIcon from '../../assets/icons/status/unavailable.svg';
+
 interface Props {
   status: 'verified' | 'warning' | 'unavailable';
   label: string;
 }
 
 const { status, label } = Astro.props;
-const icon = { verified: '✓', warning: '△', unavailable: '—' }[status];
+const icon = { verified: verifiedIcon, warning: warningIcon, unavailable: unavailableIcon }[status];
 ---
 
 <span class={`test-result-badge test-result-badge--${status}`}>
-  <span aria-hidden="true">{icon}</span>
+  <img src={icon.src} width="24" height="24" alt="" />
   {label}
 </span>
 
@@ -17,19 +21,11 @@ const icon = { verified: '✓', warning: '△', unavailable: '—' }[status];
   .test-result-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--scale-base);
+    gap: var(--scale-x3);
+    padding: var(--scale-x2) var(--scale-x4);
+    background-color: var(--surface-bg-off-white-primary);
+    border: 3px solid var(--border-neutral-subtle);
     font-family: var(--font-family-body);
-  }
-
-  .test-result-badge--verified {
-    color: var(--text-body-accent-regular);
-  }
-
-  .test-result-badge--warning {
-    color: var(--text-label-on-bg-complementary);
-  }
-
-  .test-result-badge--unavailable {
     color: var(--text-body-neutral-strong);
   }
 </style>
