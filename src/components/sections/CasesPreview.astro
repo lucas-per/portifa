@@ -38,15 +38,16 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
 
   .cases-preview__grid {
     display: flex;
-    gap: var(--scale-x10);
+    /* gap funciona como piso mínimo (nunca menor que scale-x6/24px) quando
+       combinado com justify-content: space-between — o space-between
+       distribui qualquer espaço adicional entre os cards; os cards (sem
+       flex-grow) mantêm largura própria em vez de absorver esse espaço. */
+    gap: var(--scale-x6);
+    justify-content: space-between;
     /* Altura igual entre os 3 cards, dinâmica: a linha assume a altura do
        card com mais conteúdo (sem height fixa) e align-items: stretch
        estica os demais até ela — recalcula sozinho quando o conteúdo de
        qualquer card mudar, sem precisar de um card "de referência". */
     align-items: stretch;
-  }
-
-  .cases-preview__grid > :global(.case-card) {
-    flex: 1;
   }
 </style>
