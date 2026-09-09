@@ -238,3 +238,9 @@ Exemplo (baseado no PRD do site pessoal):
 **Contexto:** container clicável que possibilita ver a lista de opções do componente accordion
 **Decisão:** ao clicar, a lista de opções do accordion se expande mostrando todas as opções selecionáveis
 **Motivo:** facilitar a navegação do usuário por todo o case quando estiver usando celular
+
+### row-results-payments
+**Contexto:** bloco de destaques/métricas de resultado (ex: "+15% Boletos pagos") dentro do card de case na Home — usado tanto no card "Pagamentos" (2 métricas) quanto no "GoSafe DS" (1 métrica)
+**Decisão (diverge do Figma atual, `.claude/worktrees/home-visual` — pendente de atualizar lá):** apesar do nome `row-*` (lado a lado), a implementação empilha as métricas em coluna (`flex-direction: column`), com divisor `border-bottom` entre elas em vez de `border-right`. Quando havia 2+ métricas lado a lado com larguras divididas automaticamente, a divisão desigual estourava a largura da coluna e o texto vazava pra fora da borda direita do card
+**Motivo:** eliminar o overflow de texto sem depender de truncamento/font-size menor — empilhar garante que cada métrica sempre tenha 100% da largura disponível, independente de quantas métricas o case tiver
+**Ação pendente:** atualizar o layout dessa camada no Figma pra refletir o empilhamento vertical, mantendo a fonte de design sincronizada com o código
