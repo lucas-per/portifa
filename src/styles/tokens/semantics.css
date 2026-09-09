@@ -1,0 +1,85 @@
+/*
+  Semânticos: nomenclatura idêntica à das variables do Figma
+  (layout/surface/bg/... -> --surface-bg-...). Só referenciam
+  primitives.css via var() — nunca o contrário.
+
+  Nota: get_variable_defs só devolveu um conjunto de valores (claro) para
+  o node lido. O bloco de dark mode existe mas ainda repete os valores do
+  claro — repovoar quando o modo escuro for desenhado no Figma.
+*/
+:root {
+  /* Superfícies */
+  --surface-bg-neutral-strong: var(--neutral-800);
+  --surface-bg-neutral-subtle: var(--neutral-200);
+  --surface-bg-off-white-primary: var(--neutral-0);
+  --surface-bg-off-white-secondary: var(--neutral-25);
+  --surface-bg-off-white-tertiary: var(--yellow-100);
+  --surface-bg-primary-subtle: var(--primary-100);
+  --surface-bg-accent-strong: var(--accent-300);
+  --surface-bg-complementary-subtle: var(--green-100);
+  --surface-bg-tertiary-subtle: var(--red-100);
+  --surface-bg-tertiary-strong: var(--red-500);
+
+  /* Bordas */
+  --border-neutral-strong: var(--neutral-800);
+  --border-neutral-medium: var(--neutral-500);
+  --border-accent-strong: var(--accent-600);
+  --border-accent-subtle: var(--accent-300);
+
+  /* Texto */
+  --text-label-on-bg-accent: var(--accent-700);
+  --text-label-on-bg-strong: var(--neutral-50);
+  --text-label-on-bg-complementary: var(--red-900);
+  --text-body-primary-strong: var(--primary-800);
+  --text-body-accent-regular: var(--accent-700);
+  --text-body-neutral-strong: var(--neutral-900);
+
+  /* Ícones */
+  --icon-neutral-1: var(--neutral-50);
+  --icon-accent: var(--accent-700);
+
+  /* Botão */
+  --button-bg-primary-filled-pressed: var(--primary-800);
+  --button-bg-accent-filled-regular: var(--accent-700);
+  --button-bg-accent-outline-regular: var(--neutral-0);
+  --button-border-neutral-strong: var(--neutral-800);
+  --button-border-neutral-subtle: var(--neutral-50);
+  --button-border-accent-strong: var(--accent-600);
+
+  /* Tag */
+  --tag-bg-primary: var(--red-700);
+  --tag-bg-secondary: var(--red-100);
+  --tag-border-subtle: var(--red-700);
+  --tag-border-strong: var(--red-300);
+
+  /* Sombras duras (neo-brutalismo — sem blur, deslocadas) */
+  --shadow-comp-neutral: 3px 3px 0 0 var(--neutral-900);
+  --shadow-layout-neutral: 5px 5px 0 0 var(--neutral-900);
+  --shadow-comp-accent: 3px 3px 0 0 var(--accent-300);
+  --shadow-layout-accent: 5px 5px 0 0 var(--accent-600);
+  --shadow-layout-img: 5px 5px 0 0 var(--red-300);
+
+  /* Line-height (escala do design-notes: none/compact/regular/comfortable).
+     "none" aqui representa razão 1 (sem espaçamento extra sobre a caixa da
+     fonte) — não zero literal, que não faz sentido para line-height de texto. */
+  --line-height-none: 1;
+  --line-height-compact: 1.24;
+  --line-height-regular: 1.48;
+  --line-height-comfortable: 1.72;
+
+  /* Letter-spacing (assumido em px — o Figma não expôs a unidade explicitamente) */
+  --letter-spacing-compact: -1px;
+  --letter-spacing-regular: 0px;
+  --letter-spacing-comfortable: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    /* TODO(design): repovoar com os valores reais do modo escuro assim que
+       existirem no Figma. Por ora, mantém a paleta do claro. */
+  }
+}
+
+:root[data-theme='dark'] {
+  /* TODO(design): mesmo valor do bloco acima. */
+}

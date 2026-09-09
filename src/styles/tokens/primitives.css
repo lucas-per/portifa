@@ -1,0 +1,58 @@
+/*
+  Primitivos: valores brutos, sem contexto de uso.
+  Convertidos de hex (Figma, get_variable_defs) para OKLCH.
+  Nunca referenciar semantics.css a partir daqui.
+*/
+:root {
+  /* Neutros (inclui os dois "off-white" do Figma — hue instável por serem quase acromáticos, tratados como uma única escala) */
+  --neutral-900: oklch(25.11% 0.0046 17.46); /* #242121 */
+  --neutral-800: oklch(29.23% 0.0044 17.41); /* #2e2b2b */
+  --neutral-500: oklch(52.00% 0.0038 17.28); /* #6b6868 */
+  --neutral-200: oklch(89.30% 0.0022 17.20); /* #dddbdb */
+  --neutral-50: oklch(98.74% 0.0032 17.21); /* #fdfafa */
+  --neutral-25: oklch(99.14% 0.0044 359.99); /* #fffbfc */
+  --neutral-0: oklch(99.65% 0.0170 106.70); /* #fffff2 */
+
+  /* Primária (roxo/ameixa da marca) */
+  --primary-800: oklch(32.54% 0.0336 315.88); /* #3b2f40 */
+  --primary-100: oklch(90.84% 0.0411 294.74); /* #e2dcfa */
+
+  /* Acento (azul) */
+  --accent-700: oklch(53.07% 0.1347 245.37); /* #0071b4 */
+  --accent-600: oklch(55.82% 0.1361 243.96); /* #057abd */
+  --accent-300: oklch(72.59% 0.1196 244.22); /* #5faeec */
+
+  /* Vermelho (tags, status, complementary) */
+  --red-900: oklch(51.20% 0.2005 25.55); /* #bf1120 */
+  --red-700: oklch(59.02% 0.2262 24.77); /* #e51e2f */
+  --red-500: oklch(71.16% 0.1812 22.84); /* #ff6b6b */
+  --red-300: oklch(79.06% 0.0955 19.41); /* #f2a2a2 */
+  --red-100: oklch(93.22% 0.0343 17.78); /* #ffe0e0 */
+
+  /* Cores de apoio (um único tom cada, sem escala) */
+  --yellow-100: oklch(96.21% 0.0619 95.40); /* #fff3c4 */
+  --green-100: oklch(95.71% 0.0210 147.64); /* #e8f5e9 */
+
+  /* Escala numérica (espaçamento e tamanho de fonte), base 4px = 0.25rem */
+  --scale-none: 0;
+  --scale-base: 0.25rem; /* 4px */
+  --scale-x2: 0.5rem; /* 8px */
+  --scale-x3: 0.75rem; /* 12px */
+  --scale-x4: 1rem; /* 16px */
+  --scale-x5: 1.25rem; /* 20px */
+  --scale-x6: 1.5rem; /* 24px */
+  --scale-x8: 2rem; /* 32px */
+  --scale-x9: 2.25rem; /* 36px */
+  --scale-x10: 2.5rem; /* 40px */
+  --scale-x11: 2.75rem; /* 44px */
+  --scale-x12: 3rem; /* 48px */
+  --scale-x16: 4rem; /* 64px */
+  --scale-x20: 5.5rem; /* 88px */
+
+  /* Pesos de fonte */
+  --weight-400: 400;
+  --weight-500: 500;
+  --weight-600: 600;
+  --weight-700: 700;
+  --weight-800: 800;
+}

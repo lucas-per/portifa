@@ -1,0 +1,76 @@
+# Case de fixture/exemplo — valida o pipeline (schema + astro:assets) e
+# exercita todas as seções opcionais. Substituir por cases reais quando o
+# conteúdo estiver pronto; não faz parte do conteúdo final do site.
+title: "Case de exemplo"
+shortDescription: "Case fictício usado para validar o schema e o pipeline de imagens."
+status: "coming-soon"
+tags:
+  - "Discovery"
+  - "Delivery"
+publishedDate: "2026-01-01"
+
+content:
+  summary: "Resumo fictício do case de exemplo, usado só para testar o pipeline de conteúdo."
+  context:
+    description: "Descrição de contexto fictícia para validar o bloco context."
+    image: "../../assets/cases/placeholder.png"
+    caption: "Legenda de exemplo da imagem de contexto."
+  problems:
+    description: "Descrição fictícia dos problemas e desafios do case de exemplo."
+  discovery:
+    intro: "Introdução fictícia da etapa de descoberta."
+    phases:
+      - title: "Fase 1"
+        subtitle: "Levantamento"
+        description: "Descrição fictícia da fase 1."
+      - title: "Fase 2"
+        subtitle: "Entrevistas"
+        description: "Descrição fictícia da fase 2."
+      - title: "Fase 3"
+        subtitle: "Síntese"
+        description: "Descrição fictícia da fase 3."
+      - title: "Fase 4"
+        subtitle: "Priorização"
+        description: "Descrição fictícia da fase 4."
+  exploration:
+    title: "Exploração"
+    description: "Descrição fictícia da etapa de exploração."
+    images:
+      - "../../assets/cases/placeholder.png"
+  pd:
+    title: "Prototipação"
+    description: "Descrição fictícia da etapa de prototipação."
+    images:
+      - "../../assets/cases/placeholder.png"
+  tests:
+    groups:
+      - title: "Teste comparativo"
+        results:
+          - status: "verified"
+            label: "Resultado positivo de exemplo"
+          - status: "warning"
+            label: "Resultado de atenção de exemplo"
+          - status: "unavailable"
+            label: "Resultado indisponível de exemplo"
+  delivery:
+    myRole:
+      title: "Meu papel"
+      description: "Descrição fictícia do papel no case de exemplo."
+    designSystem:
+      title: "Design system"
+      description: "Descrição fictícia da contribuição ao design system."
+    home:
+      title: "Tela inicial"
+      description: "Descrição fictícia da entrega da tela inicial."
+  impact:
+    highlights:
+      - title: "-00%"
+        description: "Métrica fictícia de impacto."
+    description: "Narrativa fictícia do impacto gerado pelo case de exemplo."
+  plansAhead:
+    privacy:
+      title: "Privacidade"
+      description: "Descrição fictícia dos próximos passos de privacidade."
+    pains:
+      title: "Dores remanescentes"
+      description: "Descrição fictícia das dores que ainda restam."

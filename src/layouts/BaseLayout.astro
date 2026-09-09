@@ -1,0 +1,42 @@
+---
+import '../styles/tokens/primitives.css';
+import '../styles/tokens/fonts.css';
+import '../styles/tokens/semantics.css';
+import '../styles/tokens/typography.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Portfólio de Lucas Pereira, Product Designer.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {import.meta.env.PUBLIC_UMAMI_WEBSITE_ID && (
+      <script
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
+      ></script>
+    )}
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

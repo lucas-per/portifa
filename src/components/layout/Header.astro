@@ -1,0 +1,19 @@
+---
+import { getEnabledSections } from '../../config/navigation';
+
+const sections = getEnabledSections();
+---
+
+<header>
+  <a href="/" class="clickable-link-internal-home">Lucas Pereira</a>
+  <nav>
+    <ul>
+      {sections.map((section) => (
+        <li>
+          <a href={section.path}>{section.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <a href="mailto:oi@lpereira.me" class="clickable-mailto-header">Contato</a>
+</header>

@@ -1719,6 +1719,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Tag from '../../components/ui/Tag.astro';
 import TestResultBadge from '../../components/ui/TestResultBadge.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import { estimateReadingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
@@ -1771,12 +1772,7 @@ const readingTime = estimateReadingTime(data.content);
     <section id="context">
       <h2>Contexto</h2>
       <p>{data.content.context.description}</p>
-      <img
-        src={data.content.context.image.src}
-        width={data.content.context.image.width}
-        height={data.content.context.image.height}
-        alt={data.content.context.caption}
-      />
+      <Image src={data.content.context.image} alt={data.content.context.caption} />
       <figcaption>{data.content.context.caption}</figcaption>
     </section>
   )}
@@ -1804,6 +1800,30 @@ const readingTime = estimateReadingTime(data.content);
     </section>
   )}
 
+  {data.content.exploration && (
+    <section id="exploration">
+      <h2>{data.content.exploration.title}</h2>
+      <p>{data.content.exploration.description}</p>
+      <ul>
+        {data.content.exploration.images.map((img) => (
+          <li><Image src={img} alt={data.content.exploration!.title} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {data.content.pd && (
+    <section id="pd">
+      <h2>{data.content.pd.title}</h2>
+      <p>{data.content.pd.description}</p>
+      <ul>
+        {data.content.pd.images.map((img) => (
+          <li><Image src={img} alt={data.content.pd!.title} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
   {data.content.tests && (
     <section>
       <h2>Testes</h2>
@@ -1825,6 +1845,26 @@ const readingTime = estimateReadingTime(data.content);
       <h2>Entrega</h2>
       <h3>{data.content.delivery.myRole.title}</h3>
       <p>{data.content.delivery.myRole.description}</p>
+
+      <h3>{data.content.delivery.designSystem.title}</h3>
+      <p>{data.content.delivery.designSystem.description}</p>
+      {data.content.delivery.designSystem.images && (
+        <ul>
+          {data.content.delivery.designSystem.images.map((img) => (
+            <li><Image src={img} alt={data.content.delivery!.designSystem.title} /></li>
+          ))}
+        </ul>
+      )}
+
+      <h3>{data.content.delivery.home.title}</h3>
+      <p>{data.content.delivery.home.description}</p>
+      {data.content.delivery.home.images && (
+        <ul>
+          {data.content.delivery.home.images.map((img) => (
+            <li><Image src={img} alt={data.content.delivery!.home.title} /></li>
+          ))}
+        </ul>
+      )}
     </section>
   )}
 
@@ -1863,9 +1903,13 @@ pnpm build
 ls dist/cases/exemplo-case/index.html
 grep -o 'min de leitura' dist/cases/exemplo-case/index.html
 grep -o 'Case de exemplo' dist/index.html
+grep -o 'Exploração' dist/cases/exemplo-case/index.html
+grep -o 'Prototipação' dist/cases/exemplo-case/index.html
+grep -o 'Design system' dist/cases/exemplo-case/index.html
+grep -o 'Tela inicial' dist/cases/exemplo-case/index.html
 ```
 
-Esperado: o arquivo existe, e ambos os `grep` encontram uma ocorrência.
+Esperado: o arquivo existe, e todos os `grep` encontram uma ocorrência (os últimos quatro confirmam que `exploration`, `pd`, `delivery.designSystem` e `delivery.home` — que o schema da Tarefa 7 permite mas uma versão anterior desta rota deixava de renderizar — estão de fato presentes no HTML).
 
 - [ ] **Step 4: Commit**
 
@@ -1954,3 +1998,7 @@ git commit -m "ci: adiciona workflow de type-check, testes e build"
 5. **Estilo visual final e microinterações**: as rotas e componentes desta fundação renderizam HTML funcional e sem preto/branco absoluto, mas sem bater pixel-a-pixel com o Figma e sem as animações de hover/active do design-notes — isso é implementação visual, seção a seção, via `get_design_context` (fora de escopo aqui, e indisponível nesta sessão porque o MCP do Figma está desconectado).
 6. **Conexão Cloudflare Pages ↔ GitHub**: configurada manualmente no painel da Cloudflare, fora deste repositório.
 7. **ID real do Umami** (Tarefa 9): o script só é injetado se `PUBLIC_UMAMI_WEBSITE_ID` estiver definida. Criar o site no painel do Umami Cloud e configurar essa variável nas env vars do projeto no Cloudflare Pages antes do deploy — sem isso, o site funciona normalmente, só sem analytics.
+8. **TypeScript fixado em `^6.0.3`** (Tarefa 1): esta é a major exata que o `@astrojs/check`/Astro 7.3.1 trouxeram como compatível no momento da implementação; registrado aqui para que uma leitura futura não estranhe a versão não bater com o que o texto original do plano possa ter sugerido.
+9. **Schema de content collection em `src/content.config.ts`, não `src/content/config.ts`** (Tarefa 7): o Astro 7.3.1 lança `LegacyContentConfigError` para o caminho antigo (mudança do content layer a partir da v6) e exige o novo arquivo no nível raiz de `src/`. O texto da Tarefa 7 ainda cita `src/content/config.ts` — está desatualizado; a própria collection (`getCollection('cases')`) não é afetada e funciona identicamente a partir do novo local.
+10. **`sharp` adicionado como dependência direta** (Tarefa 10): o componente `<Image>` de `astro:assets` (exigido pelas Restrições Globais deste plano) fazia o `pnpm build` falhar com "Could not find Sharp", porque o layout estrito de `node_modules` do pnpm não expõe a dependência opcional `sharp` do próprio Astro para o pipeline de processamento de imagens. Adicionar `sharp` como `dependencies` direta (já feito, em `package.json`) é a correção; registrado aqui para que uma leitura futura entenda por que ela está lá.
+11. **Gap honesto: `og:image` e `site` ausentes**: a seção 8 do spec pede uma imagem de social-preview (`og:image`), e o Astro precisa de um valor `site` em `astro.config.mjs` para gerar URLs canônicas/OG absolutas. Nenhum dos dois existe ainda — não há imagem de preview real para referenciar nem domínio de produção escolhido. Isso foi deliberadamente não simulado (uma imagem placeholder ou um domínio falso seriam piores que a lacuna honesta, mesma categoria de decisão já adiada em outros pontos deste plano para o PDF do CV e o ID do Umami). Ambos precisam de decisões reais de assets/domínio durante a etapa de implementação visual — não fabricados aqui.

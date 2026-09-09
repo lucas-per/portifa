@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/ui/Tag.astro';
+import TestResultBadge from '../../components/ui/TestResultBadge.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { estimateReadingTime } from '../../utils/reading-time';
+
+export async function getStaticPaths() {
+  const cases = await getCollection('cases');
+  return cases.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'cases'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const readingTime = estimateReadingTime(data.content);
+---
+
+<BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
+  <nav aria-label="breadcrumb">
+    <a href="/" class="clickable-link-internal-previous-page-title">Início</a>
+    <span aria-hidden="true">/</span>
+    <span class="non-clickable-active-page-title">{data.title}</span>
+  </nav>
+
+  <header>
+    {data.status === 'published' && (
+      <ul>
+        {data.tags.map((tag) => (
+          <li><Tag>{tag}</Tag></li>
+        ))}
+      </ul>
+    )}
+    <h1>{data.title}</h1>
+    <p>
+      <time class="published-case-date" datetime={data.publishedDate.toISOString()}>
+        {data.publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+      </time>
+      <span class="estimated-time">{readingTime} min de leitura</span>
+    </p>
+  </header>
+
+  <section>
+    <h2>Resumo</h2>
+    <p>{data.content.summary}</p>
+  </section>
+
+  {data.content.context && (
+    <section id="context">
+      <h2>Contexto</h2>
+      <p>{data.content.context.description}</p>
+      <Image src={data.content.context.image} alt={data.content.context.caption} />
+      <figcaption>{data.content.context.caption}</figcaption>
+    </section>
+  )}
+
+  {data.content.problems && (
+    <section id="problems-challenges">
+      <h2>Problemas e desafios</h2>
+      <p>{data.content.problems.description}</p>
+    </section>
+  )}
+
+  {data.content.discovery && (
+    <section id="discovery">
+      <h2>Descoberta</h2>
+      <p>{data.content.discovery.intro}</p>
+      <ol>
+        {data.content.discovery.phases.map((phase) => (
+          <li>
+            <h3>{phase.title}</h3>
+            <p>{phase.subtitle}</p>
+            <p>{phase.description}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {data.content.exploration && (
+    <section id="exploration">
+      <h2>{data.content.exploration.title}</h2>
+      <p>{data.content.exploration.description}</p>
+      <ul>
+        {data.content.exploration.images.map((img) => (
+          <li><Image src={img} alt={data.content.exploration!.title} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {data.content.pd && (
+    <section id="pd">
+      <h2>{data.content.pd.title}</h2>
+      <p>{data.content.pd.description}</p>
+      <ul>
+        {data.content.pd.images.map((img) => (
+          <li><Image src={img} alt={data.content.pd!.title} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {data.content.tests && (
+    <section>
+      <h2>Testes</h2>
+      {data.content.tests.groups.map((group) => (
+        <div>
+          <h3>{group.title}</h3>
+          <ul>
+            {group.results.map((result) => (
+              <li><TestResultBadge status={result.status} label={result.label} /></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  )}
+
+  {data.content.delivery && (
+    <section id="myrole">
+      <h2>Entrega</h2>
+      <h3>{data.content.delivery.myRole.title}</h3>
+      <p>{data.content.delivery.myRole.description}</p>
+
+      <h3>{data.content.delivery.designSystem.title}</h3>
+      <p>{data.content.delivery.designSystem.description}</p>
+      {data.content.delivery.designSystem.images && (
+        <ul>
+          {data.content.delivery.designSystem.images.map((img) => (
+            <li><Image src={img} alt={data.content.delivery!.designSystem.title} /></li>
+          ))}
+        </ul>
+      )}
+
+      <h3>{data.content.delivery.home.title}</h3>
+      <p>{data.content.delivery.home.description}</p>
+      {data.content.delivery.home.images && (
+        <ul>
+          {data.content.delivery.home.images.map((img) => (
+            <li><Image src={img} alt={data.content.delivery!.home.title} /></li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )}
+
+  {data.content.impact && (
+    <section id="impact">
+      <h2>Impacto</h2>
+      <ul>
+        {data.content.impact.highlights.map((highlight) => (
+          <li>
+            <strong>{highlight.title}</strong>
+            <span>{highlight.description}</span>
+          </li>
+        ))}
+      </ul>
+      <p>{data.content.impact.description}</p>
+    </section>
+  )}
+
+  {data.content.plansAhead && (
+    <section id="plans-ahead">
+      <h2>Próximos passos</h2>
+      <h3>{data.content.plansAhead.privacy.title}</h3>
+      <p>{data.content.plansAhead.privacy.description}</p>
+      <h3>{data.content.plansAhead.pains.title}</h3>
+      <p>{data.content.plansAhead.pains.description}</p>
+    </section>
+  )}
+</BaseLayout>
