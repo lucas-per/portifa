@@ -15,7 +15,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { estimateReadingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
-  const cases = await getCollection('cases');
+  const cases = await getCollection('cases', (entry) => entry.id !== 'exemplo-case');
   return cases.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },

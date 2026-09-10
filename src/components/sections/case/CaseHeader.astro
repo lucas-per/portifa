@@ -38,7 +38,7 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     </time>
     <span aria-hidden="true">·</span>
     <img src={clockIcon.src} width="16" height="16" alt="" />
-    <span class="estimated-time">{readingTime} minutos</span>
+    <span class="estimated-time">{readingTime} {readingTime === 1 ? 'minuto' : 'minutos'}</span>
   </p>
 </header>
 
@@ -54,7 +54,7 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     display: flex;
     gap: var(--scale-base);
     align-items: center;
-    color: var(--text-body-neutral-subtle, var(--text-body-neutral-strong));
+    color: var(--text-body-neutral-subtle);
   }
 
   .case-header__tags {
@@ -74,6 +74,6 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     display: flex;
     align-items: center;
     gap: var(--scale-x2);
-    color: var(--text-body-neutral-subtle, var(--text-body-neutral-strong));
+    color: var(--text-body-neutral-subtle);
   }
 </style>

@@ -37,6 +37,7 @@ describe('semantics.css', () => {
   it('mapeia bordas para os primitivos corretos', () => {
     expectDeclares('border-neutral-strong', 'var(--neutral-800)');
     expectDeclares('border-neutral-medium', 'var(--neutral-500)');
+    expectDeclares('border-neutral-subtle', 'var(--neutral-200)');
     expectDeclares('border-accent-strong', 'var(--accent-600)');
     expectDeclares('border-accent-subtle', 'var(--accent-300)');
   });
@@ -52,6 +53,7 @@ describe('semantics.css', () => {
     expectDeclares('text-body-primary-strong', 'var(--primary-800)');
     expectDeclares('text-body-accent-regular', 'var(--accent-700)');
     expectDeclares('text-body-neutral-strong', 'var(--neutral-900)');
+    expectDeclares('text-body-neutral-subtle', 'var(--neutral-600)');
     expectDeclares('icon-neutral-1', 'var(--neutral-50)');
     expectDeclares('icon-accent', 'var(--accent-700)');
   });

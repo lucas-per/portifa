@@ -63,8 +63,8 @@ content:
       title: "Product Discovery"
       description: "O workshop de 1 semana juntou as áreas de Produtos, Design, Marketing, Desenvolvimento, e Comercial, em uma mesma sala. Dele, saíram alguns artefatos que sustentaram todo o resto do projeto: Mapeamento de riscos, que formalizou os quatro pontos de atenção já citados acima. Key values, que passaram a guiar toda decisão de interface (transparência, comunicação eficiente, personalização, simplificação e autonomia). Matriz de Valor-esforço, que priorizou o que valia entrar no escopo, como melhorar descrições de funcionalidade com textos curtos e ilustração, criar níveis de proteção, entregar relatório semanal, e definir perfil de usuário via questionário. Mapeamento de jornada, decidindo unificar Onboarding, Login, Home e Antivírus em uma jornada só, mostrando o benefício do produto o mais rápido possível. Crazy-8s, gerando wireframes rápidos para os pontos mais críticos do onboarding identificados no mapeamento de riscos."
       images:
-        - "../../assets/cases/redesign/journey-mapping.svg"
-        - "../../assets/cases/redesign/impact-effort-matrix.svg"
+        - "../../assets/cases/redesign/journey-mapping.png"
+        - "../../assets/cases/redesign/impact-effort-matrix.png"
         - "../../assets/cases/redesign/crazy8.png"
     tests:
       intro: "A ideia mais votada no Crazy-8s virou um protótipo de média fidelidade, testado com 8 usuários. O resultado geral: boa compreensão do produto e da jornada, navegação fluida, sem dificuldade relevante pra concluir o teste, mas ajustes de comunicação e layout ainda eram necessários pra uma usabilidade realmente boa."
