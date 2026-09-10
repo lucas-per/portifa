@@ -69,12 +69,6 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     padding: 0;
   }
 
-  /* A tag secundária do case, no Figma, não tem borda — diferente do uso
-     em outros pontos do site. Escopado aqui pra não afetar Tag.astro. */
-  .case-header__tags :global(.tag) {
-    border: none;
-  }
-
   .case-header__title {
     color: var(--text-body-primary-strong);
   }
