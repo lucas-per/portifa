@@ -17,7 +17,7 @@ describe('primitives.css', () => {
     expectDeclares('neutral-500', 'oklch(52.00% 0.0038 17.28)');
     expectDeclares('neutral-600', 'oklch(44.34% 0.0066 17.10)');
     expectDeclares('neutral-200', 'oklch(89.30% 0.0022 17.20)');
-    expectDeclares('neutral-150', 'oklch(94.16% 0.0021 15.19)');
+    expectDeclares('neutral-150', 'oklch(93.49% 0.0054 17.25)');
     expectDeclares('neutral-50', 'oklch(98.74% 0.0032 17.21)');
     expectDeclares('neutral-50-transparent', 'oklch(98.74% 0.0032 17.21 / 0)');
     expectDeclares('neutral-25', 'oklch(99.14% 0.0044 359.99)');
