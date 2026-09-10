@@ -23,7 +23,7 @@ const hasIcon = Astro.slots.has('icon');
 ---
 
 <Tag
-  class={['button', `button--${variant}`, className].filter(Boolean).join(' ')}
+  class={['button', `button--${variant}`, `button--${size}`, className].filter(Boolean).join(' ')}
   href={href}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener noreferrer' : undefined}
@@ -109,6 +109,12 @@ const hasIcon = Astro.slots.has('icon');
     border-color: var(--button-border-neutral-invisible);
     color: var(--text-label-accent);
     padding: var(--scale-x3) var(--scale-none);
+  }
+
+  /* size="sm" (Mobile/Label/MD) também troca o padding — o token de fonte
+     sozinho não muda a altura do botão pro valor de mobile (46px). */
+  .button--sm {
+    padding: var(--scale-x2) var(--scale-x4);
   }
 
   .button:hover {
