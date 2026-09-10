@@ -85,7 +85,7 @@ const hasIcon = Astro.slots.has('icon');
   .button--filled-accent {
     background-color: var(--button-bg-accent-filled-regular);
     border-color: var(--button-border-neutral-strong);
-    color: var(--text-label-on-bg-strong);
+    color: var(--text-label-neutral-1);
     box-shadow: var(--shadow-comp-neutral);
   }
 
@@ -96,7 +96,7 @@ const hasIcon = Astro.slots.has('icon');
   .button--outline-accent {
     background-color: var(--button-bg-accent-outline-regular);
     border-color: var(--button-border-accent-strong);
-    color: var(--text-label-on-bg-accent);
+    color: var(--text-label-accent);
     box-shadow: var(--shadow-comp-accent);
   }
 
@@ -105,9 +105,9 @@ const hasIcon = Astro.slots.has('icon');
   }
 
   .button--ghost-accent {
-    background-color: var(--button-bg-accent-outline-regular);
-    border-color: var(--button-border-neutral-subtle);
-    color: var(--text-label-on-bg-accent);
+    background-color: transparent;
+    border-color: var(--button-border-neutral-invisible);
+    color: var(--text-label-accent);
     padding: var(--scale-x3) var(--scale-none);
   }
 

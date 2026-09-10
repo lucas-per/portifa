@@ -32,10 +32,12 @@
   --border-focus-strong: var(--red-700);
 
   /* Texto */
-  --text-label-on-bg-accent: var(--accent-700);
-  --text-label-on-bg-strong: var(--neutral-50);
-  --text-label-on-bg-primary: var(--primary-800);
-  --text-label-on-bg-complementary: var(--red-900);
+  --text-label-accent: var(--accent-700);
+  --text-label-neutral-1: var(--neutral-50);
+  --text-label-neutral-2: var(--neutral-500);
+  --text-label-neutral-3: var(--neutral-900);
+  --text-label-primary: var(--primary-800);
+  --text-label-extra-1: var(--red-900);
   --text-body-primary-strong: var(--primary-800);
   --text-body-accent-regular: var(--accent-700);
   --text-body-neutral-strong: var(--neutral-900);
@@ -43,7 +45,11 @@
 
   /* Ícones */
   --icon-neutral-1: var(--neutral-50);
+  --icon-neutral-2: var(--neutral-500);
+  --icon-neutral-3: var(--neutral-900);
   --icon-accent: var(--accent-700);
+  --icon-feedback-positive: var(--green-700);
+  --icon-feedback-warning: var(--yellow-700);
 
   /* Botão */
   --button-bg-primary-filled-pressed: var(--primary-800);
@@ -56,6 +62,7 @@
   --button-border-accent-strong: var(--accent-600);
   --button-border-primary-subtlest: var(--yellow-50);
   --button-border-primary-medium: var(--primary-500);
+  --button-border-neutral-invisible: var(--neutral-50-transparent);
 
   /* Tag */
   --tag-bg-primary: var(--red-700);

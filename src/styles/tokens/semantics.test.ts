@@ -49,16 +49,22 @@ describe('semantics.css', () => {
   });
 
   it('mapeia texto e ícones para os primitivos corretos', () => {
-    expectDeclares('text-label-on-bg-accent', 'var(--accent-700)');
-    expectDeclares('text-label-on-bg-strong', 'var(--neutral-50)');
-    expectDeclares('text-label-on-bg-primary', 'var(--primary-800)');
-    expectDeclares('text-label-on-bg-complementary', 'var(--red-900)');
+    expectDeclares('text-label-accent', 'var(--accent-700)');
+    expectDeclares('text-label-neutral-1', 'var(--neutral-50)');
+    expectDeclares('text-label-neutral-2', 'var(--neutral-500)');
+    expectDeclares('text-label-neutral-3', 'var(--neutral-900)');
+    expectDeclares('text-label-primary', 'var(--primary-800)');
+    expectDeclares('text-label-extra-1', 'var(--red-900)');
     expectDeclares('text-body-primary-strong', 'var(--primary-800)');
     expectDeclares('text-body-accent-regular', 'var(--accent-700)');
     expectDeclares('text-body-neutral-strong', 'var(--neutral-900)');
     expectDeclares('text-body-neutral-subtle', 'var(--neutral-600)');
     expectDeclares('icon-neutral-1', 'var(--neutral-50)');
+    expectDeclares('icon-neutral-2', 'var(--neutral-500)');
+    expectDeclares('icon-neutral-3', 'var(--neutral-900)');
     expectDeclares('icon-accent', 'var(--accent-700)');
+    expectDeclares('icon-feedback-positive', 'var(--green-700)');
+    expectDeclares('icon-feedback-warning', 'var(--yellow-700)');
   });
 
   it('mapeia botão e tag para os primitivos corretos', () => {
@@ -72,6 +78,7 @@ describe('semantics.css', () => {
     expectDeclares('button-border-accent-strong', 'var(--accent-600)');
     expectDeclares('button-border-primary-subtlest', 'var(--yellow-50)');
     expectDeclares('button-border-primary-medium', 'var(--primary-500)');
+    expectDeclares('button-border-neutral-invisible', 'var(--neutral-50-transparent)');
     expectDeclares('tag-bg-primary', 'var(--red-700)');
     expectDeclares('tag-bg-secondary', 'var(--red-100)');
     expectDeclares('tag-border-subtle', 'var(--red-700)');
