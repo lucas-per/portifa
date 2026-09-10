@@ -32,6 +32,7 @@ const readingTime = estimateReadingTime(data.content);
 ---
 
 <BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
+  <Divider />
   <CaseHeader
     title={data.title}
     status={data.status}
@@ -101,14 +102,18 @@ const readingTime = estimateReadingTime(data.content);
   .case-layout {
     display: flex;
     gap: var(--scale-x10);
-    padding: var(--scale-x6) var(--scale-x20) var(--scale-x20);
+    /* Sem padding-top: o divisor vertical precisa encostar direto no
+       divisor horizontal acima, sem lacuna (ver design-notes.md /
+       row-section-case no Figma). O respiro de cada coluna vem do
+       padding-top interno dela mesma (.side-menu e .case-layout__content). */
+    padding: 0 var(--scale-x20) var(--scale-x20);
     align-items: flex-start;
   }
 
   .case-layout__divider {
     align-self: stretch;
     width: 5px;
-    background-color: var(--border-accent-strong);
+    background-color: var(--surface-bg-accent-strong);
   }
 
   .case-layout__content {
@@ -117,5 +122,7 @@ const readingTime = estimateReadingTime(data.content);
     flex-direction: column;
     gap: var(--scale-x11);
     max-width: 977px;
+    padding-top: var(--scale-x11);
+    background-color: var(--surface-bg-neutral-subtle);
   }
 </style>

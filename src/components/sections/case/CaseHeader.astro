@@ -1,7 +1,5 @@
 ---
 import Tag from '../../ui/Tag.astro';
-import calendarIcon from '../../../assets/icons/case/calendar.svg';
-import clockIcon from '../../../assets/icons/case/clock.svg';
 
 interface Props {
   title: string;
@@ -24,7 +22,7 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
   {status === 'published' && (
     <ul class="case-header__tags">
       {tags.map((tag) => (
-        <li><Tag variant="primary">{tag}</Tag></li>
+        <li><Tag variant="secondary">{tag}</Tag></li>
       ))}
     </ul>
   )}
@@ -32,12 +30,16 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
   <h1 class="case-header__title text-title-h2">{title}</h1>
 
   <p class="case-header__meta text-body-caption">
-    <img src={calendarIcon.src} width="16" height="16" alt="" />
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 2V2.66667H10V2H11.3333V2.66667H14C14 2.66667 14 12.527 14 14C12.5176 14 2 14 2 14C2 12.6313 2 2.66667 2 2.66667H4.66667V2H6ZM12.6667 8H3.33333V12.6667H12.6667V8ZM7.33333 9.33333V12H4V9.33333H7.33333ZM4.66667 4H3.33333V6.66667H12.6667V4H11.3333V5.33333H10V4H6V5.33333H4.66667V4Z" fill="currentColor"/>
+    </svg>
     <time class="published-case-date" datetime={publishedDate.toISOString()}>
       {publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
     </time>
     <span aria-hidden="true">·</span>
-    <img src={clockIcon.src} width="16" height="16" alt="" />
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 2V14H2V2H14ZM3.33333 12.6667H12.6667V3.33333H3.33333V12.6667ZM8.66667 4.33333V7.33333H10.6667V8.66667H7.33333V4.33333H8.66667Z" fill="currentColor"/>
+    </svg>
     <span class="estimated-time">{readingTime} {readingTime === 1 ? 'minuto' : 'minutos'}</span>
   </p>
 </header>
@@ -65,6 +67,12 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  /* A tag secundária do case, no Figma, não tem borda — diferente do uso
+     em outros pontos do site. Escopado aqui pra não afetar Tag.astro. */
+  .case-header__tags :global(.tag) {
+    border: none;
   }
 
   .case-header__title {

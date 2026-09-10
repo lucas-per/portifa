@@ -38,9 +38,12 @@ const items = [
     top: var(--scale-x6);
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x6);
+    gap: var(--scale-x12);
     width: 234px;
     flex-shrink: 0;
+    /* Respiro interno (não no container pai) pra ficar encostado no
+       divisor horizontal acima, sem lacuna — ver [slug].astro. */
+    padding: var(--scale-x10) 0;
   }
 
   .side-menu__title {
