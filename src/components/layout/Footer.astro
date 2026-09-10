@@ -5,7 +5,7 @@ import downloadIcon from '../../assets/icons/download.svg';
 import externalLinkIcon from '../../assets/icons/external-link.svg';
 
 const currentYear = new Date().getFullYear();
-const dividerLines = Array.from({ length: 5 });
+const dividerLines = Array.from({ length: 4 });
 ---
 
 <footer class="site-footer">
@@ -13,7 +13,7 @@ const dividerLines = Array.from({ length: 5 });
     <div class="site-footer__dividers" aria-hidden="true">
       {dividerLines.map(() => <div class="site-footer__divider-line" />)}
     </div>
-    <Button href="mailto:oi@lpereira.me" variant="outline-accent" class="clickable-mailto-footer">
+    <Button href="mailto:oi@lpereira.me" variant="outline-accent" size="sm" class="clickable-mailto-footer">
       oi@lpereira.me
       <Fragment slot="icon">
         <img src={mailIcon.src} width="24" height="24" alt="" />
@@ -25,6 +25,7 @@ const dividerLines = Array.from({ length: 5 });
     <Button
       href="/cv-lucas-pereira.pdf"
       variant="outline-accent"
+      size="sm"
       download
       class="clickable-download-cv"
     >
@@ -39,6 +40,7 @@ const dividerLines = Array.from({ length: 5 });
     <Button
       href="https://www.linkedin.com/in/lucasvalimpereira/"
       variant="outline-accent"
+      size="sm"
       external
       class="clickable-link-external-linkedin"
     >
