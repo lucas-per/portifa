@@ -53,6 +53,7 @@ describe('primitives.css', () => {
     expectDeclares('yellow-50', 'oklch(97.98% 0.0044 78.21)');
     expectDeclares('yellow-100', 'oklch(96.21% 0.0619 95.40)');
     expectDeclares('yellow-200', 'oklch(93.30% 0.1107 95.78)');
+    expectDeclares('green-500', 'oklch(88.44% 0.1261 147.74)');
     expectDeclares('green-100', 'oklch(95.71% 0.0210 147.64)');
   });
 

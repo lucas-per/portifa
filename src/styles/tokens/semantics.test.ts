@@ -30,6 +30,7 @@ describe('semantics.css', () => {
     expectDeclares('surface-bg-accent-strong', 'var(--accent-300)');
     expectDeclares('surface-bg-primary-subtle', 'var(--primary-100)');
     expectDeclares('surface-bg-complementary-subtle', 'var(--green-100)');
+    expectDeclares('surface-bg-complementary-strong', 'var(--green-500)');
     expectDeclares('surface-bg-tertiary-subtle', 'var(--red-100)');
     expectDeclares('surface-bg-tertiary-strong', 'var(--red-500)');
   });

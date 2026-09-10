@@ -18,6 +18,7 @@
   --surface-bg-primary-subtle: var(--primary-100);
   --surface-bg-accent-strong: var(--accent-300);
   --surface-bg-complementary-subtle: var(--green-100);
+  --surface-bg-complementary-strong: var(--green-500);
   --surface-bg-tertiary-subtle: var(--red-100);
   --surface-bg-tertiary-strong: var(--red-500);
   --surface-bg-avatar-frame: var(--neutral-100);
