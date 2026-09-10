@@ -44,6 +44,10 @@ const items = [
     /* Respiro interno (não no container pai) pra ficar encostado no
        divisor horizontal acima, sem lacuna — ver [slug].astro. */
     padding: var(--scale-x10) 0;
+    /* O espaço até o divisor vertical vive aqui (não como gap
+       compartilhado em .case-layout), porque depois do divisor o
+       conteúdo precisa encostar nele sem nenhum espaço — ver [slug].astro. */
+    margin-right: var(--scale-x12);
   }
 
   .side-menu__title {

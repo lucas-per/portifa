@@ -101,7 +101,10 @@ const readingTime = estimateReadingTime(data.content);
 <style>
   .case-layout {
     display: flex;
-    gap: var(--scale-x10);
+    /* Sem gap aqui: no Figma o espaço de 48px existe só entre o menu e o
+       divisor (fica em .side-menu como margin-right) — entre o divisor e
+       o conteúdo é zero, senão o fundo cinza e os divisores de seção
+       flutuam longe do divisor vertical em vez de encostar nele. */
     /* Sem padding-top: o divisor vertical precisa encostar direto no
        divisor horizontal acima, sem lacuna (ver design-notes.md /
        row-section-case no Figma). O respiro de cada coluna vem do
