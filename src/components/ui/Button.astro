@@ -82,6 +82,15 @@ const hasIcon = Astro.slots.has('icon');
     flex-shrink: 0;
   }
 
+  /* Mesma altura do ícone (24px) pra botões sem ícone (ex: "Sobre mim")
+     ficarem com a mesma altura total dos que têm ícone (ex: "Contato"),
+     em vez de encolher pra altura da linha do texto sozinho. */
+  .button__label {
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+  }
+
   .button--filled-accent {
     background-color: var(--button-bg-accent-filled-regular);
     border-color: var(--button-border-neutral-strong);
