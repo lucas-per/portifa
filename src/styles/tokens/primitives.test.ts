@@ -32,7 +32,9 @@ describe('primitives.css', () => {
 
   it('declara a escala primária (roxo/ameixa) em OKLCH', () => {
     expectDeclares('primary-800', 'oklch(32.54% 0.0336 315.88)');
+    expectDeclares('primary-600', 'oklch(39.17% 0.0366 311.66)');
     expectDeclares('primary-500', 'oklch(41.93% 0.0350 307.50)');
+    expectDeclares('primary-300', 'oklch(56.14% 0.0365 303.03)');
     expectDeclares('primary-100', 'oklch(90.84% 0.0411 294.74)');
   });
 

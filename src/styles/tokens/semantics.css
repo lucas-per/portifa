@@ -30,6 +30,8 @@
   --border-accent-strong: var(--accent-600);
   --border-accent-subtle: var(--accent-300);
   --border-focus-strong: var(--red-700);
+  --border-primary-subtle: var(--primary-300);
+  --border-primary-strong: var(--primary-600);
 
   /* Texto */
   --text-label-accent: var(--accent-700);
