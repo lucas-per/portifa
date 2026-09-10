@@ -244,3 +244,9 @@ Exemplo (baseado no PRD do site pessoal):
 **Decisão (diverge do Figma atual, `.claude/worktrees/home-visual` — pendente de atualizar lá):** apesar do nome `row-*` (lado a lado), a implementação empilha as métricas em coluna (`flex-direction: column`), com divisor `border-bottom` entre elas em vez de `border-right`. Quando havia 2+ métricas lado a lado com larguras divididas automaticamente, a divisão desigual estourava a largura da coluna e o texto vazava pra fora da borda direita do card
 **Motivo:** eliminar o overflow de texto sem depender de truncamento/font-size menor — empilhar garante que cada métrica sempre tenha 100% da largura disponível, independente de quantas métricas o case tiver
 **Ação pendente:** atualizar o layout dessa camada no Figma pra refletir o empilhamento vertical, mantendo a fonte de design sincronizada com o código
+
+### col-case-content
+**Contexto:** área de conteúdo do case (fundo cinza, `--surface-bg-neutral-subtle`), à direita do menu lateral — contém todas as seções (Resumo, Contexto, Discovery etc.) e o botão "Ir para o topo"
+**Decisão (diverge do Figma atual — pendente de atualizar lá):** o fundo cinza se estende até encostar no footer, sem o respiro off-white que hoje existe no Figma entre o fim do botão "Ir para o topo" e o footer
+**Motivo:** decisão de design tomada diretamente em código — o respiro off-white no meio quebrava a continuidade visual da página sem agregar nada
+**Ação pendente:** atualizar essa camada no Figma pra remover o respiro off-white antes do footer, mantendo a fonte de design sincronizada com o código
