@@ -85,6 +85,11 @@ describe('semantics.css', () => {
     expect(css).toMatch(/--shadow-layout-img:\s*5px 5px 0 0 var\(--red-300\)\s*;/);
   });
 
+  it('declara a sombra de hover dos botões (offset base + deslocamento do hover)', () => {
+    expect(css).toMatch(/--shadow-comp-neutral-hover:\s*5px 5px 0 0 var\(--neutral-900\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-accent-hover:\s*5px 5px 0 0 var\(--accent-300\)\s*;/);
+  });
+
   it('declara a escala de line-height em 4 níveis', () => {
     expectDeclares('line-height-none', '1');
     expectDeclares('line-height-compact', '1.24');

@@ -69,6 +69,15 @@
   --shadow-layout-accent: 5px 5px 0 0 var(--accent-600);
   --shadow-layout-img: 5px 5px 0 0 var(--red-300);
 
+  /* Sombra dos botões no hover: mesmo offset de --shadow-comp-* (3px) somado
+     ao deslocamento do hover (2px, ver Button.astro) = 5px. Sem essa soma o
+     transform do hover arrastaria a sombra junto (ela é pintada com o resto
+     do elemento e se move em bloco com o translate). Sem variable de origem
+     no Figma — computado a partir das duas outras (mesma exceção de
+     line-height/list-spacing do design-notes.md). */
+  --shadow-comp-neutral-hover: 5px 5px 0 0 var(--neutral-900);
+  --shadow-comp-accent-hover: 5px 5px 0 0 var(--accent-300);
+
   /* Line-height (escala do design-notes: none/compact/regular/comfortable).
      "none" aqui representa razão 1 (sem espaçamento extra sobre a caixa da
      fonte) — não zero literal, que não faz sentido para line-height de texto. */

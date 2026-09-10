@@ -27,53 +27,47 @@ const hasIcon = Astro.slots.has('icon');
   download={download ? true : undefined}
   type={href ? undefined : 'button'}
 >
-  <span class="button__body">
-    {hasLeadingIcon && (
-      <span class="button__icon">
-        <slot name="leading-icon" />
-      </span>
-    )}
-    <span class="button__label text-label-md"><slot /></span>
-    {hasIcon && (
-      <span class="button__icon">
-        <slot name="icon" />
-      </span>
-    )}
-  </span>
+  {hasLeadingIcon && (
+    <span class="button__icon">
+      <slot name="leading-icon" />
+    </span>
+  )}
+  <span class="button__label text-label-md"><slot /></span>
+  {hasIcon && (
+    <span class="button__icon">
+      <slot name="icon" />
+    </span>
+  )}
 </Tag>
 
 <style>
   /*
-    A sombra dura (neo-brutalismo) precisa ficar fixa no lugar enquanto só o
-    corpo do botão se move no hover/active — por isso ela vive num ::after do
-    elemento externo (que nunca recebe transform), e o corpo visível (borda,
-    fundo, texto) fica num elemento interno separado, que é o único a se
-    deslocar. Ver design-notes.md, "Padrão de interação — botões".
+    Um ::after separado pra sombra (com o corpo do botão recebendo o
+    transform) parece a solução óbvia, mas introduz uma costura de subpixel
+    entre duas caixas renderizadas independentemente — um fiapo do fundo da
+    página aparecia entre a borda e a sombra mesmo com as duas caixas
+    matematicamente idênticas (ver histórico do bug). Border e box-shadow
+    ficam de volta no mesmo elemento (sem costura possível, mesma operação
+    de pintura) e em vez de mover o elemento, compensamos o offset do
+    box-shadow na mesma medida do deslocamento: como transform desloca o
+    elemento inteiro (incluindo sua própria sombra) em bloco, aumentar o
+    offset da sombra pelo valor exato do translate do hover cancela esse
+    deslocamento e a sombra acaba renderizada exatamente na mesma posição
+    de tela de antes — só o corpo visualmente "sobe". Ver design-notes.md,
+    "Padrão de interação — botões".
   */
   .button {
-    position: relative;
     display: inline-flex;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  .button::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
-  .button__body {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
+    align-self: flex-start; /* nunca esticar em containers flex/grid do chamador */
     align-items: center;
     justify-content: center;
     gap: var(--scale-x3);
     padding: var(--scale-x3) var(--scale-x6);
     border-width: 3px;
     border-style: solid;
-    transition: transform 0.1s ease;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
   }
 
   .button__icon {
@@ -85,42 +79,41 @@ const hasIcon = Astro.slots.has('icon');
     flex-shrink: 0;
   }
 
-  .button--filled-accent .button__body {
+  .button--filled-accent {
     background-color: var(--button-bg-accent-filled-regular);
     border-color: var(--button-border-neutral-strong);
     color: var(--text-label-on-bg-strong);
-  }
-
-  .button--filled-accent::after {
     box-shadow: var(--shadow-comp-neutral);
   }
 
-  .button--outline-accent .button__body {
+  .button--filled-accent:hover {
+    box-shadow: var(--shadow-comp-neutral-hover);
+  }
+
+  .button--outline-accent {
     background-color: var(--button-bg-accent-outline-regular);
     border-color: var(--button-border-accent-strong);
     color: var(--text-label-on-bg-accent);
-  }
-
-  .button--outline-accent::after {
     box-shadow: var(--shadow-comp-accent);
   }
 
-  .button--ghost-accent .button__body {
+  .button--outline-accent:hover {
+    box-shadow: var(--shadow-comp-accent-hover);
+  }
+
+  .button--ghost-accent {
     background-color: var(--button-bg-accent-outline-regular);
     border-color: var(--button-border-neutral-subtle);
     color: var(--text-label-on-bg-accent);
     padding: var(--scale-x3) var(--scale-none);
   }
 
-  .button:hover .button__body {
+  .button:hover {
     transform: translate(-2px, -2px);
   }
 
-  .button:active .button__body {
+  .button:active {
     transform: translate(1px, 1px);
-  }
-
-  .button:active::after {
     box-shadow: none;
   }
 
