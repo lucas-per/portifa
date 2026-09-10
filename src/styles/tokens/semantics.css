@@ -71,7 +71,7 @@
 
   /* Tag */
   --tag-bg-primary: var(--red-700);
-  --tag-bg-secondary: var(--red-100);
+  --tag-bg-secondary: var(--red-200);
   --tag-border-subtle: var(--red-700);
   --tag-border-strong: var(--red-300);
 

@@ -85,7 +85,7 @@ describe('semantics.css', () => {
     expectDeclares('button-border-primary-strong', 'var(--primary-600)');
     expectDeclares('button-border-neutral-invisible', 'var(--neutral-50-transparent)');
     expectDeclares('tag-bg-primary', 'var(--red-700)');
-    expectDeclares('tag-bg-secondary', 'var(--red-100)');
+    expectDeclares('tag-bg-secondary', 'var(--red-200)');
     expectDeclares('tag-border-subtle', 'var(--red-700)');
     expectDeclares('tag-border-strong', 'var(--red-300)');
   });

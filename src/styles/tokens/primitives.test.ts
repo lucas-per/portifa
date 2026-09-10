@@ -49,7 +49,7 @@ describe('primitives.css', () => {
     expectDeclares('red-700', 'oklch(59.02% 0.2262 24.77)');
     expectDeclares('red-500', 'oklch(71.16% 0.1812 22.84)');
     expectDeclares('red-300', 'oklch(79.06% 0.0955 19.41)');
-    expectDeclares('red-200', 'oklch(87.65% 0.0571 18.30)');
+    expectDeclares('red-200', 'oklch(89.32% 0.0509 18.15)');
     expectDeclares('red-100', 'oklch(93.22% 0.0343 17.78)');
   });
 

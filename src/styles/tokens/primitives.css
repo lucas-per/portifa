@@ -34,7 +34,7 @@
   --red-700: oklch(59.02% 0.2262 24.77); /* #e51e2f */
   --red-500: oklch(71.16% 0.1812 22.84); /* #ff6b6b */
   --red-300: oklch(79.06% 0.0955 19.41); /* #f2a2a2 */
-  --red-200: oklch(87.65% 0.0571 18.30); /* #fac8c8 — color/red/2 no Figma, ainda sem uso semântico */
+  --red-200: oklch(89.32% 0.0509 18.15); /* #fccfcf — color/red/2 no Figma, base da tag secondary/filled (contraste AA) */
   --red-100: oklch(93.22% 0.0343 17.78); /* #ffe0e0 */
 
   /* Cores de apoio (um único tom cada, sem escala, exceto verde e amarelo) */
