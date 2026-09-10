@@ -56,7 +56,7 @@ describe('semantics.css', () => {
     expectDeclares('text-label-primary', 'var(--primary-800)');
     expectDeclares('text-label-extra-1', 'var(--red-900)');
     expectDeclares('text-body-primary-strong', 'var(--primary-800)');
-    expectDeclares('text-body-accent-regular', 'var(--accent-700)');
+    expectDeclares('text-body-accent-subtle', 'var(--accent-700)');
     expectDeclares('text-body-neutral-strong', 'var(--neutral-900)');
     expectDeclares('text-body-neutral-subtle', 'var(--neutral-600)');
     expectDeclares('icon-neutral-1', 'var(--neutral-50)');
