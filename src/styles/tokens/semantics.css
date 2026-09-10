@@ -16,6 +16,7 @@
   --surface-bg-off-white-secondary: var(--neutral-25);
   --surface-bg-off-white-tertiary: var(--yellow-200);
   --surface-bg-primary-subtle: var(--primary-100);
+  --surface-bg-primary-strong: var(--primary-300);
   --surface-bg-accent-strong: var(--accent-300);
   --surface-bg-complementary-subtle: var(--green-100);
   --surface-bg-complementary-strong: var(--green-500);
@@ -43,6 +44,7 @@
   --text-body-primary-strong: var(--primary-800);
   --text-body-accent-subtle: var(--accent-700);
   --text-body-neutral-strong: var(--neutral-900);
+  --text-body-neutral-medium: var(--neutral-800);
   --text-body-neutral-subtle: var(--neutral-600);
 
   /* Ícones */
@@ -64,6 +66,7 @@
   --button-border-accent-strong: var(--accent-600);
   --button-border-primary-subtlest: var(--yellow-50);
   --button-border-primary-medium: var(--primary-500);
+  --button-border-primary-strong: var(--primary-600);
   --button-border-neutral-invisible: var(--neutral-50-transparent);
 
   /* Tag */
@@ -76,6 +79,7 @@
   --shadow-comp-neutral: 3px 3px 0 0 var(--neutral-900);
   --shadow-layout-neutral: 5px 5px 0 0 var(--neutral-900);
   --shadow-comp-accent: 3px 3px 0 0 var(--accent-300);
+  --shadow-comp-primary: 3px 3px 0 0 var(--primary-300);
   --shadow-layout-accent: 5px 5px 0 0 var(--accent-600);
   --shadow-layout-img: 5px 5px 0 0 var(--red-300);
 
@@ -87,6 +91,7 @@
      line-height/list-spacing do design-notes.md). */
   --shadow-comp-neutral-hover: 5px 5px 0 0 var(--neutral-900);
   --shadow-comp-accent-hover: 5px 5px 0 0 var(--accent-300);
+  --shadow-comp-primary-hover: 5px 5px 0 0 var(--primary-300);
 
   /* Line-height (escala do design-notes: none/compact/regular/comfortable).
      "none" aqui representa razão 1 (sem espaçamento extra sobre a caixa da
