@@ -32,6 +32,7 @@ const readingTime = estimateReadingTime(data.content);
 ---
 
 <BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
+  <Divider />
   <CaseHeader
     title={data.title}
     status={data.status}
@@ -44,55 +45,57 @@ const readingTime = estimateReadingTime(data.content);
     <SideMenu />
     <div class="case-layout__divider" aria-hidden="true"></div>
     <div class="case-layout__content">
-      <CaseSummary
-        challenge={data.content.summary.challenge}
-        solution={data.content.summary.solution}
-        results={data.content.summary.results}
-      />
+      <div class="case-layout__content-inner">
+        <CaseSummary
+          challenge={data.content.summary.challenge}
+          solution={data.content.summary.solution}
+          results={data.content.summary.results}
+        />
 
-      {data.content.context && (
-        <>
-          <Divider width="156px" />
-          <CaseContext {...data.content.context} />
-        </>
-      )}
+        {data.content.context && (
+          <>
+            <Divider width="156px" />
+            <CaseContext {...data.content.context} />
+          </>
+        )}
 
-      {data.content.problems && (
-        <>
-          <Divider width="156px" />
-          <CaseProblems {...data.content.problems} />
-        </>
-      )}
+        {data.content.problems && (
+          <>
+            <Divider width="156px" />
+            <CaseProblems {...data.content.problems} />
+          </>
+        )}
 
-      {data.content.discovery && (
-        <>
-          <Divider width="156px" />
-          <CaseDiscovery {...data.content.discovery} />
-        </>
-      )}
+        {data.content.discovery && (
+          <>
+            <Divider width="156px" />
+            <CaseDiscovery {...data.content.discovery} />
+          </>
+        )}
 
-      {data.content.delivery && (
-        <>
-          <Divider width="156px" />
-          <CaseDelivery {...data.content.delivery} />
-        </>
-      )}
+        {data.content.delivery && (
+          <>
+            <Divider width="156px" />
+            <CaseDelivery {...data.content.delivery} />
+          </>
+        )}
 
-      {data.content.impact && (
-        <>
-          <Divider width="156px" />
-          <CaseImpact {...data.content.impact} />
-        </>
-      )}
+        {data.content.impact && (
+          <>
+            <Divider width="156px" />
+            <CaseImpact {...data.content.impact} />
+          </>
+        )}
 
-      {data.content.plansAhead && (
-        <>
-          <Divider width="156px" />
-          <CasePlansAhead {...data.content.plansAhead} />
-        </>
-      )}
+        {data.content.plansAhead && (
+          <>
+            <Divider width="156px" />
+            <CasePlansAhead {...data.content.plansAhead} />
+          </>
+        )}
 
-      <BackToTopButton />
+        <BackToTopButton />
+      </div>
     </div>
   </div>
 </BaseLayout>
@@ -100,19 +103,37 @@ const readingTime = estimateReadingTime(data.content);
 <style>
   .case-layout {
     display: flex;
-    gap: var(--scale-x10);
-    padding: var(--scale-x6) var(--scale-x20) var(--scale-x20);
+    /* Sem gap aqui: no Figma o espaço de 48px existe só entre o menu e o
+       divisor (fica em .side-menu como margin-right) — entre o divisor e
+       o conteúdo é zero, senão o fundo cinza e os divisores de seção
+       flutuam longe do divisor vertical em vez de encostar nele. */
+    /* Sem padding-top nem padding-right/bottom aqui: o divisor vertical
+       precisa encostar direto no divisor horizontal acima (sem lacuna), e
+       o fundo cinza de .case-layout__content precisa se estender até a
+       borda direita da página e até o footer — por isso o respiro
+       direito/inferior vive dentro do próprio .case-layout__content (fica
+       colorido também), não aqui fora dele. */
+    padding-left: var(--scale-x20);
     align-items: flex-start;
   }
 
   .case-layout__divider {
     align-self: stretch;
     width: 5px;
-    background-color: var(--border-accent-strong);
+    background-color: var(--surface-bg-accent-strong);
   }
 
   .case-layout__content {
     flex: 1;
+    /* Sem max-width aqui: essa faixa é o fundo cinza inteiro, precisa
+       esticar até a borda direita da página e (decisão de design, diverge
+       do Figma atual de propósito — ver design-notes.md) até o footer,
+       sem sobrar respiro off-white. O miolo de 977px fica só no filho. */
+    padding: var(--scale-x11) var(--scale-x20) var(--scale-x20) 0;
+    background-color: var(--surface-bg-neutral-subtle);
+  }
+
+  .case-layout__content-inner {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x11);

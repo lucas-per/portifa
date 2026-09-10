@@ -42,12 +42,12 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
   <p class="text-body-md">{intro}</p>
 
   <ol class="case-discovery__timeline">
-    {phases.map((phase, i) => (
+    {phases.map((phase) => (
       <li class="case-discovery__phase">
         <div class="case-discovery__marker-col">
-          {i > 0 && <span class="case-discovery__timeline-line" aria-hidden="true"></span>}
+          <span class="case-discovery__timeline-line" aria-hidden="true"></span>
           <span class="case-discovery__marker" aria-hidden="true"></span>
-          {i < phases.length - 1 && <span class="case-discovery__timeline-line" aria-hidden="true"></span>}
+          <span class="case-discovery__timeline-line" aria-hidden="true"></span>
         </div>
         <div class="case-discovery__phase-content">
           <h3 class="text-body-lg-strong">{phase.title}</h3>
@@ -108,6 +108,7 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     flex-direction: column;
     gap: var(--scale-x6);
     color: var(--text-body-primary-strong);
+    padding-left: var(--scale-x12);
   }
 
   .case-discovery > p,
@@ -125,6 +126,7 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
 
   .case-discovery__phase {
     display: flex;
+    align-items: center;
     gap: var(--scale-x6);
   }
 
@@ -132,6 +134,8 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    align-self: stretch;
     width: 28px;
     flex-shrink: 0;
   }
@@ -146,8 +150,24 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     width: 28px;
     height: 28px;
     flex-shrink: 0;
-    background-color: var(--yellow-200);
     border: 3px solid var(--border-neutral-strong);
+  }
+
+  /* Cada fase tem sua própria cor de marcador (Figma, col-timeline-graph) */
+  .case-discovery__phase:nth-child(1) .case-discovery__marker {
+    background-color: var(--surface-bg-off-white-tertiary);
+  }
+
+  .case-discovery__phase:nth-child(2) .case-discovery__marker {
+    background-color: var(--surface-bg-tertiary-strong);
+  }
+
+  .case-discovery__phase:nth-child(3) .case-discovery__marker {
+    background-color: var(--surface-bg-accent-strong);
+  }
+
+  .case-discovery__phase:nth-child(4) .case-discovery__marker {
+    background-color: var(--surface-bg-complementary-strong);
   }
 
   .case-discovery__phase-content {
@@ -159,7 +179,7 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
   }
 
   .case-discovery__phase-subtitle {
-    color: var(--text-body-accent-regular);
+    color: var(--text-body-neutral-strong);
   }
 
   .case-discovery__block {
@@ -172,12 +192,20 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     display: flex;
     gap: var(--scale-x10);
     align-items: flex-start;
-    flex-wrap: wrap;
   }
 
+  /* Largura do Figma vira só a resolução de otimização do asset (prop
+     width do <Image>) — a exibição escala pra preencher o container,
+     nunca um valor fixo em px. min-width:0 evita que o tamanho
+     intrínseco da imagem force wrap antes de encolher (armadilha do
+     min-width:auto padrão em itens flex substituídos). */
   .case-discovery__images :global(img) {
     border: 3px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-img);
+    flex: 1 1 0%;
+    min-width: 0;
+    width: 100%;
+    height: auto;
   }
 
   .case-discovery__tests {

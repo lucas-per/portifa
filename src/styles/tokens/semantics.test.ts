@@ -29,7 +29,9 @@ describe('semantics.css', () => {
     expectDeclares('surface-bg-neutral-subtle', 'var(--neutral-150)');
     expectDeclares('surface-bg-accent-strong', 'var(--accent-300)');
     expectDeclares('surface-bg-primary-subtle', 'var(--primary-100)');
+    expectDeclares('surface-bg-primary-strong', 'var(--primary-300)');
     expectDeclares('surface-bg-complementary-subtle', 'var(--green-100)');
+    expectDeclares('surface-bg-complementary-strong', 'var(--green-500)');
     expectDeclares('surface-bg-tertiary-subtle', 'var(--red-100)');
     expectDeclares('surface-bg-tertiary-strong', 'var(--red-500)');
   });
@@ -40,6 +42,9 @@ describe('semantics.css', () => {
     expectDeclares('border-neutral-subtle', 'var(--neutral-200)');
     expectDeclares('border-accent-strong', 'var(--accent-600)');
     expectDeclares('border-accent-subtle', 'var(--accent-300)');
+    expectDeclares('border-focus-strong', 'var(--red-700)');
+    expectDeclares('border-primary-subtle', 'var(--primary-300)');
+    expectDeclares('border-primary-strong', 'var(--primary-600)');
   });
 
   it('mapeia surface-bg-neutral-medium (divisores de lista) pro primitivo correto', () => {
@@ -47,26 +52,40 @@ describe('semantics.css', () => {
   });
 
   it('mapeia texto e ícones para os primitivos corretos', () => {
-    expectDeclares('text-label-on-bg-accent', 'var(--accent-700)');
-    expectDeclares('text-label-on-bg-strong', 'var(--neutral-50)');
-    expectDeclares('text-label-on-bg-complementary', 'var(--red-900)');
+    expectDeclares('text-label-accent', 'var(--accent-700)');
+    expectDeclares('text-label-neutral-1', 'var(--neutral-50)');
+    expectDeclares('text-label-neutral-2', 'var(--neutral-500)');
+    expectDeclares('text-label-neutral-3', 'var(--neutral-900)');
+    expectDeclares('text-label-primary', 'var(--primary-800)');
+    expectDeclares('text-label-extra-1', 'var(--red-900)');
     expectDeclares('text-body-primary-strong', 'var(--primary-800)');
-    expectDeclares('text-body-accent-regular', 'var(--accent-700)');
+    expectDeclares('text-body-accent-subtle', 'var(--accent-700)');
     expectDeclares('text-body-neutral-strong', 'var(--neutral-900)');
+    expectDeclares('text-body-neutral-medium', 'var(--neutral-800)');
     expectDeclares('text-body-neutral-subtle', 'var(--neutral-600)');
     expectDeclares('icon-neutral-1', 'var(--neutral-50)');
+    expectDeclares('icon-neutral-2', 'var(--neutral-500)');
+    expectDeclares('icon-neutral-3', 'var(--neutral-900)');
     expectDeclares('icon-accent', 'var(--accent-700)');
+    expectDeclares('icon-feedback-positive', 'var(--green-700)');
+    expectDeclares('icon-feedback-warning', 'var(--yellow-700)');
   });
 
   it('mapeia botão e tag para os primitivos corretos', () => {
     expectDeclares('button-bg-primary-filled-pressed', 'var(--primary-800)');
+    expectDeclares('button-bg-primary-outline-regular', 'var(--yellow-50)');
+    expectDeclares('button-bg-primary-outline-pressed', 'var(--primary-500)');
     expectDeclares('button-bg-accent-filled-regular', 'var(--accent-700)');
     expectDeclares('button-bg-accent-outline-regular', 'var(--yellow-50)');
     expectDeclares('button-border-neutral-strong', 'var(--neutral-800)');
     expectDeclares('button-border-neutral-subtle', 'var(--neutral-50)');
     expectDeclares('button-border-accent-strong', 'var(--accent-600)');
+    expectDeclares('button-border-primary-subtlest', 'var(--yellow-50)');
+    expectDeclares('button-border-primary-medium', 'var(--primary-500)');
+    expectDeclares('button-border-primary-strong', 'var(--primary-600)');
+    expectDeclares('button-border-neutral-invisible', 'var(--neutral-50-transparent)');
     expectDeclares('tag-bg-primary', 'var(--red-700)');
-    expectDeclares('tag-bg-secondary', 'var(--red-100)');
+    expectDeclares('tag-bg-secondary', 'var(--red-200)');
     expectDeclares('tag-border-subtle', 'var(--red-700)');
     expectDeclares('tag-border-strong', 'var(--red-300)');
   });
@@ -75,8 +94,15 @@ describe('semantics.css', () => {
     expect(css).toMatch(/--shadow-comp-neutral:\s*3px 3px 0 0 var\(--neutral-900\)\s*;/);
     expect(css).toMatch(/--shadow-layout-neutral:\s*5px 5px 0 0 var\(--neutral-900\)\s*;/);
     expect(css).toMatch(/--shadow-comp-accent:\s*3px 3px 0 0 var\(--accent-300\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-primary:\s*3px 3px 0 0 var\(--primary-300\)\s*;/);
     expect(css).toMatch(/--shadow-layout-accent:\s*5px 5px 0 0 var\(--accent-600\)\s*;/);
     expect(css).toMatch(/--shadow-layout-img:\s*5px 5px 0 0 var\(--red-300\)\s*;/);
+  });
+
+  it('declara a sombra de hover dos botões (offset base + deslocamento do hover)', () => {
+    expect(css).toMatch(/--shadow-comp-neutral-hover:\s*5px 5px 0 0 var\(--neutral-900\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-accent-hover:\s*5px 5px 0 0 var\(--accent-300\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-primary-hover:\s*5px 5px 0 0 var\(--primary-300\)\s*;/);
   });
 
   it('declara a escala de line-height em 4 níveis', () => {

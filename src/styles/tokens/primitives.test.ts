@@ -17,8 +17,9 @@ describe('primitives.css', () => {
     expectDeclares('neutral-500', 'oklch(52.00% 0.0038 17.28)');
     expectDeclares('neutral-600', 'oklch(44.34% 0.0066 17.10)');
     expectDeclares('neutral-200', 'oklch(89.30% 0.0022 17.20)');
-    expectDeclares('neutral-150', 'oklch(94.16% 0.0021 15.19)');
+    expectDeclares('neutral-150', 'oklch(93.49% 0.0054 17.25)');
     expectDeclares('neutral-50', 'oklch(98.74% 0.0032 17.21)');
+    expectDeclares('neutral-50-transparent', 'oklch(98.74% 0.0032 17.21 / 0)');
     expectDeclares('neutral-25', 'oklch(99.14% 0.0044 359.99)');
     expectDeclares('neutral-0', 'oklch(99.65% 0.0170 106.70)');
   });
@@ -31,6 +32,9 @@ describe('primitives.css', () => {
 
   it('declara a escala primária (roxo/ameixa) em OKLCH', () => {
     expectDeclares('primary-800', 'oklch(32.54% 0.0336 315.88)');
+    expectDeclares('primary-600', 'oklch(39.17% 0.0366 311.66)');
+    expectDeclares('primary-500', 'oklch(41.93% 0.0350 307.50)');
+    expectDeclares('primary-300', 'oklch(56.14% 0.0365 303.03)');
     expectDeclares('primary-100', 'oklch(90.84% 0.0411 294.74)');
   });
 
@@ -45,6 +49,7 @@ describe('primitives.css', () => {
     expectDeclares('red-700', 'oklch(59.02% 0.2262 24.77)');
     expectDeclares('red-500', 'oklch(71.16% 0.1812 22.84)');
     expectDeclares('red-300', 'oklch(79.06% 0.0955 19.41)');
+    expectDeclares('red-200', 'oklch(89.32% 0.0509 18.15)');
     expectDeclares('red-100', 'oklch(93.22% 0.0343 17.78)');
   });
 
@@ -52,6 +57,9 @@ describe('primitives.css', () => {
     expectDeclares('yellow-50', 'oklch(97.98% 0.0044 78.21)');
     expectDeclares('yellow-100', 'oklch(96.21% 0.0619 95.40)');
     expectDeclares('yellow-200', 'oklch(93.30% 0.1107 95.78)');
+    expectDeclares('yellow-700', 'oklch(65.91% 0.1330 91.29)');
+    expectDeclares('green-700', 'oklch(57.01% 0.1597 146.55)');
+    expectDeclares('green-500', 'oklch(88.44% 0.1261 147.74)');
     expectDeclares('green-100', 'oklch(95.71% 0.0210 147.64)');
   });
 

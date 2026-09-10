@@ -1,30 +1,41 @@
 ---
 interface Props {
   variant?: 'primary' | 'secondary';
+  type?: 'filled' | 'outlined';
 }
 
-const { variant = 'primary' } = Astro.props;
+const { variant = 'primary', type = 'filled' } = Astro.props;
 ---
 
-<span class={`tag tag--${variant} text-label-sm`}><slot /></span>
+<span class={`tag tag--${variant} tag--${type} text-label-sm`}><slot /></span>
 
 <style>
   .tag {
     display: inline-block;
     padding: var(--scale-base) var(--scale-x2);
+    box-shadow: var(--shadow-comp-neutral);
+  }
+
+  .tag--outlined {
     border-width: 3px;
     border-style: solid;
   }
 
   .tag--primary {
     background-color: var(--tag-bg-primary);
+    color: var(--text-label-neutral-1);
+  }
+
+  .tag--primary.tag--outlined {
     border-color: var(--tag-border-subtle);
-    color: var(--text-label-on-bg-strong);
   }
 
   .tag--secondary {
     background-color: var(--tag-bg-secondary);
+    color: var(--text-label-extra-1);
+  }
+
+  .tag--secondary.tag--outlined {
     border-color: var(--tag-border-strong);
-    color: var(--text-label-on-bg-complementary);
   }
 </style>

@@ -10,14 +10,18 @@
   --neutral-500: oklch(52.00% 0.0038 17.28); /* #6b6868 */
   --neutral-600: oklch(44.34% 0.0066 17.10); /* #575252 — color/grey/6 no Figma */
   --neutral-200: oklch(89.30% 0.0022 17.20); /* #dddbdb */
-  --neutral-150: oklch(94.16% 0.0021 15.19); /* #edebeb — color/grey/2 no Figma */
+  --neutral-150: oklch(93.49% 0.0054 17.25); /* #ede8e8 — color/grey/2 no Figma */
   --neutral-50: oklch(98.74% 0.0032 17.21); /* #fdfafa */
+  --neutral-50-transparent: oklch(98.74% 0.0032 17.21 / 0); /* #fdfafa00 — mesma cor, alpha 0 (borda "invisível" que ainda reserva espaço) */
   --neutral-25: oklch(99.14% 0.0044 359.99); /* #fffbfc */
   --neutral-0: oklch(99.65% 0.0170 106.70); /* #fffff2 */
   --neutral-100: oklch(95.69% 0.0120 78.40); /* #f5f0e8 — não é variable no Figma, fill direto do wrap-avatar-frame */
 
   /* Primária (roxo/ameixa da marca) */
   --primary-800: oklch(32.54% 0.0336 315.88); /* #3b2f40 */
+  --primary-600: oklch(39.17% 0.0366 311.66); /* #4c4054 — color/purple/6 no Figma */
+  --primary-500: oklch(41.93% 0.0350 307.50); /* #52485c */
+  --primary-300: oklch(56.14% 0.0365 303.03); /* #797087 — color/purple/3 no Figma */
   --primary-100: oklch(90.84% 0.0411 294.74); /* #e2dcfa */
 
   /* Acento (azul) */
@@ -30,12 +34,16 @@
   --red-700: oklch(59.02% 0.2262 24.77); /* #e51e2f */
   --red-500: oklch(71.16% 0.1812 22.84); /* #ff6b6b */
   --red-300: oklch(79.06% 0.0955 19.41); /* #f2a2a2 */
+  --red-200: oklch(89.32% 0.0509 18.15); /* #fccfcf — color/red/2 no Figma, base da tag secondary/filled (contraste AA) */
   --red-100: oklch(93.22% 0.0343 17.78); /* #ffe0e0 */
 
-  /* Cores de apoio (um único tom cada, sem escala) */
+  /* Cores de apoio (um único tom cada, sem escala, exceto verde e amarelo) */
   --yellow-50: oklch(97.98% 0.0044 78.21); /* #faf8f5 — color/yellow/1 no Figma */
   --yellow-100: oklch(96.21% 0.0619 95.40); /* #fff3c4 */
   --yellow-200: oklch(93.30% 0.1107 95.78); /* #ffe991 — color/yellow/5 no Figma */
+  --yellow-700: oklch(65.91% 0.1330 91.29); /* #b08e09 — color/yellow/7 no Figma, ícone de feedback-warning */
+  --green-700: oklch(57.01% 0.1597 146.55); /* #1d8f37 — color/green/4 no Figma, ícone de feedback-positive */
+  --green-500: oklch(88.44% 0.1261 147.74); /* #9ef0a9 */
   --green-100: oklch(95.71% 0.0210 147.64); /* #e8f5e9 */
 
   /* Escala numérica (espaçamento e tamanho de fonte), base 4px = 0.25rem */
