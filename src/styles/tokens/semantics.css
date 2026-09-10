@@ -28,6 +28,7 @@
   --border-neutral-subtle: var(--neutral-200);
   --border-accent-strong: var(--accent-600);
   --border-accent-subtle: var(--accent-300);
+  --border-focus-strong: var(--red-700);
 
   /* Texto */
   --text-label-on-bg-accent: var(--accent-700);

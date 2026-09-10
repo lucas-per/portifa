@@ -40,6 +40,7 @@ describe('semantics.css', () => {
     expectDeclares('border-neutral-subtle', 'var(--neutral-200)');
     expectDeclares('border-accent-strong', 'var(--accent-600)');
     expectDeclares('border-accent-subtle', 'var(--accent-300)');
+    expectDeclares('border-focus-strong', 'var(--red-700)');
   });
 
   it('mapeia surface-bg-neutral-medium (divisores de lista) pro primitivo correto', () => {
