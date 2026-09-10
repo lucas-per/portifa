@@ -18,6 +18,7 @@
 
   /* Primária (roxo/ameixa da marca) */
   --primary-800: oklch(32.54% 0.0336 315.88); /* #3b2f40 */
+  --primary-500: oklch(41.93% 0.0350 307.50); /* #52485c */
   --primary-100: oklch(90.84% 0.0411 294.74); /* #e2dcfa */
 
   /* Acento (azul) */

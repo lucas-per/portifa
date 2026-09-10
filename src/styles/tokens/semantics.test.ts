@@ -49,6 +49,7 @@ describe('semantics.css', () => {
   it('mapeia texto e ícones para os primitivos corretos', () => {
     expectDeclares('text-label-on-bg-accent', 'var(--accent-700)');
     expectDeclares('text-label-on-bg-strong', 'var(--neutral-50)');
+    expectDeclares('text-label-on-bg-primary', 'var(--primary-800)');
     expectDeclares('text-label-on-bg-complementary', 'var(--red-900)');
     expectDeclares('text-body-primary-strong', 'var(--primary-800)');
     expectDeclares('text-body-accent-regular', 'var(--accent-700)');
@@ -60,11 +61,15 @@ describe('semantics.css', () => {
 
   it('mapeia botão e tag para os primitivos corretos', () => {
     expectDeclares('button-bg-primary-filled-pressed', 'var(--primary-800)');
+    expectDeclares('button-bg-primary-outline-regular', 'var(--yellow-50)');
+    expectDeclares('button-bg-primary-outline-pressed', 'var(--primary-500)');
     expectDeclares('button-bg-accent-filled-regular', 'var(--accent-700)');
     expectDeclares('button-bg-accent-outline-regular', 'var(--yellow-50)');
     expectDeclares('button-border-neutral-strong', 'var(--neutral-800)');
     expectDeclares('button-border-neutral-subtle', 'var(--neutral-50)');
     expectDeclares('button-border-accent-strong', 'var(--accent-600)');
+    expectDeclares('button-border-primary-subtlest', 'var(--yellow-50)');
+    expectDeclares('button-border-primary-medium', 'var(--primary-500)');
     expectDeclares('tag-bg-primary', 'var(--red-700)');
     expectDeclares('tag-bg-secondary', 'var(--red-100)');
     expectDeclares('tag-border-subtle', 'var(--red-700)');

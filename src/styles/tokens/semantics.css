@@ -32,6 +32,7 @@
   /* Texto */
   --text-label-on-bg-accent: var(--accent-700);
   --text-label-on-bg-strong: var(--neutral-50);
+  --text-label-on-bg-primary: var(--primary-800);
   --text-label-on-bg-complementary: var(--red-900);
   --text-body-primary-strong: var(--primary-800);
   --text-body-accent-regular: var(--accent-700);
@@ -44,11 +45,15 @@
 
   /* Botão */
   --button-bg-primary-filled-pressed: var(--primary-800);
+  --button-bg-primary-outline-regular: var(--yellow-50);
+  --button-bg-primary-outline-pressed: var(--primary-500);
   --button-bg-accent-filled-regular: var(--accent-700);
   --button-bg-accent-outline-regular: var(--yellow-50);
   --button-border-neutral-strong: var(--neutral-800);
   --button-border-neutral-subtle: var(--neutral-50);
   --button-border-accent-strong: var(--accent-600);
+  --button-border-primary-subtlest: var(--yellow-50);
+  --button-border-primary-medium: var(--primary-500);
 
   /* Tag */
   --tag-bg-primary: var(--red-700);
