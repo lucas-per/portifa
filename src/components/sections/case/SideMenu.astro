@@ -66,13 +66,6 @@ const items = [
 
   .side-menu__item {
     display: flex;
-    border-left: 5px solid transparent;
-    padding-left: 0;
-  }
-
-  .side-menu__item--active {
-    border-left-color: var(--border-accent-strong);
-    padding-left: var(--scale-x4);
   }
 
   .side-menu__link {
@@ -84,10 +77,14 @@ const items = [
     text-decoration: none;
   }
 
+  /* Estado ativo (Figma: type=ghost, style=primary, state=active,
+     nodes 82:404/253:729) — sem fundo sólido nem borda visível, só a
+     cor do texto muda. A borda mantém 3px pra não deslocar o layout,
+     só fica transparente. */
   .side-menu__link--active {
-    border-color: var(--button-border-primary-medium);
-    background: var(--button-bg-primary-outline-pressed);
-    color: var(--text-label-neutral-1);
+    background: transparent;
+    border-color: var(--button-border-neutral-invisible);
+    color: var(--text-label-accent);
   }
 </style>
 
