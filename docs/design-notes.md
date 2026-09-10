@@ -175,9 +175,9 @@ Exemplo (baseado no PRD do site pessoal):
 **Motivo:** facilitar a navegação do usuário por todo o case
 
 ### clickable-active-anchor-point-example
-**Contexto:** exemplo de alteração de estilo no botão que referencia a posição da seção do case que está sendo lida no momento
-**Decisão:** ao clicar, não fazer nada
-**Motivo:** facilitar a navegação do usuário por todo o case
+**Contexto:** primeiro item do menu lateral do case — referencia a seção "Resumo", mostrando o estilo do estado "ativo" (âncora atualmente em foco no scroll-spy)
+**Decisão:** funciona como âncora normal, igual às demais `clickable-inactive-anchor-*` — clicável e participa do scroll-spy (implementado via `IntersectionObserver` em `SideMenu.astro`). O nome "example" na camada do Figma descrevia o exemplo visual do estado ativo, não uma restrição funcional
+**Motivo:** facilitar a navegação do usuário por todo o case; confirmado com o usuário durante o brainstorming da spec `2026-09-09-case-detail-visual-design.md`
 
 ### clickable-inactive-anchor-context
 **Contexto:** botão que dispara o scroll automático para a respectiva posição no case
