@@ -25,6 +25,7 @@
   /* Bordas */
   --border-neutral-strong: var(--neutral-800);
   --border-neutral-medium: var(--neutral-500);
+  --border-neutral-subtle: var(--neutral-200);
   --border-accent-strong: var(--accent-600);
   --border-accent-subtle: var(--accent-300);
 
@@ -35,6 +36,7 @@
   --text-body-primary-strong: var(--primary-800);
   --text-body-accent-regular: var(--accent-700);
   --text-body-neutral-strong: var(--neutral-900);
+  --text-body-neutral-subtle: var(--neutral-600);
 
   /* Ícones */
   --icon-neutral-1: var(--neutral-50);

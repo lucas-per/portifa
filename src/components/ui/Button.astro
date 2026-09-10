@@ -15,6 +15,7 @@ const {
   class: className,
 } = Astro.props;
 const Tag = href ? 'a' : 'button';
+const hasLeadingIcon = Astro.slots.has('leading-icon');
 const hasIcon = Astro.slots.has('icon');
 ---
 
@@ -26,6 +27,11 @@ const hasIcon = Astro.slots.has('icon');
   download={download ? true : undefined}
   type={href ? undefined : 'button'}
 >
+  {hasLeadingIcon && (
+    <span class="button__icon">
+      <slot name="leading-icon" />
+    </span>
+  )}
   <span class="button__label text-label-md"><slot /></span>
   {hasIcon && (
     <span class="button__icon">

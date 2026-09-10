@@ -1,0 +1,200 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import TestResultBadge from '../../ui/TestResultBadge.astro';
+
+interface Phase {
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+interface ImagesBlock {
+  title: string;
+  description: string;
+  images: ImageMetadata[];
+}
+
+interface TestResult {
+  status: 'verified' | 'warning' | 'unavailable';
+  label: string;
+}
+
+interface TestGroup {
+  title: string;
+  results: TestResult[];
+}
+
+interface Props {
+  intro: string;
+  phases: Phase[];
+  exploration: ImagesBlock;
+  pd: ImagesBlock;
+  tests: { intro: string; groups: TestGroup[]; outro: string };
+  consolidation: { title: string; description: string };
+}
+
+const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
+---
+
+<section class="case-discovery" id="strategy-solutions">
+  <h2 class="text-title-h3">Discovery</h2>
+  <p class="text-body-md">{intro}</p>
+
+  <ol class="case-discovery__timeline">
+    {phases.map((phase, i) => (
+      <li class="case-discovery__phase">
+        <div class="case-discovery__marker-col">
+          {i > 0 && <span class="case-discovery__timeline-line" aria-hidden="true"></span>}
+          <span class="case-discovery__marker" aria-hidden="true"></span>
+          {i < phases.length - 1 && <span class="case-discovery__timeline-line" aria-hidden="true"></span>}
+        </div>
+        <div class="case-discovery__phase-content">
+          <h3 class="text-body-lg-strong">{phase.title}</h3>
+          <p class="case-discovery__phase-subtitle text-label-sm">{phase.subtitle}</p>
+          <p class="text-body-md">{phase.description}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <div class="case-discovery__block">
+    <h3 class="text-title-h4">{exploration.title}</h3>
+    <p class="text-body-md">{exploration.description}</p>
+    <div class="case-discovery__images">
+      {exploration.images.map((img) => (
+        <Image src={img} alt="" width={483} />
+      ))}
+    </div>
+  </div>
+
+  <div class="case-discovery__block">
+    <h3 class="text-title-h4">{pd.title}</h3>
+    <p class="text-body-md">{pd.description}</p>
+    <div class="case-discovery__images">
+      {pd.images.map((img) => (
+        <Image src={img} alt="" width={360} />
+      ))}
+    </div>
+  </div>
+
+  <div class="case-discovery__block">
+    <h3 class="text-title-h4">Testes de usabilidade</h3>
+    <p class="text-body-md">{tests.intro}</p>
+    <div class="case-discovery__tests">
+      {tests.groups.map((group) => (
+        <div class="case-discovery__test-group">
+          <p class="text-body-lg-strong">{group.title}</p>
+          <div class="case-discovery__test-results">
+            {group.results.map((result) => (
+              <TestResultBadge status={result.status} label={result.label} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="text-body-md">{tests.outro}</p>
+  </div>
+
+  <div class="case-discovery__block">
+    <h3 class="text-title-h4">{consolidation.title}</h3>
+    <p class="text-body-md">{consolidation.description}</p>
+  </div>
+</section>
+
+<style>
+  .case-discovery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x6);
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-discovery > p,
+  .case-discovery__block {
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-discovery__timeline {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .case-discovery__phase {
+    display: flex;
+    gap: var(--scale-x6);
+  }
+
+  .case-discovery__marker-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 28px;
+    flex-shrink: 0;
+  }
+
+  .case-discovery__timeline-line {
+    flex: 1;
+    width: 3px;
+    background-color: var(--border-neutral-strong);
+  }
+
+  .case-discovery__marker {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    background-color: var(--yellow-200);
+    border: 3px solid var(--border-neutral-strong);
+  }
+
+  .case-discovery__phase-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x2);
+    padding-bottom: var(--scale-x6);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-discovery__phase-subtitle {
+    color: var(--text-body-accent-regular);
+  }
+
+  .case-discovery__block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+  }
+
+  .case-discovery__images {
+    display: flex;
+    gap: var(--scale-x10);
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .case-discovery__images :global(img) {
+    border: 3px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-img);
+  }
+
+  .case-discovery__tests {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+  }
+
+  .case-discovery__test-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x2);
+  }
+
+  .case-discovery__test-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--scale-x3);
+  }
+</style>

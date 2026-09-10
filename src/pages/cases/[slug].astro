@@ -1,13 +1,21 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Tag from '../../components/ui/Tag.astro';
-import TestResultBadge from '../../components/ui/TestResultBadge.astro';
+import Divider from '../../components/ui/Divider.astro';
+import CaseHeader from '../../components/sections/case/CaseHeader.astro';
+import SideMenu from '../../components/sections/case/SideMenu.astro';
+import CaseSummary from '../../components/sections/case/CaseSummary.astro';
+import CaseContext from '../../components/sections/case/CaseContext.astro';
+import CaseProblems from '../../components/sections/case/CaseProblems.astro';
+import CaseDiscovery from '../../components/sections/case/CaseDiscovery.astro';
+import CaseDelivery from '../../components/sections/case/CaseDelivery.astro';
+import CaseImpact from '../../components/sections/case/CaseImpact.astro';
+import CasePlansAhead from '../../components/sections/case/CasePlansAhead.astro';
+import BackToTopButton from '../../components/sections/case/BackToTopButton.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
 import { estimateReadingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
-  const cases = await getCollection('cases');
+  const cases = await getCollection('cases', (entry) => entry.id !== 'exemplo-case');
   return cases.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -24,156 +32,90 @@ const readingTime = estimateReadingTime(data.content);
 ---
 
 <BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
-  <nav aria-label="breadcrumb">
-    <a href="/" class="clickable-link-internal-previous-page-title">Início</a>
-    <span aria-hidden="true">/</span>
-    <span class="non-clickable-active-page-title">{data.title}</span>
-  </nav>
+  <CaseHeader
+    title={data.title}
+    status={data.status}
+    tags={data.tags}
+    publishedDate={data.publishedDate}
+    readingTime={readingTime}
+  />
+  <Divider />
+  <div class="case-layout">
+    <SideMenu />
+    <div class="case-layout__divider" aria-hidden="true"></div>
+    <div class="case-layout__content">
+      <CaseSummary
+        challenge={data.content.summary.challenge}
+        solution={data.content.summary.solution}
+        results={data.content.summary.results}
+      />
 
-  <header>
-    {data.status === 'published' && (
-      <ul>
-        {data.tags.map((tag) => (
-          <li><Tag>{tag}</Tag></li>
-        ))}
-      </ul>
-    )}
-    <h1>{data.title}</h1>
-    <p>
-      <time class="published-case-date" datetime={data.publishedDate.toISOString()}>
-        {data.publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
-      </time>
-      <span class="estimated-time">{readingTime} min de leitura</span>
-    </p>
-  </header>
-
-  <section>
-    <h2>Resumo</h2>
-    <p>{data.content.summary}</p>
-  </section>
-
-  {data.content.context && (
-    <section id="context">
-      <h2>Contexto</h2>
-      <p>{data.content.context.description}</p>
-      <Image src={data.content.context.image} alt={data.content.context.caption} />
-      <figcaption>{data.content.context.caption}</figcaption>
-    </section>
-  )}
-
-  {data.content.problems && (
-    <section id="problems-challenges">
-      <h2>Problemas e desafios</h2>
-      <p>{data.content.problems.description}</p>
-    </section>
-  )}
-
-  {data.content.discovery && (
-    <section id="discovery">
-      <h2>Descoberta</h2>
-      <p>{data.content.discovery.intro}</p>
-      <ol>
-        {data.content.discovery.phases.map((phase) => (
-          <li>
-            <h3>{phase.title}</h3>
-            <p>{phase.subtitle}</p>
-            <p>{phase.description}</p>
-          </li>
-        ))}
-      </ol>
-    </section>
-  )}
-
-  {data.content.exploration && (
-    <section id="exploration">
-      <h2>{data.content.exploration.title}</h2>
-      <p>{data.content.exploration.description}</p>
-      <ul>
-        {data.content.exploration.images.map((img) => (
-          <li><Image src={img} alt={data.content.exploration!.title} /></li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  {data.content.pd && (
-    <section id="pd">
-      <h2>{data.content.pd.title}</h2>
-      <p>{data.content.pd.description}</p>
-      <ul>
-        {data.content.pd.images.map((img) => (
-          <li><Image src={img} alt={data.content.pd!.title} /></li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  {data.content.tests && (
-    <section>
-      <h2>Testes</h2>
-      {data.content.tests.groups.map((group) => (
-        <div>
-          <h3>{group.title}</h3>
-          <ul>
-            {group.results.map((result) => (
-              <li><TestResultBadge status={result.status} label={result.label} /></li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </section>
-  )}
-
-  {data.content.delivery && (
-    <section id="myrole">
-      <h2>Entrega</h2>
-      <h3>{data.content.delivery.myRole.title}</h3>
-      <p>{data.content.delivery.myRole.description}</p>
-
-      <h3>{data.content.delivery.designSystem.title}</h3>
-      <p>{data.content.delivery.designSystem.description}</p>
-      {data.content.delivery.designSystem.images && (
-        <ul>
-          {data.content.delivery.designSystem.images.map((img) => (
-            <li><Image src={img} alt={data.content.delivery!.designSystem.title} /></li>
-          ))}
-        </ul>
+      {data.content.context && (
+        <>
+          <Divider width="156px" />
+          <CaseContext {...data.content.context} />
+        </>
       )}
 
-      <h3>{data.content.delivery.home.title}</h3>
-      <p>{data.content.delivery.home.description}</p>
-      {data.content.delivery.home.images && (
-        <ul>
-          {data.content.delivery.home.images.map((img) => (
-            <li><Image src={img} alt={data.content.delivery!.home.title} /></li>
-          ))}
-        </ul>
+      {data.content.problems && (
+        <>
+          <Divider width="156px" />
+          <CaseProblems {...data.content.problems} />
+        </>
       )}
-    </section>
-  )}
 
-  {data.content.impact && (
-    <section id="impact">
-      <h2>Impacto</h2>
-      <ul>
-        {data.content.impact.highlights.map((highlight) => (
-          <li>
-            <strong>{highlight.title}</strong>
-            <span>{highlight.description}</span>
-          </li>
-        ))}
-      </ul>
-      <p>{data.content.impact.description}</p>
-    </section>
-  )}
+      {data.content.discovery && (
+        <>
+          <Divider width="156px" />
+          <CaseDiscovery {...data.content.discovery} />
+        </>
+      )}
 
-  {data.content.plansAhead && (
-    <section id="plans-ahead">
-      <h2>Próximos passos</h2>
-      <h3>{data.content.plansAhead.privacy.title}</h3>
-      <p>{data.content.plansAhead.privacy.description}</p>
-      <h3>{data.content.plansAhead.pains.title}</h3>
-      <p>{data.content.plansAhead.pains.description}</p>
-    </section>
-  )}
+      {data.content.delivery && (
+        <>
+          <Divider width="156px" />
+          <CaseDelivery {...data.content.delivery} />
+        </>
+      )}
+
+      {data.content.impact && (
+        <>
+          <Divider width="156px" />
+          <CaseImpact {...data.content.impact} />
+        </>
+      )}
+
+      {data.content.plansAhead && (
+        <>
+          <Divider width="156px" />
+          <CasePlansAhead {...data.content.plansAhead} />
+        </>
+      )}
+
+      <BackToTopButton />
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .case-layout {
+    display: flex;
+    gap: var(--scale-x10);
+    padding: var(--scale-x6) var(--scale-x20) var(--scale-x20);
+    align-items: flex-start;
+  }
+
+  .case-layout__divider {
+    align-self: stretch;
+    width: 5px;
+    background-color: var(--border-accent-strong);
+  }
+
+  .case-layout__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x11);
+    max-width: 977px;
+  }
+</style>

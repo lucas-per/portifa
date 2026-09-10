@@ -1,0 +1,98 @@
+---
+import Button from '../../ui/Button.astro';
+import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
+
+const items = [
+  { href: '#resumo', label: 'Resumo' },
+  { href: '#context', label: 'Contexto' },
+  { href: '#problems-challenges', label: 'Problema & Desafios' },
+  { href: '#strategy-solutions', label: 'Discovery' },
+  { href: '#myrole', label: 'Delivery' },
+  { href: '#impact', label: 'Impacto' },
+  { href: '#plans-ahead', label: 'Visão de futuro' },
+];
+---
+
+<nav class="side-menu" aria-label="Nesta página">
+  <p class="side-menu__title text-label-sm">Nesta página</p>
+  <ul class="side-menu__list">
+    {items.map((item) => (
+      <li>
+        <a href={item.href} class="side-menu__link text-label-md" data-side-menu-link data-target={item.href.slice(1)}>
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+  <Button href="/" variant="outline-accent" class="clickable-link-internal-home">
+    <Fragment slot="leading-icon">
+      <img src={arrowLeftIcon.src} width="24" height="24" alt="" />
+    </Fragment>
+    Voltar
+  </Button>
+</nav>
+
+<style>
+  .side-menu {
+    position: sticky;
+    top: var(--scale-x6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x6);
+    width: 234px;
+    flex-shrink: 0;
+  }
+
+  .side-menu__title {
+    margin: 0;
+    color: var(--text-body-neutral-strong);
+  }
+
+  .side-menu__list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .side-menu__link {
+    display: block;
+    padding: var(--scale-x4) 0;
+    color: var(--text-body-neutral-strong);
+    text-decoration: none;
+    border-bottom: 2px solid var(--surface-bg-neutral-subtle);
+  }
+
+  .side-menu__link--active {
+    color: var(--text-body-accent-regular);
+  }
+</style>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('[data-side-menu-link]');
+  const sections = Array.from(links)
+    .map((link) => document.getElementById(link.dataset.target!))
+    .filter((el): el is HTMLElement => el !== null);
+
+  function setActive(id: string) {
+    for (const link of links) {
+      link.classList.toggle('side-menu__link--active', link.dataset.target === id);
+    }
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      }
+    },
+    { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+  );
+
+  for (const section of sections) {
+    observer.observe(section);
+  }
+</script>

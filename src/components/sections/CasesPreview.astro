@@ -22,6 +22,7 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
         tags={caseEntry.data.tags}
         highlights={caseEntry.data.highlights}
         shadow={caseEntry.id === 'redesign' ? 'accent' : 'neutral'}
+        href={caseEntry.id === 'redesign' ? `/cases/${caseEntry.id}` : undefined}
       />
     ))}
   </div>

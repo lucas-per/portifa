@@ -1,0 +1,11 @@
+---
+import Button from '../../ui/Button.astro';
+import arrowUpIcon from '../../../assets/icons/case/arrow-up.svg';
+---
+
+<Button href="#top" variant="outline-accent" class="clickable-anchor-backtotop">
+  Ir para o topo
+  <Fragment slot="icon">
+    <img src={arrowUpIcon.src} width="24" height="24" alt="" />
+  </Fragment>
+</Button>

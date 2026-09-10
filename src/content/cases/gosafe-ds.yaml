@@ -8,4 +8,13 @@ highlights:
     label: "Time-to-market"
 
 content:
-  summary: "Criação de um design system corporativo, com impacto direto na eficiência operacional e menos tempo para lançamentos de novos produtos."
+  summary:
+    challenge:
+      title: "Desafio"
+      description: "Criação de um design system corporativo, com impacto direto na eficiência operacional e menos tempo para lançamentos de novos produtos."
+    solution:
+      title: "Solução"
+      description: "Case ainda não publicado — conteúdo completo em breve."
+    results:
+      title: "Resultados"
+      description: "Case ainda não publicado — conteúdo completo em breve."

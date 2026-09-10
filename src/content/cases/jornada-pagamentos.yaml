@@ -10,4 +10,13 @@ highlights:
     label: "Pagamentos"
 
 content:
-  summary: "Reestruturação da jornada e implementação de design system em um app com mais de 100 mil usuários."
+  summary:
+    challenge:
+      title: "Desafio"
+      description: "Reestruturação da jornada e implementação de design system em um app com mais de 100 mil usuários."
+    solution:
+      title: "Solução"
+      description: "Case ainda não publicado — conteúdo completo em breve."
+    results:
+      title: "Resultados"
+      description: "Case ainda não publicado — conteúdo completo em breve."

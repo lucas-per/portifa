@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Block {
+  title: string;
+  description: string;
+  images?: ImageMetadata[];
+}
+
+interface Props {
+  myRole: Block;
+  designSystem: Block;
+  home: Block;
+}
+
+const { myRole, designSystem, home } = Astro.props;
+---
+
+<section class="case-delivery" id="myrole">
+  <h2 class="text-title-h3">Delivery</h2>
+
+  <div class="case-delivery__block">
+    <h3 class="text-title-h4">{myRole.title}</h3>
+    <p class="text-body-md">{myRole.description}</p>
+  </div>
+
+  <div class="case-delivery__block">
+    <h3 class="text-title-h4">{designSystem.title}</h3>
+    <p class="text-body-md">{designSystem.description}</p>
+    {designSystem.images && (
+      <div class="case-delivery__images">
+        {designSystem.images.map((img) => (
+          <Image src={img} alt="" width={248} />
+        ))}
+      </div>
+    )}
+  </div>
+
+  <div class="case-delivery__block">
+    <h3 class="text-title-h4">{home.title}</h3>
+    <p class="text-body-md">{home.description}</p>
+    {home.images && (
+      <div class="case-delivery__images">
+        {home.images.map((img) => (
+          <Image src={img} alt="" width={283} />
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .case-delivery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x6);
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-delivery__block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-delivery__images {
+    display: flex;
+    gap: var(--scale-x10);
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .case-delivery__images :global(img) {
+    border: 3px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-img);
+  }
+</style>

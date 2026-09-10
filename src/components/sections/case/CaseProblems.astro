@@ -1,0 +1,48 @@
+---
+interface Props {
+  intro: string;
+  hypothesis: string;
+  risks: string[];
+  kpis: string;
+}
+
+const { intro, hypothesis, risks, kpis } = Astro.props;
+---
+
+<section class="case-problems" id="problems-challenges">
+  <h2 class="text-title-h3">Problema &amp; Desafios</h2>
+  <div class="case-problems__text">
+    <p class="text-body-md">{intro}</p>
+    <p class="text-body-md">{hypothesis}</p>
+    <ul class="case-problems__risks">
+      {risks.map((risk) => (
+        <li class="text-body-md">{risk}</li>
+      ))}
+    </ul>
+    <p class="text-body-md">{kpis}</p>
+  </div>
+</section>
+
+<style>
+  .case-problems {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-problems__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x3);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-problems__risks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x2);
+    margin: 0;
+    padding-left: var(--scale-x6);
+  }
+</style>
