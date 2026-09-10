@@ -49,8 +49,8 @@ const {
     <div class="case-card__highlights">
       {highlights.map((highlight) => (
         <div class="case-card__highlight">
-          <p class="text-body-lg-strong">{highlight.value}</p>
-          <p class="text-body-sm">{highlight.label}</p>
+          <span class="case-card__highlight-value text-body-lg-strong">{highlight.value}</span>
+          <p class="text-body-md">{highlight.label}</p>
         </div>
       ))}
     </div>
@@ -127,14 +127,17 @@ const {
 
   .case-card__highlight {
     box-sizing: border-box;
-    flex: 1;
     display: flex;
-    flex-direction: column;
-    gap: var(--scale-base);
+    align-items: center;
+    gap: var(--scale-x2);
     padding: var(--scale-x2) var(--scale-x4);
   }
 
   .case-card__highlight:not(:last-child) {
     border-bottom: 3px solid var(--border-neutral-medium);
+  }
+
+  .case-card__highlight-value {
+    min-width: 68px;
   }
 </style>
