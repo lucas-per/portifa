@@ -33,10 +33,18 @@
   }
 
   .about-me__text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--scale-x3);
     max-width: 1024px;
     color: var(--text-body-neutral-strong);
+  }
+
+  /* paragraph-spacing do Figma (12px) — margem entre parágrafos de um
+     mesmo bloco de texto, não gap de um container flex (que somava a
+     margem padrão do navegador em cada <p>, inflando o espaçamento). */
+  .about-me__text p {
+    margin: 0 0 var(--scale-x3) 0;
+  }
+
+  .about-me__text p:last-child {
+    margin-bottom: 0;
   }
 </style>
