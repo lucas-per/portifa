@@ -39,6 +39,15 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
   */
   .case-accordion-sticky {
     display: none;
+    /*
+      width: 100% explícito é obrigatório aqui: como este wrapper é o
+      item flex direto de .case-layout (align-items: flex-start), sem
+      largura própria ele encolhe pro conteúdo (shrink-to-fit) — o
+      width: 100% de .case-accordion, um filho com % dentro de um
+      ancestral sem largura definida, é ignorado nesse cálculo, e o
+      accordion aparecia como uma caixa menor que a tela inteira.
+    */
+    width: 100%;
     position: sticky;
     /*
       99px = altura renderizada de HeaderMobile.astro (pt-20 + core +
@@ -56,6 +65,9 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
     background-color: var(--surface-bg-off-white-primary);
   }
 
+  /* width: 100% relativo a .case-accordion-sticky (irmão de
+     .case-accordion, não filho) — independente do tamanho do
+     accordion em si, sempre a largura cheia do wrapper. */
   .case-accordion__divider {
     width: 100%;
     height: 5px;
@@ -141,14 +153,37 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
   // Auto-colapsa o accordion ao escolher uma âncora — decisão nova (não
   // vinha do Figma): sem isso, ele fica expandido ocupando espaço da
   // tela depois que o usuário já navegou pra onde queria.
+  //
+  // O salto padrão do navegador pro #id (href normal) calcula a posição
+  // ANTES do reflow do colapso terminar, então a seção-alvo ficava
+  // escondida atrás do header + accordion ainda expandido. Por isso o
+  // scroll é feito manualmente aqui: colapsa primeiro (síncrono),
+  // depois lê a altura já colapsada do wrapper sticky (getBoundingClientRect
+  // força o reflow) e desconta header + accordion colapsado do destino.
   const accordion = document.querySelector<HTMLDetailsElement>('.case-accordion');
+  const stickyWrapper = document.querySelector<HTMLElement>('.case-accordion-sticky');
   const links = accordion?.querySelectorAll<HTMLAnchorElement>('[data-side-menu-link]');
 
   links?.forEach((link) => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (event) => {
+      const id = link.dataset.target;
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+
+      event.preventDefault();
+
       if (accordion) {
         accordion.open = false;
       }
+
+      // .bottom (não .height): já inclui o offset do header, porque o
+      // wrapper sticky começa a 99px do topo — .bottom é onde a borda
+      // inferior do accordion colapsado realmente fica na viewport,
+      // stuck ou não.
+      const offset = stickyWrapper?.getBoundingClientRect().bottom ?? 0;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top });
+      history.pushState(null, '', `#${id}`);
     });
   });
 </script>
