@@ -180,7 +180,12 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
       // wrapper sticky começa a 99px do topo — .bottom é onde a borda
       // inferior do accordion colapsado realmente fica na viewport,
       // stuck ou não.
-      const offset = stickyWrapper?.getBoundingClientRect().bottom ?? 0;
+      //
+      // SCROLL_GAP soma um respiro visual extra abaixo do accordion
+      // colapsado: sem ele, o título da seção ficava colado direto na
+      // borda do accordion (correto tecnicamente, mas apertado demais).
+      const SCROLL_GAP = 20; // var(--scale-x5)
+      const offset = (stickyWrapper?.getBoundingClientRect().bottom ?? 0) + SCROLL_GAP;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top });
       history.pushState(null, '', `#${id}`);
