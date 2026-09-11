@@ -178,8 +178,17 @@ const readingTime = estimateReadingTime(data.content);
       display: none;
     }
 
+    /*
+      Sem padding-left aqui (Figma, node 275:471 "col-content-case"): o
+      inset de 20px é interno a cada seção (ver comentário em cada
+      componente), não deste container compartilhado — os dividers
+      estreitos entre seções (Divider width="156px", filhos diretos de
+      .case-layout__content-inner) não têm padding próprio, então
+      precisam da borda real do container pra ficar 20px à esquerda do
+      texto, "vazando" o inset em vez de herdá-lo.
+    */
     .case-layout__content {
-      padding: var(--scale-x7) var(--scale-x5) var(--scale-x11);
+      padding: var(--scale-x7) var(--scale-x5) var(--scale-x11) 0;
     }
 
     .case-layout__content-inner {

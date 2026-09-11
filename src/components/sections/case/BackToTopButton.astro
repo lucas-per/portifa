@@ -47,7 +47,10 @@ import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
 
   @media (max-width: 767px) {
     .back-to-top {
-      padding-left: 0;
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
       gap: var(--scale-x2);
     }
 

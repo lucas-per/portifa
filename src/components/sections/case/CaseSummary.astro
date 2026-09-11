@@ -87,7 +87,10 @@ const { challenge, solution, results } = Astro.props;
 
   @media (max-width: 767px) {
     .case-summary {
-      padding-left: 0;
+      /* 20px (Figma, node 275:472 "col-summary"): o inset vive aqui
+         dentro, não em .case-layout__content — ver comentário em
+         [slug].astro sobre os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
     }
 
     .case-summary__grid {

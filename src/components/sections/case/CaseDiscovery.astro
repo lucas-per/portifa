@@ -228,7 +228,10 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
 
   @media (max-width: 767px) {
     .case-discovery {
-      padding-left: 0;
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
     }
 
     .case-discovery__images {
