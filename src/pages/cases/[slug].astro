@@ -33,7 +33,7 @@ const readingTime = estimateReadingTime(data.content);
 ---
 
 <BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
-  <Divider />
+  <Divider class="case-top-divider" />
   <CaseHeader
     title={data.title}
     status={data.status}
@@ -101,6 +101,7 @@ const readingTime = estimateReadingTime(data.content);
       </div>
     </div>
   </div>
+  <Divider class="case-trail-divider" height="7px" color="var(--surface-bg-tertiary-strong)" />
 </BaseLayout>
 
 <style>
@@ -150,7 +151,32 @@ const readingTime = estimateReadingTime(data.content);
     background-color: var(--surface-bg-accent-strong);
   }
 
+  /*
+    Divider vermelho antes do footer (Figma, node 275:1149) — só existe
+    no mobile. No desktop o fundo cinza de .case-layout__content já
+    encosta direto no footer de propósito (ver design-notes.md,
+    entrada "col-case-content"), sem essa linha.
+  */
+  :global(.case-trail-divider) {
+    display: none;
+  }
+
+  /*
+    O primeiro <Divider /> da página (entre o header e o CaseHeader) é
+    redundante no mobile: HeaderMobile.astro já renderiza seu próprio
+    divisor de 5px colado no fim do header sticky (Figma, node
+    254:1007). Os dois juntos criavam uma linha dupla logo abaixo do
+    header.
+  */
   @media (max-width: 767px) {
+    :global(.case-top-divider) {
+      display: none;
+    }
+
+    :global(.case-trail-divider) {
+      display: block;
+    }
+
     .case-layout {
       flex-direction: column;
       padding-left: 0;
@@ -170,26 +196,6 @@ const readingTime = estimateReadingTime(data.content);
 
     .case-layout__content-inner {
       max-width: none;
-    }
-
-    /*
-      No desktop, cada seção do case (CaseSummary, CaseContext etc.) se
-      indenta sozinha via padding-left: var(--scale-x12) pra alinhar com
-      o fim do menu lateral (ver comentário de cada componente). No
-      mobile não existe mais esse menu ao lado — o respiro de 20px já
-      vem do padding de .case-layout__content acima — então zera esse
-      indent aqui central, em vez de duplicar a media query dentro de
-      cada um dos 8 componentes de seção.
-    */
-    :global(.case-summary),
-    :global(.case-context),
-    :global(.case-problems),
-    :global(.case-discovery),
-    :global(.case-delivery),
-    :global(.case-impact),
-    :global(.case-plans-ahead),
-    :global(.back-to-top) {
-      padding-left: 0;
     }
   }
 </style>

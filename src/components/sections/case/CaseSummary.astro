@@ -86,6 +86,10 @@ const { challenge, solution, results } = Astro.props;
   }
 
   @media (max-width: 767px) {
+    .case-summary {
+      padding-left: 0;
+    }
+
     .case-summary__grid {
       flex-direction: column;
       gap: var(--scale-x8);

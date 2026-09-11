@@ -32,6 +32,15 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
     width: 100%;
     padding: var(--scale-x4) var(--scale-x5);
     background-color: var(--surface-bg-off-white-primary);
+    /*
+      Fixo logo abaixo do header mobile durante a rolagem — decisão nova
+      (não vinha do Figma). 99px = altura renderizada de HeaderMobile.astro
+      (pt-20 + core + divider-5, node 254:1007), medida ao vivo — se o
+      header mudar de altura, ajustar este valor junto.
+    */
+    position: sticky;
+    top: 99px;
+    z-index: 9;
   }
 
   .case-accordion__summary {
