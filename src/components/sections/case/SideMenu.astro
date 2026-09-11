@@ -1,16 +1,7 @@
 ---
 import Button from '../../ui/Button.astro';
 import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
-
-const items = [
-  { href: '#resumo', label: 'Resumo' },
-  { href: '#context', label: 'Contexto' },
-  { href: '#problems-challenges', label: 'Problema & Desafios' },
-  { href: '#strategy-solutions', label: 'Discovery' },
-  { href: '#myrole', label: 'Delivery' },
-  { href: '#impact', label: 'Impacto' },
-  { href: '#plans-ahead', label: 'Visão de futuro' },
-];
+import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items';
 ---
 
 <nav class="side-menu" aria-label="Nesta página">
@@ -95,6 +86,14 @@ const items = [
     background: transparent;
     border-color: var(--button-border-neutral-invisible);
     color: var(--text-label-accent);
+  }
+
+  /* No mobile, o menu lateral vira o accordion (CaseAccordion.astro,
+     Figma node 299:673) — não encolhe, some abaixo do breakpoint. */
+  @media (max-width: 767px) {
+    .side-menu {
+      display: none;
+    }
   }
 </style>
 

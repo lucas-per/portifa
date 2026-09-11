@@ -150,4 +150,20 @@ const hasIcon = Astro.slots.has('icon');
     outline: 2px solid var(--border-focus-strong);
     outline-offset: 2px;
   }
+
+  /*
+    No mobile (<768px), todo botão usa o "perfil" visual do size="sm"
+    (padding + label 16px) independente da prop `size` recebida — é o que
+    o Figma mostra em mobile-home/mobile-case pros botões que no desktop
+    usam size="md" (ex: "Ler case", "Voltar", "Ir para o topo").
+  */
+  @media (max-width: 767px) {
+    .button {
+      padding: var(--scale-x2) var(--scale-x4);
+    }
+
+    .button__label.text-label-md {
+      font-size: var(--scale-x4);
+    }
+  }
 </style>

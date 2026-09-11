@@ -92,4 +92,13 @@ const dividerLines = Array.from({ length: 4 });
     padding: var(--scale-base) 0;
     color: var(--text-body-neutral-medium);
   }
+
+  /* No mobile, o footer vira o layout próprio de FooterMobile.astro
+     (Figma: footer-mobile, node 254:1006) — não é este componente
+     encolhendo, então ele só some abaixo do breakpoint. */
+  @media (max-width: 767px) {
+    .site-footer {
+      display: none;
+    }
+  }
 </style>

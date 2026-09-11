@@ -79,4 +79,31 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     gap: var(--scale-x2);
     color: var(--text-body-neutral-subtle);
   }
+
+  @media (max-width: 767px) {
+    .case-header {
+      padding: var(--scale-x11) var(--scale-x5) var(--scale-x6);
+    }
+
+    .case-header__breadcrumb {
+      margin-bottom: var(--scale-x4);
+    }
+
+    /* Exceção ao override global de .text-title-h2 (32px no mobile,
+       ver typography.css) — o h1 da página de case mantém 36px no
+       Figma mobile (node 275:438). Seletor com tag garante prioridade
+       sobre a regra global sem depender de ordem de carregamento. */
+    h1.case-header__title {
+      font-size: var(--scale-x9);
+    }
+
+    /* "Início" (link de volta) ganha destaque de link no mobile — o
+       Figma (node 275:429) tinha essa cor/underline aplicada no item
+       ativo ("Redesign de Produto") em vez do link, invertido; o link
+       clicável é quem deve parecer link. No desktop permanece neutro. */
+    .clickable-link-internal-previous-page-title {
+      color: var(--text-body-accent-subtle);
+      text-decoration: underline;
+    }
+  }
 </style>

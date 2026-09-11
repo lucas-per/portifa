@@ -225,4 +225,10 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     flex-wrap: wrap;
     gap: var(--scale-x3);
   }
+
+  @media (max-width: 767px) {
+    .case-discovery__images {
+      flex-direction: column;
+    }
+  }
 </style>

@@ -77,6 +77,7 @@ describe('primitives.css', () => {
     expectDeclares('scale-x10', '2.5rem');
     expectDeclares('scale-x11', '2.75rem');
     expectDeclares('scale-x12', '3rem');
+    expectDeclares('scale-x14', '3.5rem');
     expectDeclares('scale-x16', '4rem');
     expectDeclares('scale-x20', '5.5rem');
   });

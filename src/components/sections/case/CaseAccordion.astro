@@ -1,0 +1,108 @@
+---
+import chevronDownIcon from '../../../assets/icons/case/chevron-down.svg';
+import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items';
+---
+
+<details class="case-accordion clickable-row-accordion-sections">
+  <summary class="case-accordion__summary">
+    NESTA PÁGINA
+    <img
+      src={chevronDownIcon.src}
+      width="24"
+      height="24"
+      alt=""
+      class="case-accordion__chevron"
+    />
+  </summary>
+  <ul class="case-accordion__list">
+    {items.map((item) => (
+      <li class="side-menu__item" data-side-menu-item>
+        <a href={item.href} class="side-menu__link text-label-md" data-side-menu-link data-target={item.href.slice(1)}>
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</details>
+
+<style>
+  .case-accordion {
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--scale-x4) var(--scale-x5);
+    background-color: var(--surface-bg-off-white-primary);
+  }
+
+  .case-accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-family-body);
+    font-weight: var(--weight-600);
+    font-size: var(--scale-x4);
+    line-height: var(--line-height-regular);
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .case-accordion__summary:focus-visible {
+    outline: 2px solid var(--border-focus-strong);
+    outline-offset: 2px;
+  }
+
+  .case-accordion__chevron {
+    transition: transform 0.1s ease;
+  }
+
+  .case-accordion[open] .case-accordion__chevron {
+    transform: rotate(180deg);
+  }
+
+  .case-accordion__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+    list-style: none;
+    margin: 0;
+    padding-top: var(--scale-x4);
+  }
+
+  .case-accordion__list .side-menu__item {
+    display: flex;
+    border-left: 5px solid transparent;
+    padding-left: 0;
+  }
+
+  .case-accordion__list .side-menu__item--active {
+    border-left-color: var(--border-accent-strong);
+    padding-left: var(--scale-x4);
+  }
+
+  .case-accordion__list .side-menu__link {
+    display: inline-flex;
+    width: 100%;
+    padding: var(--scale-x3) var(--scale-x4);
+    border: 3px solid var(--button-border-primary-subtlest);
+    background: var(--button-bg-primary-outline-regular);
+    color: var(--text-label-primary);
+    text-decoration: none;
+  }
+
+  .case-accordion__list .side-menu__link--active {
+    background: transparent;
+    border-color: var(--button-border-neutral-invisible);
+    color: var(--text-label-accent);
+  }
+
+  @media (max-width: 767px) {
+    .case-accordion {
+      display: block;
+    }
+  }
+</style>

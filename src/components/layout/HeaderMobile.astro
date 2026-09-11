@@ -1,0 +1,87 @@
+---
+import logoMobile from '../../assets/icons/logo-mobile.svg';
+import mailIcon from '../../assets/icons/mail-on-accent.svg';
+---
+
+<header class="site-header-mobile">
+  <div class="site-header-mobile__core">
+    <a href="/" class="site-header-mobile__logo clickable-link-internal-home">
+      <img src={logoMobile.src} width="156" height="54" alt="Lucas Pereira" />
+    </a>
+    <a
+      href="mailto:oi@lpereira.me"
+      class="site-header-mobile__cta clickable-mailto-header"
+      aria-label="Enviar e-mail para oi@lpereira.me"
+    >
+      <img src={mailIcon.src} width="24" height="24" alt="" />
+    </a>
+  </div>
+  <div class="site-header-mobile__divider" aria-hidden="true"></div>
+</header>
+
+<style>
+  .site-header-mobile {
+    display: none;
+    flex-direction: column;
+    gap: var(--scale-x5);
+    padding-top: var(--scale-x5);
+    background-color: var(--surface-bg-off-white-primary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .site-header-mobile__core {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--scale-x5);
+  }
+
+  .site-header-mobile__logo {
+    display: inline-flex;
+  }
+
+  /* Mesmo visual do button--filled-accent (Button.astro), só que sem
+     label — o header mobile mostra apenas o ícone (Figma, node 236:1784,
+     row-cta), então em vez de reaproveitar o componente Button (que
+     sempre renderiza um span de label, mesmo vazio, e introduziria um
+     gap indesejado) replico as mesmas tokens aqui. */
+  .site-header-mobile__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--scale-x3) var(--scale-x6);
+    border: 3px solid var(--button-border-neutral-strong);
+    background-color: var(--button-bg-accent-filled-regular);
+    box-shadow: var(--shadow-comp-neutral);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .site-header-mobile__cta:hover {
+    box-shadow: var(--shadow-comp-neutral-hover);
+    transform: translate(-2px, -2px);
+  }
+
+  .site-header-mobile__cta:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+  }
+
+  .site-header-mobile__cta:focus-visible {
+    outline: 2px solid var(--border-focus-strong);
+    outline-offset: 2px;
+  }
+
+  .site-header-mobile__divider {
+    height: 5px;
+    width: 100%;
+    background-color: var(--surface-bg-accent-strong);
+  }
+
+  @media (max-width: 767px) {
+    .site-header-mobile {
+      display: flex;
+    }
+  }
+</style>

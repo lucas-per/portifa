@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Divider from '../../components/ui/Divider.astro';
 import CaseHeader from '../../components/sections/case/CaseHeader.astro';
 import SideMenu from '../../components/sections/case/SideMenu.astro';
+import CaseAccordion from '../../components/sections/case/CaseAccordion.astro';
 import CaseSummary from '../../components/sections/case/CaseSummary.astro';
 import CaseContext from '../../components/sections/case/CaseContext.astro';
 import CaseProblems from '../../components/sections/case/CaseProblems.astro';
@@ -44,6 +45,8 @@ const readingTime = estimateReadingTime(data.content);
   <div class="case-layout">
     <SideMenu />
     <div class="case-layout__divider" aria-hidden="true"></div>
+    <CaseAccordion />
+    <div class="case-layout__mobile-divider" aria-hidden="true"></div>
     <div class="case-layout__content">
       <div class="case-layout__content-inner">
         <CaseSummary
@@ -138,5 +141,55 @@ const readingTime = estimateReadingTime(data.content);
     flex-direction: column;
     gap: var(--scale-x11);
     max-width: 977px;
+  }
+
+  .case-layout__mobile-divider {
+    display: none;
+    width: 100%;
+    height: 5px;
+    background-color: var(--surface-bg-accent-strong);
+  }
+
+  @media (max-width: 767px) {
+    .case-layout {
+      flex-direction: column;
+      padding-left: 0;
+    }
+
+    .case-layout__divider {
+      display: none;
+    }
+
+    .case-layout__mobile-divider {
+      display: block;
+    }
+
+    .case-layout__content {
+      padding: var(--scale-x7) var(--scale-x5) var(--scale-x11);
+    }
+
+    .case-layout__content-inner {
+      max-width: none;
+    }
+
+    /*
+      No desktop, cada seção do case (CaseSummary, CaseContext etc.) se
+      indenta sozinha via padding-left: var(--scale-x12) pra alinhar com
+      o fim do menu lateral (ver comentário de cada componente). No
+      mobile não existe mais esse menu ao lado — o respiro de 20px já
+      vem do padding de .case-layout__content acima — então zera esse
+      indent aqui central, em vez de duplicar a media query dentro de
+      cada um dos 8 componentes de seção.
+    */
+    :global(.case-summary),
+    :global(.case-context),
+    :global(.case-problems),
+    :global(.case-discovery),
+    :global(.case-delivery),
+    :global(.case-impact),
+    :global(.case-plans-ahead),
+    :global(.back-to-top) {
+      padding-left: 0;
+    }
   }
 </style>

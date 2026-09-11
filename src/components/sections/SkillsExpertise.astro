@@ -172,4 +172,15 @@ const tools = [
     align-content: flex-start;
     flex: 1;
   }
+
+  @media (max-width: 767px) {
+    .skills {
+      padding: var(--scale-x12) var(--scale-x5);
+    }
+
+    .skills__grid {
+      flex-direction: column;
+      gap: var(--scale-x8);
+    }
+  }
 </style>

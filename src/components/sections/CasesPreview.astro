@@ -56,4 +56,11 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
        — não dependem do próprio conteúdo nem têm largura fixa em px. */
     flex: 1 1 0%;
   }
+
+  @media (max-width: 767px) {
+    .cases-preview__grid {
+      flex-direction: column;
+      gap: var(--scale-x8);
+    }
+  }
 </style>

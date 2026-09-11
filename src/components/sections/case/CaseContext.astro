@@ -67,4 +67,19 @@ const { description, image, caption } = Astro.props;
     color: var(--text-body-neutral-strong);
     text-transform: uppercase;
   }
+
+  @media (max-width: 767px) {
+    .case-context__row {
+      flex-direction: column;
+    }
+
+    .case-context__figure {
+      align-self: stretch;
+    }
+
+    .case-context__figure :global(img) {
+      width: 100%;
+      height: auto;
+    }
+  }
 </style>
