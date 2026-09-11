@@ -46,7 +46,6 @@ const readingTime = estimateReadingTime(data.content);
     <SideMenu />
     <div class="case-layout__divider" aria-hidden="true"></div>
     <CaseAccordion />
-    <div class="case-layout__mobile-divider" aria-hidden="true"></div>
     <div class="case-layout__content">
       <div class="case-layout__content-inner">
         <CaseSummary
@@ -144,13 +143,6 @@ const readingTime = estimateReadingTime(data.content);
     max-width: 977px;
   }
 
-  .case-layout__mobile-divider {
-    display: none;
-    width: 100%;
-    height: 5px;
-    background-color: var(--surface-bg-accent-strong);
-  }
-
   /*
     Divider vermelho antes do footer (Figma, node 275:1149) — só existe
     no mobile. No desktop o fundo cinza de .case-layout__content já
@@ -184,10 +176,6 @@ const readingTime = estimateReadingTime(data.content);
 
     .case-layout__divider {
       display: none;
-    }
-
-    .case-layout__mobile-divider {
-      display: block;
     }
 
     .case-layout__content {

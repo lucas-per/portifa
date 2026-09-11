@@ -3,44 +3,63 @@ import chevronDownIcon from '../../../assets/icons/case/chevron-down.svg';
 import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items';
 ---
 
-<details class="case-accordion clickable-row-accordion-sections">
-  <summary class="case-accordion__summary">
-    NESTA PÁGINA
-    <img
-      src={chevronDownIcon.src}
-      width="24"
-      height="24"
-      alt=""
-      class="case-accordion__chevron"
-    />
-  </summary>
-  <ul class="case-accordion__list">
-    {items.map((item) => (
-      <li class="side-menu__item" data-side-menu-item>
-        <a href={item.href} class="side-menu__link text-label-md" data-side-menu-link data-target={item.href.slice(1)}>
-          {item.label}
-        </a>
-      </li>
-    ))}
-  </ul>
-</details>
+<div class="case-accordion-sticky">
+  <details class="case-accordion clickable-row-accordion-sections">
+    <summary class="case-accordion__summary">
+      NESTA PÁGINA
+      <img
+        src={chevronDownIcon.src}
+        width="24"
+        height="24"
+        alt=""
+        class="case-accordion__chevron"
+      />
+    </summary>
+    <ul class="case-accordion__list">
+      {items.map((item) => (
+        <li class="side-menu__item" data-side-menu-item>
+          <a href={item.href} class="side-menu__link text-label-md" data-side-menu-link data-target={item.href.slice(1)}>
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </details>
+  <div class="case-accordion__divider" aria-hidden="true"></div>
+</div>
 
 <style>
-  .case-accordion {
+  /*
+    O divisor (Figma, node 275:1265) precisa acompanhar o accordion
+    quando ele fica sticky — por isso o sticky vive no wrapper (que
+    inclui o divisor) e não só em .case-accordion: um divisor fora do
+    wrapper sticky rolaria pra fora de vista assim que a página
+    scrollasse, deixando o accordion "grudado" sem nenhuma linha
+    separando ele do conteúdo abaixo.
+  */
+  .case-accordion-sticky {
     display: none;
+    position: sticky;
+    /*
+      99px = altura renderizada de HeaderMobile.astro (pt-20 + core +
+      divider-5, node 254:1007), medida ao vivo — se o header mudar de
+      altura, ajustar este valor junto.
+    */
+    top: 99px;
+    z-index: 9;
+  }
+
+  .case-accordion {
     box-sizing: border-box;
     width: 100%;
     padding: var(--scale-x4) var(--scale-x5);
     background-color: var(--surface-bg-off-white-primary);
-    /*
-      Fixo logo abaixo do header mobile durante a rolagem — decisão nova
-      (não vinha do Figma). 99px = altura renderizada de HeaderMobile.astro
-      (pt-20 + core + divider-5, node 254:1007), medida ao vivo — se o
-      header mudar de altura, ajustar este valor junto.
-    */
-    position: sticky;
-    top: 99px;
-    z-index: 9;
+  }
+
+  .case-accordion__divider {
+    width: 100%;
+    height: 5px;
+    background-color: var(--surface-bg-accent-strong);
   }
 
   .case-accordion__summary {
@@ -65,8 +84,10 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
     outline-offset: 2px;
   }
 
+  /* Duração aumentada (0.1s -> 0.3s) pra sensação mais suave — pedido
+     do usuário, a transição original parecia abrupta demais. */
   .case-accordion__chevron {
-    transition: transform 0.1s ease;
+    transition: transform 0.3s ease;
   }
 
   .case-accordion[open] .case-accordion__chevron {
@@ -110,8 +131,24 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
   }
 
   @media (max-width: 767px) {
-    .case-accordion {
+    .case-accordion-sticky {
       display: block;
     }
   }
 </style>
+
+<script>
+  // Auto-colapsa o accordion ao escolher uma âncora — decisão nova (não
+  // vinha do Figma): sem isso, ele fica expandido ocupando espaço da
+  // tela depois que o usuário já navegou pra onde queria.
+  const accordion = document.querySelector<HTMLDetailsElement>('.case-accordion');
+  const links = accordion?.querySelectorAll<HTMLAnchorElement>('[data-side-menu-link]');
+
+  links?.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (accordion) {
+        accordion.open = false;
+      }
+    });
+  });
+</script>
