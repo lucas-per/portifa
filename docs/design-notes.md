@@ -45,6 +45,23 @@ Para ajustes que não justificam um frame inteiro:
 
 ---
 
+## Padrão de implementação — fidelidade estrutural ao Figma
+
+Convenção geral, válida para toda a implementação (não é intenção de uma camada específica):
+
+- **A hierarquia de containers no código deve espelhar a hierarquia de auto-layout do Figma** — cada `row-*`/`col-*`/`wrap-*` do Figma deve virar um elemento HTML correspondente na mesma posição da árvore, não ser "achatado" em divs genéricas reconstruídas de memória
+- **Margens, paddings e gaps devem ser aplicados no elemento que os possui no Figma** — se o espaçamento pertence ao container pai (`padding`/`gap` do auto-layout), aplicar no container correspondente no código; não simular com `margin` em elementos filhos, mesmo que o resultado visual pareça igual à primeira vista
+- **Motivo:** implementações que "adivinham" a estrutura, em vez de espelhar o Figma, tendem a parecer corretas isoladamente mas quebram de formas sutis quando o conteúdo muda (texto mais longo, mais itens, cards de alturas diferentes) — gerando retrabalho evitável
+
+---
+
+## Formatos de arquivo
+
+### Imagem
+Não converta imagens vetoriais, como um SVG, para um formato de bitmap, como PNG e JPEG.
+
+---
+
 ## Arquitetura de tokens (Figma Variables)
 
 As variables do Figma estão organizadas em duas collections, cada uma com grupos e subgrupos internos, nomenclatura já definida diretamente nas variables:
@@ -219,6 +236,12 @@ Exemplo (baseado no PRD do site pessoal):
 **Decisão:** ao clicar, deve levar o usuário para a página em questão (no caso, a home/página inicial)
 **Motivo:** facilitar a navegação do usuário por todo o site
 
+### clickable-link-internal-previous-page-title — cor/underline no breadcrumb mobile
+**Contexto:** estilo do breadcrumb do case no mobile (<768px, node 275:426) — "Início" (link) e o título da página atual, lado a lado
+**Decisão (diverge do Figma atual — pendente de corrigir lá):** o destaque azul + underline vai no link clicável ("Início"), não no título da página atual. O Figma mobile tinha isso invertido (underline/azul no `non-clickable-active-page-title`, "Início" em cinza neutro)
+**Motivo:** confirmado com o usuário — texto não-clicável estilizado como link (e o link de fato clicável sem nenhuma affordance) confunde a expectativa padrão de breadcrumb; o link deve parecer link
+**Ação pendente:** corrigir a cor/underline no Figma (mover do item ativo pro link "Início")
+
 ### published-case-date
 **Contexto:** data em que o case foi publicado na internet
 **Decisão:** ao incluir um case novo no site, trazer a data em que foi publicado
@@ -238,6 +261,12 @@ Exemplo (baseado no PRD do site pessoal):
 **Contexto:** container clicável que possibilita ver a lista de opções do componente accordion
 **Decisão:** ao clicar, a lista de opções do accordion se expande mostrando todas as opções selecionáveis
 **Motivo:** facilitar a navegação do usuário por todo o case quando estiver usando celular
+
+### clickable-row-accordion-sections — conteúdo expandido (mobile)
+**Contexto:** lista de âncoras que aparece dentro do accordion quando expandido (case, mobile <768px) — equivalente mobile do SideMenu desktop
+**Decisão:** a lista expandida mostra só as 7 âncoras de seção (Resumo, Contexto, Problema & Desafios, Discovery, Delivery, Impacto, Visão de futuro), sem o botão "Voltar" que existe no SideMenu desktop
+**Motivo:** a instância do accordion capturada via `get_design_context` (node 299:673) tinha o container `col-menu-list-items` vazio (sem conteúdo autoral), então não deu pra confirmar via Figma; a altura documentada nesse container (442px) bate com as 7 âncoras sozinhas, sem sobrar espaço pro botão — e o breadcrumb "Início" no topo da página já cobre a navegação de volta. Confirmado com o usuário durante a implementação do breakpoint mobile (2026-09-11)
+**Ação pendente:** se o Figma vier a autorar esse conteúdo, revisar essa decisão
 
 ### row-results-payments
 **Contexto:** bloco de destaques/métricas de resultado (ex: "+15% Boletos pagos") dentro do card de case na Home — usado tanto no card "Pagamentos" (2 métricas) quanto no "GoSafe DS" (1 métrica)

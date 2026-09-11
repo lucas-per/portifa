@@ -11,7 +11,7 @@ import avatar from '../../assets/home/avatar.png';
       <span class="hero__title--accent">produtos complexos</span> em experiências
       de <span class="hero__title--accent">alto impacto</span>
     </p>
-    <div class="hero__avatar-frame">
+    <div class="hero__avatar-frame hidden-mobile-avatar-frame">
       <Image src={avatar} alt="Foto de Lucas Pereira" width={256} height={256} loading="eager" />
     </div>
   </div>
@@ -54,5 +54,20 @@ import avatar from '../../assets/home/avatar.png';
     background-color: var(--surface-bg-avatar-frame);
     border: 3px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-img);
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      gap: var(--scale-x14);
+      padding: var(--scale-x11) var(--scale-x5);
+    }
+
+    .hero__title {
+      margin-top: 0;
+    }
+
+    .hidden-mobile-avatar-frame {
+      display: none;
+    }
   }
 </style>

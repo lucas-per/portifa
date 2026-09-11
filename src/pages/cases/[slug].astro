@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Divider from '../../components/ui/Divider.astro';
 import CaseHeader from '../../components/sections/case/CaseHeader.astro';
 import SideMenu from '../../components/sections/case/SideMenu.astro';
+import CaseAccordion from '../../components/sections/case/CaseAccordion.astro';
 import CaseSummary from '../../components/sections/case/CaseSummary.astro';
 import CaseContext from '../../components/sections/case/CaseContext.astro';
 import CaseProblems from '../../components/sections/case/CaseProblems.astro';
@@ -32,7 +33,7 @@ const readingTime = estimateReadingTime(data.content);
 ---
 
 <BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
-  <Divider />
+  <Divider class="case-top-divider" />
   <CaseHeader
     title={data.title}
     status={data.status}
@@ -44,6 +45,7 @@ const readingTime = estimateReadingTime(data.content);
   <div class="case-layout">
     <SideMenu />
     <div class="case-layout__divider" aria-hidden="true"></div>
+    <CaseAccordion />
     <div class="case-layout__content">
       <div class="case-layout__content-inner">
         <CaseSummary
@@ -98,6 +100,7 @@ const readingTime = estimateReadingTime(data.content);
       </div>
     </div>
   </div>
+  <Divider class="case-trail-divider" height="7px" color="var(--surface-bg-tertiary-strong)" />
 </BaseLayout>
 
 <style>
@@ -138,5 +141,58 @@ const readingTime = estimateReadingTime(data.content);
     flex-direction: column;
     gap: var(--scale-x11);
     max-width: 977px;
+  }
+
+  /*
+    Divider vermelho antes do footer (Figma, node 275:1149) — só existe
+    no mobile. No desktop o fundo cinza de .case-layout__content já
+    encosta direto no footer de propósito (ver design-notes.md,
+    entrada "col-case-content"), sem essa linha.
+  */
+  :global(.case-trail-divider) {
+    display: none;
+  }
+
+  /*
+    O primeiro <Divider /> da página (entre o header e o CaseHeader) é
+    redundante no mobile: HeaderMobile.astro já renderiza seu próprio
+    divisor de 5px colado no fim do header sticky (Figma, node
+    254:1007). Os dois juntos criavam uma linha dupla logo abaixo do
+    header.
+  */
+  @media (max-width: 767px) {
+    :global(.case-top-divider) {
+      display: none;
+    }
+
+    :global(.case-trail-divider) {
+      display: block;
+    }
+
+    .case-layout {
+      flex-direction: column;
+      padding-left: 0;
+    }
+
+    .case-layout__divider {
+      display: none;
+    }
+
+    /*
+      Sem padding-left aqui (Figma, node 275:471 "col-content-case"): o
+      inset de 20px é interno a cada seção (ver comentário em cada
+      componente), não deste container compartilhado — os dividers
+      estreitos entre seções (Divider width="156px", filhos diretos de
+      .case-layout__content-inner) não têm padding próprio, então
+      precisam da borda real do container pra ficar 20px à esquerda do
+      texto, "vazando" o inset em vez de herdá-lo.
+    */
+    .case-layout__content {
+      padding: var(--scale-x7) var(--scale-x5) var(--scale-x11) 0;
+    }
+
+    .case-layout__content-inner {
+      max-width: none;
+    }
   }
 </style>

@@ -69,4 +69,13 @@ const { highlights, description } = Astro.props;
     gap: var(--scale-x3);
     color: var(--text-body-neutral-strong);
   }
+
+  @media (max-width: 767px) {
+    .case-impact {
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
+    }
+  }
 </style>

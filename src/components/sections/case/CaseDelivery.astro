@@ -85,4 +85,17 @@ const { myRole, designSystem, home } = Astro.props;
     width: 100%;
     height: auto;
   }
+
+  @media (max-width: 767px) {
+    .case-delivery {
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
+    }
+
+    .case-delivery__images {
+      flex-direction: column;
+    }
+  }
 </style>

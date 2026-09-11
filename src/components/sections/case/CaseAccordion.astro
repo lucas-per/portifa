@@ -1,0 +1,194 @@
+---
+import chevronDownIcon from '../../../assets/icons/case/chevron-down.svg';
+import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items';
+---
+
+<div class="case-accordion-sticky">
+  <details class="case-accordion clickable-row-accordion-sections">
+    <summary class="case-accordion__summary">
+      NESTA PÁGINA
+      <img
+        src={chevronDownIcon.src}
+        width="24"
+        height="24"
+        alt=""
+        class="case-accordion__chevron"
+      />
+    </summary>
+    <ul class="case-accordion__list">
+      {items.map((item) => (
+        <li class="side-menu__item" data-side-menu-item>
+          <a href={item.href} class="side-menu__link text-label-md" data-side-menu-link data-target={item.href.slice(1)}>
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </details>
+  <div class="case-accordion__divider" aria-hidden="true"></div>
+</div>
+
+<style>
+  /*
+    O divisor (Figma, node 275:1265) precisa acompanhar o accordion
+    quando ele fica sticky — por isso o sticky vive no wrapper (que
+    inclui o divisor) e não só em .case-accordion: um divisor fora do
+    wrapper sticky rolaria pra fora de vista assim que a página
+    scrollasse, deixando o accordion "grudado" sem nenhuma linha
+    separando ele do conteúdo abaixo.
+  */
+  .case-accordion-sticky {
+    display: none;
+    /*
+      width: 100% explícito é obrigatório aqui: como este wrapper é o
+      item flex direto de .case-layout (align-items: flex-start), sem
+      largura própria ele encolhe pro conteúdo (shrink-to-fit) — o
+      width: 100% de .case-accordion, um filho com % dentro de um
+      ancestral sem largura definida, é ignorado nesse cálculo, e o
+      accordion aparecia como uma caixa menor que a tela inteira.
+    */
+    width: 100%;
+    position: sticky;
+    /*
+      99px = altura renderizada de HeaderMobile.astro (pt-20 + core +
+      divider-5, node 254:1007), medida ao vivo — se o header mudar de
+      altura, ajustar este valor junto.
+    */
+    top: 99px;
+    z-index: 9;
+  }
+
+  .case-accordion {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--scale-x4) var(--scale-x5);
+    background-color: var(--surface-bg-off-white-primary);
+  }
+
+  /* width: 100% relativo a .case-accordion-sticky (irmão de
+     .case-accordion, não filho) — independente do tamanho do
+     accordion em si, sempre a largura cheia do wrapper. */
+  .case-accordion__divider {
+    width: 100%;
+    height: 5px;
+    background-color: var(--surface-bg-accent-strong);
+  }
+
+  .case-accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-family-body);
+    font-weight: var(--weight-600);
+    font-size: var(--scale-x4);
+    line-height: var(--line-height-regular);
+    color: var(--text-body-primary-strong);
+  }
+
+  .case-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .case-accordion__summary:focus-visible {
+    outline: 2px solid var(--border-focus-strong);
+    outline-offset: 2px;
+  }
+
+  /* Duração aumentada (0.1s -> 0.3s) pra sensação mais suave — pedido
+     do usuário, a transição original parecia abrupta demais. */
+  .case-accordion__chevron {
+    transition: transform 0.3s ease;
+  }
+
+  .case-accordion[open] .case-accordion__chevron {
+    transform: rotate(180deg);
+  }
+
+  .case-accordion__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+    list-style: none;
+    margin: 0;
+    padding-top: var(--scale-x4);
+  }
+
+  .case-accordion__list .side-menu__item {
+    display: flex;
+    border-left: 5px solid transparent;
+    padding-left: 0;
+  }
+
+  .case-accordion__list .side-menu__item--active {
+    border-left-color: var(--border-accent-strong);
+    padding-left: var(--scale-x4);
+  }
+
+  .case-accordion__list .side-menu__link {
+    display: inline-flex;
+    width: 100%;
+    padding: var(--scale-x3) var(--scale-x4);
+    border: 3px solid var(--button-border-primary-subtlest);
+    background: var(--button-bg-primary-outline-regular);
+    color: var(--text-label-primary);
+    text-decoration: none;
+  }
+
+  .case-accordion__list .side-menu__link--active {
+    background: transparent;
+    border-color: var(--button-border-neutral-invisible);
+    color: var(--text-label-accent);
+  }
+
+  @media (max-width: 767px) {
+    .case-accordion-sticky {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  // Auto-colapsa o accordion ao escolher uma âncora — decisão nova (não
+  // vinha do Figma): sem isso, ele fica expandido ocupando espaço da
+  // tela depois que o usuário já navegou pra onde queria.
+  //
+  // O salto padrão do navegador pro #id (href normal) calcula a posição
+  // ANTES do reflow do colapso terminar, então a seção-alvo ficava
+  // escondida atrás do header + accordion ainda expandido. Por isso o
+  // scroll é feito manualmente aqui: colapsa primeiro (síncrono),
+  // depois lê a altura já colapsada do wrapper sticky (getBoundingClientRect
+  // força o reflow) e desconta header + accordion colapsado do destino.
+  const accordion = document.querySelector<HTMLDetailsElement>('.case-accordion');
+  const stickyWrapper = document.querySelector<HTMLElement>('.case-accordion-sticky');
+  const links = accordion?.querySelectorAll<HTMLAnchorElement>('[data-side-menu-link]');
+
+  links?.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const id = link.dataset.target;
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+
+      event.preventDefault();
+
+      if (accordion) {
+        accordion.open = false;
+      }
+
+      // .bottom (não .height): já inclui o offset do header, porque o
+      // wrapper sticky começa a 99px do topo — .bottom é onde a borda
+      // inferior do accordion colapsado realmente fica na viewport,
+      // stuck ou não.
+      //
+      // SCROLL_GAP soma um respiro visual extra abaixo do accordion
+      // colapsado: sem ele, o título da seção ficava colado direto na
+      // borda do accordion (correto tecnicamente, mas apertado demais).
+      const SCROLL_GAP = 20; // var(--scale-x5)
+      const offset = (stickyWrapper?.getBoundingClientRect().bottom ?? 0) + SCROLL_GAP;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top });
+      history.pushState(null, '', `#${id}`);
+    });
+  });
+</script>

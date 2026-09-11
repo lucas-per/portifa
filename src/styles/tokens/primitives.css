@@ -60,6 +60,7 @@
   --scale-x10: 2.5rem; /* 40px */
   --scale-x11: 2.75rem; /* 44px */
   --scale-x12: 3rem; /* 48px */
+  --scale-x14: 3.5rem; /* 56px — gap do hero mobile (Figma, node 235:745) */
   --scale-x16: 4rem; /* 64px */
   --scale-x20: 5.5rem; /* 88px */
 

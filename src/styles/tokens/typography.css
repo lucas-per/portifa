@@ -103,3 +103,35 @@
   text-transform: uppercase;
   margin: 0;
 }
+
+/*
+  Escala tipográfica mobile (<768px, Figma "Prototype — Mobile",
+  frames mobile-home node 235:741 e mobile-case node 275:421).
+  text-title-h2 cai pra 32px aqui (bate com "Cases selecionados",
+  "Skills & Expertise" e "Sobre mim" na Home) — exceção: o h1 da página de
+  case (.case-header__title) mantém 36px no Figma mobile, então esse
+  elemento tem override próprio, mais específico, em CaseHeader.astro.
+*/
+@media (max-width: 767px) {
+  .text-title-display {
+    font-size: var(--scale-x9);
+  }
+
+  .text-title-h2 {
+    font-size: var(--scale-x8);
+  }
+
+  .text-title-h3,
+  .text-title-h4 {
+    font-size: var(--scale-x6);
+    font-weight: var(--weight-700);
+  }
+
+  .text-body-md {
+    font-size: var(--scale-x4);
+  }
+
+  .text-label-sm {
+    font-size: var(--scale-x3);
+  }
+}

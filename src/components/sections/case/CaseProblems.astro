@@ -46,4 +46,13 @@ const { intro, hypothesis, risks, kpis } = Astro.props;
     margin: 0;
     padding-left: var(--scale-x6);
   }
+
+  @media (max-width: 767px) {
+    .case-problems {
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
+    }
+  }
 </style>

@@ -1,9 +1,20 @@
 ---
 import Button from '../../ui/Button.astro';
 import arrowUpIcon from '../../../assets/icons/case/arrow-up.svg';
+import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
 ---
 
 <div class="back-to-top">
+  <Button
+    href="/"
+    variant="outline-accent"
+    class="clickable-link-internal-home back-to-top__voltar"
+  >
+    <Fragment slot="leading-icon">
+      <img src={arrowLeftIcon.src} width="24" height="24" alt="" />
+    </Fragment>
+    Voltar
+  </Button>
   <Button href="#top" variant="outline-accent" class="clickable-anchor-backtotop">
     Ir para o topo
     <Fragment slot="icon">
@@ -14,6 +25,37 @@ import arrowUpIcon from '../../../assets/icons/case/arrow-up.svg';
 
 <style>
   .back-to-top {
+    display: flex;
+    align-items: flex-start;
     padding-left: var(--scale-x12);
+  }
+
+  /*
+    "Voltar" (Figma, node 275:1247) só existe ao lado de "Ir para o
+    topo" no mobile — no desktop essa navegação de volta já vive no
+    SideMenu (side-menu__link do tipo Voltar), então não duplica aqui.
+    :global() é necessário aqui porque a classe é passada como prop pro
+    Button.astro — o elemento renderizado carrega o escopo do Button,
+    não o deste arquivo.
+  */
+  /* .button.back-to-top__voltar (duas classes) pra garantir prioridade
+     sobre a regra .button do Button.astro independente da ordem de
+     carregamento — ver comentário equivalente em CaseHeader.astro. */
+  :global(.button.back-to-top__voltar) {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .back-to-top {
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
+      gap: var(--scale-x2);
+    }
+
+    :global(.button.back-to-top__voltar) {
+      display: inline-flex;
+    }
   }
 </style>

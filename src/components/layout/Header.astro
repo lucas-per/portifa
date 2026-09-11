@@ -39,4 +39,13 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
     gap: var(--scale-x12);
     align-items: center;
   }
+
+  /* No mobile, o header vira o layout próprio de HeaderMobile.astro
+     (Figma: header-mobile, node 254:1007) — não é este componente
+     encolhendo, então ele só some abaixo do breakpoint. */
+  @media (max-width: 767px) {
+    .site-header {
+      display: none;
+    }
+  }
 </style>
