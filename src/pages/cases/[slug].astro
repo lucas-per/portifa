@@ -104,6 +104,14 @@ const readingTime = estimateReadingTime(data.content);
 </BaseLayout>
 
 <style>
+  /* Mesmo padrão de site-header__inner/site-footer__inner/hero__inner
+     (max-width 1440 + margin auto + box-sizing:border-box) — sem isso,
+     o conteúdo do case ficava colado à esquerda com um vazio grande à
+     direita em telas acima de 1440px (o Figma foi desenhado só em
+     1440px fixo e não previa esse comportamento). O padding-left
+     continua aqui (agora incluído no box de 1440 via border-box, não
+     mais "sozinho" ancorando à borda real da viewport) — é ele que
+     mantém o menu lateral 88px depois da borda esquerda do bloco. */
   .case-layout {
     display: flex;
     /* Sem gap aqui: no Figma o espaço de 48px existe só entre o menu e o
@@ -113,9 +121,12 @@ const readingTime = estimateReadingTime(data.content);
     /* Sem padding-top nem padding-right/bottom aqui: o divisor vertical
        precisa encostar direto no divisor horizontal acima (sem lacuna), e
        o fundo cinza de .case-layout__content precisa se estender até a
-       borda direita da página e até o footer — por isso o respiro
-       direito/inferior vive dentro do próprio .case-layout__content (fica
-       colorido também), não aqui fora dele. */
+       borda direita do bloco de 1440px e até o footer — por isso o
+       respiro direito/inferior vive dentro do próprio
+       .case-layout__content (fica colorido também), não aqui fora dele. */
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
     padding-left: var(--scale-x20);
     align-items: flex-start;
   }
