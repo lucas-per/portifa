@@ -5,28 +5,37 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
 ---
 
 <header class="site-header">
-  <a href="/" class="site-header__logo clickable-link-internal-home">
-    <img src={logo.src} width="304" height="54" alt="Lucas Pereira" />
-  </a>
-  <div class="site-header__cta">
-    <Button href="#sobre-mim" variant="outline-accent" class="clickable-anchor-aboutme">
-      Sobre mim
-    </Button>
-    <Button href="mailto:oi@lpereira.me" variant="filled-accent" class="clickable-mailto-header">
-      Contato
-      <Fragment slot="icon">
-        <img src={mailIcon.src} width="24" height="24" alt="" />
-      </Fragment>
-    </Button>
+  <div class="site-header__inner">
+    <a href="/" class="site-header__logo clickable-link-internal-home">
+      <img src={logo.src} width="304" height="54" alt="Lucas Pereira" />
+    </a>
+    <div class="site-header__cta">
+      <Button href="#sobre-mim" variant="outline-accent" class="clickable-anchor-aboutme">
+        Sobre mim
+      </Button>
+      <Button href="mailto:oi@lpereira.me" variant="filled-accent" class="clickable-mailto-header">
+        Contato
+        <Fragment slot="icon">
+          <img src={mailIcon.src} width="24" height="24" alt="" />
+        </Fragment>
+      </Button>
+    </div>
   </div>
 </header>
 
 <style>
   .site-header {
+    width: 100%;
+  }
+
+  .site-header__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--scale-x8);
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
     padding: var(--scale-x8) var(--scale-x20);
   }
 

@@ -13,42 +13,56 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
 ---
 
 <header class="case-header" id="top">
-  <nav class="case-header__breadcrumb" aria-label="breadcrumb">
-    <a href="/" class="clickable-link-internal-previous-page-title text-body-caption">Início</a>
-    <span aria-hidden="true">/</span>
-    <span class="non-clickable-active-page-title text-body-caption">{title}</span>
-  </nav>
+  <div class="case-header__inner">
+    <nav class="case-header__breadcrumb" aria-label="breadcrumb">
+      <a href="/" class="clickable-link-internal-previous-page-title text-body-caption">Início</a>
+      <span aria-hidden="true">/</span>
+      <span class="non-clickable-active-page-title text-body-caption">{title}</span>
+    </nav>
 
-  {status === 'published' && (
-    <ul class="case-header__tags">
-      {tags.map((tag) => (
-        <li><Tag variant="secondary">{tag}</Tag></li>
-      ))}
-    </ul>
-  )}
+    {status === 'published' && (
+      <ul class="case-header__tags">
+        {tags.map((tag) => (
+          <li><Tag variant="secondary">{tag}</Tag></li>
+        ))}
+      </ul>
+    )}
 
-  <h1 class="case-header__title text-title-h2">{title}</h1>
+    <h1 class="case-header__title text-title-h2">{title}</h1>
 
-  <p class="case-header__meta text-body-caption">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 2V2.66667H10V2H11.3333V2.66667H14C14 2.66667 14 12.527 14 14C12.5176 14 2 14 2 14C2 12.6313 2 2.66667 2 2.66667H4.66667V2H6ZM12.6667 8H3.33333V12.6667H12.6667V8ZM7.33333 9.33333V12H4V9.33333H7.33333ZM4.66667 4H3.33333V6.66667H12.6667V4H11.3333V5.33333H10V4H6V5.33333H4.66667V4Z" fill="currentColor"/>
-    </svg>
-    <time class="published-case-date" datetime={publishedDate.toISOString()}>
-      {publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
-    </time>
-    <span aria-hidden="true">·</span>
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-      <path d="M14 2V14H2V2H14ZM3.33333 12.6667H12.6667V3.33333H3.33333V12.6667ZM8.66667 4.33333V7.33333H10.6667V8.66667H7.33333V4.33333H8.66667Z" fill="currentColor"/>
-    </svg>
-    <span class="estimated-time">{readingTime} {readingTime === 1 ? 'minuto' : 'minutos'}</span>
-  </p>
+    <p class="case-header__meta text-body-caption">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2V2.66667H10V2H11.3333V2.66667H14C14 2.66667 14 12.527 14 14C12.5176 14 2 14 2 14C2 12.6313 2 2.66667 2 2.66667H4.66667V2H6ZM12.6667 8H3.33333V12.6667H12.6667V8ZM7.33333 9.33333V12H4V9.33333H7.33333ZM4.66667 4H3.33333V6.66667H12.6667V4H11.3333V5.33333H10V4H6V5.33333H4.66667V4Z" fill="currentColor"/>
+      </svg>
+      <time class="published-case-date" datetime={publishedDate.toISOString()}>
+        {publishedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+      </time>
+      <span aria-hidden="true">·</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2V14H2V2H14ZM3.33333 12.6667H12.6667V3.33333H3.33333V12.6667ZM8.66667 4.33333V7.33333H10.6667V8.66667H7.33333V4.33333H8.66667Z" fill="currentColor"/>
+      </svg>
+      <span class="estimated-time">{readingTime} {readingTime === 1 ? 'minuto' : 'minutos'}</span>
+    </p>
+  </div>
 </header>
 
 <style>
   .case-header {
+    width: 100%;
+  }
+
+  /* Mesmo padrão de site-header__inner/site-footer__inner/hero__inner
+     (max-width 1440 + margin auto + box-sizing:border-box) — sem isso,
+     o header do case ficava colado à esquerda com um vazio à direita
+     em telas acima de 1440px (o Figma foi desenhado só em 1440px
+     fixo e não previa esse comportamento). */
+  .case-header__inner {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x4);
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
     padding: var(--scale-x12) var(--scale-x20);
   }
 
@@ -81,7 +95,7 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
   }
 
   @media (max-width: 767px) {
-    .case-header {
+    .case-header__inner {
       padding: var(--scale-x11) var(--scale-x5) var(--scale-x6);
     }
 

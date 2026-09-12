@@ -26,9 +26,17 @@ const { title, description = 'Portfólio de Lucas Pereira, Product Designer.' } 
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lpereira.me/" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lpereira.me/og-image.png" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="600" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://lpereira.me/og-image.png" />
     {import.meta.env.PUBLIC_UMAMI_WEBSITE_ID && (
       <script
         defer
@@ -37,17 +45,8 @@ const { title, description = 'Portfólio de Lucas Pereira, Product Designer.' } 
       ></script>
     )}
     <style>
-      /*
-        Figma (desktop-home) é um frame fixo de 1440px, com todo o conteúdo
-        interno (row-headline, col-cases, row-skills etc.) sempre a 1264px
-        (1440 - 88px de padding de cada lado). Sem esse teto, telas mais
-        largas que 1440px esticam o conteúdo além do design — quebrando
-        menos linha de texto do que no Figma e distorcendo qualquer gap
-        calculado via justify-content: space-between.
-      */
       body {
-        max-width: 1440px;
-        margin-inline: auto;
+        margin: 0;
         background-color: var(--surface-bg-off-white-primary);
       }
     </style>

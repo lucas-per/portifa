@@ -7,72 +7,122 @@ const dividerLines = Array.from({ length: 4 });
 
 <footer class="site-footer">
   <div class="site-footer__buttons">
-    <div class="site-footer__dividers" aria-hidden="true">
+    <!-- col-dividers, node 305:437 -->
+    <div class="site-footer__dividers site-footer__dividers--edge" aria-hidden="true">
       {dividerLines.map(() => <div class="site-footer__divider-line" />)}
     </div>
-    <Button href="mailto:oi@lpereira.me" variant="outline-primary" size="sm" class="clickable-mailto-footer">
-      oi@lpereira.me
-      <Fragment slot="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 3C22 5.20956 22 21 22 21H2C2 21 2 5.05303 2 3C2 3 19.7765 3 22 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z" fill="currentColor"/>
-        </svg>
-      </Fragment>
-    </Button>
-    <div class="site-footer__dividers" aria-hidden="true">
-      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    <div class="site-footer__buttons-content">
+      <div class="site-footer__dividers site-footer__dividers--fixed" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button href="mailto:oi@lpereira.me" variant="outline-primary" size="sm" class="clickable-mailto-footer">
+        oi@lpereira.me
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 3C22 5.20956 22 21 22 21H2C2 21 2 5.05303 2 3C2 3 19.7765 3 22 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button
+        href="/cv-lucas-pereira.pdf"
+        variant="outline-primary"
+        size="sm"
+        download
+        class="clickable-download-cv"
+      >
+        Baixar CV
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 19H20V12H22C22 13.3616 22 21 22 21H2C2 21 2 13.3616 2 12H4V19ZM14 9H19L12 16L5 9H10V3H14V9Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button
+        href="https://www.linkedin.com/in/lucasvalimpereira/"
+        variant="outline-primary"
+        size="sm"
+        external
+        class="clickable-link-external-linkedin"
+      >
+        LinkedIn
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers site-footer__dividers--fixed" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
     </div>
-    <Button
-      href="/cv-lucas-pereira.pdf"
-      variant="outline-primary"
-      size="sm"
-      download
-      class="clickable-download-cv"
-    >
-      Baixar CV
-      <Fragment slot="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 19H20V12H22C22 13.3616 22 21 22 21H2C2 21 2 13.3616 2 12H4V19ZM14 9H19L12 16L5 9H10V3H14V9Z" fill="currentColor"/>
-        </svg>
-      </Fragment>
-    </Button>
-    <div class="site-footer__dividers" aria-hidden="true">
-      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-    </div>
-    <Button
-      href="https://www.linkedin.com/in/lucasvalimpereira/"
-      variant="outline-primary"
-      size="sm"
-      external
-      class="clickable-link-external-linkedin"
-    >
-      LinkedIn
-      <Fragment slot="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
-        </svg>
-      </Fragment>
-    </Button>
-    <div class="site-footer__dividers" aria-hidden="true">
+    <!-- col-dividers, node 305:449 -->
+    <div class="site-footer__dividers site-footer__dividers--edge" aria-hidden="true">
       {dividerLines.map(() => <div class="site-footer__divider-line" />)}
     </div>
   </div>
-  <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
+  <div class="site-footer__inner">
+    <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
+  </div>
 </footer>
 
 <style>
   .site-footer {
-    display: flex;
-    flex-direction: column;
+    width: 100%;
     border-top: 5px solid var(--border-accent-strong);
     background-color: var(--surface-bg-off-white-primary);
   }
 
+  .site-footer__inner {
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--scale-x20);
+  }
+
+  /* Full-bleed: ao contrário de .site-footer__inner, essa row precisa
+     esticar borda a borda da viewport (não só até 1440px) pra que os
+     dois blocos de dividers decorativos das pontas (col-dividers,
+     nodes 305:437/305:449) preencham o espaço sobrando em telas
+     largas — o Figma foi desenhado só em 1440px fixo e não previa
+     esse comportamento. */
   .site-footer__buttons {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    /* Sem gap aqui: o espaçamento entre botões/dividers vive só dentro
+       de .site-footer__buttons-content (que tem o próprio gap) — um
+       gap nesta linha externa reservaria espaço extra ao redor dos
+       blocos de dividers das pontas mesmo quando eles encolhem a
+       largura zero, deslocando a zona de conteúdo pra fora do
+       alinhamento com o resto da página em telas ≤1440px. */
+    padding: var(--scale-x4) 0;
+    border-bottom: 3px solid var(--border-primary-subtle);
+  }
+
+  /* Zona de conteúdo central: mesmo max-width/box-sizing/centralização
+     de site-header__inner, site-footer__inner e hero__inner, mas sem
+     padding horizontal — o respiro aqui vem dos dois dividers fixos
+     de 64px (.site-footer__dividers--fixed, no início/fim desta lista
+     de filhos) somados ao gap:24px da própria linha
+     (64+24=88, o mesmo valor do padding que substituem). flex-basis
+     1440px (em vez de só max-width) garante que ela ocupe exatamente
+     esse espaço e ceda o resto para os blocos de dividers das pontas
+     full-bleed (node 305:437/305:449) crescerem. */
+  .site-footer__buttons-content {
+    flex: 0 1 1440px;
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     gap: var(--scale-x6);
-    padding: var(--scale-x4) var(--scale-x20);
-    border-bottom: 3px solid var(--border-primary-subtle);
   }
 
   .site-footer__dividers {
@@ -80,6 +130,23 @@ const dividerLines = Array.from({ length: 4 });
     display: flex;
     flex-direction: column;
     gap: var(--scale-x2);
+  }
+
+  /* Blocos das pontas: preenchem o espaço entre a borda real da
+     viewport e a zona de conteúdo (0 em telas ≤1440px, crescem acima
+     disso). min-width:0 evita que o conteúdo mínimo do flex item
+     impeça o encolhimento até zero. */
+  .site-footer__dividers--edge {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  /* Dividers fixos no início/fim da zona de conteúdo (substituem o
+     padding horizontal removido) — largura fixa, não participam do
+     crescimento/encolhimento como os das pontas full-bleed nem do
+     preenchimento variável dos dividers do meio. */
+  .site-footer__dividers--fixed {
+    flex: 0 0 64px;
   }
 
   .site-footer__divider-line {
