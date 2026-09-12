@@ -69,15 +69,17 @@ const dividerLines = Array.from({ length: 4 });
   }
 
   .site-footer__inner {
+    box-sizing: border-box;
     max-width: 1440px;
     margin: 0 auto;
+    padding: 0 var(--scale-x20);
   }
 
   .site-footer__buttons {
     display: flex;
     align-items: center;
     gap: var(--scale-x6);
-    padding: var(--scale-x4) var(--scale-x20);
+    padding: var(--scale-x4) 0;
     border-bottom: 3px solid var(--border-primary-subtle);
   }
 

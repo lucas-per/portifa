@@ -29,19 +29,15 @@ const barStyle = { width, height, backgroundColor: color };
 
 <style>
   /* Alguns dividers (ex: entre skills e sobre-mim) não são estruturais
-     full-bleed — precisam ficar presos à mesma coluna de conteúdo
-     (max-width 1440 + respiro 88px) das seções vizinhas, não à borda
-     real da viewport. */
+     full-bleed — precisam ficar presos à coluna max-width 1440 das
+     seções vizinhas, não à borda real da viewport. Sem padding aqui:
+     o cliente confirmou que a barra deve começar na borda esquerda do
+     próprio container de 1440 (antes do respiro de 88px do conteúdo),
+     não alinhada com o texto/cards que têm o padding aplicado. Isso
+     também mantém o comportamento em telas ≤1440px idêntico ao atual
+     (a barra encostada na borda real da viewport). */
   .divider-container {
-    box-sizing: border-box;
     max-width: 1440px;
     margin: 0 auto;
-    padding-inline: var(--scale-x20);
-  }
-
-  @media (max-width: 767px) {
-    .divider-container {
-      padding-inline: var(--scale-x5);
-    }
   }
 </style>
