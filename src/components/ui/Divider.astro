@@ -4,6 +4,7 @@ interface Props {
   height?: string;
   color?: string;
   class?: string;
+  contained?: boolean;
 }
 
 const {
@@ -11,10 +12,36 @@ const {
   height = '5px',
   color = 'var(--surface-bg-accent-strong)',
   class: className,
+  contained = false,
 } = Astro.props;
+
+const barClass = ['divider', className].filter(Boolean).join(' ');
+const barStyle = { width, height, backgroundColor: color };
 ---
 
-<div
-  class={['divider', className].filter(Boolean).join(' ')}
-  style={{ width, height, backgroundColor: color }}
-></div>
+{contained ? (
+  <div class="divider-container">
+    <div class={barClass} style={barStyle}></div>
+  </div>
+) : (
+  <div class={barClass} style={barStyle}></div>
+)}
+
+<style>
+  /* Alguns dividers (ex: entre skills e sobre-mim) não são estruturais
+     full-bleed — precisam ficar presos à mesma coluna de conteúdo
+     (max-width 1440 + respiro 88px) das seções vizinhas, não à borda
+     real da viewport. */
+  .divider-container {
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-inline: var(--scale-x20);
+  }
+
+  @media (max-width: 767px) {
+    .divider-container {
+      padding-inline: var(--scale-x5);
+    }
+  }
+</style>
