@@ -43,6 +43,7 @@ const readingTime = estimateReadingTime(data.content);
   />
   <Divider />
   <div class="case-layout">
+    <div class="case-layout__gutter" aria-hidden="true"></div>
     <SideMenu />
     <div class="case-layout__divider" aria-hidden="true"></div>
     <CaseAccordion />
@@ -104,15 +105,24 @@ const readingTime = estimateReadingTime(data.content);
 </BaseLayout>
 
 <style>
-  /* Mesmo padrão de site-header__inner/site-footer__inner/hero__inner
-     (max-width 1440 + margin auto + box-sizing:border-box) — sem isso,
-     o conteúdo do case ficava colado à esquerda com um vazio grande à
-     direita em telas acima de 1440px (o Figma foi desenhado só em
-     1440px fixo e não previa esse comportamento). O padding-left
-     continua aqui (agora incluído no box de 1440 via border-box, não
-     mais "sozinho" ancorando à borda real da viewport) — é ele que
-     mantém o menu lateral 88px depois da borda esquerda do bloco. */
+  /* .case-layout__gutter e a base de .case-layout__content substituem
+     o antigo max-width:1440+padding-left direto em .case-layout: aquele
+     esquema centralizava o menu lateral, mas também limitava o fundo
+     cinza de .case-layout__content ao boundary de 1440px — em telas
+     largas sobrava um vazio off-white entre o fim desse fundo e a
+     borda real da viewport (o Figma foi desenhado só em 1440px fixo e
+     não previa nenhum dos dois comportamentos). Em vez de capar
+     .case-layout, ele volta a ser full-bleed (width:100%) e ganha um
+     "gutter" invisível — mesma técnica de preenchedor flex das pontas
+     do footer da home (flex:1 1 <base>, dividido igualmente com
+     .case-layout__content, que também é flex:1). Como os dois crescem
+     na mesma proporção, o gutter sempre absorve exatamente metade do
+     espaço excedente acima de 1440px — a mesma posição que o menu
+     lateral já tinha quando .case-layout estava capado — enquanto
+     .case-layout__content (e seu fundo cinza) absorve a outra metade
+     e continua até a borda real da tela. */
   .case-layout {
+    width: 100%;
     display: flex;
     /* Sem gap aqui: no Figma o espaço de 48px existe só entre o menu e o
        divisor (fica em .side-menu como margin-right) — entre o divisor e
@@ -121,14 +131,22 @@ const readingTime = estimateReadingTime(data.content);
     /* Sem padding-top nem padding-right/bottom aqui: o divisor vertical
        precisa encostar direto no divisor horizontal acima (sem lacuna), e
        o fundo cinza de .case-layout__content precisa se estender até a
-       borda direita do bloco de 1440px e até o footer — por isso o
-       respiro direito/inferior vive dentro do próprio
-       .case-layout__content (fica colorido também), não aqui fora dele. */
-    box-sizing: border-box;
-    max-width: 1440px;
-    margin: 0 auto;
-    padding-left: var(--scale-x20);
+       borda real da viewport e até o footer — por isso o respiro
+       direito/inferior vive dentro do próprio .case-layout__content
+       (fica colorido também), não aqui fora dele. */
     align-items: flex-start;
+  }
+
+  /* flex-basis = padding-left que .case-layout tinha antes (88px) — em
+     telas ≤1440px o gutter fica exatamente nesse tamanho (sem espaço
+     excedente pra crescer), reproduzindo o layout atual. min-width:0
+     não é estritamente necessário aqui (o elemento não tem conteúdo
+     próprio, então não tem largura mínima intrínseca), mas documenta a
+     intenção de "pode encolher livremente" e casa com o padrão já
+     usado nos preenchedores full-bleed do footer da home. */
+  .case-layout__gutter {
+    flex: 1 1 var(--scale-x20);
+    min-width: 0;
   }
 
   .case-layout__divider {
@@ -137,10 +155,19 @@ const readingTime = estimateReadingTime(data.content);
     background-color: var(--surface-bg-accent-strong);
   }
 
+  /* flex-basis = max-width de .case-layout__content-inner (977px) —
+     SEM somar o padding-right aqui: flex-basis segue box-sizing
+     (content-box neste projeto), então o padding declarado abaixo já
+     é somado por cima automaticamente durante o layout. Com o menu
+     lateral/divisor/gutter, 977 + padding-right(88) fecha exatamente
+     os 1440px do frame do Figma quando não há espaço excedente. Sem
+     esse basis explícito (em vez do antigo `flex: 1`, que zera o
+     basis), o gutter acima ficaria com toda a folga sozinho em vez de
+     dividir meio a meio com o conteúdo. */
   .case-layout__content {
-    flex: 1;
+    flex: 1 1 977px;
     /* Sem max-width aqui: essa faixa é o fundo cinza inteiro, precisa
-       esticar até a borda direita da página e (decisão de design, diverge
+       esticar até a borda real da viewport e (decisão de design, diverge
        do Figma atual de propósito — ver design-notes.md) até o footer,
        sem sobrar respiro off-white. O miolo de 977px fica só no filho. */
     padding: var(--scale-x11) var(--scale-x20) var(--scale-x20) 0;
@@ -182,7 +209,14 @@ const readingTime = estimateReadingTime(data.content);
 
     .case-layout {
       flex-direction: column;
-      padding-left: 0;
+    }
+
+    /* Sem função no mobile (o menu lateral vira accordion) — some do
+       fluxo. Importante: se só ficasse invisível, o flex-basis de
+       88px herdado da regra desktop passaria a valer como altura (não
+       largura) assim que .case-layout vira flex-direction:column. */
+    .case-layout__gutter {
+      display: none;
     }
 
     .case-layout__divider {
@@ -199,6 +233,12 @@ const readingTime = estimateReadingTime(data.content);
       texto, "vazando" o inset em vez de herdá-lo.
     */
     .case-layout__content {
+      /* Reseta o flex-basis em calc(977px + 88px) da regra desktop:
+         em flex-direction:column esse valor passaria a ser lido como
+         altura (o eixo principal muda de largura pra altura), não
+         largura — sem isso o container tentaria nascer com ~1065px
+         de altura antes de crescer/encolher pro conteúdo real. */
+      flex: 1;
       padding: var(--scale-x7) var(--scale-x5) var(--scale-x11) 0;
     }
 
