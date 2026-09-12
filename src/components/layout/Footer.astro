@@ -6,65 +6,71 @@ const dividerLines = Array.from({ length: 4 });
 ---
 
 <footer class="site-footer">
-  <div class="site-footer__buttons">
-    <div class="site-footer__dividers" aria-hidden="true">
-      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+  <div class="site-footer__inner">
+    <div class="site-footer__buttons">
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button href="mailto:oi@lpereira.me" variant="outline-primary" size="sm" class="clickable-mailto-footer">
+        oi@lpereira.me
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 3C22 5.20956 22 21 22 21H2C2 21 2 5.05303 2 3C2 3 19.7765 3 22 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button
+        href="/cv-lucas-pereira.pdf"
+        variant="outline-primary"
+        size="sm"
+        download
+        class="clickable-download-cv"
+      >
+        Baixar CV
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 19H20V12H22C22 13.3616 22 21 22 21H2C2 21 2 13.3616 2 12H4V19ZM14 9H19L12 16L5 9H10V3H14V9Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button
+        href="https://www.linkedin.com/in/lucasvalimpereira/"
+        variant="outline-primary"
+        size="sm"
+        external
+        class="clickable-link-external-linkedin"
+      >
+        LinkedIn
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
     </div>
-    <Button href="mailto:oi@lpereira.me" variant="outline-primary" size="sm" class="clickable-mailto-footer">
-      oi@lpereira.me
-      <Fragment slot="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 3C22 5.20956 22 21 22 21H2C2 21 2 5.05303 2 3C2 3 19.7765 3 22 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z" fill="currentColor"/>
-        </svg>
-      </Fragment>
-    </Button>
-    <div class="site-footer__dividers" aria-hidden="true">
-      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-    </div>
-    <Button
-      href="/cv-lucas-pereira.pdf"
-      variant="outline-primary"
-      size="sm"
-      download
-      class="clickable-download-cv"
-    >
-      Baixar CV
-      <Fragment slot="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 19H20V12H22C22 13.3616 22 21 22 21H2C2 21 2 13.3616 2 12H4V19ZM14 9H19L12 16L5 9H10V3H14V9Z" fill="currentColor"/>
-        </svg>
-      </Fragment>
-    </Button>
-    <div class="site-footer__dividers" aria-hidden="true">
-      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-    </div>
-    <Button
-      href="https://www.linkedin.com/in/lucasvalimpereira/"
-      variant="outline-primary"
-      size="sm"
-      external
-      class="clickable-link-external-linkedin"
-    >
-      LinkedIn
-      <Fragment slot="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
-        </svg>
-      </Fragment>
-    </Button>
-    <div class="site-footer__dividers" aria-hidden="true">
-      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-    </div>
+    <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
   </div>
-  <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
 </footer>
 
 <style>
   .site-footer {
-    display: flex;
-    flex-direction: column;
+    width: 100%;
     border-top: 5px solid var(--border-accent-strong);
     background-color: var(--surface-bg-off-white-primary);
+  }
+
+  .site-footer__inner {
+    max-width: 1440px;
+    margin: 0 auto;
   }
 
   .site-footer__buttons {

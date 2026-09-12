@@ -52,46 +52,48 @@ const tools = [
 ---
 
 <section class="skills">
-  <h2 class="text-title-h2">Skills & Expertise</h2>
-  <div class="skills__grid">
-    <div class="skills__column">
-      <h3 class="skills__column-title skills__column-title--strategy text-title-h3">
-        Estratégia & Discovery
-      </h3>
-      <ul class="skills__list">
-        {strategySkills.map((skill) => (
-          <li class="text-body-md">{skill}</li>
-        ))}
-      </ul>
-    </div>
-    <div class="skills__column">
-      <h3 class="skills__column-title skills__column-title--ds text-title-h3">
-        Design Systems
-      </h3>
-      <ul class="skills__list">
-        {designSystemSkills.map((skill) => (
-          <li class="text-body-md">{skill}</li>
-        ))}
-      </ul>
-    </div>
-    <div class="skills__column">
-      <h3 class="skills__column-title skills__column-title--colab text-title-h3">
-        Execução e Colaboração
-      </h3>
-      <ul class="skills__list">
-        {collabSkills.map((skill) => (
-          <li class="text-body-md">{skill}</li>
-        ))}
-      </ul>
-    </div>
-    <div class="skills__column">
-      <h3 class="skills__column-title skills__column-title--tools text-title-h3">
-        Ferramentas que uso
-      </h3>
-      <div class="skills__tools">
-        {tools.map((tool) => (
-          <img src={tool.icon.src} width={tool.width} height={tool.height} alt={tool.alt} />
-        ))}
+  <div class="skills__inner">
+    <h2 class="text-title-h2">Skills & Expertise</h2>
+    <div class="skills__grid">
+      <div class="skills__column">
+        <h3 class="skills__column-title skills__column-title--strategy text-title-h3">
+          Estratégia & Discovery
+        </h3>
+        <ul class="skills__list">
+          {strategySkills.map((skill) => (
+            <li class="text-body-md">{skill}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="skills__column">
+        <h3 class="skills__column-title skills__column-title--ds text-title-h3">
+          Design Systems
+        </h3>
+        <ul class="skills__list">
+          {designSystemSkills.map((skill) => (
+            <li class="text-body-md">{skill}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="skills__column">
+        <h3 class="skills__column-title skills__column-title--colab text-title-h3">
+          Execução e Colaboração
+        </h3>
+        <ul class="skills__list">
+          {collabSkills.map((skill) => (
+            <li class="text-body-md">{skill}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="skills__column">
+        <h3 class="skills__column-title skills__column-title--tools text-title-h3">
+          Ferramentas que uso
+        </h3>
+        <div class="skills__tools">
+          {tools.map((tool) => (
+            <img src={tool.icon.src} width={tool.width} height={tool.height} alt={tool.alt} />
+          ))}
+        </div>
       </div>
     </div>
   </div>
@@ -99,11 +101,17 @@ const tools = [
 
 <style>
   .skills {
+    width: 100%;
+    color: var(--text-body-primary-strong);
+  }
+
+  .skills__inner {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x11);
+    max-width: 1440px;
+    margin: 0 auto;
     padding: var(--scale-x12) var(--scale-x20);
-    color: var(--text-body-primary-strong);
   }
 
   .skills__grid {
@@ -174,7 +182,7 @@ const tools = [
   }
 
   @media (max-width: 767px) {
-    .skills {
+    .skills__inner {
       padding: var(--scale-x12) var(--scale-x5);
     }
 

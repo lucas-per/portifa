@@ -2,34 +2,42 @@
 ---
 
 <section class="about-me" id="sobre-mim">
-  <h2 class="text-title-h2">Sobre mim</h2>
-  <div class="about-me__text text-body-md">
-    <p>
-      Sou um Product Designer focado em viabilizar soluções digitais que
-      equilibram estratégia de negócio, viabilidade técnica e usabilidade
-      refinada. Ao longo de mais de 11 anos de carreira, consolidei minha
-      experiência em mercados complexos, como o ecossistema financeiro,
-      serviços transacionais, seguros e segurança digital, integrando times
-      multidisciplinares para transformar problemas desafiadores em jornadas
-      fluidas, consistentes e intuitivas para o usuário final.
-    </p>
-    <p>
-      Tenho sólida bagagem na condução de processos de design de ponta a
-      ponta (Discovery e Delivery), liderando e mentorando outros designers
-      no desenvolvimento de projetos, além de contribuir ativamente na
-      construção e governança de Design Systems corporativos escaláveis e
-      acessíveis (WCAG).
-    </p>
+  <div class="about-me__inner">
+    <h2 class="text-title-h2">Sobre mim</h2>
+    <div class="about-me__text text-body-md">
+      <p>
+        Sou um Product Designer focado em viabilizar soluções digitais que
+        equilibram estratégia de negócio, viabilidade técnica e usabilidade
+        refinada. Ao longo de mais de 11 anos de carreira, consolidei minha
+        experiência em mercados complexos, como o ecossistema financeiro,
+        serviços transacionais, seguros e segurança digital, integrando times
+        multidisciplinares para transformar problemas desafiadores em jornadas
+        fluidas, consistentes e intuitivas para o usuário final.
+      </p>
+      <p>
+        Tenho sólida bagagem na condução de processos de design de ponta a
+        ponta (Discovery e Delivery), liderando e mentorando outros designers
+        no desenvolvimento de projetos, além de contribuir ativamente na
+        construção e governança de Design Systems corporativos escaláveis e
+        acessíveis (WCAG).
+      </p>
+    </div>
   </div>
 </section>
 
 <style>
   .about-me {
+    width: 100%;
+    color: var(--text-body-primary-strong);
+  }
+
+  .about-me__inner {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x11);
+    max-width: 1440px;
+    margin: 0 auto;
     padding: var(--scale-x12) var(--scale-x20) var(--scale-x20);
-    color: var(--text-body-primary-strong);
   }
 
   .about-me__text {
@@ -49,7 +57,7 @@
   }
 
   @media (max-width: 767px) {
-    .about-me {
+    .about-me__inner {
       padding: var(--scale-x12) var(--scale-x5);
     }
   }

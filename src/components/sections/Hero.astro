@@ -5,26 +5,34 @@ import avatar from '../../assets/home/avatar.png';
 ---
 
 <section class="hero">
-  <div class="hero__headline">
-    <p class="hero__title text-title-display">
-      Há alguns anos transformando{' '}
-      <span class="hero__title--accent">produtos complexos</span> em experiências
-      de <span class="hero__title--accent">alto impacto</span>
-    </p>
-    <div class="hero__avatar-frame hidden-mobile-avatar-frame">
-      <Image src={avatar} alt="Foto de Lucas Pereira" width={256} height={256} loading="eager" />
+  <div class="hero__inner">
+    <div class="hero__headline">
+      <p class="hero__title text-title-display">
+        Há alguns anos transformando{' '}
+        <span class="hero__title--accent">produtos complexos</span> em experiências
+        de <span class="hero__title--accent">alto impacto</span>
+      </p>
+      <div class="hero__avatar-frame hidden-mobile-avatar-frame">
+        <Image src={avatar} alt="Foto de Lucas Pereira" width={256} height={256} loading="eager" />
+      </div>
     </div>
+    <CasesPreview />
   </div>
-  <CasesPreview />
 </section>
 
 <style>
   .hero {
+    width: 100%;
+    background-color: var(--surface-bg-neutral-subtle);
+  }
+
+  .hero__inner {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x16);
+    max-width: 1440px;
+    margin: 0 auto;
     padding: var(--scale-x12) var(--scale-x20);
-    background-color: var(--surface-bg-neutral-subtle);
   }
 
   .hero__headline {
@@ -57,7 +65,7 @@ import avatar from '../../assets/home/avatar.png';
   }
 
   @media (max-width: 767px) {
-    .hero {
+    .hero__inner {
       gap: var(--scale-x14);
       padding: var(--scale-x11) var(--scale-x5);
     }
