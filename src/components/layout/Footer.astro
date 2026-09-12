@@ -6,11 +6,12 @@ const dividerLines = Array.from({ length: 4 });
 ---
 
 <footer class="site-footer">
-  <div class="site-footer__inner">
-    <div class="site-footer__buttons">
-      <div class="site-footer__dividers" aria-hidden="true">
-        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-      </div>
+  <div class="site-footer__buttons">
+    <!-- col-dividers, node 305:437 -->
+    <div class="site-footer__dividers site-footer__dividers--edge" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    </div>
+    <div class="site-footer__buttons-content">
       <Button href="mailto:oi@lpereira.me" variant="outline-primary" size="sm" class="clickable-mailto-footer">
         oi@lpereira.me
         <Fragment slot="icon">
@@ -53,10 +54,13 @@ const dividerLines = Array.from({ length: 4 });
           </svg>
         </Fragment>
       </Button>
-      <div class="site-footer__dividers" aria-hidden="true">
-        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-      </div>
     </div>
+    <!-- col-dividers, node 305:449 -->
+    <div class="site-footer__dividers site-footer__dividers--edge" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+    </div>
+  </div>
+  <div class="site-footer__inner">
     <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
   </div>
 </footer>
@@ -75,12 +79,41 @@ const dividerLines = Array.from({ length: 4 });
     padding: 0 var(--scale-x20);
   }
 
+  /* Full-bleed: ao contrário de .site-footer__inner, essa row precisa
+     esticar borda a borda da viewport (não só até 1440px) pra que os
+     dois blocos de dividers decorativos das pontas (col-dividers,
+     nodes 305:437/305:449) preencham o espaço sobrando em telas
+     largas — o Figma foi desenhado só em 1440px fixo e não previa
+     esse comportamento. */
   .site-footer__buttons {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    /* Sem gap aqui: o espaçamento entre botões/dividers vive só dentro
+       de .site-footer__buttons-content (que tem o próprio gap) — um
+       gap nesta linha externa reservaria espaço extra ao redor dos
+       blocos de dividers das pontas mesmo quando eles encolhem a
+       largura zero, deslocando a zona de conteúdo pra fora do
+       alinhamento com o resto da página em telas ≤1440px. */
+    padding: var(--scale-x4) 0;
+    border-bottom: 3px solid var(--border-primary-subtle);
+  }
+
+  /* Zona de conteúdo central: mesmo padrão de site-header__inner,
+     site-footer__inner e hero__inner (max-width 1440 + padding 88 +
+     border-box + centralizado). flex-basis 1440px (em vez de só
+     max-width) garante que ela ocupe exatamente esse espaço e ceda o
+     resto para os blocos de dividers das pontas crescerem. */
+  .site-footer__buttons-content {
+    flex: 0 1 1440px;
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--scale-x20);
     display: flex;
     align-items: center;
     gap: var(--scale-x6);
-    padding: var(--scale-x4) 0;
-    border-bottom: 3px solid var(--border-primary-subtle);
   }
 
   .site-footer__dividers {
@@ -88,6 +121,15 @@ const dividerLines = Array.from({ length: 4 });
     display: flex;
     flex-direction: column;
     gap: var(--scale-x2);
+  }
+
+  /* Blocos das pontas: preenchem o espaço entre a borda real da
+     viewport e a zona de conteúdo (0 em telas ≤1440px, crescem acima
+     disso). min-width:0 evita que o conteúdo mínimo do flex item
+     impeça o encolhimento até zero. */
+  .site-footer__dividers--edge {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .site-footer__divider-line {
