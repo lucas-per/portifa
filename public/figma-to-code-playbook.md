@@ -119,6 +119,8 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 
 **Verificação:** medir via DOM a largura de cada preenchedor (deve ser exatamente `0` na largura do frame de referência) e a posição (`left`/`right`) do primeiro e do último elemento de conteúdo da zona central — devem bater exatamente com a posição de um elemento de conteúdo equivalente em outra seção da página (ex: um heading), em qualquer largura testada.
 
+**Refinamento — quando o padding da zona de conteúdo cria uma "costura" visível:** se o preenchedor full-bleed da ponta é ele mesmo um elemento decorativo com conteúdo visual (ex: linhas divisórias), colocar um `padding` vazio na zona de conteúdo entre ele e o primeiro elemento real (botão, texto) cria uma quebra visual — o preenchedor "para" na borda da zona de conteúdo e só depois, atravessando um vão em branco, o conteúdo começa. Nesses casos, trocar o padding por um elemento igual ao preenchedor mas de **largura fixa** (`flex: 0 0 <valor>px`, sem crescer/encolher), inserido como o primeiro/último filho da própria zona de conteúdo, e deixar o `gap` que já existe entre os filhos internos criar o respiro final. A soma "largura fixa + gap" deve bater com o padding que ela substitui (ex: divider de 64px + gap de 24px = 88px de respiro total) — assim o preenchedor full-bleed emenda direto no divider fixo, sem vão em branco, e a posição do primeiro/último elemento de conteúdo real não muda.
+
 ---
 
 ## 10. Checklist rápido antes de dar uma tarefa de layout como concluída
