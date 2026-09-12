@@ -102,12 +102,32 @@ Nem toda divergência entre Figma e bom senso de UX deve virar "seguir o Figma c
 
 ---
 
-## 9. Checklist rápido antes de dar uma tarefa de layout como concluída
+## 9. Uma linha com preenchedores full-bleed nas duas pontas + conteúdo centralizado no meio
+
+**Sintoma:** uma seção precisa de dois blocos decorativos que preenchem o espaço sobrando entre a coluna de conteúdo e a borda real da tela (ex: linhas divisórias ornamentais dos dois lados de uma barra de botões), mas eles ficam pequenos ou desaparecem incorretamente, ou deslocam o conteúdo central para fora do alinhamento com o resto da página.
+
+**Causa raiz — duas armadilhas comuns na mesma implementação:**
+1. O elemento "flexível" precisa de `flex: 1 1 0` (flex-basis **zero**) para crescer/encolher proporcionalmente a partir de nada — `flex: 1` sozinho tem `flex-basis: auto`, que parte do tamanho do conteúdo, não de zero, e pode não encolher até desaparecer quando deveria. Combine com `min-width: 0` para permitir encolher além do tamanho mínimo do conteúdo (relevante quando o "conteúdo" tem alguma largura intrínseca, como bordas ou padding).
+2. Se o container flex pai tem `gap` (comum quando essa linha antes tinha só os botões, sem os preenchedores full-bleed), esse gap continua reservando espaço ao redor de um item flex mesmo quando ele encolhe até **largura zero** — um gap "residual" nas duas pontas empurra a zona de conteúdo central para fora do alinhamento esperado com o resto da página, mesmo com os preenchedores corretamente configurados. **`gap` não é opcional/inofensivo quando um dos itens pode chegar a zero** — remova o gap do container externo e recrie o espaçamento necessário como `padding` dentro da própria zona de conteúdo (ou um gap num container interno separado, só entre os elementos que de fato precisam dele).
+
+**Correção no código — padrão de 3 partes lado a lado, dentro de um container full-bleed (`width: 100%`, sem `max-width`, sem `gap` no nível externo):**
+- Preenchedor esquerdo: `flex: 1 1 0; min-width: 0;`
+- Zona de conteúdo central: `flex: 0 1 <largura-do-frame>px` (ex: `1440px`) **+** `max-width` igual, `box-sizing: border-box`, `padding` horizontal e `margin: 0 auto` — o mesmo container centralizado usado no resto do site (ver seção 1). O `gap`/gutter entre os elementos internos (botões, dividers menores) vive só aqui dentro, não no container externo.
+- Preenchedor direito: espelho do esquerdo.
+
+Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a zona central ocupa 100% da linha — resultado idêntico ao layout original de largura única. Acima do frame, o espaço excedente é dividido igualmente entre os dois preenchedores.
+
+**Verificação:** medir via DOM a largura de cada preenchedor (deve ser exatamente `0` na largura do frame de referência) e a posição (`left`/`right`) do primeiro e do último elemento de conteúdo da zona central — devem bater exatamente com a posição de um elemento de conteúdo equivalente em outra seção da página (ex: um heading), em qualquer largura testada.
+
+---
+
+## 10. Checklist rápido antes de dar uma tarefa de layout como concluída
 
 - [ ] O fundo de cada seção de topo é `width: 100%`? O conteúdo interno tem `max-width` + `margin: 0 auto`?
 - [ ] Todo elemento que combina `max-width`/`width` fixo com `padding` tem `box-sizing: border-box`?
 - [ ] Alguma regra de reset (margin, padding, box-sizing) foi removida/reescrita sem um substituto explícito?
 - [ ] Cada elemento "solto" no frame foi classificado como estrutural (acompanha a viewport) ou de conteúdo (acompanha a coluna) — nenhum foi tratado por padrão/adivinhação?
+- [ ] Algum container flex com `gap` tem um item que pode encolher até largura zero? Se sim, o gap não deveria estar nesse nível.
 - [ ] A verificação usou medição de DOM real (não só screenshot) em pelo menos uma largura acima do maior frame de referência?
 - [ ] Algum elemento "já dado como correto" antes de uma correção sistêmica foi reexaminado depois dela?
 - [ ] Toda divergência intencional em relação ao Figma está documentada (o quê, por quê, e se o Figma precisa ser atualizado)?
