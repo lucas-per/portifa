@@ -22,6 +22,8 @@ Para cada seção de topo (header, hero, footer etc.):
 
 **O que mudar no Figma:** ao desenhar uma seção de topo (header, hero, footer, qualquer banda full-width), usar auto-layout com **"Fill container"** na largura, não um valor fixo em pixels — mesmo sabendo que o frame de referência tem uma largura fixa. Isso comunica a intenção ("essa banda deveria acompanhar o container pai") de forma que sobrevive à leitura automatizada do arquivo (dev mode, MCP, etc.), em vez de depender de alguém inferir a intenção olhando o número.
 
+**Variante mais simples — quando nada precisa esticar além do frame:** nem todo bloco precisa do padrão de duas camadas acima. Se o elemento não tem nenhum fundo/borda que deva continuar até a borda real da viewport (ex: uma coluna de conteúdo com sidebar, sem banda colorida associada), o sintoma aparece diferente: em vez de "falta fundo esticando", o bloco inteiro fica **grudado numa borda com um vazio grande do outro lado** — geralmente causado por um `padding` assimétrico (só `padding-left`, por exemplo) usado sozinho, sem `max-width`/`margin: auto`, pra empurrar o conteúdo pra longe da borda. A correção aqui é mais direta: aplicar `max-width` + `margin: 0 auto` + `box-sizing: border-box` **no próprio elemento**, mantendo o padding que ele já tinha (agora incluído dentro do teto de largura via `border-box`, em vez de agir sozinho). Não é preciso separar em fundo full-bleed + coluna interna quando não há fundo para esticar.
+
 ---
 
 ## 2. Nem tudo que está "solto" no frame deve virar full-bleed
