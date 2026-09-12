@@ -48,6 +48,8 @@ Para cada seção de topo (header, hero, footer etc.):
 
 **Verificação:** não confie no valor declarado no CSS — meça a largura real renderizada (`getBoundingClientRect().width` via DevTools/Playwright) em pelo menos uma viewport onde o `max-width` realmente entra em ação (ou seja, mais larga que o próprio valor).
 
+**A mesma armadilha em `flex-basis`:** `flex-basis` também segue `box-sizing`, exatamente como `width`/`max-width` — e é fácil esquecer isso porque `flex-basis` não "parece" uma medida de largura à primeira vista. Se um elemento tem `padding` declarado E você calcula manualmente um `flex-basis` que já soma esse padding (ex: `flex-basis: calc(977px + 88px)` quando o elemento também tem `padding-right: 88px` no CSS), o padding é contado **em dobro** — o navegador já soma o padding por cima do `flex-basis` (que descreve só a área de conteúdo, em `content-box`) durante o layout. O sintoma é um item flex "encolhendo" ou crescendo de forma que não bate com a conta manual, porque a soma real dos itens da linha ficou maior do que o esperado. Regra prática: `flex-basis` deve ser só a medida do **conteúdo** do item (sem padding/border), do mesmo jeito que `width` seria em `content-box` — nunca some manualmente algo que o próprio CSS do elemento já declara como padding.
+
 ---
 
 ## 4. Resets básicos somem quando você refatora a regra que os escondia
@@ -125,10 +127,26 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 
 ---
 
-## 10. Checklist rápido antes de dar uma tarefa de layout como concluída
+## 10. Centralizar uma coluna cujo fundo, ao mesmo tempo, precisa continuar até a borda real (bleed assimétrico)
+
+**Sintoma:** uma linha tem um elemento de largura fixa (ex: menu lateral) que precisa ficar centralizado dentro de uma coluna de largura X, e ao lado dele um bloco de conteúdo com fundo colorido que — diferente do menu — precisa continuar até a borda real da viewport, não parar no limite de X. Capar a linha inteira em `max-width: X` (seção 1) resolve a centralização do menu mas quebra o bleed do fundo; deixar a linha sem `max-width` resolve o bleed mas perde a centralização.
+
+**Causa raiz:** os dois requisitos parecem contraditórios porque foram tratados como se precisassem do mesmo mecanismo (`max-width` na linha inteira), quando na verdade só o menu precisa de um teto de largura — o bloco de fundo quer exatamente o oposto (nenhum teto).
+
+**Correção no código:** ao invés de capar o container da linha, mantenha-o full-bleed (`width: 100%`, sem `max-width`) e insira um **gutter invisível** (`div` vazio) como primeiro filho, com `flex: 1 1 <valor-do-padding-que-ele-substitui>px` (ex: `88px`) — a mesma técnica dos preenchedores da seção 9, mas usado de um lado só. O elemento de fundo (o último da linha) recebe `flex: 1 1 <largura-do-miolo>px` (sem padding somado ao basis — ver a armadilha de `flex-basis` acima) e **sem** `max-width`. Como os dois têm o mesmo `flex-grow`, crescem na mesma proporção acima da largura de referência: o gutter absorve metade do espaço excedente (empurrando o menu pra posição centralizada, idêntica à que teria dentro de uma coluna capada) e o bloco de fundo absorve a outra metade — mas, como não tem teto, continua crescendo até preencher o resto da linha, chegando exatamente na borda real. Nenhum cálculo com `vw`/`calc(50vw - ...)` é necessário (evita o efeito colateral clássico de barra de rolagem vertical inflar `100vw` além da área visível) — é só aritmética de `flex-grow`/`flex-basis`.
+
+**Verificação:** medir, na largura de referência, se o gutter e a posição dos elementos fixos batem com o layout anterior (idêntico); acima dela, medir se o **fim do bloco de fundo** bate exatamente com a largura da viewport (não com a largura de referência), e se a posição do conteúdo real dentro do bloco de fundo não mudou.
+
+**Atenção no responsivo:** se a linha muda para `flex-direction: column` em telas menores (layout empilhado), o `flex-basis` em pixels definido para o modo `row` passa a ser lido como **altura**, não largura, no modo `column` — reset explícito do gutter (`display: none`) e do bloco de fundo (`flex: 1` simples, sem basis fixo) na media query correspondente é obrigatório, não opcional.
+
+---
+
+## 11. Checklist rápido antes de dar uma tarefa de layout como concluída
 
 - [ ] O fundo de cada seção de topo é `width: 100%`? O conteúdo interno tem `max-width` + `margin: 0 auto`?
 - [ ] Todo elemento que combina `max-width`/`width` fixo com `padding` tem `box-sizing: border-box`?
+- [ ] Algum `flex-basis` calculado manualmente soma um `padding` que o elemento já declara separadamente (dobrando a contagem)?
+- [ ] Algum elemento precisa ficar centralizado enquanto um vizinho no mesmo container precisa fazer bleed até a borda real? Se sim, nenhum dos dois deveria estar dentro de um `max-width` compartilhado.
 - [ ] Alguma regra de reset (margin, padding, box-sizing) foi removida/reescrita sem um substituto explícito?
 - [ ] Cada elemento "solto" no frame foi classificado como estrutural (acompanha a viewport) ou de conteúdo (acompanha a coluna) — nenhum foi tratado por padrão/adivinhação?
 - [ ] Algum container flex com `gap` tem um item que pode encolher até largura zero? Se sim, o gap não deveria estar nesse nível.
