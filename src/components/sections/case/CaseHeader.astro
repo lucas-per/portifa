@@ -95,7 +95,12 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
   }
 
   @media (max-width: 767px) {
+    /* Reseta max-width/margin herdados da regra desktop (mesmo padrão
+       de .case-layout__content-inner) — sem isso sobrava um resíduo
+       do fix de centralização acima de 1440px aqui no mobile. */
     .case-header__inner {
+      max-width: none;
+      margin: 0;
       padding: var(--scale-x11) var(--scale-x5) var(--scale-x6);
     }
 

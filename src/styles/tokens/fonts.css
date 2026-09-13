@@ -1,9 +1,16 @@
+/* font-display: optional (não swap) — é a fonte de título (h1/h2 em
+   toda a página, inclusive o título do case). Com swap, uma medição
+   de texto no fallback seguida de troca pra essa fonte causa reflow
+   visível em títulos grandes quando a fonte chega um pouco atrasada
+   (rede lenta/cache frio); optional usa a fonte já pronta a tempo ou
+   fica no fallback sem trocar depois, eliminando o reflow ao custo de
+   eventualmente exibir a fonte do sistema em conexões muito lentas. */
 @font-face {
   font-family: 'Plus Jakarta Sans';
   src: url('../../assets/fonts/plus-jakarta-sans-variable.woff2') format('woff2-variations');
   font-weight: 700 800;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
 }
 
 @font-face {
