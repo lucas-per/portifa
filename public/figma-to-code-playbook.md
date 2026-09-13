@@ -60,6 +60,8 @@ Para cada seção de topo (header, hero, footer etc.):
 
 **Correção no código:** ao remover ou reescrever qualquer regra de layout de alto nível (`body`, containers-raiz, wrappers globais), verificar explicitamente se ela também fazia um reset implícito (margin, padding, box-sizing) e substituir por um reset explícito equivalente, em vez de assumir que "os valores padrão do navegador são zero" — quase nunca são.
 
+**4.1 — O inverso também acontece: adicionar `max-width`/`margin: auto` numa regra base sem revisar as media queries que já a sobrescrevem parcialmente.** Ao aplicar a correção da seção 1 (`max-width` + `margin: 0 auto` num seletor, para centralizar acima do frame de referência), é comum esse seletor já ter uma media query mobile que sobrescreve *outra* propriedade dele (tipicamente `padding`, pra um valor diferente no mobile) sem tocar em `max-width`/`margin`. O resultado não quebra visualmente no mobile isolado (o valor herdado geralmente não causa overflow visível numa tela estreita), mas fica um resíduo morto no computed style — e é fácil de esquecer porque nada "parece" errado até alguém auditar. **Correção:** sempre que adicionar `max-width`/`margin: auto` numa regra que já tem uma media query menor sobrescrevendo parte dela, resetar explicitamente as duas propriedades (`max-width: none; margin: 0;`) junto do resto da regra mobile, mesmo sem sintoma visual — mesmo padrão que o elemento-irmão análogo já deveria seguir (ex: `.case-layout__content-inner` → `.case-header__inner`).
+
 ---
 
 ## 5. Interações e timing que um frame estático não mostra
@@ -148,6 +150,7 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 - [ ] Algum `flex-basis` calculado manualmente soma um `padding` que o elemento já declara separadamente (dobrando a contagem)?
 - [ ] Algum elemento precisa ficar centralizado enquanto um vizinho no mesmo container precisa fazer bleed até a borda real? Se sim, nenhum dos dois deveria estar dentro de um `max-width` compartilhado.
 - [ ] Alguma regra de reset (margin, padding, box-sizing) foi removida/reescrita sem um substituto explícito?
+- [ ] Ao adicionar `max-width`/`margin: auto` numa regra pra centralizar acima do frame, alguma media query menor que já sobrescreve outra propriedade dessa mesma regra ficou sem resetar essas duas?
 - [ ] Cada elemento "solto" no frame foi classificado como estrutural (acompanha a viewport) ou de conteúdo (acompanha a coluna) — nenhum foi tratado por padrão/adivinhação?
 - [ ] Algum container flex com `gap` tem um item que pode encolher até largura zero? Se sim, o gap não deveria estar nesse nível.
 - [ ] A verificação usou medição de DOM real (não só screenshot) em pelo menos uma largura acima do maior frame de referência?

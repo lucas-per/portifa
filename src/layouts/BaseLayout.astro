@@ -3,6 +3,8 @@ import '../styles/tokens/primitives.css';
 import '../styles/tokens/fonts.css';
 import '../styles/tokens/semantics.css';
 import '../styles/tokens/typography.css';
+import plusJakartaSansUrl from '../assets/fonts/plus-jakarta-sans-variable.woff2';
+import dmSansUrl from '../assets/fonts/dm-sans-variable.woff2';
 import Header from '../components/layout/Header.astro';
 import HeaderMobile from '../components/layout/HeaderMobile.astro';
 import Footer from '../components/layout/Footer.astro';
@@ -21,6 +23,8 @@ const { title, description = 'Portfólio de Lucas Pereira, Product Designer.' } 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="font" type="font/woff2" href={plusJakartaSansUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={dmSansUrl} crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

@@ -13,12 +13,18 @@ const fontFiles = [
 ];
 
 describe('fonts.css', () => {
-  it('declara as 3 famílias com font-display: swap', () => {
+  it('declara as 3 famílias com font-display', () => {
     const blocks = css.match(/@font-face\s*\{[^}]*\}/g) ?? [];
     expect(blocks.length).toBeGreaterThanOrEqual(3);
     for (const block of blocks) {
-      expect(block).toMatch(/font-display:\s*swap;/);
+      expect(block).toMatch(/font-display:\s*(swap|optional);/);
     }
+  });
+
+  it('usa font-display: optional na fonte de título (evita reflow visível em h1/h2)', () => {
+    const titleBlock = css.match(/@font-face\s*\{[^}]*Plus Jakarta Sans[^}]*\}/)?.[0];
+    expect(titleBlock).toBeDefined();
+    expect(titleBlock).toMatch(/font-display:\s*optional;/);
   });
 
   it('define as custom properties de família usadas por typography.css', () => {
