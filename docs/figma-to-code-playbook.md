@@ -1,6 +1,6 @@
 # Playbook: do protótipo Figma ao código
 
-Este documento reúne os problemas recorrentes na tradução de um protótipo Figma para código de produção, e o que fazer — tanto no código quanto na configuração do próprio arquivo Figma — para reduzir a chance de repeti-los. Não é específico de um projeto: a ideia é colar este arquivo (ou linkar a URL pública dele) como base de conhecimento no início de qualquer novo projeto que envolva handoff Figma → código.
+Este documento reúne os problemas recorrentes na tradução de um protótipo Figma para código de produção, e o que fazer — tanto no código quanto na configuração do próprio arquivo Figma — para reduzir a chance de repeti-los. Não é específico de um projeto: o intuito é reutilizar este arquivo (ou linkar a URL pública dele) como base de conhecimento no início de qualquer novo projeto que envolva handoff Figma → código.
 
 Cada seção tem: o sintoma, a causa raiz, a correção no código, e — quando aplicável — o que mudar no Figma para que o problema nem apareça da próxima vez.
 
@@ -34,7 +34,7 @@ Para cada seção de topo (header, hero, footer etc.):
 
 **Correção no código:** classificar cada elemento solto individualmente perguntando "isso é parte da moldura da página (deve reagir à largura real da tela) ou é parte do conteúdo (deve reagir à largura da coluna)?" antes de decidir onde ele mora na árvore de containers. Elementos de conteúdo — mesmo decorativos, como um divider curto — devem estar dentro do mesmo container `max-width` + padding que o texto ao redor, alinhados à mesma borda esquerda que um título ou parágrafo vizinho usaria.
 
-**O que mudar no Figma:** agrupar esses elementos decorativos dentro do mesmo frame/auto-layout do conteúdo da seção (não deixá-los soltos como camada-irmã solta no nível do frame). Se a intenção de design é que o elemento realmente comece na borda da coluna mas antes do padding interno (ou seja, alinhado à moldura, não ao texto), isso deve estar visualmente óbvio na composição do Figma — e vale a pena registrar essa distinção explicitamente em uma nota (ver seção 6.5).
+**O que mudar no Figma:** agrupar esses elementos decorativos dentro do mesmo frame/auto-layout do conteúdo da seção (não deixá-los soltos como camada-irmã solta no nível do frame). Se a intenção de design é que o elemento realmente comece na borda da coluna mas antes do padding interno (ou seja, alinhado à moldura, não ao texto), isso deve estar visualmente óbvio na composição do Figma — e vale a pena registrar essa distinção explicitamente numa nota.
 
 ---
 
@@ -80,7 +80,7 @@ Figma (fora de smart-animate simples) não simula bem: scroll, offsets calculado
 
 ## 6. Rigor de verificação
 
-**6.1 — Screenshot prova que renderizou, não prova a métrica.** Um screenshot mostra se algo *parece* certo; não prova se uma largura bate com um valor exato, nem revela um offset de poucos pixels que passa despercebido. Sempre que a tarefa envolver um valor numérico exato (largura, posição, alinhamento), medir via inspeção de DOM (`getBoundingClientRect()`, computed styles) — um script Playwright rodando `page.evaluate()` é suficiente e barato — em vez de confiar só na inspeção visual do screenshot.
+**6.1 — Screenshot prova que renderizou, não prova a métrica.** Um screenshot mostra se algo *parece* certo; não prova se uma largura bate com um valor exato, nem revela um offset de poucos pixels que passa despercebido. Sempre que a tarefa envolver um valor numérico exato (largura, posição, alinhamento), medir via inspeção de DOM (`getBoundingClientRect()`, computed styles) — um script Playwright rodando `page.evaluate()` é suficiente e barato — em vez de confiar só na inspeção visual do screenshot. Antes de usar um screenshot como evidência (de que um bug existe OU de que foi corrigido), verificar se as duas cores/estados em comparação são sequer **diferenciáveis visualmente**. Um fundo com a mesma cor que o fundo padrão da página, por exemplo, renderiza identicamente estando 100% correto (full-bleed) ou incorreto (preso a um `max-width`, com a cor da página vazando ao redor) — a prova só existe via medição de DOM, nunca pela imagem, mesmo com o olho mais treinado.
 
 **6.2 — Testar em pelo menos duas larguras, uma delas fora do range do frame.** Se o frame de referência é 1440px, o teste mínimo é: uma largura ≤1440 (deve reproduzir o frame) e uma >1440 (onde o comportamento responsivo implícito — que o Figma não desenha — entra em ação). Testar só na largura exata do frame não pega nenhum dos problemas das seções 1–3 deste documento.
 
@@ -158,9 +158,39 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 
 **Verificação:** carregar a página com `html { font-size: 200% }` (equivalente a 200% de zoom/fonte do navegador) via Playwright, tanto no breakpoint desktop quanto no mobile, e medir `scrollWidth`/`clientWidth`/`getBoundingClientRect()` de cada filho da linha — nenhum filho deve ter `scrollWidth > clientWidth`, e o `right` de cada filho não deve ultrapassar o `right` do container da linha. Um screenshot nessa condição confirma visualmente (texto sobreposto é óbvio), mas a medição de DOM é o que prova a ausência do problema em todos os casos, não só no que apareceu no screenshot.
 
+### 11.1 Variante da seção 11: o item não cresce, mas o vizinho sim
+
+**Sintoma:** um elemento de tamanho fixo (ex: uma logo em SVG, com dimensões travadas) fica cada vez mais perto — ou colide com — um vizinho na mesma linha flex quando a fonte do sistema aumenta, mesmo o elemento fixo não crescendo nem um pixel.
+
+**Causa raiz:** a seção 11 cobre o caso onde o próprio item que está encolhendo tem uma medida fixa baseada no texto que ele contém. Existe uma variante: numa linha `justify-content: space-between` sem `flex-wrap`, se o **outro** elemento da linha (ex: um botão com padding/gap em `rem`) cresce com a fonte, o espaço total ocupado pela linha aumenta mesmo que o elemento fixo não mude — e sem `flex-wrap: wrap`, o excesso vira overflow em vez de reorganizar.
+
+**Correção no código:** o mesmo `flex-wrap: wrap` da seção 11 resolve — mas o diagnóstico é diferente: antes de mexer no elemento que "parece" estar sendo espremido, medir qual elemento da linha está de fato crescendo (pode não ser o mesmo que está colidindo).
+
 ---
 
-## 12. Checklist rápido antes de dar uma tarefa de layout como concluída
+## 12. Flash de fonte customizada infla o viewport de layout no mobile Safari
+
+**Sintoma:** um carregamento pontual (rede lenta, cache frio) mostra um espaço em branco ao lado de um texto/título que desaparece depois de um reload — reproduzível só nessa janela de tempo específica, nunca de forma consistente.
+
+**Causa raiz:** antes da fonte customizada (`@font-face`) carregar, o texto renderiza com a fonte de fallback do sistema, que pode medir mais largo. Isso é normal e geralmente inofensivo — mas no Safari mobile, se esse texto momentaneamente mais largo causa overflow, o "layout viewport" (usado por unidades como `100vw`) se expande pra acomodar, e não encolhe de volta automaticamente depois que a fonte troca e o texto normaliza.
+
+**Correção no código:** `<link rel="preload" as="font" ...>` no `<head>` para fontes usadas acima da dobra, e considerar `font-display: optional` (em vez de `swap`) para textos onde a troca de fonte pode causar reflow visível — aceita ficar na fonte de fallback antes de trocar, em vez de trocar e potencialmente causar o salto.
+
+**Verificação:** throttling de rede (Slow 3G) no DevTools — sem isso, o bug não reproduz de forma confiável.
+
+---
+
+## 13. Variáveis duplicadas/órfãs no Figma antes de criar um Mode
+
+**Sintoma:** um valor de espaçamento vem "solto" (sem nome de token reconhecível) ao extrair o design, mesmo parecendo bater com um valor da escala oficial.
+
+**Causa raiz:** arquivos que passaram por retrabalho acumulam variáveis duplicadas — a mesma medida definida duas vezes em coleções diferentes (uma ativa, uma órfã/legada de uma biblioteca desconectada), ou nomeada fora do padrão (`dimension/scale-x3` ao lado de `size/scale-x3`, mesmo valor). Isso passa despercebido porque visualmente não muda nada.
+
+**Correção:** antes de montar uma camada semântica de token com Modes (responsivo, tema, etc.), auditar o arquivo procurando por bindings de variável fora da coleção principal — sem essa limpeza, um Mode herda a inconsistência (parte dos elementos escuta o token certo, parte não, e o Mode não afeta essa segunda parte).
+
+---
+
+## 14. Checklist rápido antes de dar uma tarefa de layout como concluída
 
 - [ ] O fundo de cada seção de topo é `width: 100%`? O conteúdo interno tem `max-width` + `margin: 0 auto`?
 - [ ] Todo elemento que combina `max-width`/`width` fixo com `padding` tem `box-sizing: border-box`?
@@ -174,3 +204,7 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 - [ ] Algum elemento "já dado como correto" antes de uma correção sistêmica foi reexaminado depois dela?
 - [ ] Toda divergência intencional em relação ao Figma está documentada (o quê, por quê, e se o Figma precisa ser atualizado)?
 - [ ] Algum item flex com texto tem `min-width`/`min-height`/`height` fixo em px herdado do Figma? Testar com `html { font-size: 200% }` (desktop e mobile) e medir `scrollWidth` vs `clientWidth` de cada filho da linha.
+- [ ] Numa linha flex sem wrap, o elemento que parece "espremido" foi confirmado como a causa, ou pode ser um vizinho crescendo (padding/gap em `rem`) empurrando o espaço disponível?
+- [ ] Fontes customizadas usadas acima da dobra têm `preload`? A estratégia de `font-display` foi escolhida deliberadamente (não só o padrão do framework)?
+- [ ] Alguma variável usada no arquivo Figma vem de uma coleção diferente de `primitives`/da coleção principal do projeto? Auditar antes de criar Modes.
+- [ ] Antes de usar um screenshot como prova, os dois estados comparados são visualmente diferenciáveis (cores diferentes, não a mesma cor de fundo em ambos os casos)?
