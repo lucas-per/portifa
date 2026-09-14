@@ -15,8 +15,14 @@ import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
     </Fragment>
     Voltar
   </Button>
-  <Button href="#top" variant="outline-accent" class="clickable-anchor-backtotop">
-    Ir para o topo
+  <Button
+    href="#top"
+    variant="outline-accent"
+    class="clickable-anchor-backtotop"
+    ariaLabel="Ir para o topo da página"
+  >
+    <span class="back-to-top__label-full">Ir para o topo</span>
+    <span class="back-to-top__label-short">Topo</span>
     <Fragment slot="icon">
       <img src={arrowUpIcon.src} width="24" height="24" alt="" />
     </Fragment>
@@ -26,8 +32,32 @@ import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
 <style>
   .back-to-top {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
+    /* space-between (não gap fixo): no mobile "Voltar" e "Topo" devem
+       ficar nas pontas opostas da linha disponível (Figma, row-btn-top),
+       com o espaço do meio sendo o que sobrar — não um valor fixo. Com
+       um único botão visível (desktop, "Voltar" tem display:none), não
+       muda nada.
+       gap aqui não é um espaçamento fixo entre os botões — junto com
+       space-between ele age só como piso mínimo (o browser garante essa
+       distância mesmo quando "o que sobra" encolhe perto de zero, ex:
+       fonte do sistema bem ampliada numa tela estreita); com espaço de
+       sobra normal, space-between distribui bem mais que isso e o gap
+       não é perceptível. flex-wrap é a última rede de segurança: se nem
+       o piso mínimo couber lado a lado, "Topo" quebra pra linha de
+       baixo em vez de colar em "Voltar". */
+    justify-content: space-between;
+    gap: var(--scale-x2);
     padding-left: var(--scale-x12);
+  }
+
+  /* Texto curto ("Topo", Figma node 275:1148) só existe no mobile, onde
+     o botão divide a linha com "Voltar" e o espaço é mais apertado —
+     no desktop mantém "Ir para o topo" por completo (instância própria
+     no Figma, sem par ao lado). */
+  .back-to-top__label-short {
+    display: none;
   }
 
   /*
@@ -49,13 +79,21 @@ import arrowLeftIcon from '../../../assets/icons/case/arrow-left.svg';
     .back-to-top {
       /* 20px (Figma): o inset vive aqui dentro, não em
          .case-layout__content — ver comentário em [slug].astro sobre
-         os dividers estreitos entre seções. */
+         os dividers estreitos entre seções. Sem gap fixo: space-between
+         acima já distribui "Voltar" e "Topo" nas pontas da linha. */
       padding-left: var(--scale-x5);
-      gap: var(--scale-x2);
     }
 
     :global(.button.back-to-top__voltar) {
       display: inline-flex;
+    }
+
+    .back-to-top__label-full {
+      display: none;
+    }
+
+    .back-to-top__label-short {
+      display: inline;
     }
   }
 </style>

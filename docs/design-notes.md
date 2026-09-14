@@ -257,6 +257,9 @@ Exemplo (baseado no PRD do site pessoal):
 **Decisão:** ao clicar no botão/link, o usuário deve ser levado para o topo da página
 **Motivo:** facilitar a navegação do usuário por todo o case
 
+**Texto curto no mobile (2026-09-14, Figma node 275:1148):** no mobile, esse botão divide a linha (`row-btn-top`) com "Voltar" — o texto completo "Ir para o topo" foi trocado por "Topo" só aí (via CSS, `@media (max-width: 767px)`, duas `<span>` alternadas por `display`), mantendo "Ir para o topo" no desktop (instância própria, sem par ao lado) e o mesmo `aria-label="Ir para o topo da página"` nos dois — texto visível curto, nome acessível completo. `Button.astro` ganhou a prop `ariaLabel` pra isso (sobrescreve o nome acessível quando o slot visível é abreviado).
+**Espaçamento (`row-btn-top`):** `justify-content: space-between` entre "Voltar" e "Topo/Ir para o topo" (Figma), não um gap fixo — o espaço do meio é o que sobra da linha. `gap: var(--scale-x2)` continua declarado, mas como **piso mínimo** (o comportamento padrão de `gap` + `space-between` no CSS): some na prática quando sobra espaço normal, e só passa a valer quando a fonte do sistema/zoom aumenta numa tela estreita a ponto de o espaço sobrando quase zerar — sem ele os dois botões chegavam a se tocar (testado a 150% em 360px). `flex-wrap: wrap` é a última rede de segurança: se nem esse piso couber lado a lado, "Topo" quebra pra uma segunda linha em vez de colar em "Voltar".
+
 ### clickable-row-accordion-sections
 **Contexto:** container clicável que possibilita ver a lista de opções do componente accordion
 **Decisão:** ao clicar, a lista de opções do accordion se expande mostrando todas as opções selecionáveis
