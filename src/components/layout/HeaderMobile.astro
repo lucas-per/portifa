@@ -1,12 +1,26 @@
 ---
 import logoMobile from '../../assets/icons/logo-mobile.svg';
+import logoReduced from '../../assets/icons/logo-reduced.svg';
 import mailIcon from '../../assets/icons/mail-on-accent.svg';
 ---
 
 <header class="site-header-mobile">
   <div class="site-header-mobile__core">
     <a href="/" class="site-header-mobile__logo clickable-link-internal-home">
-      <img src={logoMobile.src} width="156" height="54" alt="Lucas Pereira" />
+      <img
+        class="site-header-mobile__logo-full"
+        src={logoMobile.src}
+        width="156"
+        height="54"
+        alt="Lucas Pereira"
+      />
+      <img
+        class="site-header-mobile__logo-reduced"
+        src={logoReduced.src}
+        width="63"
+        height="54"
+        alt="Lucas Pereira"
+      />
     </a>
     <a
       href="mailto:oi@lpereira.me"
@@ -40,6 +54,26 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
 
   .site-header-mobile__logo {
     display: inline-flex;
+  }
+
+  .site-header-mobile__logo-reduced {
+    display: none;
+  }
+
+  /* Telas estreitas (<=360px) + fonte do sistema ampliada apertam o
+     padding/gap (em rem) entre a logo e o botão de contato ao ponto de
+     cortar um dos dois — troca pra logo-reduced (só a marca "LP", sem
+     o nome, Figma node 412:335) dá mais respiro sem quebrar a linha.
+     É uma aproximação fixa por largura de tela, não detecção real de
+     zoom/fonte (que exigiria JS) — aceito como solução deliberada. */
+  @media (max-width: 360px) {
+    .site-header-mobile__logo-full {
+      display: none;
+    }
+
+    .site-header-mobile__logo-reduced {
+      display: inline-flex;
+    }
   }
 
   /* Mesmo visual do button--filled-accent (Button.astro), só que sem

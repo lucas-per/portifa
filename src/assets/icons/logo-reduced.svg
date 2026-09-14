@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="63" height="54" viewBox="0 0 63 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="logo-reduced" clip-path="url(#clip0_0_8)">
+<path id="vector" d="M63.1969 4H5V53.9701H63.1969V4Z" fill="#057ABD"/>
+<path id="vector_2" d="M58.1969 0H0V49.9701H58.1969V0Z" fill="#FFD23F"/>
+<g id="vector_3">
+<path d="M20.6322 23.417H27.082V36.0744H14.1824V13.9237H20.6322V23.417Z" fill="#2E2B2B"/>
+<path d="M44.8176 26.5821H38.3687V36.0744H31.9189V13.9237H44.8176V26.5821Z" fill="#2E2B2B"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M59 50H0V0H59V50ZM4.98688 45.0923H54.0131V4.90769H4.98688V45.0923Z" fill="#2E2B2B"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_8">
+<rect width="63" height="54" fill="white"/>
+</clipPath>
+</defs>
+</svg>

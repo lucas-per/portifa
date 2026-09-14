@@ -280,3 +280,9 @@ Exemplo (baseado no PRD do site pessoal):
 **Decisão (diverge do Figma atual — pendente de atualizar lá):** o fundo cinza se estende até encostar no footer, sem o respiro off-white que hoje existe no Figma entre o fim do botão "Ir para o topo" e o footer
 **Motivo:** decisão de design tomada diretamente em código — o respiro off-white no meio quebrava a continuidade visual da página sem agregar nada
 **Ação pendente:** atualizar essa camada no Figma pra remover o respiro off-white antes do footer, mantendo a fonte de design sincronizada com o código
+
+### logo-reduced — header mobile em telas muito estreitas (2026-09-14)
+**Contexto:** header mobile (`HeaderMobile.astro`, row-cta node 236:1784) — logo + botão de contato lado a lado, `justify-content: space-between`. Padding/gap do header são em `rem`, então crescem junto com a fonte do sistema/acessibilidade, apertando o espaço entre logo e botão em telas estreitas até correr risco de cortar um dos dois.
+**Decisão:** terceira variante de logo criada no Figma — `logo-reduced` (node 412:335, 63×54px, só a marca amarela "LP", sem o nome) — substitui `logo-mobile` (156×54px) via `@media (max-width: 360px)` (dois `<img>`, alternados por `display: none`/`inline-flex`, mesmo `alt="Lucas Pereira"` nos dois). Acima de 360px continua a logo mobile completa.
+**Motivo:** dar mais respiro ao layout sem quebrar a linha do header nem adicionar JS — aprovado como aproximação fixa por largura de tela, não uma detecção real de zoom/fonte (que exigiria JS pra medir o espaço disponível de verdade). 360px foi o valor sugerido e usado como está; o projeto não tinha nenhum breakpoint já definido nesse intervalo.
+**Verificação:** Playwright em larguras 320–767px — a troca acontece exatamente em 360/361px, sem overlap entre logo e botão em nenhuma delas.
