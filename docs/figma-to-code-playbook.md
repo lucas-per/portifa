@@ -143,7 +143,24 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 
 ---
 
-## 11. Checklist rápido antes de dar uma tarefa de layout como concluída
+## 11. Dimensão fixa em px, herdada do Figma, some/sobrepõe sob zoom ou fonte ampliada (WCAG 1.4.4 / 1.4.10)
+
+**Sintoma:** com a fonte do sistema ou o zoom do navegador aumentados (testado a 200%), um texto curto dentro de uma linha flex (ex: o valor de uma métrica, "+15%") passa a se sobrepor visualmente ao texto vizinho (o label, "Boletos pagos") em vez de a linha crescer ou os dois textos se reorganizarem. Em telas menores/DevTools a olho nu pode passar despercebido porque só aparece em fonte grande.
+
+**Causa raiz:** um valor como `min-width: 68px` (ou uma largura/altura fixa equivalente) extraído do Figma descreve o tamanho do texto *no tamanho de fonte em que o frame foi desenhado* — não é um piso de verdade, é a medida do conteúdo original. Quando o item é um flex child e o texto cresce (fonte do usuário, zoom), o `min-width` fixo passa a ser **menor** que o `min-content` real do texto; sem `flex-shrink: 0`, o algoritmo de flex ainda assim encolhe o item até esse piso baixo demais, e como não há `overflow: hidden` em lugar nenhum da árvore, o texto não é cortado — ele **vaza visualmente por cima do vizinho**, porque o vizinho começa a ser desenhado logo depois da borda (agora pequena demais) do item anterior.
+
+**Correção no código:** para um item flex cujo conteúdo é um texto que não pode/deve quebrar sozinho (uma única "palavra" como um valor percentual) e que fica lado a lado com outro texto na mesma linha:
+- Trocar `min-width: <px fixo>` por `flex-shrink: 0` — o item sempre ocupa sua largura natural (a do próprio texto, em qualquer tamanho de fonte), nunca encolhe abaixo dela.
+- Adicionar `flex-wrap: wrap` no container da linha — se os dois itens não couberem lado a lado (fonte grande + card estreito), o segundo item quebra para a linha de baixo em vez de sobrepor o primeiro.
+- Nunca usar `height`/`min-height` fixo em px num container que envolve texto — deixar a altura `auto` (crescer com o conteúdo via flex/auto-layout normal) nos dois breakpoints.
+
+**O que mudar no Figma:** ao anotar/medir um item de texto curto dentro de um auto-layout horizontal, preferir não fixar largura mínima nenhuma (deixar "Hug contents") — se uma largura mínima é mesmo necessária para alinhamento visual entre linhas (ex: valores de tamanhos diferentes alinhados numa coluna), documentar que é só uma referência visual no tamanho de fonte padrão, não uma restrição rígida a ser copiada literalmente para `min-width` no CSS.
+
+**Verificação:** carregar a página com `html { font-size: 200% }` (equivalente a 200% de zoom/fonte do navegador) via Playwright, tanto no breakpoint desktop quanto no mobile, e medir `scrollWidth`/`clientWidth`/`getBoundingClientRect()` de cada filho da linha — nenhum filho deve ter `scrollWidth > clientWidth`, e o `right` de cada filho não deve ultrapassar o `right` do container da linha. Um screenshot nessa condição confirma visualmente (texto sobreposto é óbvio), mas a medição de DOM é o que prova a ausência do problema em todos os casos, não só no que apareceu no screenshot.
+
+---
+
+## 12. Checklist rápido antes de dar uma tarefa de layout como concluída
 
 - [ ] O fundo de cada seção de topo é `width: 100%`? O conteúdo interno tem `max-width` + `margin: 0 auto`?
 - [ ] Todo elemento que combina `max-width`/`width` fixo com `padding` tem `box-sizing: border-box`?
@@ -156,3 +173,4 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 - [ ] A verificação usou medição de DOM real (não só screenshot) em pelo menos uma largura acima do maior frame de referência?
 - [ ] Algum elemento "já dado como correto" antes de uma correção sistêmica foi reexaminado depois dela?
 - [ ] Toda divergência intencional em relação ao Figma está documentada (o quê, por quê, e se o Figma precisa ser atualizado)?
+- [ ] Algum item flex com texto tem `min-width`/`min-height`/`height` fixo em px herdado do Figma? Testar com `html { font-size: 200% }` (desktop e mobile) e medir `scrollWidth` vs `clientWidth` de cada filho da linha.

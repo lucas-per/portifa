@@ -128,6 +128,7 @@ const {
   .case-card__highlight {
     box-sizing: border-box;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--scale-x2);
     padding: var(--scale-x2) var(--scale-x4);
@@ -138,6 +139,13 @@ const {
   }
 
   .case-card__highlight-value {
-    min-width: 68px;
+    /* flex-shrink: 0, não min-width fixo — um floor em px fica menor
+       que o texto (ex: "+15%") quando a fonte do usuário aumenta
+       (200% de zoom ou ajuste de fonte do sistema), e o valor encolhe
+       abaixo do próprio conteúdo, sobrepondo o label ao lado. Sem
+       min-width, o valor sempre ocupa sua largura natural; se não
+       couber ao lado do label, o flex-wrap acima quebra o label pra
+       a linha de baixo em vez de sobrepor. */
+    flex-shrink: 0;
   }
 </style>
