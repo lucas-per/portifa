@@ -34,7 +34,7 @@ Para cada seção de topo (header, hero, footer etc.):
 
 **Correção no código:** classificar cada elemento solto individualmente perguntando "isso é parte da moldura da página (deve reagir à largura real da tela) ou é parte do conteúdo (deve reagir à largura da coluna)?" antes de decidir onde ele mora na árvore de containers. Elementos de conteúdo — mesmo decorativos, como um divider curto — devem estar dentro do mesmo container `max-width` + padding que o texto ao redor, alinhados à mesma borda esquerda que um título ou parágrafo vizinho usaria.
 
-**O que mudar no Figma:** agrupar esses elementos decorativos dentro do mesmo frame/auto-layout do conteúdo da seção (não deixá-los soltos como camada-irmã solta no nível do frame). Se a intenção de design é que o elemento realmente comece na borda da coluna mas antes do padding interno (ou seja, alinhado à moldura, não ao texto), isso deve estar visualmente óbvio na composição do Figma — e vale a pena registrar essa distinção explicitamente em uma nota (ver seção 6.5).
+**O que mudar no Figma:** agrupar esses elementos decorativos dentro do mesmo frame/auto-layout do conteúdo da seção (não deixá-los soltos como camada-irmã solta no nível do frame). Se a intenção de design é que o elemento realmente comece na borda da coluna mas antes do padding interno (ou seja, alinhado à moldura, não ao texto), isso deve estar visualmente óbvio na composição do Figma — e vale a pena registrar essa distinção explicitamente numa nota.
 
 ---
 
