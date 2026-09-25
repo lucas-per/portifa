@@ -3,7 +3,7 @@
 
 <section class="about-me" id="sobre-mim">
   <div class="about-me__inner">
-    <h2 class="text-title-h2">Sobre mim</h2>
+    <h2 class="about-me__title text-title-h2">Sobre mim</h2>
     <div class="about-me__text text-body-md">
       <p>
         Sou um Product Designer focado em viabilizar soluções digitais que
@@ -41,6 +41,13 @@
     padding: var(--scale-x12) var(--scale-x20) var(--scale-x20);
   }
 
+  /* Acompanha a largura do card do Skills & Expertise logo acima
+     (mesma fórmula de grid implícito — ver --grid-col-4-width). */
+  .about-me__title {
+    box-sizing: border-box;
+    width: var(--grid-col-4-width);
+  }
+
   .about-me__text {
     max-width: 1024px;
     color: var(--text-body-neutral-strong);
@@ -57,9 +64,20 @@
     margin-bottom: 0;
   }
 
+  @media (min-width: 768px) {
+    .about-me__inner {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
   @media (max-width: 767px) {
     .about-me__inner {
       padding: var(--scale-x12) var(--scale-x5);
+    }
+
+    .about-me__title {
+      width: 100%;
     }
   }
 </style>
