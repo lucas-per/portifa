@@ -190,7 +190,34 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 
 ---
 
-## 14. Checklist rápido antes de dar uma tarefa de layout como concluída
+## 14. Uma correção de largura "resolve" o sintoma, mas deixa a direção do flex intacta
+
+**Sintoma:** depois de ajustar a largura de um elemento (ex: título) para bater com o Figma, a seção continua com título e texto empilhados no desktop, quando o protótipo mostra os dois lado a lado — mesmo em viewport bem acima do breakpoint mobile.
+
+**Causa raiz:** a spec original tinha dois itens: (1) trocar o container pai de `flex-direction: column` para `row` acima do breakpoint, e (2) ajustar a largura fluída do título. Só o item de largura foi implementado — ele é o que salta aos olhos num screenshot lado a lado com o Figma (título com proporção errada), enquanto o item de direção do flex não muda a proporção de nada, só a posição relativa dos filhos. Uma verificação que compara só "o título tem a largura certa?" passa mesmo com o container inteiro na orientação errada.
+
+**Correção no código:** ao implementar uma seção com dois blocos de conteúdo lado a lado no desktop (título + texto, label + valor, etc.), tratar `flex-direction` como parte da mesma spec que a largura dos filhos — não como um detalhe implícito. O padrão do projeto (mobile-first, empilhado por padrão) é declarar `flex-direction: column` na regra base e sobrescrever para `row` numa media query `min-width` correspondente ao breakpoint desktop, com `align-items: flex-start` para não esticar os filhos verticalmente:
+
+```css
+.container {
+  display: flex;
+  flex-direction: column; /* mobile: empilhado */
+  gap: var(--scale-x11);
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+```
+
+**Verificação:** depois de qualquer ajuste de largura/proporção motivado por comparação com o Figma, reabrir a spec original e confirmar item a item — não só o que mudou visualmente de forma óbvia no screenshot. Um veredito "já está certo" dado antes de um fix relacionado não sobrevive automaticamente a esse fix; precisa ser reverificado.
+
+---
+
+## 15. Checklist rápido antes de dar uma tarefa de layout como concluída
 
 - [ ] O fundo de cada seção de topo é `width: 100%`? O conteúdo interno tem `max-width` + `margin: 0 auto`?
 - [ ] Todo elemento que combina `max-width`/`width` fixo com `padding` tem `box-sizing: border-box`?
@@ -208,3 +235,4 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 - [ ] Fontes customizadas usadas acima da dobra têm `preload`? A estratégia de `font-display` foi escolhida deliberadamente (não só o padrão do framework)?
 - [ ] Alguma variável usada no arquivo Figma vem de uma coleção diferente de `primitives`/da coleção principal do projeto? Auditar antes de criar Modes.
 - [ ] Antes de usar um screenshot como prova, os dois estados comparados são visualmente diferenciáveis (cores diferentes, não a mesma cor de fundo em ambos os casos)?
+- [ ] Uma spec com mais de um item (ex: largura + `flex-direction`) foi conferida item a item, não só pelo que salta aos olhos num screenshot comparativo?
