@@ -62,13 +62,18 @@
   }
 
   /* Acompanha a largura do card do Skills & Expertise logo acima
-     (mesma fórmula de grid implícito — ver --grid-col-4-width). */
+     (mesma fórmula de grid implícito — ver --grid-col-4-width).
+     flex-shrink: 0 porque o texto ao lado (parágrafo longo, sem
+     largura fixa) senão disputa espaço com o título via flex-shrink
+     padrão e o espreme abaixo do valor calculado. */
   .about-me__title {
     box-sizing: border-box;
-    width: var(--grid-col-4-width);
+    flex: 0 0 var(--grid-col-4-width);
   }
 
   .about-me__text {
+    flex: 1 1 auto;
+    min-width: 0;
     max-width: 1024px;
     color: var(--text-body-neutral-strong);
   }
@@ -105,6 +110,7 @@
     .about-me__inner {
       flex-direction: row;
       align-items: flex-start;
+      gap: var(--scale-x10);
     }
   }
 
@@ -114,7 +120,7 @@
     }
 
     .about-me__title {
-      width: 100%;
+      flex-basis: 100%;
     }
   }
 </style>
