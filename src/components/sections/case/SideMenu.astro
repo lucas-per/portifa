@@ -111,6 +111,18 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
     }
   }
 
+  // O clique precisa marcar a âncora ativa na hora: o salto nativo do
+  // navegador pro #id alinha o topo da seção com o topo da viewport, o
+  // que fica FORA da faixa estreita observada pelo IntersectionObserver
+  // abaixo (rootMargin só considera ~40%-45% da viewport). Sem isso, o
+  // observer só reativaria por acidente (ex: reflow de imagem carregando
+  // depois) ou nunca, deixando o destaque preso na âncora anterior.
+  for (const link of links) {
+    link.addEventListener('click', () => {
+      if (link.dataset.target) setActive(link.dataset.target);
+    });
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {

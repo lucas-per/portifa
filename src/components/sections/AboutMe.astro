@@ -3,7 +3,7 @@
 
 <section class="about-me" id="sobre-mim">
   <div class="about-me__inner">
-    <h2 class="text-title-h2">Sobre mim</h2>
+    <h2 class="about-me__title text-title-h2">Sobre mim</h2>
     <div class="about-me__text text-body-md">
       <p>
         Trabalho com design há mais de 11 anos, desde 2019 só com
@@ -61,7 +61,19 @@
     padding: var(--scale-x12) var(--scale-x20) var(--scale-x20);
   }
 
+  /* Acompanha a largura do card do Skills & Expertise logo acima
+     (mesma fórmula de grid implícito — ver --grid-col-4-width).
+     flex-shrink: 0 porque o texto ao lado (parágrafo longo, sem
+     largura fixa) senão disputa espaço com o título via flex-shrink
+     padrão e o espreme abaixo do valor calculado. */
+  .about-me__title {
+    box-sizing: border-box;
+    flex: 0 0 var(--grid-col-4-width);
+  }
+
   .about-me__text {
+    flex: 1 1 auto;
+    min-width: 0;
     max-width: 1024px;
     color: var(--text-body-neutral-strong);
   }
@@ -94,9 +106,21 @@
     margin-bottom: 0;
   }
 
+  @media (min-width: 768px) {
+    .about-me__inner {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--scale-x10);
+    }
+  }
+
   @media (max-width: 767px) {
     .about-me__inner {
       padding: var(--scale-x12) var(--scale-x5);
+    }
+
+    .about-me__title {
+      flex-basis: 100%;
     }
   }
 </style>

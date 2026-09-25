@@ -105,6 +105,14 @@
   --letter-spacing-compact: -1px;
   --letter-spacing-regular: 0px;
   --letter-spacing-comfortable: 1px;
+
+  /* Grid implícito entre seções (Figma): largura de 1 coluna num grid de 4,
+     com gap --scale-x10 entre elas. Usada tanto pelos cards do Skills &
+     Expertise (via flex: 1, matematicamente equivalente) quanto pelo título
+     "Sobre mim", que precisa acompanhar a largura do card acima dele — os
+     dois só ficam alinhados se compartilharem a mesma fórmula. Só é válida
+     acima do breakpoint mobile, onde o grid do Skills vira coluna única. */
+  --grid-col-4-width: calc((100% - 3 * var(--scale-x10)) / 4);
 }
 
 @media (prefers-color-scheme: dark) {
