@@ -27,23 +27,6 @@ const dividerLines = Array.from({ length: 4 });
         {dividerLines.map(() => <div class="site-footer__divider-line" />)}
       </div>
       <Button
-        href="/cv-lucas-pereira.pdf"
-        variant="outline-primary"
-        size="sm"
-        download
-        class="clickable-download-cv"
-      >
-        Baixar CV
-        <Fragment slot="icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 19H20V12H22C22 13.3616 22 21 22 21H2C2 21 2 13.3616 2 12H4V19ZM14 9H19L12 16L5 9H10V3H14V9Z" fill="currentColor"/>
-          </svg>
-        </Fragment>
-      </Button>
-      <div class="site-footer__dividers" aria-hidden="true">
-        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
-      </div>
-      <Button
         href="https://www.linkedin.com/in/lucasvalimpereira/"
         variant="outline-primary"
         size="sm"
@@ -54,6 +37,41 @@ const dividerLines = Array.from({ length: 4 });
         <Fragment slot="icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button
+        href="https://github.com/lucas-per"
+        variant="outline-primary"
+        size="sm"
+        external
+        ariaLabel="Abrir perfil do GitHub em nova aba"
+        class="clickable-link-external-github"
+      >
+        GitHub
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
+          </svg>
+        </Fragment>
+      </Button>
+      <div class="site-footer__dividers" aria-hidden="true">
+        {dividerLines.map(() => <div class="site-footer__divider-line" />)}
+      </div>
+      <Button
+        href="/cv-lucas-pereira.pdf"
+        variant="outline-primary"
+        size="sm"
+        download
+        class="clickable-download-cv"
+      >
+        Baixar CV
+        <Fragment slot="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 19H20V12H22C22 13.3616 22 21 22 21H2C2 21 2 13.3616 2 12H4V19ZM14 9H19L12 16L5 9H10V3H14V9Z" fill="currentColor"/>
           </svg>
         </Fragment>
       </Button>

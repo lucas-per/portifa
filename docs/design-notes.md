@@ -186,6 +186,11 @@ Exemplo (baseado no PRD do site pessoal):
 **Decisão:** ao clicar, o usuário é levado para uma nova aba contendo meu perfil professional no linkedin → https://www.linkedin.com/in/lucasvalimpereira/
 **Motivo:** facilitar que o usuário possa ver meu perfil professional completo
 
+### clickable-link-external-github
+**Contexto:** botão que permite ao usuário ver meu perfil no GitHub (footer, desktop `438:328` e mobile `438:510`)
+**Decisão:** ao clicar, o usuário é levado para uma nova aba contendo meu perfil no GitHub → https://github.com/lucas-per. Ordem dos botões no footer, nos dois breakpoints: E-mail → LinkedIn → GitHub → Baixar CV
+**Motivo:** facilitar que o usuário possa ver meu código e projetos
+
 ### section-side-menu
 **Contexto:** menu lateral dedicado a navegação, contendo botões que levam para posições específicas na mesma página, ou que permitam que o usuário volte para a página anterior
 **Decisão:** o menu deve ficar fixo na lateral esquerda, não dependendo da rolagem da seção que contém o case
