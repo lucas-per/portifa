@@ -44,6 +44,24 @@ const dividerLines = Array.from({ length: 2 });
       {dividerLines.map(() => <div class="site-footer-mobile__divider-line" />)}
     </div>
     <Button
+      href="https://github.com/lucas-per"
+      variant="outline-primary"
+      size="sm"
+      external
+      ariaLabel="Abrir perfil do GitHub em nova aba"
+      class="site-footer-mobile__button clickable-link-external-github"
+    >
+      GitHub
+      <Fragment slot="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 6V8H5V19H16V14H18V21C18 21 4.91874 21 3 21V6H10ZM21 3V12L17.206 8.207L11.2071 14.2071L9.79289 12.7929L15.792 6.793L12 3H21Z" fill="currentColor"/>
+        </svg>
+      </Fragment>
+    </Button>
+    <div class="site-footer-mobile__dividers" aria-hidden="true">
+      {dividerLines.map(() => <div class="site-footer-mobile__divider-line" />)}
+    </div>
+    <Button
       href="/cv-lucas-pereira.pdf"
       variant="outline-primary"
       size="sm"
