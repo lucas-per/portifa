@@ -8,7 +8,7 @@ tags:
 cardTags:
   - "discovery"
   - "delivery"
-publishedDate: "2026-10-12" # data de publicação: atualizar para o dia em que o case for para a main
+publishedDate: "2026-10-12" # data em que o case foi para a main
 optimizedImages: true
 
 # Trechos entre ** viram negrito (SemiBold) — ver src/utils/inline-markup.ts.
