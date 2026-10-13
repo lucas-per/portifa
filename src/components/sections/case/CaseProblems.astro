@@ -1,25 +1,35 @@
 ---
+import { inlineMarkup } from '../../../utils/inline-markup';
+
 interface Props {
   intro: string;
-  hypothesis: string;
+  hypothesis?: string;
+  hypothesisCard?: string;
+  risksIntro?: string;
   risks: string[];
-  kpis: string;
+  kpis?: string;
 }
 
-const { intro, hypothesis, risks, kpis } = Astro.props;
+const { intro, hypothesis, hypothesisCard, risksIntro, risks, kpis } = Astro.props;
 ---
 
 <section class="case-problems" id="problems-challenges">
   <h2 class="text-title-h3">Problema &amp; Desafios</h2>
+  {hypothesisCard && (
+    <div class="case-problems__card">
+      <p class="text-body-md" set:html={inlineMarkup(hypothesisCard)} />
+    </div>
+  )}
   <div class="case-problems__text">
-    <p class="text-body-md">{intro}</p>
-    <p class="text-body-md">{hypothesis}</p>
+    <p class="text-body-md" set:html={inlineMarkup(intro)} />
+    {hypothesis && <p class="text-body-md" set:html={inlineMarkup(hypothesis)} />}
+    {risksIntro && <p class="text-body-md" set:html={inlineMarkup(risksIntro)} />}
     <ul class="case-problems__risks">
       {risks.map((risk) => (
-        <li class="text-body-md">{risk}</li>
+        <li class="text-body-md" set:html={inlineMarkup(risk)} />
       ))}
     </ul>
-    <p class="text-body-md">{kpis}</p>
+    {kpis && <p class="text-body-md" set:html={inlineMarkup(kpis)} />}
   </div>
 </section>
 
@@ -30,6 +40,14 @@ const { intro, hypothesis, risks, kpis } = Astro.props;
     gap: var(--scale-x5);
     color: var(--text-body-primary-strong);
     padding-left: var(--scale-x12);
+  }
+
+  .case-problems__card {
+    padding: var(--scale-x6);
+    background-color: var(--surface-bg-off-white-primary);
+    border: 2px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-accent);
+    color: var(--text-body-neutral-strong);
   }
 
   .case-problems__text {

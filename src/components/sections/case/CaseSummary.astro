@@ -1,4 +1,6 @@
 ---
+import { inlineMarkup } from '../../../utils/inline-markup';
+
 interface Block {
   title: string;
   description: string;
@@ -20,19 +22,19 @@ const { challenge, solution, results } = Astro.props;
       <h3 class="case-summary__col-title case-summary__col-title--challenge text-title-h4">
         {challenge.title}
       </h3>
-      <p class="case-summary__col-desc text-body-md">{challenge.description}</p>
+      <p class="case-summary__col-desc text-body-md" set:html={inlineMarkup(challenge.description)} />
     </div>
     <div class="case-summary__col">
       <h3 class="case-summary__col-title case-summary__col-title--solution text-title-h4">
         {solution.title}
       </h3>
-      <p class="case-summary__col-desc text-body-md">{solution.description}</p>
+      <p class="case-summary__col-desc text-body-md" set:html={inlineMarkup(solution.description)} />
     </div>
     <div class="case-summary__col">
       <h3 class="case-summary__col-title case-summary__col-title--results text-title-h4">
         {results.title}
       </h3>
-      <p class="case-summary__col-desc text-body-md">{results.description}</p>
+      <p class="case-summary__col-desc text-body-md" set:html={inlineMarkup(results.description)} />
     </div>
   </div>
 </section>

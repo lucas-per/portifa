@@ -1,0 +1,136 @@
+---
+import type { ImageMetadata } from 'astro';
+import CaseImage from '../../ui/CaseImage.astro';
+import { inlineMarkup } from '../../../utils/inline-markup';
+
+interface Topic {
+  title: string;
+  paragraphs: string[];
+  image?: { src: ImageMetadata; caption: string };
+}
+
+interface Props {
+  intro: string;
+  topics: Topic[];
+  consolidation: { title: string; description: string };
+}
+
+const { intro, topics, consolidation } = Astro.props;
+---
+
+<section class="case-discovery-topics" id="strategy-solutions">
+  <h2 class="text-title-h3">Discovery</h2>
+  <div class="case-discovery-topics__plan">
+    <p class="text-body-md" set:html={inlineMarkup(intro)} />
+    {topics.map((topic) => (
+      <div class="case-discovery-topics__topic">
+        <div class="case-discovery-topics__topic-text">
+          <h3 class="text-body-lg-strong">{topic.title}</h3>
+          {topic.paragraphs.map((paragraph) => (
+            <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
+          ))}
+        </div>
+        {topic.image && (
+          <figure class="case-discovery-topics__figure">
+            <CaseImage
+              src={topic.image.src}
+              alt={topic.image.caption}
+              width={107}
+              widths={[107, 214, 428, 800]}
+              sizes="(max-width: 767px) calc(100vw - 40px), 107px"
+            />
+            <figcaption class="text-body-caption">{topic.image.caption}</figcaption>
+          </figure>
+        )}
+      </div>
+    ))}
+  </div>
+  <div class="case-discovery-topics__consolidation">
+    <h3 class="text-title-h4">{consolidation.title}</h3>
+    <p class="text-body-md" set:html={inlineMarkup(consolidation.description)} />
+  </div>
+</section>
+
+<style>
+  .case-discovery-topics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+    color: var(--text-body-primary-strong);
+    padding-left: var(--scale-x12);
+  }
+
+  .case-discovery-topics__plan {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+    color: var(--text-body-neutral-strong);
+  }
+
+  .case-discovery-topics__topic {
+    display: flex;
+    gap: var(--scale-x10);
+    align-items: flex-start;
+  }
+
+  .case-discovery-topics__topic-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x3);
+  }
+
+  .case-discovery-topics__figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+    width: 107px;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .case-discovery-topics__figure :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-img);
+  }
+
+  .case-discovery-topics__figure figcaption {
+    color: var(--text-body-neutral-strong);
+    text-transform: uppercase;
+  }
+
+  .case-discovery-topics__consolidation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x4);
+    padding: var(--scale-x6);
+    background-color: var(--surface-bg-off-white-primary);
+    border: 2px solid var(--border-neutral-strong);
+    box-shadow: var(--shadow-layout-accent);
+  }
+
+  .case-discovery-topics__consolidation > p {
+    color: var(--text-body-neutral-strong);
+  }
+
+  @media (max-width: 767px) {
+    .case-discovery-topics {
+      /* 20px (Figma): o inset vive aqui dentro, não em
+         .case-layout__content — ver comentário em [slug].astro sobre
+         os dividers estreitos entre seções. */
+      padding-left: var(--scale-x5);
+    }
+
+    .case-discovery-topics__topic {
+      flex-direction: column;
+    }
+
+    .case-discovery-topics__figure {
+      width: 100%;
+    }
+  }
+</style>

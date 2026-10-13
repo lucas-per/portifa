@@ -1,27 +1,41 @@
 ---
+import { inlineMarkup } from '../../../utils/inline-markup';
+
 interface Block {
   title: string;
   description: string;
 }
 
 interface Props {
-  privacy: Block;
-  pains: Block;
+  privacy?: Block;
+  pains?: Block;
+  paragraphs?: string[];
 }
 
-const { privacy, pains } = Astro.props;
+const { privacy, pains, paragraphs } = Astro.props;
 ---
 
 <section class="case-plans-ahead" id="plans-ahead">
   <h2 class="text-title-h3">Visão de futuro</h2>
-  <div class="case-plans-ahead__block">
-    <h3 class="text-title-h4">{privacy.title}</h3>
-    <p class="text-body-md">{privacy.description}</p>
-  </div>
-  <div class="case-plans-ahead__block">
-    <h3 class="text-title-h4">{pains.title}</h3>
-    <p class="text-body-md">{pains.description}</p>
-  </div>
+  {privacy && (
+    <div class="case-plans-ahead__block">
+      <h3 class="text-title-h4">{privacy.title}</h3>
+      <p class="text-body-md">{privacy.description}</p>
+    </div>
+  )}
+  {pains && (
+    <div class="case-plans-ahead__block">
+      <h3 class="text-title-h4">{pains.title}</h3>
+      <p class="text-body-md">{pains.description}</p>
+    </div>
+  )}
+  {paragraphs && (
+    <div class="case-plans-ahead__text">
+      {paragraphs.map((paragraph) => (
+        <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
+      ))}
+    </div>
+  )}
 </section>
 
 <style>
@@ -31,6 +45,13 @@ const { privacy, pains } = Astro.props;
     gap: var(--scale-x6);
     color: var(--text-body-primary-strong);
     padding-left: var(--scale-x12);
+  }
+
+  .case-plans-ahead__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x3);
+    color: var(--text-body-neutral-strong);
   }
 
   .case-plans-ahead__block {

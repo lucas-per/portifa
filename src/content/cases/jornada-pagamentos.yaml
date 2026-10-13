@@ -1,22 +1,118 @@
 title: "Jornada de Pagamentos"
 shortDescription: "Reestruturação da jornada e implementação de design system em um app com mais de 100 mil usuários."
-status: "coming-soon"
-tags: []
-publishedDate: "2026-09-08" # provisória — o case ainda não foi publicado
-highlights:
-  - value: "+15%"
-    label: "Boletos pagos"
-  - value: "+20%"
-    label: "Pagamentos"
+status: "published"
+tags:
+  - "discovery"
+  - "delivery"
+  - "design system"
+cardTags:
+  - "discovery"
+  - "delivery"
+publishedDate: "2026-10-12" # data de publicação: atualizar para o dia em que o case for para a main
+optimizedImages: true
 
+# Trechos entre ** viram negrito (SemiBold) — ver src/utils/inline-markup.ts.
 content:
   summary:
     challenge:
       title: "Desafio"
-      description: "Reestruturação da jornada e implementação de design system em um app com mais de 100 mil usuários."
+      description: "Recursos de pagamentos eram **pouco utilizados** dentro do app, apesar do **grande potencial de receita**, e havia pouco mais de dois meses para entregar, por uma exigência regulatória do Banco Central."
     solution:
       title: "Solução"
-      description: "Case ainda não publicado — conteúdo completo em breve."
+      description: "Atualização da UI para o design system da empresa, com **redesenho completo das jornadas** e um **Assistente de Pagamentos que traz inteligência** sobre o comportamento financeiro do usuário."
     results:
-      title: "Resultados"
-      description: "Case ainda não publicado — conteúdo completo em breve."
+      title: "Resultado"
+      description: "Nos dois primeiros meses após o lançamento, **projeção de +15%** no número de transações envolvendo boletos e **+20%** no volume total de pagamentos, em comparação com os doze meses anteriores."
+
+  context:
+    description:
+      - "A PagueVeloz, fintech de pagamentos nascida em Blumenau, entrou para o grupo Serasa Experian em 2021. Dentro da conta digital, a jornada de pagamentos (boleto, Pix e DDA, o Débito Direto Autorizado) já movimentava valores expressivos por ano, e três em cada quatro clientes cadastrados eram ativos. Essa jornada tinha potencial para ser mais utilizada e contribuir para o aumento de receita."
+      - "O prazo era curto, pouco mais de dois meses, por causa de uma exigência regulatória do Banco Central com prazo próprio a cumprir. Além do tempo apertado, a jornada também precisava sair da base legada e migrar para o design system da empresa, dívida técnica que fazia parte do escopo desde o primeiro dia."
+    image: "../../assets/cases/jornada-pagamentos/legacy-home.png"
+    caption: "Home de pagamentos legada"
+
+  myRole:
+    title: "Meu papel"
+    paragraphs:
+      - "A pesquisa inicial foi conduzida pela PM e pela minha liderança de design; revisei esse material com liberdade para ajustar, complementando o mapeamento de jornadas, a avaliação heurística e o mapeamento de concorrentes. Também participei ativamente das decisões tomadas durante o Discovery. Em seguida, levei os wireframes até a UI final, já usando o design system."
+      - "Reportei direto à minha liderança de design e trabalhei lado a lado com a PO no dia a dia do projeto. Validei o trabalho de forma recorrente com os times de Produto e Engenharia, para reduzir risco técnico e evitar surpresas na entrega final. A PM entrava só quando surgia alguma decisão estratégica fora do escopo inicial, sem fazer parte da rotina."
+
+  problems:
+    hypothesisCard: "**Hipótese principal:** se a jornada parasse de pedir informações que o sistema já tinha, desse visibilidade clara sobre o status de cada pagamento e trouxesse inteligência sobre o comportamento financeiro do usuário (não só dados crus), o uso cresceria e isso se traduziria em receita."
+    intro: "Duas frentes vinham com prazo fixo, fora do meu controle: a **exigência regulatória** do Banco Central e a **migração para o design system**. Por isso, um levantamento detalhado de problemas era essencial para decidir o que priorizar dentro da própria jornada e onde valia a pena cavar fundo."
+    risksIntro: "**O levantamento organizado por jornadas confirmou onde focar:**"
+    risks:
+      - "Produtos de pagamento escondidos na Home"
+      - "A configuração do limite de pagamentos ficava escondida, o que levava clientes com problemas relacionados a acionar o atendimento"
+      - "A jornada de pagamento poderia ser mais enxuta, pois havia dados já conhecidos que poderiam vir pré-preenchidos"
+      - "O buscador de boletos prometia um processo simplificado, mas replicava boa parte da complexidade do pagamento comum"
+      - "A escrita, de forma geral, era muito técnica e pouco didática"
+
+  discoveryTopics:
+    intro: "O objetivo do discovery era entender como **elevar** a quantidade de transações feitas na jornada de pagamentos e, consequentemente, a receita. Para isso, o time combinou **cinco frentes**. Os dados de uso deram o tamanho do problema, a avaliação heurística e o mapeamento das jornadas localizaram onde o atrito acontecia, e o levantamento por área organizou os problemas e as oportunidades. O benchmark fechou a etapa, comparando a hipótese do time com o que o mercado oferecia."
+    topics:
+      - title: "Dados"
+        paragraphs:
+          - "O time levantou dados de uso no Splunk, de fevereiro a maio, e comparou cada número com o volume de logins. O uso de **Pagamentos** equivalia a cerca de 4% dos logins, e o de **Emissão de boletos**, a cerca de 0,1%. A análise de boletos também mostrou mais emitidos do que pagos, e nos meses de pico de emissão o volume pago seguia na média de sempre."
+      - title: "Mapeamento das jornadas"
+        paragraphs:
+          - "O mapeamento percorreu **quatro jornadas** (Pagamentos via boleto ou Pix, Consultas de pagamentos, DDA, e Configurações), incluindo o passo a passo a partir da Home, com as ideias de melhoria anotadas no caminho. A de Pagamentos tinha oito passos, da entrada na Home até finalizar o processo. Uma das ideias registradas nela, o **atalho direto para o pagamento** quando o código já está copiado, chegou à versão entregue."
+        image:
+          src: "../../assets/cases/jornada-pagamentos/journey-mapping.png"
+          caption: "Mapeamento de jornadas"
+      - title: "Avaliação heurística"
+        paragraphs:
+          - "A avaliação heurística aplicou às jornadas os dez critérios de usabilidade de Jakob Nielsen, cada um com nota de 1 a 5. Sete deles ficaram em 2 ou menos. As **piores** notas, 1, foram prevenção de erros, já que a jornada pedia o vencimento de um boleto que já trazia essa informação, e flexibilidade e eficiência de uso, porque quem não conhece pagamentos a fundo tinha dificuldade de entender as etapas. A **melhor**, 4, foi liberdade e controle do usuário, que permite não continuar ou recuar, embora não permita desfazer uma movimentação financeira."
+          - "O time registrou também **termos complexos e inconsistentes** entre produtos, **excesso de informação**, **falta de padronização** de tamanho e cores, e uma **FAQ fora do fluxo**, em um link externo."
+      - title: "Problemas e oportunidades por área"
+        paragraphs:
+          - "O time também organizou os problemas e as oportunidades por área do produto (Home, Pagar, Consultar, Buscador e Limites), usando as telas atuais como ponto de partida. Entre as oportunidades registradas estavam **mostrar os benefícios** de cada produto dentro dele (Home), **trazer os dados já pré-preenchidos** e deixar ao usuário só a confirmação (Pagar); incluir **busca por status**, **seletor de datas**, e **exportação de PDF** (Consultar); e levar boletos pendentes ou avisos de pagamento para a Home do app, o que resultou nos **lembretes** (Buscador)."
+    consolidation:
+      title: "Consolidação dos resultados e encaminhamentos"
+      description: "No início do discovery, o time levantou a hipótese de que entregar **inteligência** sobre o comportamento financeiro do usuário, em vez de relatórios crus, seria um diferencial. Completei o mapeamento de oito concorrentes para testar isso contra o mercado. Somente o Mercado Pago ia além da gestão básica, e por ser um dos principais nomes do mercado, consideramos que já configurava um precedente para a ideia. Usei essa leitura como base para o **Assistente de Pagamentos**. O **histórico de gastos por beneficiário**, de fácil leitura, ajuda o usuário a entender seus gastos passados. Na Home do app, **lembretes** avisam dos boletos que vencem e ajuda a antecipar o que vem pela frente."
+
+  deliveryFlows:
+    intro: "O redesenho entregou a jornada de pagamentos inteira, mas a narrativa deste case se apoia em dois pontos específicos. A **aba de Pagamentos** reorganiza o que já existia, e o **Assistente de pagamentos** é a aposta nova do projeto."
+    flows:
+      - title: "Aba de Pagamentos"
+        paragraphs:
+          - "A tela reúne o que antes estava espalhado. Um campo único recebe chave Pix ou código de barras, logo no **topo**. **Abaixo**, atalhos para novo pagamento, consulta e limite de pagamentos. No **fim** da tela ficam os recursos menos utilizados pelos clientes (emitir boleto, gerar link de pagamento e deixar uma sugestão para o time)."
+          - "No **meio** da tela, a seção Soluções traz dois caminhos para o DDA lado a lado. De um lado, o banner/card novo do Assistente de pagamentos, que incorpora inteligência ao DDA. Do outro, o Buscador de boletos, ainda ativo e repaginado, que cumpre estritamente as regulações do Banco Central. A convivência foi uma decisão de transição. Para não forçar o usuário a migrar de um dia para o outro para um recurso diferente e com mais opções, optamos por manter os dois, acompanhar a adesão ao Assistente e monitorar eventuais problemas de uma primeira versão. Com mais segurança de que o Assistente funcionava bem e tinha boa usabilidade, o passo seguinte seria avisar que o DDA passaria a existir somente dentro dele, preparando o usuário para a mudança."
+        images:
+          - "../../assets/cases/jornada-pagamentos/payment-top.png"
+          - "../../assets/cases/jornada-pagamentos/payment-mid.png"
+          - "../../assets/cases/jornada-pagamentos/payment-bottom.png"
+        caption: "Aba de pagamentos"
+      - title: "Assistente de pagamentos"
+        paragraphs:
+          - "O usuário ativa o Assistente por consentimento explícito no onboarding, aceitando o termo de adesão ao DDA. Daí em diante, o Assistente captura os boletos do CPF automaticamente. A tela de detalhes de cada conta traz o **histórico de gastos** dos últimos seis meses com aquele beneficiário, além do valor da fatura em aberto, e esse foi o **diferencial do projeto**. Depois de ativado, o usuário gerencia o recurso em telas dedicadas a boletos pagos e ocultados, configurações e desativação."
+          - "O Assistente também alimenta a Home do app com **lembretes** que variam conforme a proximidade do vencimento. Com um único boleto, o lembrete mostra a data (ou \"Vence hoje\"), o valor e o beneficiário. Com vários, mostra quantos são e o valor deles. A tag ganha tom de alerta quando o vencimento é “hoje”. A prioridade segue a ordem de vencimento (no dia, em cinco dias, em dez dias e no mês). Quando nenhum boleto está a vencer, o lembrete passa a mostrar os vencidos não revisados pela mesma lógica. Quem ainda não ativou o Assistente vê, no mesmo espaço da Home, um banner que o recomenda."
+        images:
+          - "../../assets/cases/jornada-pagamentos/assistant-adhesion.png"
+          - "../../assets/cases/jornada-pagamentos/assistant-home.png"
+          - "../../assets/cases/jornada-pagamentos/assistant-details.png"
+        caption: "adesão, contas do assistente, e detalhamento de conta"
+      - title: "Demais fluxos"
+        paragraphs:
+          - "Os outros fluxos passaram por ajustes de **padronização** e **usabilidade**, além da utilização do design system. Nos pagamentos por Pix e boleto, as etapas de revisão eram diferentes entre si em muitos pontos, sem necessidade, e foram padronizadas. Em Limite, o trabalho foi de usabilidade, corrigindo componentes que eram usados de forma equivocada. A Consulta não tinha nenhuma categorização e não permitia exportar um comprovante a partir dela, o que deixava o usuário sem apoio. Agora ela organiza os pagamentos em categorias, com uma aba para os futuros, e permite exportar o comprovante direto da listagem."
+        images:
+          - "../../assets/cases/jornada-pagamentos/flow-reminder.png"
+          - "../../assets/cases/jornada-pagamentos/flow-code.png"
+          - "../../assets/cases/jornada-pagamentos/flow-review.png"
+        caption: "lembrete, reconhecimento automático, e revisão de pagamento"
+
+  impact:
+    highlights:
+      - value: "+15%"
+        label: "Transações feitas"
+      - value: "+20%"
+        label: "Pagamentos feitos"
+    description:
+      - "Com base nos dois primeiros meses após o lançamento da nova área de Pagamentos, a projeção é de **+15% no número de transações** envolvendo boletos e **+20% no volume total de pagamentos** (TPV). A comparação foi feita contra os doze meses anteriores ao lançamento, período em que o TPV tinha chegado a um platô de crescimento."
+      - "O **tracking de conversão** não estava disponível no lançamento. Os dados brutos existiam, mas ainda não haviam virado conhecimento, e por isso a taxa de conversão ficou sem medição. Por isso, os percentuais usam o número absoluto de transações e são projeções, não uma medição fechada."
+
+  plansAhead:
+    paragraphs:
+      - "Devido ao prazo, alguns itens ficaram fora do escopo e seguiram como candidatos para futuros ciclos. O atalho de **Múltiplos pagamentos** (na Home de Pagamentos) e a opção de **débito automático** não foram priorizadas naquele momento. Outra ideia registrada foi **ampliar as formas de pagamento**, com crédito parcelado, saldo ou investimentos (Open Finance)."
+      - "Sobraram também perguntas sem resposta. A emissão de boletos acontecia com mais frequência na web do que no app, e a pesquisa não chegou a separar se a diferença vinha do perfil de usuário ou de um processo ruim no app."
+      - "Dois encaminhamentos ficaram pendentes. O primeiro é **transformar as projeções em medição**. O segundo é **concluir a migração do DDA** para dentro do Assistente. Com a adesão acompanhada e a segurança de que funciona bem, o passo seguinte seria avisar os usuários de que o DDA passaria a existir somente dentro do Assistente, preparando todos para a mudança."

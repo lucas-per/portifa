@@ -221,7 +221,19 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 
 ---
 
-## 15. Checklist rápido antes de dar uma tarefa de layout como concluída
+## 15. Sincronizar um case novo ou uma rodada de mudanças globais no Figma
+
+**15.1 — "Todas as bordas de 3px viraram 2px" quase nunca é verdade node a node.** Uma mudança global descrita em uma frase (bordas de cards e imagens de 3 para 2px) tem exceções que só aparecem lendo o stroke real de cada node: as telas de celular do Delivery estavam com 1px, os marcadores da timeline e os botões continuaram em 3px, e uma caixa de resultado esquecida na rodada ainda estava em 3px. **Correção:** antes de aplicar a regra global, listar `strokeWeight` de cada node afetado (via `use_figma`, agrupando por valor + variável de cor) e tratar o que diverge como decisão explícita — seguir o Figma ou pedir pra corrigir o arquivo — nunca uniformizar por suposição.
+
+**15.2 — Renomeação de tokens no Figma pode vir junto com mudança de valor.** `bg/primary → bg/secondary` parecia só renome, mas os primitivos amarelos e o cinza claro também mudaram de hex. Comparar nome **e** valor resolvido (alias → primitivo → hex) de cada variável contra o CSS, em vez de só renomear a variável no código.
+
+**15.3 — `<Picture>` do Astro com `widths` não define o tamanho de exibição.** Sem o atributo `width`, o `<img>` assume a largura original do arquivo e estoura a coluna (uma imagem de 1170px dentro de uma coluna de 156px). Passar `width` (tamanho de exibição em 1x) junto com `widths` e `sizes`. Em layouts flex, o item é o `<picture>`, não o `<img>`: `flex`/`min-width` vão no `picture`, e borda/sombra/`width: 100%` no `img` (via `:global`, porque o CSS escopado não alcança o `img` gerado por um componente filho).
+
+**15.4 — Screenshot mobile em Chrome/Edge headless: `--window-size=390,...` não gera viewport de 390px.** O navegador impõe uma largura mínima de janela (~500px), o layout é calculado nela e o screenshot é só cortado — o que parece "conteúdo vazando à direita" é artefato. Para verificar o mobile de verdade, abrir a página dentro de um `<iframe width="390">` num HTML local e capturar esse iframe (os media queries respondem à largura do iframe).
+
+---
+
+## 16. Checklist rápido antes de dar uma tarefa de layout como concluída
 
 - [ ] O fundo de cada seção de topo é `width: 100%`? O conteúdo interno tem `max-width` + `margin: 0 auto`?
 - [ ] Todo elemento que combina `max-width`/`width` fixo com `padding` tem `box-sizing: border-box`?
@@ -242,3 +254,7 @@ Nas larguras ≤ frame de referência, os dois preenchedores encolhem a zero e a
 - [ ] Alguma variável usada no arquivo Figma vem de uma coleção diferente de `primitives`/da coleção principal do projeto? Auditar antes de criar Modes.
 - [ ] Antes de usar um screenshot como prova, os dois estados comparados são visualmente diferenciáveis (cores diferentes, não a mesma cor de fundo em ambos os casos)?
 - [ ] Uma spec com mais de um item (ex: largura + `flex-direction`) foi conferida item a item, não só pelo que salta aos olhos num screenshot comparativo?
+- [ ] Uma mudança global ("todas as bordas", "todos os dividers") foi conferida node a node, listando o valor real de cada um, em vez de aplicada a todos por igual?
+- [ ] Um token renomeado no Figma teve o valor resolvido comparado com o do CSS, não só o nome?
+- [ ] Imagens servidas por `<Picture>`/`<Image>` têm `width` de exibição definido, e o item flex certo (`picture`) recebe o `flex`?
+- [ ] A verificação mobile foi feita numa viewport realmente estreita (iframe), não numa janela headless com largura mínima?

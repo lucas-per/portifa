@@ -33,6 +33,10 @@ const cases = defineCollection({
       // página dedicada de case.
       highlights: z.array(valueLabelSchema).optional(),
       publishedDate: z.coerce.date(),
+      // true: imagens do case saem em AVIF/WebP em 1x e 2x (ver
+      // components/ui/CaseImage.astro). O Redesign segue com false, como
+      // já era servido.
+      optimizedImages: z.boolean().default(false),
 
       // Conteúdo da página dedicada — espelha as 7 seções do frame
       // desktop-case no Figma (Resumo, Contexto, Problema & Desafios,
@@ -51,12 +55,25 @@ const cases = defineCollection({
             caption: z.string(),
           })
           .optional(),
+        // Meu papel como seção própria, logo depois do Contexto e sem
+        // divider entre as duas (Figma, col-myrole do case Pagamentos).
+        myRole: z
+          .object({
+            title: z.string(),
+            paragraphs: z.array(z.string()),
+          })
+          .optional(),
+        // Ordem de exibição: hypothesisCard, intro, hypothesis, risksIntro,
+        // risks, kpis. O Redesign usa intro/hypothesis/risks/kpis; o case
+        // Pagamentos abre com a hipótese em card e tem um lead-in antes da lista.
         problems: z
           .object({
             intro: z.string(),
-            hypothesis: z.string(),
+            hypothesis: z.string().optional(),
+            hypothesisCard: z.string().optional(),
+            risksIntro: z.string().optional(),
             risks: z.array(z.string()),
-            kpis: z.string(),
+            kpis: z.string().optional(),
           })
           .optional(),
         discovery: z
@@ -95,6 +112,36 @@ const cases = defineCollection({
             }),
           })
           .optional(),
+        // Discovery narrativo (subseções livres + card de consolidação),
+        // alternativo ao `discovery` com timeline do Redesign.
+        discoveryTopics: z
+          .object({
+            intro: z.string(),
+            topics: z.array(
+              z.object({
+                title: z.string(),
+                paragraphs: z.array(z.string()),
+                image: z.object({ src: image(), caption: z.string() }).optional(),
+              })
+            ),
+            consolidation: titleDescriptionSchema,
+          })
+          .optional(),
+        // Delivery em fluxos (texto + telas lado a lado), alternativo ao
+        // `delivery` do Redesign.
+        deliveryFlows: z
+          .object({
+            intro: z.string(),
+            flows: z.array(
+              z.object({
+                title: z.string(),
+                paragraphs: z.array(z.string()),
+                images: z.array(image()),
+                caption: z.string(),
+              })
+            ),
+          })
+          .optional(),
         delivery: z
           .object({
             myRole: titleDescriptionSchema,
@@ -114,8 +161,10 @@ const cases = defineCollection({
           .optional(),
         plansAhead: z
           .object({
-            privacy: titleDescriptionSchema,
-            pains: titleDescriptionSchema,
+            privacy: titleDescriptionSchema.optional(),
+            pains: titleDescriptionSchema.optional(),
+            // Texto corrido sem subtítulos (case Pagamentos).
+            paragraphs: z.array(z.string()).optional(),
           })
           .optional(),
       }),

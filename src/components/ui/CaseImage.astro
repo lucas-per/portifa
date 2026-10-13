@@ -1,0 +1,37 @@
+---
+import { Image, Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** Largura de exibição (1x) em px. */
+  width: number;
+  /**
+   * true: <picture> com AVIF + WebP (e PNG de fallback) em 1x e 2x.
+   * false: <Image> simples, como os cases anteriores já eram servidos
+   * (o case Redesign segue assim de propósito).
+   */
+  optimized?: boolean;
+  /** Larguras geradas quando optimized — padrão: 1x e 2x de `width`. */
+  widths?: number[];
+  /** Atributo sizes do <img>; padrão: `width`px fixo. */
+  sizes?: string;
+}
+
+const { src, alt, width, optimized = true, widths, sizes } = Astro.props;
+---
+
+{optimized ? (
+  <Picture
+    src={src}
+    alt={alt}
+    width={width}
+    formats={['avif', 'webp']}
+    widths={widths ?? [width, width * 2]}
+    sizes={sizes ?? `${width}px`}
+    loading="lazy"
+  />
+) : (
+  <Image src={src} alt={alt} width={width} />
+)}

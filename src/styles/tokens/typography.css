@@ -57,6 +57,11 @@
   margin: 0;
 }
 
+/* **trecho** vindo do conteúdo dos cases (utils/inline-markup.ts) */
+.text-body-md strong {
+  font-weight: var(--weight-600);
+}
+
 .text-body-lg-strong {
   font-family: var(--font-family-body);
   font-weight: var(--weight-600);

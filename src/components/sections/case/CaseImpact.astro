@@ -1,4 +1,6 @@
 ---
+import { inlineMarkup } from '../../../utils/inline-markup';
+
 interface Highlight {
   value: string;
   label: string;
@@ -24,7 +26,7 @@ const { highlights, description } = Astro.props;
   </div>
   <div class="case-impact__text">
     {description.map((paragraph) => (
-      <p class="text-body-md">{paragraph}</p>
+      <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
     ))}
   </div>
 </section>

@@ -6,9 +6,12 @@ import SideMenu from '../../components/sections/case/SideMenu.astro';
 import CaseAccordion from '../../components/sections/case/CaseAccordion.astro';
 import CaseSummary from '../../components/sections/case/CaseSummary.astro';
 import CaseContext from '../../components/sections/case/CaseContext.astro';
+import CaseMyRole from '../../components/sections/case/CaseMyRole.astro';
 import CaseProblems from '../../components/sections/case/CaseProblems.astro';
 import CaseDiscovery from '../../components/sections/case/CaseDiscovery.astro';
+import CaseDiscoveryTopics from '../../components/sections/case/CaseDiscoveryTopics.astro';
 import CaseDelivery from '../../components/sections/case/CaseDelivery.astro';
+import CaseDeliveryFlows from '../../components/sections/case/CaseDeliveryFlows.astro';
 import CaseImpact from '../../components/sections/case/CaseImpact.astro';
 import CasePlansAhead from '../../components/sections/case/CasePlansAhead.astro';
 import BackToTopButton from '../../components/sections/case/BackToTopButton.astro';
@@ -57,9 +60,11 @@ const readingTime = estimateReadingTime(data.content);
         {data.content.context && (
           <>
             <Divider width="156px" />
-            <CaseContext {...data.content.context} />
+            <CaseContext {...data.content.context} optimized={data.optimizedImages} />
           </>
         )}
+
+        {data.content.myRole && <CaseMyRole {...data.content.myRole} />}
 
         {data.content.problems && (
           <>
@@ -75,10 +80,24 @@ const readingTime = estimateReadingTime(data.content);
           </>
         )}
 
+        {data.content.discoveryTopics && (
+          <>
+            <Divider width="156px" />
+            <CaseDiscoveryTopics {...data.content.discoveryTopics} />
+          </>
+        )}
+
         {data.content.delivery && (
           <>
             <Divider width="156px" />
             <CaseDelivery {...data.content.delivery} />
+          </>
+        )}
+
+        {data.content.deliveryFlows && (
+          <>
+            <Divider width="156px" />
+            <CaseDeliveryFlows {...data.content.deliveryFlows} />
           </>
         )}
 
