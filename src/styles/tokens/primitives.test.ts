@@ -39,6 +39,7 @@ describe('primitives.css', () => {
 
   it('declara a escala de acento (azul) em OKLCH', () => {
     expectDeclares('accent-50', 'oklch(97.23% 0.0100 238.51)');
+    expectDeclares('accent-100', 'oklch(89.84% 0.0548 240.89)');
     expectDeclares('accent-700', 'oklch(53.07% 0.1347 245.37)');
     expectDeclares('accent-600', 'oklch(55.82% 0.1361 243.96)');
     expectDeclares('accent-300', 'oklch(72.59% 0.1196 244.22)');

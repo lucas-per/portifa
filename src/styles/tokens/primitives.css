@@ -25,6 +25,7 @@
 
   /* Acento (azul) */
   --accent-50: oklch(97.23% 0.0100 238.51); /* #f0f7fc — color/blue/1 no Figma, fundo do "Sobre mim" */
+  --accent-100: oklch(89.84% 0.0548 240.89); /* #bee3ff — color/blue/2 no Figma, título "Execução e Colaboração" */
   --accent-700: oklch(53.07% 0.1347 245.37); /* #0071b4 */
   --accent-600: oklch(55.82% 0.1361 243.96); /* #057abd */
   --accent-300: oklch(72.59% 0.1196 244.22); /* #5faeec */

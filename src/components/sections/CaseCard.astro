@@ -16,6 +16,7 @@ interface Props {
   highlights?: Highlight[];
   href?: string;
   shadow?: 'accent' | 'neutral';
+  linkClass?: string;
 }
 
 const {
@@ -26,6 +27,7 @@ const {
   highlights,
   href,
   shadow = 'neutral',
+  linkClass,
 } = Astro.props;
 ---
 
@@ -56,7 +58,7 @@ const {
     </div>
   )}
   {href && (
-    <Button href={href} variant="outline-accent" class="clickable-link-internal-case">
+    <Button href={href} variant="outline-accent" class={linkClass}>
       Ler case
       <Fragment slot="icon">
         <img src={arrowRightIcon.src} width="24" height="24" alt="" />
@@ -82,7 +84,7 @@ const {
     min-width: 0;
     box-sizing: border-box;
     padding: var(--scale-x6);
-    background-color: var(--surface-bg-off-white-primary);
+    background-color: var(--surface-bg-neutral-extra);
     border: 2px solid var(--border-neutral-strong);
   }
 

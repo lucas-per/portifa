@@ -17,6 +17,7 @@
   --surface-bg-off-white-tertiary: var(--yellow-400);
   --surface-bg-neutral-extra: var(--neutral-50);
   --surface-bg-accent-subtle: var(--accent-50);
+  --surface-bg-accent-medium: var(--accent-100);
   --surface-bg-secondary-subtle: var(--primary-100);
   --surface-bg-secondary-strong: var(--primary-300);
   --surface-bg-accent-strong: var(--accent-300);

@@ -25,6 +25,9 @@ const cases = defineCollection({
       shortDescription: z.string(),
       status: z.enum(['published', 'coming-soon']),
       tags: z.array(z.string()),
+      // Tags do card da Home, quando diferem das do cabeçalho do case (no Figma
+      // o card mostra menos tags que a página). Sem isso, usa `tags`.
+      cardTags: z.array(z.string()).optional(),
       // Métricas de resultado exibidas no card da Home (ex: "+15%" / "Boletos
       // pagos") — distinto de content.impact.highlights, que é o bloco da
       // página dedicada de case.
