@@ -124,7 +124,8 @@ const readingTime = estimateReadingTime(data.content);
       </div>
     </div>
   </div>
-  <Divider class="case-trail-divider" height="7px" color="var(--surface-bg-tertiary-strong)" />
+  <!-- divider-trail (Figma desktop 452:938 / mobile 275:1149): faixa vermelha entre o conteúdo e o footer -->
+  <Divider height="7px" color="var(--surface-bg-tertiary-strong)" />
 </BaseLayout>
 
 <style>
@@ -214,21 +215,7 @@ const readingTime = estimateReadingTime(data.content);
     margin: calc(var(--scale-x16) - var(--scale-x11)) 0;
   }
 
-  /*
-    Divider vermelho antes do footer (Figma, node 275:1149) — só existe
-    no mobile. No desktop o fundo cinza de .case-layout__content já
-    encosta direto no footer de propósito (ver design-notes.md,
-    entrada "col-case-content"), sem essa linha.
-  */
-  :global(.case-trail-divider) {
-    display: none;
-  }
-
   @media (max-width: 767px) {
-    :global(.case-trail-divider) {
-      display: block;
-    }
-
     .case-layout {
       flex-direction: column;
     }
