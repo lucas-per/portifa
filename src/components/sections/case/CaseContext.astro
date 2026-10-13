@@ -62,12 +62,22 @@ const { description, image, caption, optimized = false } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--scale-x4);
-    align-items: center;
+    /* A figura tem a largura da imagem (Figma 452:290, col-img-context):
+       a legenda quebra dentro dela e fica alinhada à esquerda, em vez de
+       centralizada e mais larga que a imagem. */
+    width: 156px;
     margin: 0;
     flex-shrink: 0;
   }
 
+  /* border-box: o projeto não tem reset de box-sizing, então sem isso a
+     borda de 2px somaria 4px aos 156px e a imagem ficaria mais larga que
+     a legenda. */
   .case-context__figure :global(img) {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    height: auto;
     border: 2px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-img);
   }
@@ -91,11 +101,7 @@ const { description, image, caption, optimized = false } = Astro.props;
 
     .case-context__figure {
       align-self: stretch;
-    }
-
-    .case-context__figure :global(img) {
-      width: 100%;
-      height: auto;
+      width: auto;
     }
   }
 </style>
