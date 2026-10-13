@@ -115,6 +115,11 @@ const readingTime = estimateReadingTime(data.content);
           </>
         )}
 
+        <div class="case-layout__divider-doubled" aria-hidden="true">
+          <Divider width="156px" />
+          <Divider width="156px" />
+        </div>
+
         <BackToTopButton />
       </div>
     </div>
@@ -197,6 +202,16 @@ const readingTime = estimateReadingTime(data.content);
     flex-direction: column;
     gap: var(--scale-x11);
     max-width: 977px;
+  }
+
+  /* divider-doubled (Figma): dois dividers com 20px entre si e 64px até a
+     última seção e até o botão. O gap de .case-layout__content-inner já dá
+     44px de cada lado; a margem completa a diferença até 64px. */
+  .case-layout__divider-doubled {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+    margin: calc(var(--scale-x16) - var(--scale-x11)) 0;
   }
 
   /*

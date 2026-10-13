@@ -95,8 +95,8 @@ const { intro, flows } = Astro.props;
 
   /* <picture> é o item flex (o <img> fica dentro dele): os 3 preenchem a
      linha igualmente (Fill no Figma, proporção 720:1600 dos próprios PNGs).
-     A borda é de 1px aqui, não 2px como nas outras imagens — é o stroke
-     das telas no Figma (nodes img-payment-*, img-assistant-*). */
+     Borda de 2px, igual às demais imagens (o stroke dessas telas no Figma
+     está em 1px, mas a decisão do projeto é uniformizar em 2px). */
   .case-delivery-flows__images :global(picture) {
     flex: 1 1 0%;
     min-width: 0;
@@ -107,7 +107,7 @@ const { intro, flows } = Astro.props;
     display: block;
     width: 100%;
     height: auto;
-    border: 1px solid var(--border-neutral-strong);
+    border: 2px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-img);
   }
 
