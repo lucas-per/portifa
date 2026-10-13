@@ -30,16 +30,15 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
       <img src={mailIcon.src} width="24" height="24" alt="" />
     </a>
   </div>
-  <div class="site-header-mobile__divider" aria-hidden="true"></div>
 </header>
 
 <style>
   .site-header-mobile {
     display: none;
     flex-direction: column;
-    gap: var(--scale-x5);
-    padding-top: var(--scale-x5);
+    padding: var(--scale-x5) 0;
     background-color: var(--surface-bg-off-white-primary);
+    border-bottom: 5px solid var(--border-accent-strong);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -105,12 +104,6 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
   .site-header-mobile__cta:focus-visible {
     outline: 2px solid var(--border-focus-strong);
     outline-offset: 2px;
-  }
-
-  .site-header-mobile__divider {
-    height: 5px;
-    width: 100%;
-    background-color: var(--surface-bg-accent-strong);
   }
 
   @media (max-width: 767px) {
