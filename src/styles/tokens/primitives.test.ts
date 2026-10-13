@@ -18,9 +18,8 @@ describe('primitives.css', () => {
     expectDeclares('neutral-600', 'oklch(44.34% 0.0066 17.10)');
     expectDeclares('neutral-200', 'oklch(89.30% 0.0022 17.20)');
     expectDeclares('neutral-150', 'oklch(93.49% 0.0054 17.25)');
-    expectDeclares('neutral-50', 'oklch(98.74% 0.0032 17.21)');
-    expectDeclares('neutral-50-transparent', 'oklch(98.74% 0.0032 17.21 / 0)');
-    expectDeclares('neutral-25', 'oklch(99.14% 0.0044 359.99)');
+    expectDeclares('neutral-50', 'oklch(98.51% 0 0)');
+    expectDeclares('neutral-50-transparent', 'oklch(98.51% 0 0 / 0)');
     expectDeclares('neutral-0', 'oklch(99.65% 0.0170 106.70)');
   });
 
@@ -39,6 +38,7 @@ describe('primitives.css', () => {
   });
 
   it('declara a escala de acento (azul) em OKLCH', () => {
+    expectDeclares('accent-50', 'oklch(97.23% 0.0100 238.51)');
     expectDeclares('accent-700', 'oklch(53.07% 0.1347 245.37)');
     expectDeclares('accent-600', 'oklch(55.82% 0.1361 243.96)');
     expectDeclares('accent-300', 'oklch(72.59% 0.1196 244.22)');
@@ -54,13 +54,13 @@ describe('primitives.css', () => {
   });
 
   it('declara amarelo e verde de apoio em OKLCH', () => {
-    expectDeclares('yellow-50', 'oklch(97.98% 0.0044 78.21)');
-    expectDeclares('yellow-100', 'oklch(96.21% 0.0619 95.40)');
-    expectDeclares('yellow-200', 'oklch(93.30% 0.1107 95.78)');
-    expectDeclares('yellow-700', 'oklch(65.91% 0.1330 91.29)');
+    expectDeclares('yellow-50', 'oklch(97.29% 0.0378 92.23)');
+    expectDeclares('yellow-100', 'oklch(94.48% 0.0756 91.82)');
+    expectDeclares('yellow-400', 'oklch(79.98% 0.1459 86.18)');
+    expectDeclares('yellow-700', 'oklch(55.18% 0.0981 82.73)');
     expectDeclares('green-700', 'oklch(57.01% 0.1597 146.55)');
     expectDeclares('green-500', 'oklch(88.44% 0.1261 147.74)');
-    expectDeclares('green-100', 'oklch(95.71% 0.0210 147.64)');
+    expectDeclares('green-200', 'oklch(93.29% 0.0629 147.14)');
   });
 
   it('declara a escala numérica de tamanho em rem', () => {

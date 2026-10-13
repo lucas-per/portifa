@@ -24,14 +24,16 @@ describe('semantics.css', () => {
   it('mapeia superfícies e cores de marca para os primitivos corretos', () => {
     expectDeclares('surface-bg-neutral-strong', 'var(--neutral-800)');
     expectDeclares('surface-bg-off-white-primary', 'var(--yellow-50)');
-    expectDeclares('surface-bg-off-white-secondary', 'var(--neutral-25)');
-    expectDeclares('surface-bg-off-white-tertiary', 'var(--yellow-200)');
+    expectDeclares('surface-bg-off-white-secondary', 'var(--yellow-100)');
+    expectDeclares('surface-bg-off-white-tertiary', 'var(--yellow-400)');
+    expectDeclares('surface-bg-neutral-extra', 'var(--neutral-50)');
+    expectDeclares('surface-bg-accent-subtle', 'var(--accent-50)');
     expectDeclares('surface-bg-neutral-subtle', 'var(--neutral-150)');
     expectDeclares('surface-bg-accent-strong', 'var(--accent-300)');
-    expectDeclares('surface-bg-primary-subtle', 'var(--primary-100)');
-    expectDeclares('surface-bg-primary-strong', 'var(--primary-300)');
-    expectDeclares('surface-bg-complementary-subtle', 'var(--green-100)');
-    expectDeclares('surface-bg-complementary-strong', 'var(--green-500)');
+    expectDeclares('surface-bg-secondary-subtle', 'var(--primary-100)');
+    expectDeclares('surface-bg-secondary-strong', 'var(--primary-300)');
+    expectDeclares('surface-bg-quaternary-subtle', 'var(--green-200)');
+    expectDeclares('surface-bg-quaternary-strong', 'var(--green-500)');
     expectDeclares('surface-bg-tertiary-subtle', 'var(--red-100)');
     expectDeclares('surface-bg-tertiary-strong', 'var(--red-500)');
   });
