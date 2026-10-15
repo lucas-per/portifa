@@ -9,82 +9,97 @@
 */
 :root {
   /* Superfícies */
-  --surface-bg-neutral-strong: var(--neutral-800);
-  --surface-bg-neutral-subtle: var(--neutral-150);
-  --surface-bg-neutral-medium: var(--neutral-600);
-  --surface-bg-off-white-primary: var(--yellow-50);
-  --surface-bg-off-white-secondary: var(--yellow-100);
-  --surface-bg-off-white-tertiary: var(--yellow-400);
-  --surface-bg-neutral-extra: var(--neutral-50);
-  --surface-bg-accent-subtle: var(--accent-50);
-  --surface-bg-accent-medium: var(--accent-100);
-  --surface-bg-secondary-subtle: var(--primary-100);
-  --surface-bg-secondary-strong: var(--primary-300);
-  --surface-bg-accent-strong: var(--accent-300);
-  --surface-bg-quaternary-subtle: var(--green-200);
-  --surface-bg-quaternary-strong: var(--green-500);
-  --surface-bg-tertiary-subtle: var(--red-100);
-  --surface-bg-tertiary-strong: var(--red-500);
-  --surface-bg-avatar-frame: var(--neutral-100);
+  --surface-bg-neutral-subtle: var(--grey-1);
+  --surface-bg-neutral-medium: var(--grey-6);
+  --surface-bg-neutral-strong: var(--grey-8);
+  --surface-bg-neutral-extra: var(--grey-1);
+  --surface-bg-off-white-primary: var(--yellow-1);
+  --surface-bg-off-white-secondary: var(--yellow-2);
+  --surface-bg-off-white-tertiary: var(--yellow-3);
+  --surface-bg-off-white-extra: var(--yellow-4);
+  --surface-bg-accent-subtle: var(--blue-1);
+  --surface-bg-accent-medium: var(--blue-2);
+  --surface-bg-accent-strong: var(--blue-3);
+  --surface-bg-secondary-subtle: var(--purple-1);
+  --surface-bg-secondary-medium: var(--purple-2);
+  --surface-bg-secondary-strong: var(--purple-3);
+  --surface-bg-tertiary-subtle: var(--red-1);
+  --surface-bg-tertiary-medium: var(--red-2);
+  --surface-bg-tertiary-strong: var(--red-3);
+  --surface-bg-quaternary-subtle: var(--green-2);
+  --surface-bg-quaternary-strong: var(--green-3);
+  --surface-bg-avatar-frame: var(--avatar-frame-beige);
 
   /* Bordas */
-  --border-neutral-strong: var(--neutral-800);
-  --border-neutral-medium: var(--neutral-500);
-  --border-neutral-subtle: var(--neutral-200);
-  --border-accent-strong: var(--accent-600);
-  --border-accent-subtle: var(--accent-300);
-  --border-focus-strong: var(--red-700);
-  --border-primary-subtle: var(--primary-300);
-  --border-primary-strong: var(--primary-600);
+  --border-neutral-subtle: var(--grey-3);
+  --border-neutral-medium: var(--grey-5);
+  --border-neutral-strong: var(--grey-8);
+  --border-accent-subtle: var(--blue-3);
+  --border-accent-strong: var(--blue-4);
+  --border-primary-subtle: var(--purple-3);
+  --border-primary-strong: var(--purple-6);
+  --border-focus-strong: var(--red-6);
 
   /* Texto */
-  --text-label-accent: var(--accent-700);
-  --text-label-neutral-1: var(--neutral-50);
-  --text-label-neutral-2: var(--neutral-500);
-  --text-label-neutral-3: var(--neutral-900);
-  --text-label-primary: var(--primary-800);
-  --text-label-extra-1: var(--red-900);
-  --text-body-primary-strong: var(--primary-800);
-  --text-body-accent-subtle: var(--accent-700);
-  --text-body-neutral-strong: var(--neutral-900);
-  --text-body-neutral-medium: var(--neutral-800);
-  --text-body-neutral-subtle: var(--neutral-600);
+  --text-label-neutral-1: var(--grey-1);
+  --text-label-neutral-2: var(--grey-5);
+  --text-label-neutral-3: var(--grey-9);
+  --text-label-accent: var(--blue-5);
+  --text-label-primary: var(--purple-7);
+  --text-label-extra-1: var(--red-7);
+  --text-body-neutral-subtle: var(--grey-6);
+  --text-body-neutral-medium: var(--grey-8);
+  --text-body-neutral-strong: var(--grey-9);
+  --text-body-accent-subtle: var(--blue-5);
+  --text-body-accent-strong: var(--blue-6);
+  --text-body-primary-strong: var(--purple-7);
 
   /* Ícones */
-  --icon-neutral-1: var(--neutral-50);
-  --icon-neutral-2: var(--neutral-500);
-  --icon-neutral-3: var(--neutral-900);
-  --icon-accent: var(--accent-700);
-  --icon-feedback-positive: var(--green-700);
-  --icon-feedback-warning: var(--yellow-700);
+  --icon-neutral-1: var(--grey-1);
+  --icon-neutral-2: var(--grey-5);
+  --icon-neutral-3: var(--grey-9);
+  --icon-accent: var(--blue-5);
+  --icon-primary: var(--purple-7);
+  --icon-feedback-positive: var(--green-5);
+  --icon-feedback-warning: var(--yellow-7);
 
   /* Botão */
-  --button-bg-primary-filled-pressed: var(--primary-800);
-  --button-bg-primary-outline-regular: var(--yellow-50);
-  --button-bg-primary-outline-pressed: var(--primary-500);
-  --button-bg-accent-filled-regular: var(--accent-700);
-  --button-bg-accent-outline-regular: var(--yellow-50);
-  --button-border-neutral-strong: var(--neutral-800);
-  --button-border-neutral-subtle: var(--neutral-50);
-  --button-border-accent-strong: var(--accent-600);
-  --button-border-primary-subtlest: var(--yellow-50);
-  --button-border-primary-medium: var(--primary-500);
-  --button-border-primary-strong: var(--primary-600);
-  --button-border-neutral-invisible: var(--neutral-50-transparent);
+  --button-bg-accent-filled-regular: var(--blue-5);
+  --button-bg-accent-filled-hovered: var(--blue-4);
+  --button-bg-accent-filled-pressed: var(--blue-6);
+  --button-bg-accent-outline-regular: var(--yellow-1);
+  --button-bg-accent-outline-hovered: var(--blue-1);
+  --button-bg-accent-outline-pressed: var(--blue-2);
+  --button-bg-primary-filled-regular: var(--purple-6);
+  --button-bg-primary-filled-hovered: var(--purple-3);
+  --button-bg-primary-filled-pressed: var(--purple-7);
+  --button-bg-primary-outline-regular: var(--yellow-1);
+  --button-bg-primary-outline-hovered: var(--purple-2);
+  --button-bg-primary-outline-pressed: var(--purple-5);
+  --button-border-accent-subtle: var(--blue-1);
+  --button-border-accent-medium: var(--blue-2);
+  --button-border-accent-strong: var(--blue-4);
+  --button-border-primary-subtle: var(--purple-2);
+  --button-border-primary-subtlest: var(--yellow-1);
+  --button-border-primary-medium: var(--purple-5);
+  --button-border-primary-strong: var(--purple-6);
+  --button-border-neutral-subtle: var(--grey-1);
+  --button-border-neutral-strong: var(--grey-8);
+  --button-border-neutral-invisible: var(--grey-1-transparent);
 
   /* Tag */
-  --tag-bg-primary: var(--red-700);
-  --tag-bg-secondary: var(--red-200);
-  --tag-border-subtle: var(--red-700);
-  --tag-border-strong: var(--red-300);
+  --tag-bg-primary: var(--red-6);
+  --tag-bg-secondary: var(--red-2);
+  --tag-border-subtle: var(--red-6);
+  --tag-border-strong: var(--red-3);
 
   /* Sombras duras (neo-brutalismo — sem blur, deslocadas) */
-  --shadow-comp-neutral: 3px 3px 0 0 var(--neutral-900);
-  --shadow-layout-neutral: 5px 5px 0 0 var(--neutral-900);
-  --shadow-comp-accent: 3px 3px 0 0 var(--accent-300);
-  --shadow-comp-primary: 3px 3px 0 0 var(--primary-300);
-  --shadow-layout-accent: 5px 5px 0 0 var(--accent-600);
-  --shadow-layout-img: 5px 5px 0 0 var(--red-300);
+  --shadow-comp-neutral: 3px 3px 0 0 var(--grey-9);
+  --shadow-layout-neutral: 5px 5px 0 0 var(--grey-9);
+  --shadow-comp-accent: 3px 3px 0 0 var(--blue-3);
+  --shadow-comp-primary: 3px 3px 0 0 var(--purple-3);
+  --shadow-layout-accent: 5px 5px 0 0 var(--blue-4);
+  --shadow-layout-img: 5px 5px 0 0 var(--red-3);
 
   /* Sombra dos botões no hover: mesmo offset de --shadow-comp-* (3px) somado
      ao deslocamento do hover (2px, ver Button.astro) = 5px. Sem essa soma o
@@ -92,9 +107,9 @@
      do elemento e se move em bloco com o translate). Sem variable de origem
      no Figma — computado a partir das duas outras (mesma exceção de
      line-height/list-spacing do design-notes.md). */
-  --shadow-comp-neutral-hover: 5px 5px 0 0 var(--neutral-900);
-  --shadow-comp-accent-hover: 5px 5px 0 0 var(--accent-300);
-  --shadow-comp-primary-hover: 5px 5px 0 0 var(--primary-300);
+  --shadow-comp-neutral-hover: 5px 5px 0 0 var(--grey-9);
+  --shadow-comp-accent-hover: 5px 5px 0 0 var(--blue-3);
+  --shadow-comp-primary-hover: 5px 5px 0 0 var(--purple-3);
 
   /* Line-height (escala do design-notes: none/compact/regular/comfortable).
      "none" aqui representa razão 1 (sem espaçamento extra sobre a caixa da

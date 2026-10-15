@@ -320,3 +320,21 @@ Origem: componente `footer-desktop` (91:581) e texto do copyright (88:720).
 - **Fundo:** o footer (desktop e mobile) passa de `off-white/primary` para `tertiary/subtle`. O mobile segue o desktop de propósito: o frame mobile do Figma está desatualizado e ainda mostra o fundo antigo.
 - **Versão:** o copyright vira "© 2026 Lucas Pereira · v.1.0.1", em maiúsculas como no Figma (`text-transform: uppercase`, igual ao desktop e ao mobile). O formato "v." com ponto vem do Figma. A fonte única é o `version` do `package.json`, lido em `src/config/version.ts` (`siteVersion`) no build; `resolveJsonModule` já vem ligado no `astro/tsconfigs/strict`, então o import tipa sem configuração extra.
 - **Regra de versão (semver manual, a cada PR que vai para a main):** patch para correções e ajustes de texto, minor para seções ou cases novos, major para redesign. A versão inicial é 1.0.1.
+### Sincronização de textos de 2026-10-14 — cards da Home, título do case e "Sobre mim"
+
+Origem: frame `desktop-home` (31:690), nó do "Sobre mim" (31:735) e `desktop-case-pagamentos` (452:216).
+
+- **Título do case de pagamentos:** "Jornada de Pagamentos" virou "Área de pagamentos" (card, h1, breadcrumb e `<title>`, todos vindos do YAML). O slug segue `/cases/jornada-pagamentos`. O Figma tem três grafias (card "Área de Pagamentos", h2 "Área de pagamentos", breadcrumb "ÁREA de pagamentos"); o código usa só a do h2, e o `uppercase` do CSS cobre o breadcrumb e o h1.
+- **Cards da Home:** `shortDescription` agora aceita `**negrito**` e o `CaseCard` renderiza com `inlineMarkup`, como o Figma (SemiBold em "+15%", "+20%", "novo modelo de negócio" e "base de pagantes"). As metatags (`description`, `og:description`, `twitter:description`) usam `stripInlineMarkup`, sem os asteriscos.
+- **Dados da empresa:** os cards não citam mais "mais de 100 mil usuários" nem "24 mil". O "Sobre mim" também não cita "24 mil". Os números que aparecem no corpo do case do Redesign ficam para outra tarefa.
+- **"Sobre mim":** duas frases novas (EXA e Serasa) e negritos do Figma em "11 anos", "de 3,6 para 4,7", "60%", "+15%" e "+20%".
+### Sincronização de paleta de 2026-10-14 — primitivos espelham o Figma
+
+Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desktop-home` (31:690) e `desktop-case-pagamentos` (452:216). O Figma prevaleceu.
+
+- **Primitivos renomeados:** `--grey-1…9`, `--purple-1…9`, `--blue-1…9`, `--red-1…9`, `--yellow-1…9`, `--green-1…6`, `--pink-1…5` (rosa sem uso em semânticos). Os nomes antigos (`--neutral-*`, `--primary-*`, `--accent-*`, `--red-900` etc.) foram removidos; nenhum componente os referenciava, só os semânticos. `--neutral-50-transparent` virou `--grey-1-transparent`. `--neutral-100` (fill solto do avatar, sem variable no Figma) virou `--avatar-frame-beige`, para renomear quando a variable existir.
+- **Semânticos:** 52 valores mudaram e 15 tokens novos foram declarados: `text-body-accent-strong`, `surface-bg-off-white-extra`, `surface-bg-secondary-medium`, `surface-bg-tertiary-medium`, `icon-primary`, `button-bg-accent-filled-{hovered,pressed}`, `button-bg-accent-outline-{hovered,pressed}`, `button-bg-primary-filled-{regular,hovered}`, `button-bg-primary-outline-hovered`, `button-border-accent-{subtle,medium}` e `button-border-primary-subtle`. Os de hover e pressed só foram declarados: o hover dos botões segue sendo o deslocamento da sombra.
+- **`border-focus-strong`** (anel de foco, sem equivalente no Figma) aponta para `red/6`. Contraste de 4,84 a 5,10:1 sobre os fundos onde o anel aparece.
+- **Fundos alinhados ao Figma:** Hero e "Sobre mim" sem fundo próprio (usam o off-white da página), Skills com `accent/subtle` e colunas do Skills com `off-white/primary`.
+- **Contraste (WCAG AA):** `blue/5` sobre `yellow/1` dá 4,47:1. Texto accent abaixo de 18,66px bold usa `text-body-accent-strong` (`blue/6`, 6,48:1): "Início" do breadcrumb (desktop e mobile) e labels dos botões accent no mobile (16px). Os labels de 20px bold do desktop seguem em `blue/5` (texto grande, mínimo 3:1). Para replicar no Figma, ver a descrição do PR.
+- **Divergências conhecidas, mantidas:** bordas abaixo de 3:1 (`blue/4` nos botões e no header, `grey/3` no `TestResultBadge`). O "Início" do breadcrumb passou a azul também no desktop (Figma 452:222), mas em `blue/6` e não em `blue/5`, pelo mesmo motivo de contraste.

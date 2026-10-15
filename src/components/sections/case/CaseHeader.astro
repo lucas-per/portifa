@@ -74,6 +74,13 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     text-transform: uppercase;
   }
 
+  /* "Início" é azul no Figma desktop (452:222, text/body/accent/subtle).
+     accent-strong (blue/6) e não accent-subtle: o texto é 12px e blue/5
+     sobre o fundo da página dá 4,47:1, abaixo dos 4,5:1 do AA. */
+  .clickable-link-internal-previous-page-title {
+    color: var(--text-body-accent-strong);
+  }
+
   .case-header__tags {
     display: flex;
     flex-wrap: wrap;
@@ -116,12 +123,12 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
       font-size: var(--scale-x9);
     }
 
-    /* "Início" (link de volta) ganha destaque de link no mobile — o
-       Figma (node 275:429) tinha essa cor/underline aplicada no item
-       ativo ("Redesign de Produto") em vez do link, invertido; o link
-       clicável é quem deve parecer link. No desktop permanece neutro. */
+    /* "Início" (link de volta) ganha sublinhado no mobile — o Figma
+       (node 275:429) tinha o destaque aplicado no item ativo
+       ("Redesign de Produto") em vez do link, invertido; o link
+       clicável é quem deve parecer link. A cor vale nos dois
+       breakpoints (regra base acima). */
     .clickable-link-internal-previous-page-title {
-      color: var(--text-body-accent-subtle);
       text-decoration: underline;
     }
   }
