@@ -338,3 +338,17 @@ Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desk
 - **Fundos alinhados ao Figma:** Hero e "Sobre mim" sem fundo próprio (usam o off-white da página), Skills com `accent/subtle` e colunas do Skills com `off-white/primary`.
 - **Contraste (WCAG AA):** `blue/5` sobre `yellow/1` dá 4,47:1. Texto accent abaixo de 18,66px bold usa `text-body-accent-strong` (`blue/6`, 6,48:1): "Início" do breadcrumb (desktop e mobile) e labels dos botões accent no mobile (16px). Os labels de 20px bold do desktop seguem em `blue/5` (texto grande, mínimo 3:1). Para replicar no Figma, ver a descrição do PR.
 - **Divergências conhecidas, mantidas:** bordas abaixo de 3:1 (`blue/4` nos botões e no header, `grey/3` no `TestResultBadge`). O "Início" do breadcrumb passou a azul também no desktop (Figma 452:222), mas em `blue/6` e não em `blue/5`, pelo mesmo motivo de contraste.
+
+### Seta "→" dos destaques de Impacto — subset da Plus Jakarta Sans de 2026-10-14
+
+- **Causa:** `plus-jakarta-sans-variable.woff2` é um subset (a faixa `latin` do Google, 229 caracteres) e não tinha U+2192. O navegador desenhava só a seta com uma fonte do sistema, mais fina e com a cabeça menor que a do Figma. A fonte completa (v2.071, `google/fonts`, `ofl/plusjakartasans`) tem a seta; só o recorte a excluía.
+- **Correção:** o arquivo foi regerado a partir da fonte completa com os 229 caracteres anteriores mais U+2192 e U+2190 (27.348 para 27.420 bytes, +72). Mesmos eixos (`wght` 200 a 800), mesmas features (`calt ccmp dnom frac liga locl numr pnum tnum kern mark`), mesmos nomes (inclusive a licença) e mesmos contornos em todos os pesos testados (400, 700 e 800).
+- **Como regerar** (fonttools e brotli; `LISTA` = a `cmap` do arquivo atual, não a faixa `latin` pura, que difere em 16 caracteres):
+  ```
+  pyftsubset "PlusJakartaSans[wght].ttf" --unicodes="$LISTA,U+2190,U+2192" \
+    --layout-features=calt,ccmp,dnom,frac,liga,locl,numr,pnum,tnum,kern,mark \
+    --glyph-names --name-IDs=0,1,2,3,4,5,6,14,259,260,261,262,263,264,265,266,267,268 \
+    --flavor=woff2 --output-file=plus-jakarta-sans-variable.woff2
+  ```
+- **Guarda:** `fonts.test.ts` falha se o arquivo perder →, ←, ×, ↑ ou ↓. Caractere novo que apareça em texto de título precisa entrar no subset; o navegador não avisa quando cai numa fonte do sistema.
+- **Levantamento:** nas 4 páginas geradas, a seta era o único caractere fora do subset nas 3 fontes (Plus Jakarta Sans, DM Sans e JetBrains Mono).
