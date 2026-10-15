@@ -11,16 +11,82 @@ function expectDeclares(name: string, value: string) {
 }
 
 describe('primitives.css', () => {
-  it('declara a escala de neutros em OKLCH', () => {
-    expectDeclares('neutral-900', 'oklch(25.11% 0.0046 17.46)');
-    expectDeclares('neutral-800', 'oklch(29.23% 0.0044 17.41)');
-    expectDeclares('neutral-500', 'oklch(52.00% 0.0038 17.28)');
-    expectDeclares('neutral-600', 'oklch(44.34% 0.0066 17.10)');
-    expectDeclares('neutral-200', 'oklch(89.30% 0.0022 17.20)');
-    expectDeclares('neutral-150', 'oklch(93.49% 0.0054 17.25)');
-    expectDeclares('neutral-50', 'oklch(98.51% 0 0)');
-    expectDeclares('neutral-50-transparent', 'oklch(98.51% 0 0 / 0)');
-    expectDeclares('neutral-0', 'oklch(99.65% 0.0170 106.70)');
+  it('declara a escala de cinzas do Figma em OKLCH', () => {
+    expectDeclares('grey-1', 'oklch(99.58% 0.0025 228.78)');
+    expectDeclares('grey-2', 'oklch(89.68% 0.0140 247.98)');
+    expectDeclares('grey-3', 'oklch(79.77% 0.0144 248.01)');
+    expectDeclares('grey-4', 'oklch(70.15% 0.0137 244.33)');
+    expectDeclares('grey-5', 'oklch(60.23% 0.0143 244.38)');
+    expectDeclares('grey-6', 'oklch(50.54% 0.0137 240.12)');
+    expectDeclares('grey-7', 'oklch(40.50% 0.0136 243.94)');
+    expectDeclares('grey-8', 'oklch(30.85% 0.0132 239.00)');
+    expectDeclares('grey-9', 'oklch(20.96% 0.0134 243.58)');
+    expectDeclares('grey-1-transparent', 'oklch(99.58% 0.0025 228.78 / 0)');
+  });
+
+  it('declara a escala de roxo (primária) do Figma em OKLCH', () => {
+    expectDeclares('purple-1', 'oklch(97.88% 0.0126 306.03)');
+    expectDeclares('purple-2', 'oklch(85.59% 0.0375 304.72)');
+    expectDeclares('purple-3', 'oklch(73.25% 0.0362 306.15)');
+    expectDeclares('purple-4', 'oklch(60.98% 0.0361 305.01)');
+    expectDeclares('purple-5', 'oklch(48.52% 0.0367 305.66)');
+    expectDeclares('purple-6', 'oklch(41.61% 0.0366 306.45)');
+    expectDeclares('purple-7', 'oklch(34.68% 0.0362 305.09)');
+    expectDeclares('purple-8', 'oklch(27.92% 0.0363 305.81)');
+    expectDeclares('purple-9', 'oklch(21.05% 0.0364 303.88)');
+  });
+
+  it('declara a escala de azul (acento) do Figma em OKLCH', () => {
+    expectDeclares('blue-1', 'oklch(99.58% 0.0025 228.78)');
+    expectDeclares('blue-2', 'oklch(87.37% 0.0667 244.52)');
+    expectDeclares('blue-3', 'oklch(76.82% 0.1281 243.85)');
+    expectDeclares('blue-4', 'oklch(66.42% 0.1359 243.76)');
+    expectDeclares('blue-5', 'oklch(55.82% 0.1361 243.96)');
+    expectDeclares('blue-6', 'oklch(47.12% 0.1163 244.05)');
+    expectDeclares('blue-7', 'oklch(38.37% 0.0953 244.34)');
+    expectDeclares('blue-8', 'oklch(29.79% 0.0735 244.04)');
+    expectDeclares('blue-9', 'oklch(20.98% 0.0518 244.04)');
+  });
+
+  it('declara a escala de vermelho (tags/status) do Figma em OKLCH', () => {
+    expectDeclares('red-1', 'oklch(97.98% 0.0098 25.07)');
+    expectDeclares('red-2', 'oklch(90.34% 0.0500 24.21)');
+    expectDeclares('red-3', 'oklch(82.89% 0.0950 24.86)');
+    expectDeclares('red-4', 'oklch(75.31% 0.1482 24.64)');
+    expectDeclares('red-5', 'oklch(67.86% 0.2095 24.66)');
+    expectDeclares('red-6', 'oklch(56.10% 0.2095 24.48)');
+    expectDeclares('red-7', 'oklch(44.47% 0.1802 24.76)');
+    expectDeclares('red-8', 'oklch(32.82% 0.1330 24.75)');
+    expectDeclares('red-9', 'oklch(20.97% 0.0850 24.97)');
+  });
+
+  it('declara a escala de amarelo (fundos) do Figma em OKLCH', () => {
+    expectDeclares('yellow-1', 'oklch(98.64% 0.0119 101.48)');
+    expectDeclares('yellow-2', 'oklch(96.00% 0.0499 98.62)');
+    expectDeclares('yellow-3', 'oklch(93.22% 0.0868 95.59)');
+    expectDeclares('yellow-4', 'oklch(90.44% 0.1242 93.58)');
+    expectDeclares('yellow-5', 'oklch(87.89% 0.1617 90.94)');
+    expectDeclares('yellow-6', 'oklch(71.14% 0.1454 90.87)');
+    expectDeclares('yellow-7', 'oklch(54.32% 0.1110 90.75)');
+    expectDeclares('yellow-8', 'oklch(37.64% 0.0769 90.40)');
+    expectDeclares('yellow-9', 'oklch(20.99% 0.0429 89.63)');
+  });
+
+  it('declara a escala de verde (feedback) do Figma em OKLCH', () => {
+    expectDeclares('green-1', 'oklch(95.71% 0.0210 147.64)');
+    expectDeclares('green-2', 'oklch(93.29% 0.0629 147.14)');
+    expectDeclares('green-3', 'oklch(88.44% 0.1261 147.74)');
+    expectDeclares('green-4', 'oklch(74.43% 0.1611 147.56)');
+    expectDeclares('green-5', 'oklch(57.02% 0.1598 146.46)');
+    expectDeclares('green-6', 'oklch(36.88% 0.0993 148.76)');
+  });
+
+  it('declara a escala de rosa do Figma em OKLCH', () => {
+    expectDeclares('pink-1', 'oklch(95.09% 0.0259 2.76)');
+    expectDeclares('pink-2', 'oklch(88.90% 0.0622 2.08)');
+    expectDeclares('pink-3', 'oklch(59.73% 0.0996 1.70)');
+    expectDeclares('pink-4', 'oklch(51.94% 0.1037 3.79)');
+    expectDeclares('pink-5', 'oklch(33.96% 0.0968 2.91)');
   });
 
   it('não declara nenhuma cor em preto ou branco absoluto', () => {
@@ -29,39 +95,8 @@ describe('primitives.css', () => {
     expect(css).not.toMatch(/oklch\(\s*0(\.0+)?%/i);
   });
 
-  it('declara a escala primária (roxo/ameixa) em OKLCH', () => {
-    expectDeclares('primary-800', 'oklch(32.54% 0.0336 315.88)');
-    expectDeclares('primary-600', 'oklch(39.17% 0.0366 311.66)');
-    expectDeclares('primary-500', 'oklch(41.93% 0.0350 307.50)');
-    expectDeclares('primary-300', 'oklch(56.14% 0.0365 303.03)');
-    expectDeclares('primary-100', 'oklch(90.84% 0.0411 294.74)');
-  });
-
-  it('declara a escala de acento (azul) em OKLCH', () => {
-    expectDeclares('accent-50', 'oklch(97.23% 0.0100 238.51)');
-    expectDeclares('accent-100', 'oklch(89.84% 0.0548 240.89)');
-    expectDeclares('accent-700', 'oklch(53.07% 0.1347 245.37)');
-    expectDeclares('accent-600', 'oklch(55.82% 0.1361 243.96)');
-    expectDeclares('accent-300', 'oklch(72.59% 0.1196 244.22)');
-  });
-
-  it('declara a escala vermelha (tags/status) em OKLCH', () => {
-    expectDeclares('red-900', 'oklch(51.20% 0.2005 25.55)');
-    expectDeclares('red-700', 'oklch(59.02% 0.2262 24.77)');
-    expectDeclares('red-500', 'oklch(71.16% 0.1812 22.84)');
-    expectDeclares('red-300', 'oklch(79.06% 0.0955 19.41)');
-    expectDeclares('red-200', 'oklch(89.32% 0.0509 18.15)');
-    expectDeclares('red-100', 'oklch(93.22% 0.0343 17.78)');
-  });
-
-  it('declara amarelo e verde de apoio em OKLCH', () => {
-    expectDeclares('yellow-50', 'oklch(97.29% 0.0378 92.23)');
-    expectDeclares('yellow-100', 'oklch(94.48% 0.0756 91.82)');
-    expectDeclares('yellow-400', 'oklch(79.98% 0.1459 86.18)');
-    expectDeclares('yellow-700', 'oklch(55.18% 0.0981 82.73)');
-    expectDeclares('green-700', 'oklch(57.01% 0.1597 146.55)');
-    expectDeclares('green-500', 'oklch(88.44% 0.1261 147.74)');
-    expectDeclares('green-200', 'oklch(93.29% 0.0629 147.14)');
+  it('não mantém nomes da paleta antiga (neutral/primary/accent)', () => {
+    expect(css).not.toMatch(/--(neutral|primary|accent)-\d/);
   });
 
   it('declara a escala numérica de tamanho em rem', () => {
@@ -92,6 +127,6 @@ describe('primitives.css', () => {
   });
 
   it('declara o primitivo da moldura do avatar em OKLCH', () => {
-    expectDeclares('neutral-100', 'oklch(95.69% 0.0120 78.40)');
+    expectDeclares('avatar-frame-beige', 'oklch(95.69% 0.0120 78.40)');
   });
 });
