@@ -16,13 +16,13 @@ content:
   summary:
     challenge:
       title: "Desafio"
-      description: "Seis meses, equipe enxuta e um app legado instável, com uma base consolidada de usuários e uma receita a proteger"
+      description: "Seis meses para a entrega, equipe enxuta e um app legado instável, com uma **base consolidada de usuários** e uma **receita a proteger**."
     solution:
       title: "Solução"
-      description: "Discovery completo, redesenho de jornada e home screen, e mudança de modelo de negócio com apoio de consultoria"
+      description: "**Discovery completo**, **redesenho de jornadas** e **home screen**, e mudança de **modelo de negócio** com apoio de consultoria."
     results:
       title: "Resultado"
-      description: "Em um ano, a nota da loja saiu de 3.6 para 4.7, a base ativa quase dobrou e os pagantes, que não existiam, passaram a ser milhares"
+      description: "Em um ano, a nota da loja saiu de 3.6 para **4.7**, a base ativa **quase dobrou** e os pagantes, que não existiam, passaram a ser **milhares**."
 
   context:
     description:
