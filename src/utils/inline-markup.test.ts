@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { inlineMarkup } from './inline-markup';
+import { inlineMarkup, stripInlineMarkup } from './inline-markup';
 
 describe('inlineMarkup', () => {
   it('transforma **trecho** em <strong>', () => {
@@ -26,5 +26,19 @@ describe('inlineMarkup', () => {
 
   it('deixa ** sem par como texto', () => {
     expect(inlineMarkup('sobrou ** solto')).toBe('sobrou ** solto');
+  });
+});
+
+describe('stripInlineMarkup', () => {
+  it('remove os asteriscos e mantém o texto', () => {
+    expect(stripInlineMarkup('Projeção de **+15%** e **+20%** no volume.')).toBe('Projeção de +15% e +20% no volume.');
+  });
+
+  it('devolve o texto igual quando não há marcação', () => {
+    expect(stripInlineMarkup('texto simples.')).toBe('texto simples.');
+  });
+
+  it('deixa ** sem par como texto', () => {
+    expect(stripInlineMarkup('sobrou ** solto')).toBe('sobrou ** solto');
   });
 });

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { stripInlineMarkup } from '../../utils/inline-markup';
 import Divider from '../../components/ui/Divider.astro';
 import CaseHeader from '../../components/sections/case/CaseHeader.astro';
 import SideMenu from '../../components/sections/case/SideMenu.astro';
@@ -35,7 +36,7 @@ const { data } = entry;
 const readingTime = estimateReadingTime(data.content);
 ---
 
-<BaseLayout title={`${data.title} — Lucas Pereira`} description={data.shortDescription}>
+<BaseLayout title={`${data.title} — Lucas Pereira`} description={stripInlineMarkup(data.shortDescription)}>
   <CaseHeader
     title={data.title}
     status={data.status}

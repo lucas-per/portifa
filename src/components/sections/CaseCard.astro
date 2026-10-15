@@ -2,6 +2,7 @@
 import Tag from '../ui/Tag.astro';
 import Button from '../ui/Button.astro';
 import arrowRightIcon from '../../assets/icons/arrow-right.svg';
+import { inlineMarkup } from '../../utils/inline-markup';
 
 interface Highlight {
   value: string;
@@ -44,7 +45,7 @@ const {
     </ul>
     <div class="case-card__texts">
       <h3 class="text-title-h3">{title}</h3>
-      <p class="text-body-md">{shortDescription}</p>
+      <p class="text-body-md" set:html={inlineMarkup(shortDescription)} />
     </div>
   </div>
   {highlights && highlights.length > 0 && (

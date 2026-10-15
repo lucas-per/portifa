@@ -313,6 +313,14 @@ Origem: frame `desktop-case-pagamentos` (452:216) + mudanças recentes do Figma 
 - **Data de publicação:** é a do dia em que o case vai para a `main`; o `2026-10-12` do YAML é provisório até o merge.
 - **Divider duplo antes do "Ir para o topo":** dois dividers de 156px com 20px entre si e 64px de espaço acima e abaixo, nos dois cases. Vale o do Pagamentos; o frame do Redesign no Figma ainda tem gap de 32px entre os dois (e 38px de altura) e precisa ser alinhado ao Pagamentos.
 
+### Sincronização de textos de 2026-10-14 — cards da Home, título do case e "Sobre mim"
+
+Origem: frame `desktop-home` (31:690), nó do "Sobre mim" (31:735) e `desktop-case-pagamentos` (452:216).
+
+- **Título do case de pagamentos:** "Jornada de Pagamentos" virou "Área de pagamentos" (card, h1, breadcrumb e `<title>`, todos vindos do YAML). O slug segue `/cases/jornada-pagamentos`. O Figma tem três grafias (card "Área de Pagamentos", h2 "Área de pagamentos", breadcrumb "ÁREA de pagamentos"); o código usa só a do h2, e o `uppercase` do CSS cobre o breadcrumb e o h1.
+- **Cards da Home:** `shortDescription` agora aceita `**negrito**` e o `CaseCard` renderiza com `inlineMarkup`, como o Figma (SemiBold em "+15%", "+20%", "novo modelo de negócio" e "base de pagantes"). As metatags (`description`, `og:description`, `twitter:description`) usam `stripInlineMarkup`, sem os asteriscos.
+- **Dados da empresa:** os cards não citam mais "mais de 100 mil usuários" nem "24 mil". O "Sobre mim" também não cita "24 mil". Os números que aparecem no corpo do case do Redesign ficam para outra tarefa.
+- **"Sobre mim":** duas frases novas (EXA e Serasa) e negritos do Figma em "11 anos", "de 3,6 para 4,7", "60%", "+15%" e "+20%".
 ### Sincronização de paleta de 2026-10-14 — primitivos espelham o Figma
 
 Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desktop-home` (31:690) e `desktop-case-pagamentos` (452:216). O Figma prevaleceu.
