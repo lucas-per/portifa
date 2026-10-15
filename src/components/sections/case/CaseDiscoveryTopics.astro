@@ -20,34 +20,36 @@ const { intro, topics, consolidation } = Astro.props;
 
 <section class="case-discovery-topics" id="strategy-solutions">
   <h2 class="text-title-h3">Discovery</h2>
-  <div class="case-discovery-topics__plan">
-    <p class="text-body-md" set:html={inlineMarkup(intro)} />
-    {topics.map((topic) => (
-      <div class="case-discovery-topics__topic">
-        <div class="case-discovery-topics__topic-text">
-          <h3 class="text-body-lg-strong">{topic.title}</h3>
-          {topic.paragraphs.map((paragraph) => (
-            <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
-          ))}
+  <div class="case-discovery-topics__subsections">
+    <div class="case-discovery-topics__plan">
+      <p class="text-body-md" set:html={inlineMarkup(intro)} />
+      {topics.map((topic) => (
+        <div class="case-discovery-topics__topic">
+          <div class="case-discovery-topics__topic-text">
+            <h3 class="text-body-lg-strong">{topic.title}</h3>
+            {topic.paragraphs.map((paragraph) => (
+              <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
+            ))}
+          </div>
+          {topic.image && (
+            <figure class="case-discovery-topics__figure">
+              <CaseImage
+                src={topic.image.src}
+                alt={topic.image.caption}
+                width={107}
+                widths={[107, 214, 428, 800]}
+                sizes="(max-width: 767px) calc(100vw - 40px), 107px"
+              />
+              <figcaption class="text-body-caption">{topic.image.caption}</figcaption>
+            </figure>
+          )}
         </div>
-        {topic.image && (
-          <figure class="case-discovery-topics__figure">
-            <CaseImage
-              src={topic.image.src}
-              alt={topic.image.caption}
-              width={107}
-              widths={[107, 214, 428, 800]}
-              sizes="(max-width: 767px) calc(100vw - 40px), 107px"
-            />
-            <figcaption class="text-body-caption">{topic.image.caption}</figcaption>
-          </figure>
-        )}
-      </div>
-    ))}
-  </div>
-  <div class="case-discovery-topics__consolidation">
-    <h3 class="text-title-h4">{consolidation.title}</h3>
-    <p class="text-body-md" set:html={inlineMarkup(consolidation.description)} />
+      ))}
+    </div>
+    <div class="case-discovery-topics__consolidation">
+      <h3 class="text-title-h4">{consolidation.title}</h3>
+      <p class="text-body-md" set:html={inlineMarkup(consolidation.description)} />
+    </div>
   </div>
 </section>
 
@@ -55,15 +57,22 @@ const { intro, topics, consolidation } = Astro.props;
   .case-discovery-topics {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x5);
+    gap: var(--scale-x6);
     color: var(--text-body-primary-strong);
     padding-left: var(--scale-x12);
+  }
+
+  /* col-subsections (Figma 577:355): plano de pesquisa e consolidação. */
+  .case-discovery-topics__subsections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x8);
   }
 
   .case-discovery-topics__plan {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x5);
     color: var(--text-body-neutral-strong);
   }
 
@@ -84,7 +93,7 @@ const { intro, topics, consolidation } = Astro.props;
   .case-discovery-topics__figure {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x2);
     width: 107px;
     flex-shrink: 0;
     margin: 0;
@@ -106,7 +115,7 @@ const { intro, topics, consolidation } = Astro.props;
   .case-discovery-topics__consolidation {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x5);
     padding: var(--scale-x6);
     background-color: var(--surface-bg-off-white-primary);
     border: 2px solid var(--border-neutral-strong);
