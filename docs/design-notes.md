@@ -312,3 +312,11 @@ Origem: frame `desktop-case-pagamentos` (452:216) + mudanças recentes do Figma 
 - **Imagens:** `optimizedImages: true` no YAML faz o case usar `<Picture>` (AVIF + WebP, 1x e 2x, PNG de fallback) via `ui/CaseImage.astro`. O Redesign mantém `<Image>` simples de propósito. PNGs originais em 720×1600 (telas) e maiores nas duas imagens de contexto/mapeamento.
 - **Data de publicação:** é a do dia em que o case vai para a `main`; o `2026-10-12` do YAML é provisório até o merge.
 - **Divider duplo antes do "Ir para o topo":** dois dividers de 156px com 20px entre si e 64px de espaço acima e abaixo, nos dois cases. Vale o do Pagamentos; o frame do Redesign no Figma ainda tem gap de 32px entre os dois (e 38px de altura) e precisa ser alinhado ao Pagamentos.
+
+### Sincronização de footer e versão de 2026-10-14
+
+Origem: componente `footer-desktop` (91:581) e texto do copyright (88:720).
+
+- **Fundo:** o footer (desktop e mobile) passa de `off-white/primary` para `tertiary/subtle`. O mobile segue o desktop de propósito: o frame mobile do Figma está desatualizado e ainda mostra o fundo antigo.
+- **Versão:** o copyright vira "© 2026 Lucas Pereira · v.1.0.1", em maiúsculas como no Figma (`text-transform: uppercase`, igual ao desktop e ao mobile). O formato "v." com ponto vem do Figma. A fonte única é o `version` do `package.json`, lido em `src/config/version.ts` (`siteVersion`) no build; `resolveJsonModule` já vem ligado no `astro/tsconfigs/strict`, então o import tipa sem configuração extra.
+- **Regra de versão (semver manual, a cada PR que vai para a main):** patch para correções e ajustes de texto, minor para seções ou cases novos, major para redesign. A versão inicial é 1.0.1.

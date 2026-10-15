@@ -1,5 +1,6 @@
 ---
 import Button from '../ui/Button.astro';
+import { siteVersion } from '../../config/version';
 
 const currentYear = new Date().getFullYear();
 const dividerLines = Array.from({ length: 4 });
@@ -85,14 +86,14 @@ const dividerLines = Array.from({ length: 4 });
     </div>
   </div>
   <div class="site-footer__inner">
-    <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
+    <p class="site-footer__copyright text-body-caption">&copy; {currentYear} Lucas Pereira &middot; {siteVersion}</p>
   </div>
 </footer>
 
 <style>
   .site-footer {
     width: 100%;
-    background-color: var(--surface-bg-off-white-primary);
+    background-color: var(--surface-bg-tertiary-subtle);
   }
 
   .site-footer__inner {
@@ -175,6 +176,7 @@ const dividerLines = Array.from({ length: 4 });
     text-align: center;
     padding: var(--scale-base) 0;
     color: var(--text-body-neutral-medium);
+    text-transform: uppercase;
   }
 
   /* No mobile, o footer vira o layout próprio de FooterMobile.astro
