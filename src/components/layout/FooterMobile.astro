@@ -1,5 +1,6 @@
 ---
 import Button from '../ui/Button.astro';
+import { siteVersion } from '../../config/version';
 
 const currentYear = new Date().getFullYear();
 const dividerLines = Array.from({ length: 2 });
@@ -79,14 +80,14 @@ const dividerLines = Array.from({ length: 2 });
       {dividerLines.map(() => <div class="site-footer-mobile__divider-line" />)}
     </div>
   </div>
-  <p class="site-footer-mobile__copyright text-body-caption">&copy; {currentYear} Lucas Pereira</p>
+  <p class="site-footer-mobile__copyright text-body-caption">&copy; {currentYear} Lucas Pereira &middot; {siteVersion}</p>
 </footer>
 
 <style>
   .site-footer-mobile {
     display: none;
     flex-direction: column;
-    background-color: var(--surface-bg-off-white-primary);
+    background-color: var(--surface-bg-tertiary-subtle);
   }
 
   .site-footer-mobile__buttons {
@@ -112,6 +113,7 @@ const dividerLines = Array.from({ length: 2 });
     text-align: center;
     padding: var(--scale-base) 0;
     color: var(--text-body-neutral-medium);
+    text-transform: uppercase;
   }
 
   /* Botões ocupam a largura toda, empilhados (Figma, col-core-buttons) —
