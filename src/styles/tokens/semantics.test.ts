@@ -21,91 +21,104 @@ describe('semantics.css', () => {
     }
   });
 
-  it('mapeia superfícies e cores de marca para os primitivos corretos', () => {
-    expectDeclares('surface-bg-neutral-strong', 'var(--neutral-800)');
-    expectDeclares('surface-bg-off-white-primary', 'var(--yellow-50)');
-    expectDeclares('surface-bg-off-white-secondary', 'var(--yellow-100)');
-    expectDeclares('surface-bg-off-white-tertiary', 'var(--yellow-400)');
-    expectDeclares('surface-bg-neutral-extra', 'var(--neutral-50)');
-    expectDeclares('surface-bg-accent-subtle', 'var(--accent-50)');
-    expectDeclares('surface-bg-accent-medium', 'var(--accent-100)');
-    expectDeclares('surface-bg-neutral-subtle', 'var(--neutral-150)');
-    expectDeclares('surface-bg-accent-strong', 'var(--accent-300)');
-    expectDeclares('surface-bg-secondary-subtle', 'var(--primary-100)');
-    expectDeclares('surface-bg-secondary-strong', 'var(--primary-300)');
-    expectDeclares('surface-bg-quaternary-subtle', 'var(--green-200)');
-    expectDeclares('surface-bg-quaternary-strong', 'var(--green-500)');
-    expectDeclares('surface-bg-tertiary-subtle', 'var(--red-100)');
-    expectDeclares('surface-bg-tertiary-strong', 'var(--red-500)');
+  it('mapeia superfícies para os primitivos do Figma', () => {
+    expectDeclares('surface-bg-neutral-subtle', 'var(--grey-1)');
+    expectDeclares('surface-bg-neutral-medium', 'var(--grey-6)');
+    expectDeclares('surface-bg-neutral-strong', 'var(--grey-8)');
+    expectDeclares('surface-bg-neutral-extra', 'var(--grey-1)');
+    expectDeclares('surface-bg-off-white-primary', 'var(--yellow-1)');
+    expectDeclares('surface-bg-off-white-secondary', 'var(--yellow-2)');
+    expectDeclares('surface-bg-off-white-tertiary', 'var(--yellow-3)');
+    expectDeclares('surface-bg-off-white-extra', 'var(--yellow-4)');
+    expectDeclares('surface-bg-accent-subtle', 'var(--blue-1)');
+    expectDeclares('surface-bg-accent-medium', 'var(--blue-2)');
+    expectDeclares('surface-bg-accent-strong', 'var(--blue-3)');
+    expectDeclares('surface-bg-secondary-subtle', 'var(--purple-1)');
+    expectDeclares('surface-bg-secondary-medium', 'var(--purple-2)');
+    expectDeclares('surface-bg-secondary-strong', 'var(--purple-3)');
+    expectDeclares('surface-bg-tertiary-subtle', 'var(--red-1)');
+    expectDeclares('surface-bg-tertiary-medium', 'var(--red-2)');
+    expectDeclares('surface-bg-tertiary-strong', 'var(--red-3)');
+    expectDeclares('surface-bg-quaternary-subtle', 'var(--green-2)');
+    expectDeclares('surface-bg-quaternary-strong', 'var(--green-3)');
+    expectDeclares('surface-bg-avatar-frame', 'var(--avatar-frame-beige)');
   });
 
-  it('mapeia bordas para os primitivos corretos', () => {
-    expectDeclares('border-neutral-strong', 'var(--neutral-800)');
-    expectDeclares('border-neutral-medium', 'var(--neutral-500)');
-    expectDeclares('border-neutral-subtle', 'var(--neutral-200)');
-    expectDeclares('border-accent-strong', 'var(--accent-600)');
-    expectDeclares('border-accent-subtle', 'var(--accent-300)');
-    expectDeclares('border-focus-strong', 'var(--red-700)');
-    expectDeclares('border-primary-subtle', 'var(--primary-300)');
-    expectDeclares('border-primary-strong', 'var(--primary-600)');
+  it('mapeia bordas para os primitivos do Figma', () => {
+    expectDeclares('border-neutral-subtle', 'var(--grey-3)');
+    expectDeclares('border-neutral-medium', 'var(--grey-5)');
+    expectDeclares('border-neutral-strong', 'var(--grey-8)');
+    expectDeclares('border-accent-subtle', 'var(--blue-3)');
+    expectDeclares('border-accent-strong', 'var(--blue-4)');
+    expectDeclares('border-primary-subtle', 'var(--purple-3)');
+    expectDeclares('border-primary-strong', 'var(--purple-6)');
+    expectDeclares('border-focus-strong', 'var(--red-6)');
   });
 
-  it('mapeia surface-bg-neutral-medium (divisores de lista) pro primitivo correto', () => {
-    expectDeclares('surface-bg-neutral-medium', 'var(--neutral-600)');
+  it('mapeia texto e ícones para os primitivos do Figma', () => {
+    expectDeclares('text-label-neutral-1', 'var(--grey-1)');
+    expectDeclares('text-label-neutral-2', 'var(--grey-5)');
+    expectDeclares('text-label-neutral-3', 'var(--grey-9)');
+    expectDeclares('text-label-accent', 'var(--blue-5)');
+    expectDeclares('text-label-primary', 'var(--purple-7)');
+    expectDeclares('text-label-extra-1', 'var(--red-7)');
+    expectDeclares('text-body-neutral-subtle', 'var(--grey-6)');
+    expectDeclares('text-body-neutral-medium', 'var(--grey-8)');
+    expectDeclares('text-body-neutral-strong', 'var(--grey-9)');
+    expectDeclares('text-body-accent-subtle', 'var(--blue-5)');
+    expectDeclares('text-body-accent-strong', 'var(--blue-6)');
+    expectDeclares('text-body-primary-strong', 'var(--purple-7)');
+    expectDeclares('icon-neutral-1', 'var(--grey-1)');
+    expectDeclares('icon-neutral-2', 'var(--grey-5)');
+    expectDeclares('icon-neutral-3', 'var(--grey-9)');
+    expectDeclares('icon-accent', 'var(--blue-5)');
+    expectDeclares('icon-primary', 'var(--purple-7)');
+    expectDeclares('icon-feedback-positive', 'var(--green-5)');
+    expectDeclares('icon-feedback-warning', 'var(--yellow-7)');
   });
 
-  it('mapeia texto e ícones para os primitivos corretos', () => {
-    expectDeclares('text-label-accent', 'var(--accent-700)');
-    expectDeclares('text-label-neutral-1', 'var(--neutral-50)');
-    expectDeclares('text-label-neutral-2', 'var(--neutral-500)');
-    expectDeclares('text-label-neutral-3', 'var(--neutral-900)');
-    expectDeclares('text-label-primary', 'var(--primary-800)');
-    expectDeclares('text-label-extra-1', 'var(--red-900)');
-    expectDeclares('text-body-primary-strong', 'var(--primary-800)');
-    expectDeclares('text-body-accent-subtle', 'var(--accent-700)');
-    expectDeclares('text-body-neutral-strong', 'var(--neutral-900)');
-    expectDeclares('text-body-neutral-medium', 'var(--neutral-800)');
-    expectDeclares('text-body-neutral-subtle', 'var(--neutral-600)');
-    expectDeclares('icon-neutral-1', 'var(--neutral-50)');
-    expectDeclares('icon-neutral-2', 'var(--neutral-500)');
-    expectDeclares('icon-neutral-3', 'var(--neutral-900)');
-    expectDeclares('icon-accent', 'var(--accent-700)');
-    expectDeclares('icon-feedback-positive', 'var(--green-700)');
-    expectDeclares('icon-feedback-warning', 'var(--yellow-700)');
-  });
-
-  it('mapeia botão e tag para os primitivos corretos', () => {
-    expectDeclares('button-bg-primary-filled-pressed', 'var(--primary-800)');
-    expectDeclares('button-bg-primary-outline-regular', 'var(--yellow-50)');
-    expectDeclares('button-bg-primary-outline-pressed', 'var(--primary-500)');
-    expectDeclares('button-bg-accent-filled-regular', 'var(--accent-700)');
-    expectDeclares('button-bg-accent-outline-regular', 'var(--yellow-50)');
-    expectDeclares('button-border-neutral-strong', 'var(--neutral-800)');
-    expectDeclares('button-border-neutral-subtle', 'var(--neutral-50)');
-    expectDeclares('button-border-accent-strong', 'var(--accent-600)');
-    expectDeclares('button-border-primary-subtlest', 'var(--yellow-50)');
-    expectDeclares('button-border-primary-medium', 'var(--primary-500)');
-    expectDeclares('button-border-primary-strong', 'var(--primary-600)');
-    expectDeclares('button-border-neutral-invisible', 'var(--neutral-50-transparent)');
-    expectDeclares('tag-bg-primary', 'var(--red-700)');
-    expectDeclares('tag-bg-secondary', 'var(--red-200)');
-    expectDeclares('tag-border-subtle', 'var(--red-700)');
-    expectDeclares('tag-border-strong', 'var(--red-300)');
+  it('mapeia botão e tag para os primitivos do Figma', () => {
+    expectDeclares('button-bg-accent-filled-regular', 'var(--blue-5)');
+    expectDeclares('button-bg-accent-filled-hovered', 'var(--blue-4)');
+    expectDeclares('button-bg-accent-filled-pressed', 'var(--blue-6)');
+    expectDeclares('button-bg-accent-outline-regular', 'var(--yellow-1)');
+    expectDeclares('button-bg-accent-outline-hovered', 'var(--blue-1)');
+    expectDeclares('button-bg-accent-outline-pressed', 'var(--blue-2)');
+    expectDeclares('button-bg-primary-filled-regular', 'var(--purple-6)');
+    expectDeclares('button-bg-primary-filled-hovered', 'var(--purple-3)');
+    expectDeclares('button-bg-primary-filled-pressed', 'var(--purple-7)');
+    expectDeclares('button-bg-primary-outline-regular', 'var(--yellow-1)');
+    expectDeclares('button-bg-primary-outline-hovered', 'var(--purple-2)');
+    expectDeclares('button-bg-primary-outline-pressed', 'var(--purple-5)');
+    expectDeclares('button-border-accent-subtle', 'var(--blue-1)');
+    expectDeclares('button-border-accent-medium', 'var(--blue-2)');
+    expectDeclares('button-border-accent-strong', 'var(--blue-4)');
+    expectDeclares('button-border-primary-subtle', 'var(--purple-2)');
+    expectDeclares('button-border-primary-subtlest', 'var(--yellow-1)');
+    expectDeclares('button-border-primary-medium', 'var(--purple-5)');
+    expectDeclares('button-border-primary-strong', 'var(--purple-6)');
+    expectDeclares('button-border-neutral-subtle', 'var(--grey-1)');
+    expectDeclares('button-border-neutral-strong', 'var(--grey-8)');
+    expectDeclares('button-border-neutral-invisible', 'var(--grey-1-transparent)');
+    expectDeclares('tag-bg-primary', 'var(--red-6)');
+    expectDeclares('tag-bg-secondary', 'var(--red-2)');
+    expectDeclares('tag-border-subtle', 'var(--red-6)');
+    expectDeclares('tag-border-strong', 'var(--red-3)');
   });
 
   it('declara as sombras duras (neo-brutalismo: sem blur, deslocadas)', () => {
-    expect(css).toMatch(/--shadow-comp-neutral:\s*3px 3px 0 0 var\(--neutral-900\)\s*;/);
-    expect(css).toMatch(/--shadow-layout-neutral:\s*5px 5px 0 0 var\(--neutral-900\)\s*;/);
-    expect(css).toMatch(/--shadow-comp-accent:\s*3px 3px 0 0 var\(--accent-300\)\s*;/);
-    expect(css).toMatch(/--shadow-comp-primary:\s*3px 3px 0 0 var\(--primary-300\)\s*;/);
-    expect(css).toMatch(/--shadow-layout-accent:\s*5px 5px 0 0 var\(--accent-600\)\s*;/);
-    expect(css).toMatch(/--shadow-layout-img:\s*5px 5px 0 0 var\(--red-300\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-neutral:\s*3px 3px 0 0 var\(--grey-9\)\s*;/);
+    expect(css).toMatch(/--shadow-layout-neutral:\s*5px 5px 0 0 var\(--grey-9\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-accent:\s*3px 3px 0 0 var\(--blue-3\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-primary:\s*3px 3px 0 0 var\(--purple-3\)\s*;/);
+    expect(css).toMatch(/--shadow-layout-accent:\s*5px 5px 0 0 var\(--blue-4\)\s*;/);
+    expect(css).toMatch(/--shadow-layout-img:\s*5px 5px 0 0 var\(--red-3\)\s*;/);
   });
 
   it('declara a sombra de hover dos botões (offset base + deslocamento do hover)', () => {
-    expect(css).toMatch(/--shadow-comp-neutral-hover:\s*5px 5px 0 0 var\(--neutral-900\)\s*;/);
-    expect(css).toMatch(/--shadow-comp-accent-hover:\s*5px 5px 0 0 var\(--accent-300\)\s*;/);
-    expect(css).toMatch(/--shadow-comp-primary-hover:\s*5px 5px 0 0 var\(--primary-300\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-neutral-hover:\s*5px 5px 0 0 var\(--grey-9\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-accent-hover:\s*5px 5px 0 0 var\(--blue-3\)\s*;/);
+    expect(css).toMatch(/--shadow-comp-primary-hover:\s*5px 5px 0 0 var\(--purple-3\)\s*;/);
   });
 
   it('declara a escala de line-height em 4 níveis', () => {
@@ -123,9 +136,5 @@ describe('semantics.css', () => {
 
   it('tem um bloco de dark mode (mesmo que ainda repita os valores do claro)', () => {
     expect(css).toMatch(/\[data-theme=["']dark["']\]|prefers-color-scheme:\s*dark/);
-  });
-
-  it('mapeia a moldura do avatar pro primitivo correto', () => {
-    expectDeclares('surface-bg-avatar-frame', 'var(--neutral-100)');
   });
 });
