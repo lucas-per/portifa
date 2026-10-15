@@ -170,5 +170,13 @@ const hasIcon = Astro.slots.has('icon');
     .button__label.text-label-md {
       font-size: var(--scale-x4);
     }
+
+    /* Label de 16px deixa de ser "texto grande" (WCAG): blue/5 sobre o
+       fundo da página dá 4,47:1, então os botões accent usam blue/6 aqui.
+       No desktop o label é 20px bold e segue em blue/5. */
+    .button--outline-accent,
+    .button--ghost-accent {
+      color: var(--text-body-accent-strong);
+    }
   }
 </style>

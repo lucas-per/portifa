@@ -1,52 +1,83 @@
 /*
   Primitivos: valores brutos, sem contexto de uso.
-  Convertidos de hex (Figma, get_variable_defs) para OKLCH.
+  Convertidos de hex (Figma, coleção "primitive") para OKLCH.
+  Nomes espelham as escalas do Figma: --grey-1…9, --purple-1…9 etc.
   Nunca referenciar semantics.css a partir daqui.
 */
 :root {
-  /* Neutros (inclui os dois "off-white" do Figma — hue instável por serem quase acromáticos, tratados como uma única escala) */
-  --neutral-900: oklch(25.11% 0.0046 17.46); /* #242121 */
-  --neutral-800: oklch(29.23% 0.0044 17.41); /* #2e2b2b */
-  --neutral-500: oklch(52.00% 0.0038 17.28); /* #6b6868 */
-  --neutral-600: oklch(44.34% 0.0066 17.10); /* #575252 — color/grey/6 no Figma */
-  --neutral-200: oklch(89.30% 0.0022 17.20); /* #dddbdb */
-  --neutral-150: oklch(93.49% 0.0054 17.25); /* #ede8e8 — color/grey/2 no Figma */
-  --neutral-50: oklch(98.51% 0 0); /* #fafafa — color/grey/1 no Figma */
-  --neutral-50-transparent: oklch(98.51% 0 0 / 0); /* #fafafa00 — mesma cor, alpha 0 (borda "invisível" que ainda reserva espaço) */
-  --neutral-0: oklch(99.65% 0.0170 106.70); /* #fffff2 */
-  --neutral-100: oklch(95.69% 0.0120 78.40); /* #f5f0e8 — não é variable no Figma, fill direto do wrap-avatar-frame */
+  /* Cinzas */
+  --grey-1: oklch(99.58% 0.0025 228.78); /* #fcfeff */
+  --grey-2: oklch(89.68% 0.0140 247.98); /* #d6dee6 */
+  --grey-3: oklch(79.77% 0.0144 248.01); /* #b6bec6 */
+  --grey-4: oklch(70.15% 0.0137 244.33); /* #98a0a7 */
+  --grey-5: oklch(60.23% 0.0143 244.38); /* #7a8289 */
+  --grey-6: oklch(50.54% 0.0137 240.12); /* #5e666c */
+  --grey-7: oklch(40.50% 0.0136 243.94); /* #434a50 */
+  --grey-8: oklch(30.85% 0.0132 239.00); /* #2a3136 */
+  --grey-9: oklch(20.96% 0.0134 243.58); /* #13191e */
+  --grey-1-transparent: oklch(99.58% 0.0025 228.78 / 0); /* #fcfeff00 — mesma cor, alpha 0 (borda "invisível" que ainda reserva espaço) */
 
-  /* Primária (roxo/ameixa da marca) */
-  --primary-800: oklch(32.54% 0.0336 315.88); /* #3b2f40 */
-  --primary-600: oklch(39.17% 0.0366 311.66); /* #4c4054 — color/purple/6 no Figma */
-  --primary-500: oklch(41.93% 0.0350 307.50); /* #52485c */
-  --primary-300: oklch(56.14% 0.0365 303.03); /* #797087 — color/purple/3 no Figma */
-  --primary-100: oklch(90.84% 0.0411 294.74); /* #e2dcfa */
+  /* Roxo (cor primária da marca) */
+  --purple-1: oklch(97.88% 0.0126 306.03); /* #faf6ff */
+  --purple-2: oklch(85.59% 0.0375 304.72); /* #d5cae4 */
+  --purple-3: oklch(73.25% 0.0362 306.15); /* #aea3bb */
+  --purple-4: oklch(60.98% 0.0361 305.01); /* #887e95 */
+  --purple-5: oklch(48.52% 0.0367 305.66); /* #645a70 */
+  --purple-6: oklch(41.61% 0.0366 306.45); /* #51475c */
+  --purple-7: oklch(34.68% 0.0362 305.09); /* #3e3549 */
+  --purple-8: oklch(27.92% 0.0363 305.81); /* #2d2437 */
+  --purple-9: oklch(21.05% 0.0364 303.88); /* #1c1426 */
 
-  /* Acento (azul) */
-  --accent-50: oklch(97.23% 0.0100 238.51); /* #f0f7fc — color/blue/1 no Figma, fundo do "Sobre mim" */
-  --accent-100: oklch(89.84% 0.0548 240.89); /* #bee3ff — color/blue/2 no Figma, título "Execução e Colaboração" */
-  --accent-700: oklch(53.07% 0.1347 245.37); /* #0071b4 */
-  --accent-600: oklch(55.82% 0.1361 243.96); /* #057abd */
-  --accent-300: oklch(72.59% 0.1196 244.22); /* #5faeec */
+  /* Azul (acento) */
+  --blue-1: oklch(99.58% 0.0025 228.78); /* #fcfeff */
+  --blue-2: oklch(87.37% 0.0667 244.52); /* #b1dbff */
+  --blue-3: oklch(76.82% 0.1281 243.85); /* #65bcff */
+  --blue-4: oklch(66.42% 0.1359 243.76); /* #3a9be0 */
+  --blue-5: oklch(55.82% 0.1361 243.96); /* #057abd */
+  --blue-6: oklch(47.12% 0.1163 244.05); /* #006097 */
+  --blue-7: oklch(38.37% 0.0953 244.34); /* #004772 */
+  --blue-8: oklch(29.79% 0.0735 244.04); /* #00304f */
+  --blue-9: oklch(20.98% 0.0518 244.04); /* #001a2e */
 
   /* Vermelho (tags, status) */
-  --red-900: oklch(51.20% 0.2005 25.55); /* #bf1120 */
-  --red-700: oklch(59.02% 0.2262 24.77); /* #e51e2f */
-  --red-500: oklch(71.16% 0.1812 22.84); /* #ff6b6b */
-  --red-300: oklch(79.06% 0.0955 19.41); /* #f2a2a2 */
-  --red-200: oklch(89.32% 0.0509 18.15); /* #fccfcf — color/red/2 no Figma, base da tag secondary/filled (contraste AA) */
-  --red-100: oklch(93.22% 0.0343 17.78); /* #ffe0e0 */
+  --red-1: oklch(97.98% 0.0098 25.07); /* #fff6f5 */
+  --red-2: oklch(90.34% 0.0500 24.21); /* #ffd3cf */
+  --red-3: oklch(82.89% 0.0950 24.86); /* #ffafa8 */
+  --red-4: oklch(75.31% 0.1482 24.64); /* #ff867f */
+  --red-5: oklch(67.86% 0.2095 24.66); /* #ff5252 */
+  --red-6: oklch(56.10% 0.2095 24.48); /* #d4222f */
+  --red-7: oklch(44.47% 0.1802 24.76); /* #a00018 */
+  --red-8: oklch(32.82% 0.1330 24.75); /* #69000c */
+  --red-9: oklch(20.97% 0.0850 24.97); /* #360003 */
 
-  /* Cores de apoio (um único tom cada, sem escala, exceto verde e amarelo) */
-  --yellow-50: oklch(97.29% 0.0378 92.23); /* #fff6da — color/yellow/1 no Figma, fundo da página */
-  --yellow-100: oklch(94.48% 0.0756 91.82); /* #ffecb3 — color/yellow/2 no Figma */
-  --yellow-400: oklch(79.98% 0.1459 86.18); /* #e7b639 — color/yellow/4 no Figma */
-  --yellow-700: oklch(55.18% 0.0981 82.73); /* #8e6c23 — color/yellow/7 no Figma, ícone de feedback-warning */
-  --green-700: oklch(57.01% 0.1597 146.55); /* #1d8f37 — color/green/5 no Figma, ícone de feedback-positive */
-  --green-500: oklch(88.44% 0.1261 147.74); /* #9ef0a9 — color/green/3 no Figma */
-  --green-200: oklch(93.29% 0.0629 147.14); /* #cef5d1 — color/green/2 no Figma */
+  /* Amarelo (fundos da página) */
+  --yellow-1: oklch(98.64% 0.0119 101.48); /* #fcfbf2 */
+  --yellow-2: oklch(96.00% 0.0499 98.62); /* #faf3cd */
+  --yellow-3: oklch(93.22% 0.0868 95.59); /* #fae9a6 */
+  --yellow-4: oklch(90.44% 0.1242 93.58); /* #fbde7a */
+  --yellow-5: oklch(87.89% 0.1617 90.94); /* #ffd23f */
+  --yellow-6: oklch(71.14% 0.1454 90.87); /* #c49d00 */
+  --yellow-7: oklch(54.32% 0.1110 90.75); /* #886c00 */
+  --yellow-8: oklch(37.64% 0.0769 90.40); /* #513f00 */
+  --yellow-9: oklch(20.99% 0.0429 89.63); /* #201700 */
 
+  /* Verde (feedback) */
+  --green-1: oklch(95.71% 0.0210 147.64); /* #e8f5e9 */
+  --green-2: oklch(93.29% 0.0629 147.14); /* #cef5d1 */
+  --green-3: oklch(88.44% 0.1261 147.74); /* #9ef0a9 */
+  --green-4: oklch(74.43% 0.1611 147.56); /* #5ac76e */
+  --green-5: oklch(57.02% 0.1598 146.46); /* #1d8f37 */
+  --green-6: oklch(36.88% 0.0993 148.76); /* #084d1f */
+
+  /* Rosa (sem uso em semânticos) */
+  --pink-1: oklch(95.09% 0.0259 2.76); /* #ffe8ed */
+  --pink-2: oklch(88.90% 0.0622 2.08); /* #ffcad7 */
+  --pink-3: oklch(59.73% 0.0996 1.70); /* #b0657b */
+  --pink-4: oklch(51.94% 0.1037 3.79); /* #994d62 */
+  --pink-5: oklch(33.96% 0.0968 2.91); /* #5e1d33 */
+
+  /* Fill direto do wrap-avatar-frame no Figma (149:536), ainda sem variable — criar no Figma e renomear aqui */
+  --avatar-frame-beige: oklch(95.69% 0.0120 78.40); /* #f5f0e8 */
   /* Escala numérica (espaçamento e tamanho de fonte), base 4px = 0.25rem */
   --scale-none: 0;
   --scale-base: 0.25rem; /* 4px */
