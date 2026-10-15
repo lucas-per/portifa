@@ -70,7 +70,7 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
      accordion em si, sempre a largura cheia do wrapper. */
   .case-accordion__divider {
     width: 100%;
-    height: 5px;
+    height: 3px;
     background-color: var(--surface-bg-accent-strong);
   }
 
@@ -112,24 +112,30 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
     gap: var(--scale-x5);
     list-style: none;
     margin: 0;
-    padding-top: var(--scale-x4);
+    padding: var(--scale-x4) 0 0;
   }
 
   .case-accordion__list .side-menu__item {
     display: flex;
-    border-left: 5px solid transparent;
-    padding-left: 0;
   }
 
+  /* Marcador de 5px + 16px de espaço só no item ativo (Figma 299:673);
+     o inativo não reserva espaço lateral. */
   .case-accordion__list .side-menu__item--active {
-    border-left-color: var(--border-accent-strong);
+    border-left: 5px solid var(--button-bg-accent-filled-regular);
     padding-left: var(--scale-x4);
   }
 
   .case-accordion__list .side-menu__link {
     display: inline-flex;
     width: 100%;
-    padding: var(--scale-x3) var(--scale-x4);
+    align-items: center;
+    /* Figma 299:673: label 16px (Mobile/Label/MD) em container de 24px,
+       padding vertical 8px → botão de 46px. */
+    min-height: var(--scale-x6);
+    box-sizing: content-box;
+    font-size: var(--scale-x4);
+    padding: var(--scale-x2) 0;
     border: 3px solid var(--button-border-primary-subtlest);
     background: var(--button-bg-primary-outline-regular);
     color: var(--text-label-primary);
@@ -139,7 +145,7 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
   .case-accordion__list .side-menu__link--active {
     background: transparent;
     border-color: var(--button-border-neutral-invisible);
-    color: var(--text-label-accent);
+    color: var(--text-label-primary);
   }
 
   @media (max-width: 767px) {
