@@ -90,8 +90,8 @@
   /* Tag */
   --tag-bg-primary: var(--red-6);
   --tag-bg-secondary: var(--red-2);
-  --tag-border-subtle: var(--red-6);
-  --tag-border-strong: var(--red-3);
+  --tag-border-subtle: var(--red-3);
+  --tag-border-strong: var(--red-5);
 
   /* Sombras duras (neo-brutalismo — sem blur, deslocadas) */
   --shadow-comp-neutral: 3px 3px 0 0 var(--grey-9);

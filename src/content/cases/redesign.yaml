@@ -26,10 +26,12 @@ content:
 
   context:
     description:
-      - "O app nasceu focado só em cibersegurança, com o antivírus como funcionalidade mais usada, mirando o mercado B2B. Com o tempo, consolidou uma base e tanto de usuários e uma receita que precisava ser protegida. Só que por trás disso morava um código legado instável, do tipo que rende reclamação de usuário e de parceiro em doses parecidas."
+      - "O app nasceu focado só em cibersegurança, com o antivírus como funcionalidade mais usada, mirando o mercado B2B. Com o tempo, consolidou uma base e tanto de usuários e uma receita que precisava ser protegida. Só que por trás disso morava um código legado instável, do tipo que rende reclamação de usuário e de parceiro em doses parecidas. A imagem mostra a home screen **legada** do app, antes do redesign."
       - "O prazo para resolver era curto, seis meses, com uma equipe enxuta, o que torna qualquer decisão errada mais cara do que o normal. O objetivo ia além de modernizar a experiência, exigia também mitigar risco e proteger a receita existente."
     image: "../../assets/cases/redesign/legacy-app.png"
-    caption: "Home screen legada"
+    alt: "Home screen legada do app, antes do redesign"
+    imageWidth: 148
+    tag: "Legada"
 
   problems:
     intro: "Reestruturar um produto já em pé, usado todos os dias, sem derrubar nada no processo (e com um time pequeno) significa equilibrar duas forças que raramente cooperam: velocidade de entrega e decisões bem fundamentadas."

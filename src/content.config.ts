@@ -52,7 +52,14 @@ const cases = defineCollection({
           .object({
             description: z.array(z.string()),
             image: image(),
-            caption: z.string(),
+            // Sem legenda (Figma 452:286 / 222:409): a descrição vai só no alt.
+            alt: z.string(),
+            // Largura da imagem no frame do Figma (px): tamanho do HTML
+            // inicial, antes do ajuste à altura do texto (evita salto de
+            // layout). Ver utils/context-image-fit.ts.
+            imageWidth: z.number().min(120).max(240),
+            // Texto da tag sobre o canto superior esquerdo da imagem.
+            tag: z.string().optional(),
           })
           .optional(),
         // Meu papel como seção própria, logo depois do Contexto e sem

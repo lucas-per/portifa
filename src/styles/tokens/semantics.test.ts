@@ -102,8 +102,8 @@ describe('semantics.css', () => {
     expectDeclares('button-border-neutral-invisible', 'var(--grey-1-transparent)');
     expectDeclares('tag-bg-primary', 'var(--red-6)');
     expectDeclares('tag-bg-secondary', 'var(--red-2)');
-    expectDeclares('tag-border-subtle', 'var(--red-6)');
-    expectDeclares('tag-border-strong', 'var(--red-3)');
+    expectDeclares('tag-border-subtle', 'var(--red-3)');
+    expectDeclares('tag-border-strong', 'var(--red-5)');
   });
 
   it('declara as sombras duras (neo-brutalismo: sem blur, deslocadas)', () => {

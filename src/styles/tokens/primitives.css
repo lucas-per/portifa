@@ -80,6 +80,7 @@
   --avatar-frame-beige: oklch(95.69% 0.0120 78.40); /* #f5f0e8 */
   /* Escala numérica (espaçamento e tamanho de fonte), base 4px = 0.25rem */
   --scale-none: 0;
+  --scale-half: 0.125rem; /* 2px */
   --scale-base: 0.25rem; /* 4px */
   --scale-x2: 0.5rem; /* 8px */
   --scale-x3: 0.75rem; /* 12px */

@@ -26,10 +26,12 @@ content:
 
   context:
     description:
-      - "A PagueVeloz, fintech de pagamentos nascida em Blumenau, entrou para o grupo Serasa Experian em 2021. Dentro da conta digital, a jornada de pagamentos (boleto, Pix e DDA, o Débito Direto Autorizado) já movimentava valores expressivos por ano, e três em cada quatro clientes cadastrados eram ativos. Essa jornada tinha potencial para ser mais utilizada e contribuir para o aumento de receita."
+      - "A PagueVeloz, fintech de pagamentos nascida em Blumenau, entrou para o grupo Serasa Experian em 2021. Dentro da conta digital, a jornada de pagamentos (boleto, Pix e DDA, o Débito Direto Autorizado) já movimentava valores expressivos por ano, e três em cada quatro clientes cadastrados eram ativos. Essa jornada tinha potencial para ser mais utilizada e contribuir para o aumento de receita. A imagem mostra a home de pagamentos **legada**, ponto de partida do projeto."
       - "O prazo era curto, pouco mais de dois meses, por causa de uma exigência regulatória do Banco Central com prazo próprio a cumprir. Além do tempo apertado, a jornada também precisava sair da base legada e migrar para o design system da empresa, dívida técnica que fazia parte do escopo desde o primeiro dia."
     image: "../../assets/cases/jornada-pagamentos/legacy-home.png"
-    caption: "Home de pagamentos legada"
+    alt: "Home de pagamentos legada, antes do redesenho"
+    imageWidth: 172
+    tag: "Legada"
 
   myRole:
     title: "Meu papel"

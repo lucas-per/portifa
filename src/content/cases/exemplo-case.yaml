@@ -25,7 +25,8 @@ content:
       - "Primeiro parágrafo fictício de contexto, usado para validar o bloco context."
       - "Segundo parágrafo fictício de contexto."
     image: "../../assets/cases/placeholder.png"
-    caption: "Legenda de exemplo da imagem de contexto."
+    alt: "Texto alternativo de exemplo da imagem de contexto."
+    imageWidth: 160
   problems:
     intro: "Introdução fictícia dos problemas e desafios do case de exemplo."
     hypothesis: "Hipótese fictícia do case de exemplo."
