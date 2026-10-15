@@ -15,21 +15,23 @@ const { intro, hypothesis, hypothesisCard, risksIntro, risks, kpis } = Astro.pro
 
 <section class="case-problems" id="problems-challenges">
   <h2 class="text-title-h3">Problema &amp; Desafios</h2>
-  {hypothesisCard && (
-    <div class="case-problems__card">
-      <p class="text-body-md" set:html={inlineMarkup(hypothesisCard)} />
+  <div class="case-problems__body">
+    {hypothesisCard && (
+      <div class="case-problems__card">
+        <p class="text-body-md" set:html={inlineMarkup(hypothesisCard)} />
+      </div>
+    )}
+    <div class="case-problems__text">
+      <p class="text-body-md" set:html={inlineMarkup(intro)} />
+      {hypothesis && <p class="text-body-md" set:html={inlineMarkup(hypothesis)} />}
+      {risksIntro && <p class="text-body-md" set:html={inlineMarkup(risksIntro)} />}
+      <ul class="case-problems__risks">
+        {risks.map((risk) => (
+          <li class="text-body-md" set:html={inlineMarkup(risk)} />
+        ))}
+      </ul>
+      {kpis && <p class="text-body-md" set:html={inlineMarkup(kpis)} />}
     </div>
-  )}
-  <div class="case-problems__text">
-    <p class="text-body-md" set:html={inlineMarkup(intro)} />
-    {hypothesis && <p class="text-body-md" set:html={inlineMarkup(hypothesis)} />}
-    {risksIntro && <p class="text-body-md" set:html={inlineMarkup(risksIntro)} />}
-    <ul class="case-problems__risks">
-      {risks.map((risk) => (
-        <li class="text-body-md" set:html={inlineMarkup(risk)} />
-      ))}
-    </ul>
-    {kpis && <p class="text-body-md" set:html={inlineMarkup(kpis)} />}
   </div>
 </section>
 
@@ -37,9 +39,17 @@ const { intro, hypothesis, hypothesisCard, risksIntro, risks, kpis } = Astro.pro
   .case-problems {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x5);
+    gap: var(--scale-x6);
     color: var(--text-body-primary-strong);
     padding-left: var(--scale-x12);
+  }
+
+  /* col-body (Figma 577:354): card + texto, gap 20. No Redesign só há o
+     texto, e o gap não tem efeito. */
+  .case-problems__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
   }
 
   .case-problems__card {

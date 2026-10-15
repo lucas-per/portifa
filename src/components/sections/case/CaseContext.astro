@@ -1,37 +1,43 @@
 ---
 import type { ImageMetadata } from 'astro';
 import CaseImage from '../../ui/CaseImage.astro';
+import CaseMyRole from './CaseMyRole.astro';
 import { inlineMarkup } from '../../../utils/inline-markup';
 
 interface Props {
   description: string[];
   image: ImageMetadata;
   caption: string;
+  /** "Meu papel" como subseção do Contexto (Figma, col-subsections do case Pagamentos). */
+  myRole?: { title: string; paragraphs: string[] };
   optimized?: boolean;
 }
 
-const { description, image, caption, optimized = false } = Astro.props;
+const { description, image, caption, myRole, optimized = false } = Astro.props;
 ---
 
 <section class="case-context" id="context">
   <h2 class="text-title-h3">Contexto</h2>
-  <div class="case-context__row">
-    <div class="case-context__text">
-      {description.map((paragraph) => (
-        <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
-      ))}
+  <div class="case-context__subsections">
+    <div class="case-context__row">
+      <div class="case-context__text">
+        {description.map((paragraph) => (
+          <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
+        ))}
+      </div>
+      <figure class="case-context__figure">
+        <CaseImage
+          src={image}
+          alt={caption}
+          width={156}
+          optimized={optimized}
+          widths={[156, 312, 640]}
+          sizes="(max-width: 767px) calc(100vw - 40px), 156px"
+        />
+        <figcaption class="text-body-caption">{caption}</figcaption>
+      </figure>
     </div>
-    <figure class="case-context__figure">
-      <CaseImage
-        src={image}
-        alt={caption}
-        width={156}
-        optimized={optimized}
-        widths={[156, 312, 640]}
-        sizes="(max-width: 767px) calc(100vw - 40px), 156px"
-      />
-      <figcaption class="text-body-caption">{caption}</figcaption>
-    </figure>
+    {myRole && <CaseMyRole {...myRole} />}
   </div>
 </section>
 
@@ -39,9 +45,17 @@ const { description, image, caption, optimized = false } = Astro.props;
   .case-context {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x5);
+    gap: var(--scale-x6);
     color: var(--text-body-primary-strong);
     padding-left: var(--scale-x12);
+  }
+
+  /* col-subsections (Figma 577:353): texto+imagem e "Meu papel". No
+     Redesign só há o primeiro bloco, e o gap não tem efeito. */
+  .case-context__subsections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x8);
   }
 
   .case-context__row {
@@ -61,7 +75,7 @@ const { description, image, caption, optimized = false } = Astro.props;
   .case-context__figure {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x2);
     /* A figura tem a largura da imagem (Figma 452:290, col-img-context):
        a legenda quebra dentro dela e fica alinhada à esquerda, em vez de
        centralizada e mais larga que a imagem. */

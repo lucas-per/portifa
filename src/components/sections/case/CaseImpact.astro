@@ -16,18 +16,20 @@ const { highlights, description } = Astro.props;
 
 <section class="case-impact" id="impact">
   <h2 class="text-title-h3">Impacto</h2>
-  <div class="case-impact__highlights">
-    {highlights.map((highlight) => (
-      <div class="case-impact__highlight">
-        <p class="text-title-h3">{highlight.value}</p>
-        <p class="text-body-md">{highlight.label}</p>
-      </div>
-    ))}
-  </div>
-  <div class="case-impact__text">
-    {description.map((paragraph) => (
-      <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
-    ))}
+  <div class="case-impact__body">
+    <div class="case-impact__highlights">
+      {highlights.map((highlight) => (
+        <div class="case-impact__highlight">
+          <p class="text-title-h3">{highlight.value}</p>
+          <p class="text-body-md">{highlight.label}</p>
+        </div>
+      ))}
+    </div>
+    <div class="case-impact__text">
+      {description.map((paragraph) => (
+        <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
+      ))}
+    </div>
   </div>
 </section>
 
@@ -40,6 +42,13 @@ const { highlights, description } = Astro.props;
     padding-left: var(--scale-x12);
   }
 
+  /* col-body (Figma 577:357): números + texto, gap 20. */
+  .case-impact__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+  }
+
   .case-impact__highlights {
     display: flex;
     gap: var(--scale-x10);
@@ -50,7 +59,7 @@ const { highlights, description } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--scale-x2);
-    padding: var(--scale-x5);
+    padding: var(--scale-x6);
     background-color: var(--surface-bg-off-white-primary);
     border: 2px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-neutral);

@@ -9,14 +9,16 @@ interface Props {
 const { title, paragraphs } = Astro.props;
 ---
 
-<section class="case-my-role" id="my-role">
+<!-- Subseção do Contexto (Figma, col-myrole dentro de col-subsections):
+     o recuo lateral vem de .case-context. O id fica para âncoras antigas. -->
+<div class="case-my-role" id="my-role">
   <h3 class="text-title-h4">{title}</h3>
   <div class="case-my-role__text">
     {paragraphs.map((paragraph) => (
       <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
     ))}
   </div>
-</section>
+</div>
 
 <style>
   .case-my-role {
@@ -24,7 +26,6 @@ const { title, paragraphs } = Astro.props;
     flex-direction: column;
     gap: var(--scale-x5);
     color: var(--text-body-primary-strong);
-    padding-left: var(--scale-x12);
   }
 
   .case-my-role__text {
@@ -32,14 +33,5 @@ const { title, paragraphs } = Astro.props;
     flex-direction: column;
     gap: var(--scale-x3);
     color: var(--text-body-neutral-strong);
-  }
-
-  @media (max-width: 767px) {
-    .case-my-role {
-      /* 20px (Figma): o inset vive aqui dentro, não em
-         .case-layout__content — ver comentário em [slug].astro sobre
-         os dividers estreitos entre seções. */
-      padding-left: var(--scale-x5);
-    }
   }
 </style>

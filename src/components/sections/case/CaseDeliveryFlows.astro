@@ -20,41 +20,49 @@ const { intro, flows } = Astro.props;
 
 <section class="case-delivery-flows" id="myrole">
   <h2 class="text-title-h3">Delivery</h2>
-  <p class="case-delivery-flows__intro text-body-md" set:html={inlineMarkup(intro)} />
-
-  {flows.map((flow) => (
-    <div class="case-delivery-flows__flow">
-      <h3 class="text-title-h4">{flow.title}</h3>
-      <div class="case-delivery-flows__text">
-        {flow.paragraphs.map((paragraph) => (
-          <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
-        ))}
-      </div>
-      <figure class="case-delivery-flows__figure">
-        <div class="case-delivery-flows__images">
-          {flow.images.map((img) => (
-            <CaseImage
-              src={img}
-              alt=""
-              width={284}
-              widths={[284, 568, 720]}
-              sizes="(max-width: 767px) calc(100vw - 40px), 284px"
-            />
+  <div class="case-delivery-flows__subsections">
+    <p class="case-delivery-flows__intro text-body-md" set:html={inlineMarkup(intro)} />
+    {flows.map((flow) => (
+      <div class="case-delivery-flows__flow">
+        <h3 class="text-title-h4">{flow.title}</h3>
+        <div class="case-delivery-flows__text">
+          {flow.paragraphs.map((paragraph) => (
+            <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
           ))}
         </div>
-        <figcaption class="text-body-caption">{flow.caption}</figcaption>
-      </figure>
-    </div>
-  ))}
+        <figure class="case-delivery-flows__figure">
+          <div class="case-delivery-flows__images">
+            {flow.images.map((img) => (
+              <CaseImage
+                src={img}
+                alt=""
+                width={284}
+                widths={[284, 568, 720]}
+                sizes="(max-width: 767px) calc(100vw - 40px), 284px"
+              />
+            ))}
+          </div>
+          <figcaption class="text-body-caption">{flow.caption}</figcaption>
+        </figure>
+      </div>
+    ))}
+  </div>
 </section>
 
 <style>
   .case-delivery-flows {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x5);
+    gap: var(--scale-x6);
     color: var(--text-body-primary-strong);
     padding-left: var(--scale-x12);
+  }
+
+  /* col-subsections (Figma 577:356): intro e um bloco por fluxo. */
+  .case-delivery-flows__subsections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x8);
   }
 
   .case-delivery-flows__intro {
@@ -64,7 +72,7 @@ const { intro, flows } = Astro.props;
   .case-delivery-flows__flow {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x5);
   }
 
   .case-delivery-flows__text {
@@ -77,9 +85,8 @@ const { intro, flows } = Astro.props;
   .case-delivery-flows__figure {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x2);
     margin: 0;
-    padding: var(--scale-x5) 0;
   }
 
   .case-delivery-flows__figure figcaption {

@@ -7,7 +7,6 @@ import SideMenu from '../../components/sections/case/SideMenu.astro';
 import CaseAccordion from '../../components/sections/case/CaseAccordion.astro';
 import CaseSummary from '../../components/sections/case/CaseSummary.astro';
 import CaseContext from '../../components/sections/case/CaseContext.astro';
-import CaseMyRole from '../../components/sections/case/CaseMyRole.astro';
 import CaseProblems from '../../components/sections/case/CaseProblems.astro';
 import CaseDiscovery from '../../components/sections/case/CaseDiscovery.astro';
 import CaseDiscoveryTopics from '../../components/sections/case/CaseDiscoveryTopics.astro';
@@ -61,11 +60,13 @@ const readingTime = estimateReadingTime(data.content);
         {data.content.context && (
           <>
             <Divider width="156px" />
-            <CaseContext {...data.content.context} optimized={data.optimizedImages} />
+            <CaseContext
+              {...data.content.context}
+              myRole={data.content.myRole}
+              optimized={data.optimizedImages}
+            />
           </>
         )}
-
-        {data.content.myRole && <CaseMyRole {...data.content.myRole} />}
 
         {data.content.problems && (
           <>
@@ -195,25 +196,28 @@ const readingTime = estimateReadingTime(data.content);
        esticar até a borda real da viewport e (decisão de design, diverge
        do Figma atual de propósito — ver design-notes.md) até o footer,
        sem sobrar respiro off-white. O miolo de 977px fica só no filho. */
-    padding: var(--scale-x11) var(--scale-x20) var(--scale-x20) 0;
+    /* 40px no topo (Figma, col-content-case y=40): alinhado ao topo da
+       lista do menu lateral. */
+    padding: var(--scale-x10) var(--scale-x20) var(--scale-x20) 0;
     background-color: var(--surface-bg-neutral-subtle);
   }
 
   .case-layout__content-inner {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x11);
+    /* Seção ↔ seção: 40 + divider 3px + 40 (Figma). */
+    gap: var(--scale-x10);
     max-width: 977px;
   }
 
   /* divider-doubled (Figma): dois dividers com 20px entre si e 64px até a
      última seção e até o botão. O gap de .case-layout__content-inner já dá
-     44px de cada lado; a margem completa a diferença até 64px. */
+     40px de cada lado; a margem completa a diferença até 64px. */
   .case-layout__divider-doubled {
     display: flex;
     flex-direction: column;
     gap: var(--scale-x5);
-    margin: calc(var(--scale-x16) - var(--scale-x11)) 0;
+    margin: calc(var(--scale-x16) - var(--scale-x10)) 0;
   }
 
   @media (max-width: 767px) {

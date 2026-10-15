@@ -48,16 +48,24 @@ const { challenge, solution, results } = Astro.props;
     padding-left: var(--scale-x12);
   }
 
+  /* Grid com subgrid: as três faixas de título (linha 1) e as três
+     descrições (linha 2) compartilham as mesmas linhas, então as faixas
+     ficam com a altura da mais alta mesmo quando um título quebra linha
+     e outro não (Figma, wrap-h4-title-* com 85px nas três colunas). */
   .case-summary__grid {
-    display: flex;
-    gap: var(--scale-x10);
-    align-items: stretch;
+    display: grid;
+    /* min-content como piso: igual ao flex anterior, a coluna nunca fica
+       mais estreita que a palavra mais longa (o texto não vaza do card). */
+    grid-template-columns: repeat(3, minmax(min-content, 1fr));
+    grid-template-rows: auto auto;
+    column-gap: var(--scale-x10);
   }
 
   .case-summary__col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 0;
     background-color: var(--surface-bg-off-white-primary);
     border: 2px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-neutral);
@@ -95,9 +103,16 @@ const { challenge, solution, results } = Astro.props;
       padding-left: var(--scale-x5);
     }
 
+    /* Empilhado: cada card volta a ter as próprias linhas. */
     .case-summary__grid {
-      flex-direction: column;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
       gap: var(--scale-x8);
+    }
+
+    .case-summary__col {
+      grid-row: auto;
+      grid-template-rows: auto auto;
     }
   }
 </style>

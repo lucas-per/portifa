@@ -39,66 +39,66 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
 
 <section class="case-discovery" id="strategy-solutions">
   <h2 class="text-title-h3">Discovery</h2>
-  <p class="text-body-md">{intro}</p>
+  <div class="case-discovery__subsections">
+    <div class="case-discovery__intro">
+      <p class="text-body-md">{intro}</p>
 
-  <ol class="case-discovery__timeline">
-    {phases.map((phase) => (
-      <li class="case-discovery__phase">
-        <div class="case-discovery__marker-col">
-          <span class="case-discovery__timeline-line" aria-hidden="true"></span>
-          <span class="case-discovery__marker" aria-hidden="true"></span>
-          <span class="case-discovery__timeline-line" aria-hidden="true"></span>
-        </div>
-        <div class="case-discovery__phase-content">
-          <h3 class="text-body-lg-strong">{phase.title}</h3>
-          <p class="case-discovery__phase-subtitle text-label-sm">{phase.subtitle}</p>
-          <p class="text-body-md">{phase.description}</p>
-        </div>
-      </li>
-    ))}
-  </ol>
-
-  <div class="case-discovery__block">
-    <h3 class="text-title-h4">{exploration.title}</h3>
-    <p class="text-body-md">{exploration.description}</p>
-    <div class="case-discovery__images">
-      {exploration.images.map((img) => (
-        <Image src={img} alt="" width={483} />
-      ))}
+      <ol class="case-discovery__timeline">
+        {phases.map((phase) => (
+          <li class="case-discovery__phase">
+            <div class="case-discovery__marker-col">
+              <span class="case-discovery__timeline-line" aria-hidden="true"></span>
+              <span class="case-discovery__marker" aria-hidden="true"></span>
+              <span class="case-discovery__timeline-line" aria-hidden="true"></span>
+            </div>
+            <div class="case-discovery__phase-content">
+              <h3 class="text-body-lg-strong">{phase.title}</h3>
+              <p class="case-discovery__phase-subtitle text-label-sm">{phase.subtitle}</p>
+              <p class="text-body-md">{phase.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
-  </div>
-
-  <div class="case-discovery__block">
-    <h3 class="text-title-h4">{pd.title}</h3>
-    <p class="text-body-md">{pd.description}</p>
-    <div class="case-discovery__images">
-      {pd.images.map((img) => (
-        <Image src={img} alt="" width={360} />
-      ))}
+    <div class="case-discovery__block">
+      <h3 class="text-title-h4">{exploration.title}</h3>
+      <p class="text-body-md">{exploration.description}</p>
+      <div class="case-discovery__images">
+        {exploration.images.map((img) => (
+          <Image src={img} alt="" width={483} />
+        ))}
+      </div>
     </div>
-  </div>
-
-  <div class="case-discovery__block">
-    <h3 class="text-title-h4">Testes de usabilidade</h3>
-    <p class="text-body-md">{tests.intro}</p>
-    <div class="case-discovery__tests">
-      {tests.groups.map((group) => (
-        <div class="case-discovery__test-group">
-          <p class="text-body-lg-strong">{group.title}</p>
-          <div class="case-discovery__test-results">
-            {group.results.map((result) => (
-              <TestResultBadge status={result.status} label={result.label} />
-            ))}
+    <div class="case-discovery__block">
+      <h3 class="text-title-h4">{pd.title}</h3>
+      <p class="text-body-md">{pd.description}</p>
+      <div class="case-discovery__images">
+        {pd.images.map((img) => (
+          <Image src={img} alt="" width={360} />
+        ))}
+      </div>
+    </div>
+    <div class="case-discovery__block">
+      <h3 class="text-title-h4">Testes de usabilidade</h3>
+      <p class="text-body-md">{tests.intro}</p>
+      <div class="case-discovery__tests">
+        {tests.groups.map((group) => (
+          <div class="case-discovery__test-group">
+            <p class="text-body-lg-strong">{group.title}</p>
+            <div class="case-discovery__test-results">
+              {group.results.map((result) => (
+                <TestResultBadge status={result.status} label={result.label} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      <p class="text-body-md">{tests.outro}</p>
     </div>
-    <p class="text-body-md">{tests.outro}</p>
-  </div>
-
-  <div class="case-discovery__block">
-    <h3 class="text-title-h4">{consolidation.title}</h3>
-    <p class="text-body-md">{consolidation.description}</p>
+    <div class="case-discovery__block">
+      <h3 class="text-title-h4">{consolidation.title}</h3>
+      <p class="text-body-md">{consolidation.description}</p>
+    </div>
   </div>
 </section>
 
@@ -111,7 +111,22 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     padding-left: var(--scale-x12);
   }
 
-  .case-discovery > p,
+  /* col-subsections (Figma 577:358): intro+timeline, Exploração, Product
+     discovery, Testes e Consolidação. */
+  .case-discovery__subsections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x8);
+  }
+
+  /* col-discovery-intro (Figma 577:359): intro e timeline juntos. */
+  .case-discovery__intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x5);
+  }
+
+  .case-discovery__intro > p,
   .case-discovery__block {
     color: var(--text-body-neutral-strong);
   }
@@ -185,7 +200,7 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
   .case-discovery__block {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x5);
   }
 
   .case-discovery__images {
@@ -211,7 +226,7 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
   .case-discovery__tests {
     display: flex;
     flex-direction: column;
-    gap: var(--scale-x4);
+    gap: var(--scale-x5);
   }
 
   .case-discovery__test-group {
