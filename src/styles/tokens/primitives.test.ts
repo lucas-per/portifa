@@ -101,6 +101,7 @@ describe('primitives.css', () => {
 
   it('declara a escala numérica de tamanho em rem', () => {
     expectDeclares('scale-none', '0');
+    expectDeclares('scale-half', '0.125rem');
     expectDeclares('scale-base', '0.25rem');
     expectDeclares('scale-x2', '0.5rem');
     expectDeclares('scale-x3', '0.75rem');

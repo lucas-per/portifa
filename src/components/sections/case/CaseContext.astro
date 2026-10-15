@@ -1,41 +1,66 @@
 ---
 import type { ImageMetadata } from 'astro';
 import CaseImage from '../../ui/CaseImage.astro';
+import Tag from '../../ui/Tag.astro';
 import CaseMyRole from './CaseMyRole.astro';
 import { inlineMarkup } from '../../../utils/inline-markup';
 
 interface Props {
   description: string[];
   image: ImageMetadata;
-  caption: string;
+  alt: string;
+  /** Largura da imagem no Figma: tamanho do HTML inicial, antes do ajuste. */
+  imageWidth: number;
+  /** Texto da tag sobre o canto superior esquerdo da imagem (Figma 573:690 / 573:764). */
+  tag?: string;
   /** "Meu papel" como subseção do Contexto (Figma, col-subsections do case Pagamentos). */
   myRole?: { title: string; paragraphs: string[] };
   optimized?: boolean;
 }
 
-const { description, image, caption, myRole, optimized = false } = Astro.props;
+const { description, image, alt, imageWidth, tag, myRole, optimized = false } = Astro.props;
+
+// Proporção da imagem (largura ÷ altura), lida pelo script de ajuste.
+const ratio = image.width / image.height;
 ---
 
 <section class="case-context" id="context">
   <h2 class="text-title-h3">Contexto</h2>
   <div class="case-context__subsections">
-    <div class="case-context__row">
-      <div class="case-context__text">
+    <div class="case-context__row" data-context-fit>
+      <div class="case-context__text" data-context-fit-text>
         {description.map((paragraph) => (
           <p class="text-body-md" set:html={inlineMarkup(paragraph)} />
         ))}
       </div>
-      <figure class="case-context__figure">
+      <div
+        class="case-context__media"
+        data-context-fit-media
+        data-ratio={ratio}
+        style={`width: ${imageWidth}px; aspect-ratio: ${image.width} / ${image.height};`}
+      >
+        {/*
+          O tamanho exibido vem do CSS: no desktop, a largura do Figma no
+          HTML inicial, ajustada depois pelo script abaixo; no mobile, a
+          largura total. width aqui é a resolução gerada: 240 (1x) +
+          480/960 no case otimizado, a largura nativa no Redesign (<Image>
+          simples). Os atributos width/height do <img> saem na proporção
+          da imagem.
+        */}
         <CaseImage
           src={image}
-          alt={caption}
-          width={156}
+          alt={alt}
+          width={optimized ? 240 : image.width}
           optimized={optimized}
-          widths={[156, 312, 640]}
-          sizes="(max-width: 767px) calc(100vw - 40px), 156px"
+          widths={[240, 480, 960]}
+          sizes="(max-width: 767px) calc(100vw - 40px), 240px"
         />
-        <figcaption class="text-body-caption">{caption}</figcaption>
-      </figure>
+        {tag && (
+          <span class="case-context__tag" aria-hidden="true">
+            <Tag variant="secondary" type="outlined" size="mobile">{tag}</Tag>
+          </span>
+        )}
+      </div>
     </div>
     {myRole && <CaseMyRole {...myRole} />}
   </div>
@@ -66,39 +91,48 @@ const { description, image, caption, myRole, optimized = false } = Astro.props;
 
   .case-context__text {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: var(--scale-x3);
     color: var(--text-body-neutral-strong);
   }
 
-  .case-context__figure {
-    display: flex;
-    flex-direction: column;
-    gap: var(--scale-x2);
-    /* A figura tem a largura da imagem (Figma 452:290, col-img-context):
-       a legenda quebra dentro dela e fica alinhada à esquerda, em vez de
-       centralizada e mais larga que a imagem. */
-    width: 156px;
-    margin: 0;
-    flex-shrink: 0;
+  /* width e aspect-ratio inline: a largura do Figma no HTML inicial,
+     depois a do script; a altura sai da proporção. Alinhada ao topo do
+     texto: com a largura no máximo (240px), fica mais baixa que ele. */
+  .case-context__media {
+    position: relative;
+    flex: none;
+  }
+
+  /* A imagem preenche a caixa em position:absolute, sem contribuir com
+     tamanho próprio: a caixa sai só da largura + aspect-ratio. Com a
+     imagem no fluxo, o WebKit usava a altura do layout anterior como
+     mínimo automático do item flex e a caixa saía fora da proporção. */
+  .case-context__media :global(picture),
+  .case-context__media :global(img) {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   /* border-box: o projeto não tem reset de box-sizing, então sem isso a
-     borda de 2px somaria 4px aos 156px e a imagem ficaria mais larga que
-     a legenda. */
-  .case-context__figure :global(img) {
+     borda de 2px somaria 4px à largura da imagem. */
+  .case-context__media :global(img) {
     box-sizing: border-box;
-    display: block;
-    width: 100%;
-    height: auto;
     border: 2px solid var(--border-neutral-strong);
     box-shadow: var(--shadow-layout-img);
   }
 
-  .case-context__figure figcaption {
-    color: var(--text-body-neutral-strong);
-    text-transform: uppercase;
+  /* Sobre a imagem, sem ocupar altura (Figma: top 4, left 8). */
+  .case-context__tag {
+    position: absolute;
+    top: var(--scale-base);
+    left: var(--scale-x2);
+    display: flex;
   }
 
   @media (max-width: 767px) {
@@ -109,13 +143,61 @@ const { description, image, caption, myRole, optimized = false } = Astro.props;
       padding-left: var(--scale-x5);
     }
 
+    /* Empilhado: imagem abaixo do texto, na largura total. */
     .case-context__row {
       flex-direction: column;
     }
 
-    .case-context__figure {
-      align-self: stretch;
-      width: auto;
+    /* min-width vence o width inline (desktop) sem !important. */
+    .case-context__media {
+      min-width: 100%;
     }
   }
 </style>
+
+<script>
+  import { fitContextImage } from '../../../utils/context-image-fit';
+
+  // Ajusta a largura da imagem para a altura dela acompanhar a do texto
+  // (no máximo 3 iterações por ciclo, travada em 120–240px). Ver
+  // utils/context-image-fit.ts. Só no desktop: abaixo de 768px o bloco
+  // empilha e o min-width: 100% do CSS se sobrepõe à largura inline.
+  const desktop = window.matchMedia('(min-width: 768px)');
+
+  document.querySelectorAll<HTMLElement>('[data-context-fit]').forEach((row) => {
+    const text = row.querySelector<HTMLElement>('[data-context-fit-text]');
+    const media = row.querySelector<HTMLElement>('[data-context-fit-media]');
+    if (!text || !media) return;
+    const ratio = Number(media.dataset.ratio);
+    let width = parseFloat(media.style.width);
+    // Tamanho do texto deixado pelo último ajuste: o ResizeObserver
+    // dispara também por causa da largura que o próprio ajuste aplica, e
+    // esse disparo não abre um ciclo novo (é isso que impede o loop).
+    let settled = { width: -1, height: -1 };
+
+    const fit = () => {
+      if (!desktop.matches) return;
+      ({ width } = fitContextImage({
+        measureTextHeight: () => text.getBoundingClientRect().height,
+        applyWidth: (next) => {
+          media.style.width = `${next}px`;
+        },
+        currentWidth: width,
+        ratio,
+      }));
+      const rect = text.getBoundingClientRect();
+      settled = { width: rect.width, height: rect.height };
+    };
+
+    new ResizeObserver(([entry]) => {
+      const { width: w, height: h } = entry.target.getBoundingClientRect();
+      if (Math.abs(w - settled.width) < 0.5 && Math.abs(h - settled.height) < 0.5) return;
+      fit();
+    }).observe(text);
+
+    // A altura do texto muda quando a fonte web substitui a de fallback.
+    document.fonts.ready.then(fit);
+    desktop.addEventListener('change', fit);
+    fit();
+  });
+</script>

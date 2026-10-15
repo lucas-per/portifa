@@ -2,12 +2,20 @@
 interface Props {
   variant?: 'primary' | 'secondary';
   type?: 'filled' | 'outlined';
+  /**
+   * Propriedade `size` do componente tag no Figma (20:139).
+   * responsive: variante desktop, que vira a mobile abaixo de 768px
+   * (o text-label-sm já reduz a fonte nesse breakpoint).
+   * mobile: variante mobile em qualquer largura (ex.: tag sobre a
+   * imagem do Contexto, que usa size=mobile também no desktop).
+   */
+  size?: 'responsive' | 'mobile';
 }
 
-const { variant = 'primary', type = 'filled' } = Astro.props;
+const { variant = 'primary', type = 'filled', size = 'responsive' } = Astro.props;
 ---
 
-<span class={`tag tag--${variant} tag--${type} text-label-sm`}><slot /></span>
+<span class={`tag tag--${variant} tag--${type} tag--${size} text-label-sm`}><slot /></span>
 
 <style>
   .tag {
@@ -16,9 +24,12 @@ const { variant = 'primary', type = 'filled' } = Astro.props;
     box-shadow: var(--shadow-comp-neutral);
   }
 
+  /* Outlined (Figma 229:625/229:627/238:492/238:496): borda de 2px,
+     sem sombra. */
   .tag--outlined {
-    border-width: 3px;
+    border-width: 2px;
     border-style: solid;
+    box-shadow: none;
   }
 
   .tag--primary {
@@ -27,7 +38,7 @@ const { variant = 'primary', type = 'filled' } = Astro.props;
   }
 
   .tag--primary.tag--outlined {
-    border-color: var(--tag-border-subtle);
+    border-color: var(--tag-border-strong);
   }
 
   .tag--secondary {
@@ -36,6 +47,22 @@ const { variant = 'primary', type = 'filled' } = Astro.props;
   }
 
   .tag--secondary.tag--outlined {
-    border-color: var(--tag-border-strong);
+    border-color: var(--tag-border-subtle);
+  }
+
+  /* size=mobile: label de 12px; o outlined mobile ainda tem padding
+     menor (2px 4px). O filled mobile mantém 4px 8px. */
+  .tag--mobile {
+    font-size: var(--scale-x3);
+  }
+
+  .tag--outlined.tag--mobile {
+    padding: var(--scale-half) var(--scale-base);
+  }
+
+  @media (max-width: 767px) {
+    .tag--outlined.tag--responsive {
+      padding: var(--scale-half) var(--scale-base);
+    }
   }
 </style>
