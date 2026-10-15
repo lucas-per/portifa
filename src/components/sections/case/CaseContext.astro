@@ -159,7 +159,8 @@ const ratio = image.width / image.height;
   import { fitContextImage } from '../../../utils/context-image-fit';
 
   // Ajusta a largura da imagem para a altura dela acompanhar a do texto
-  // (no máximo 3 iterações por ciclo, travada em 120–240px). Ver
+  // (no máximo 3 iterações por ciclo; mínimo 120px, máximo de 240px ou 26%
+  // do bloco linha, o que for menor). Ver
   // utils/context-image-fit.ts. Só no desktop: abaixo de 768px o bloco
   // empilha e o min-width: 100% do CSS se sobrepõe à largura inline.
   const desktop = window.matchMedia('(min-width: 768px)');
@@ -170,10 +171,14 @@ const ratio = image.width / image.height;
     if (!text || !media) return;
     const ratio = Number(media.dataset.ratio);
     let width = parseFloat(media.style.width);
-    // Tamanho do texto deixado pelo último ajuste: o ResizeObserver
-    // dispara também por causa da largura que o próprio ajuste aplica, e
-    // esse disparo não abre um ciclo novo (é isso que impede o loop).
-    let settled = { width: -1, height: -1 };
+    // Tamanhos deixados pelo último ajuste: o ResizeObserver dispara
+    // também por causa da largura que o próprio ajuste aplica, e esse
+    // disparo não abre um ciclo novo (é isso que impede o loop).
+    let settled = { row: -1, width: -1, height: -1 };
+    const sizes = () => {
+      const t = text.getBoundingClientRect();
+      return { row: row.getBoundingClientRect().width, width: t.width, height: t.height };
+    };
 
     const fit = () => {
       if (!desktop.matches) return;
@@ -184,16 +189,19 @@ const ratio = image.width / image.height;
         },
         currentWidth: width,
         ratio,
+        rowWidth: row.getBoundingClientRect().width,
       }));
-      const rect = text.getBoundingClientRect();
-      settled = { width: rect.width, height: rect.height };
+      settled = sizes();
     };
 
-    new ResizeObserver(([entry]) => {
-      const { width: w, height: h } = entry.target.getBoundingClientRect();
-      if (Math.abs(w - settled.width) < 0.5 && Math.abs(h - settled.height) < 0.5) return;
+    const observer = new ResizeObserver(() => {
+      const now = sizes();
+      const same = (a: number, b: number) => Math.abs(a - b) < 0.5;
+      if (same(now.row, settled.row) && same(now.width, settled.width) && same(now.height, settled.height)) return;
       fit();
-    }).observe(text);
+    });
+    observer.observe(text);
+    observer.observe(row);
 
     // A altura do texto muda quando a fonte web substitui a de fallback.
     document.fonts.ready.then(fit);
