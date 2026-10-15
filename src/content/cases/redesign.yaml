@@ -16,18 +16,18 @@ content:
   summary:
     challenge:
       title: "Desafio"
-      description: "Seis meses, equipe enxuta, um app legado carregando 100 mil usuários e mais de R$ 100 milhões em receita"
+      description: "Seis meses, equipe enxuta e um app legado instável, com uma base consolidada de usuários e uma receita a proteger"
     solution:
       title: "Solução"
       description: "Discovery completo, redesenho de jornada e home screen, e mudança de modelo de negócio com apoio de consultoria"
     results:
       title: "Resultado"
-      description: "Em um ano, a nota da loja saiu de 3.4 para 4.7, a base ativa dobrou e 24 mil pessoas passaram a contratar um plano pago"
+      description: "Em um ano, a nota da loja saiu de 3.6 para 4.7, a base ativa quase dobrou e os pagantes, que não existiam, passaram a ser milhares"
 
   context:
     description:
-      - "O app nasceu focado só em cibersegurança, com o antivírus como funcionalidade mais usada, mirando o mercado B2B. Com o tempo, consolidou uma base e tanto: mais de 100 mil usuários, R$ 100 milhões em receita. Só que por trás desses números morava um código legado instável, do tipo que rende reclamação de usuário e de parceiro em doses parecidas."
-      - "O prazo pra resolver era curto, seis meses, com uma equipe enxuta, o que torna qualquer decisão errada mais cara do que o normal. O objetivo ia além de modernizar a experiência, exigia também mitigar risco e proteger a receita existente."
+      - "O app nasceu focado só em cibersegurança, com o antivírus como funcionalidade mais usada, mirando o mercado B2B. Com o tempo, consolidou uma base e tanto de usuários e uma receita que precisava ser protegida. Só que por trás disso morava um código legado instável, do tipo que rende reclamação de usuário e de parceiro em doses parecidas."
+      - "O prazo para resolver era curto, seis meses, com uma equipe enxuta, o que torna qualquer decisão errada mais cara do que o normal. O objetivo ia além de modernizar a experiência, exigia também mitigar risco e proteger a receita existente."
     image: "../../assets/cases/redesign/legacy-app.png"
     caption: "Home screen legada"
 
@@ -39,7 +39,7 @@ content:
       - "O baixo uso de funcionalidades, sintoma de uma proposta de valor mal comunicada"
       - "A fricção nas permissões solicitadas ao usuário, com risco real de soar invasivo e quebrar confiança no primeiro contato"
       - "O mais traiçoeiro dos quatro: negligenciar funcionalidades essenciais em nome de uma simplificação bem-intencionada"
-    kpis: "Objetivos e KPIs, definidos com o time em três frentes: aumentar o reconhecimento da marca junto ao público-alvo, entender melhor o comportamento dos usuários pra entregar valor de forma mais clara, e acompanhar isso por métricas de crescimento da base ativa, nota nas lojas e conversão para pagantes."
+    kpis: "Objetivos e KPIs, definidos com o time em três frentes: aumentar o reconhecimento da marca junto ao público-alvo, entender melhor o comportamento dos usuários para entregar valor de forma mais clara, e acompanhar isso por métricas de crescimento da base ativa, nota nas lojas e conversão para pagantes."
 
   discovery:
     intro: "O processo como um todo teve a duração de 6 meses e foi dividido nas quatro fases abaixo:"
@@ -58,7 +58,7 @@ content:
         description: "1 mês de foco total no core do Design System (+1 designer) e 4 meses de prototipação contínua das jornadas"
     exploration:
       title: "Exploração"
-      description: "Três frentes de pesquisa rodaram em paralelo. O benchmark contra concorrentes revelou que recursos gratuitos são essenciais para atrair e reter clientes, que um tom educativo facilita o onboarding, e que pacotes de serviços em torno da assinatura é estratégia comum no setor. A análise de tendências de mercado apontou personalização de interface, transparência na coleta de dados, curadoria de conteúdo de segurança e gamificação como direções que o setor inteiro vem perseguindo. E teve as entrevistas qualitativas: 20 participantes, todos usuários ativos toda semana no último mês e na plataforma há pelo menos seis meses — critério pensado pra garantir que quem falasse já tivesse familiaridade real com o produto, não uma primeira impressão qualquer."
+      description: "Três frentes de pesquisa rodaram em paralelo. O benchmark contra concorrentes revelou que recursos gratuitos são essenciais para atrair e reter clientes, que um tom educativo facilita o onboarding, e que pacotes de serviços em torno da assinatura é estratégia comum no setor. A análise de tendências de mercado apontou personalização de interface, transparência na coleta de dados, curadoria de conteúdo de segurança e gamificação como direções que o setor inteiro vem perseguindo. E teve as entrevistas qualitativas: 20 participantes, todos usuários ativos toda semana no último mês e na plataforma há pelo menos seis meses — critério pensado para garantir que quem falasse já tivesse familiaridade real com o produto, não uma primeira impressão qualquer."
       images:
         - "../../assets/cases/redesign/competitors-mapping.png"
         - "../../assets/cases/redesign/interview.png"
@@ -70,7 +70,7 @@ content:
         - "../../assets/cases/redesign/impact-effort-matrix.png"
         - "../../assets/cases/redesign/crazy8.png"
     tests:
-      intro: "A ideia mais votada no Crazy-8s virou um protótipo de média fidelidade, testado com 8 usuários. O resultado geral: boa compreensão do produto e da jornada, navegação fluida, sem dificuldade relevante pra concluir o teste, mas ajustes de comunicação e layout ainda eram necessários pra uma usabilidade realmente boa."
+      intro: "A ideia mais votada no Crazy-8s virou um protótipo de média fidelidade, testado com 8 usuários. O resultado geral: boa compreensão do produto e da jornada, navegação fluida, sem dificuldade relevante para concluir o teste, mas ajustes de comunicação e layout ainda eram necessários para uma usabilidade realmente boa."
       groups:
         - title: "Boas-vindas"
           results:
@@ -115,14 +115,14 @@ content:
       description: "Atuei do Discovery ao Delivery. No Discovery, levantei suposições e o plano de pesquisa com o PM, analisei concorrentes e tendências em cibersegurança, conduzi pesquisas quali e quanti, e facilitei o workshop de Product Discovery em parceria com o PM. No Delivery, gerenciei entregas do time de design também com o apoio do PM, defini a estratégia do design system (governança, arquitetura de tokens, bibliotecas), os padrões de interface do app (alinhados à marca), prototipei componentes e ícones com outro designer sênior, e dei suporte tático aos imprevistos do projeto."
     designSystem:
       title: "Design System"
-      description: "Reconstruir do zero também significou construir a base que faltava. Foi criada uma biblioteca de ícones organizada por estilos, design tokens, e os componentes já documentados no Figma, pronto pra engenharia consumir."
+      description: "Reconstruir do zero também significou construir a base que faltava. Foi criada uma biblioteca de ícones organizada por estilos, design tokens, e os componentes já documentados no Figma, pronto para a engenharia consumir."
       images:
         - "../../assets/cases/redesign/ds-border-radius.png"
         - "../../assets/cases/redesign/ds-components.png"
         - "../../assets/cases/redesign/ds-documentation.png"
     home:
       title: "Home screen"
-      description: "A tela inicial foi reorganizada pra comunicar com clareza o status de proteção do usuário, distinguir recursos gratuitos de pagos sem ambiguidade, e dar feedback visual imediato sobre problemas de conexão ou do dispositivo. A hierarquia da informação passou a guiar o olhar para o que importava em cada momento."
+      description: "A tela inicial foi reorganizada para comunicar com clareza o status de proteção do usuário, distinguir recursos gratuitos de pagos sem ambiguidade, e dar feedback visual imediato sobre problemas de conexão ou do dispositivo. A hierarquia da informação passou a guiar o olhar para o que importava em cada momento."
       images:
         - "../../assets/cases/redesign/home-default.png"
         - "../../assets/cases/redesign/home-alert.png"
@@ -130,14 +130,14 @@ content:
 
   impact:
     highlights:
-      - value: "+24k"
+      - value: "0 → milhares"
         label: "Assinantes pagantes"
-      - value: "3.4 → 4.7"
+      - value: "3.6 → 4.7"
         label: "Nota na loja"
-      - value: "2x"
-        label: "Base ativa dobrou"
+      - value: "Quase 2x"
+        label: "Base ativa"
     description:
-      - "No primeiro ano completo, a base quase dobra, a nota da Play Store sobe de 3.4 para 4.7 e os usuários pagantes, inexistentes um ano antes, chegam a 24 mil. A melhora na nota tem mais de uma causa provável: a estabilidade do app recriado pesa tanto quanto a experiência que ele passou a entregar."
+      - "No primeiro ano completo, a base quase dobra, a nota da Play Store sobe de 3.6 para 4.7 e os usuários pagantes, inexistentes um ano antes, chegam à casa dos milhares. A melhora na nota tem mais de uma causa provável: a estabilidade do app recriado pesa tanto quanto a experiência que ele passou a entregar."
       - "O crescimento da base, esse sim, nasce quase todo do redesign. Dois riscos apareceram já no discovery: a fricção no onboarding e o baixo entendimento do valor das funcionalidades. A jornada de onboarding integrada e a nova hierarquia da home screen deram conta dos dois, deixando a comunicação com o usuário mais clara. Não à toa, a base ativa acelera nos meses seguintes ao lançamento dessas mudanças."
 
   plansAhead:
