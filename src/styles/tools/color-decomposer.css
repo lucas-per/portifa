@@ -5,6 +5,8 @@
     viraram .cd, e * virou .cd * (escopo: color-decomposer.test.ts);
   - os @font-face saíram: as três fontes são as mesmas do site (fonts.css);
   - a regra html { -webkit-text-size-adjust } saiu: só vale no <html>.
+  Exceção de design (decisão do Lucas, 2026-10-16): --font-title usa DM Sans,
+  não Plus Jakarta Sans, como o app desenhava na prática (ver design-notes.md).
   Os nomes curtos de variável (--bg, --fg...) ficam como no app. As que o JS
   define em tempo de execução estão listadas em var-usage.test.ts.
 */
@@ -29,7 +31,7 @@
   --warn-edge: #8a5f00;
 
   --font: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-title: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  --font-title: "DM Sans", system-ui, sans-serif;
   --font-label: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   /* Forma do site: cantos retos, bordas de 2 px, sombras duras sem blur (2 e 4 px, na escala de 2 em 2) */
   --r-strip: 0;

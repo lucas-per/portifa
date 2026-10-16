@@ -48,4 +48,11 @@ describe('CSS do Color Decomposer fica restrito à área da ferramenta', () => {
   it('não declara fontes: usa as do site (fonts.css)', () => {
     expect(css).not.toMatch(/@font-face/);
   });
+
+  // Exceção registrada no design-notes.md: os títulos da ferramenta usam DM Sans.
+  it('títulos em DM Sans, sem Plus Jakarta Sans no CSS da ferramenta', () => {
+    const fontTitle = css.match(/--font-title:\s*([^;]+);/)?.[1];
+    expect(fontTitle?.split(',')[0].trim()).toBe('"DM Sans"');
+    expect(css).not.toMatch(/Plus Jakarta Sans/);
+  });
 });
