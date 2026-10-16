@@ -16,4 +16,4 @@
 - [x] **6. Testes.** `state.test.ts` (hashes de referência, ida e volta, valores inválidos); `color-decomposer.test.ts` (todo seletor começa por `.cd`, sem `@font-face`); `var-usage.test.ts` aceita, só no CSS da ferramenta, as variáveis declaradas nele e as definidas em tempo de execução.
 - [x] **7. Navegador, local.** Comparar app (tag) e página com os mesmos hashes em 1440, 820 e 375px: estilo computado de cada elemento, textos, rótulos dos tons, variáveis do tema, hash, título, as quatro exportações, teclado e Ajuda. Umami com o script real e `/api/send` interceptado: arrastar slider não gera requisição; controle sem `data-exclude-hash`. axe em claro, escuro e mobile. Cabeçalho, rodapé e `<html>` iguais aos da home no modo escuro da ferramenta.
 - [x] **8. Docs.** Escala de forma e entrada da página em `docs/design-notes.md`; esta spec e este plano.
-- [ ] **9. Preview do Cloudflare.** Repetir as verificações do passo 7 no preview da branch e capturar 1440, 1024, 820 e 375px.
+- [x] **9. Preview do Cloudflare.** Repetir as verificações do passo 7 no preview da branch e capturar 1440, 1024, 820 e 375px.
