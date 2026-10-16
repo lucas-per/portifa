@@ -138,6 +138,21 @@ Convenção geral, válida para todo `clickable-*` do tipo botão (não é inten
 
 ---
 
+## Escala de forma (UaiUI)
+
+Decisão fechada em 2026-10-16. Vale para o site e para tudo que entrar nele (ferramentas incluídas), e é a base da UaiUI.
+
+| Elemento | Espessura |
+|---|---|
+| Dividers | 3px e 5px |
+| Bordas de campos, painéis, cards e tags | 2px |
+| Bordas de botões | 3px |
+| Sombras duras, sem blur | 3px e 5px |
+
+O site já segue a escala. Exceções que não são forma e ficam fora dela: o anel de foco (`outline` de 2px) e marcadores pontuais, como a faixa de aviso dos tons do Color Decomposer.
+
+---
+
 ## Entradas
 
 <!--
@@ -352,3 +367,19 @@ Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desk
   ```
 - **Guarda:** `fonts.test.ts` falha se o arquivo perder →, ←, ×, ↑ ou ↓. Caractere novo que apareça em texto de título precisa entrar no subset; o navegador não avisa quando cai numa fonte do sistema.
 - **Levantamento:** nas 4 páginas geradas, a seta era o único caractere fora do subset nas 3 fontes (Plus Jakarta Sans, DM Sans e JetBrains Mono).
+
+### Página do Color Decomposer (`/ferramentas/color-decomposer/`) — 2026-10-16
+
+Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app/`) portada sem redesenho, com o motor como dependência (`github:lucas-per/color-decomposer#v0.2.0`). A partir daqui, a interface oficial é esta; o `app/` do repositório da ferramenta fica congelado. Spec: `docs/superpowers/specs/2026-10-16-color-decomposer-page-design.md`.
+
+- **Tema derivado só na área da ferramenta:** fundo, texto e bordas saem dos neutros da cor escolhida e são aplicados no `.cd` (com `data-theme` e `color-scheme`), nunca no `<html>`. Cabeçalho, rodapé e o modo escuro do site não mudam. O CSS do app tem todo seletor prefixado por `.cd` (`src/styles/tools/color-decomposer.css`, garantido por teste).
+- **Duas faixas de 5px, aceitas na fase 1:** a azul do cabeçalho do site e a do cabeçalho da ferramenta, na cor digitada. A segunda muda com a cor, então é comportamento da ferramenta.
+- **Breakpoints diferentes:** a ferramenta vira coluna única em 900px; o site troca de cabeçalho em 767px. Entre 768 e 900px aparecem o cabeçalho desktop do site e o layout de celular da ferramenta. Unificar fica para a fase 2.
+- **Celular:** a página tem `scroll-padding-top` igual à altura do cabeçalho sticky mais 8px, para os atalhos da Ajuda e o foco não pararem escondidos sob ele.
+- **Exceção de tipografia (decisão do Lucas, 2026-10-16):** os títulos da ferramenta usam **DM Sans**, não Plus Jakarta Sans. Vale para tudo que usa `--font-title` dentro do `.cd`: nome da ferramenta, "Ajustes", títulos dos detalhes, do diálogo e da Ajuda, os "Aa" dos tons e da amostra e os números do guia rápido. É como o app desenhava na prática (ele não pré-carregava a Plus Jakarta Sans e, com `font-display: optional`, caía na DM Sans). Os pesos 700 e 800 pedidos pelo CSS saem como 600, o máximo declarado no `@font-face` do site, sem negrito sintético, igual ao app. Fora do `.cd` nada muda. Guarda: `color-decomposer.test.ts`.
+- **Umami:** só esta página usa `data-exclude-hash`, porque o estado da ferramenta mora no hash e muda a cada ajuste. Exportar, Copiar tudo e Baixar arquivo enviam eventos (`color-decomposer-exportar`, `-copiar-tudo`, `-baixar-arquivo`).
+- **Onde o app diverge da escala de forma** (troca na fase 2, junto com os componentes do site):
+  - sombras de 2 e 4px (`--shadow-comp`, `--shadow-comp-hover`, `--shadow-layout` e a sombra do aviso amarelo), em vez de 3 e 5px;
+  - bordas de 2px nos botões (`.btn`, botão de copiar dos tons), em vez de 3px;
+  - divisores de 2px (linha do painel de ajustes, "Ajustes avançados", linha das abas, seções e perguntas da Ajuda, "No modo …" dos detalhes), em vez de 3px.
+  Campos, painéis, células da faixa e tags já estão em 2px, e a faixa do cabeçalho em 5px.

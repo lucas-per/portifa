@@ -1,7 +1,7 @@
 {
   "name": "portifa",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "astro": "^7.3.1",
+    "color-decomposer": "github:lucas-per/color-decomposer#v0.2.0",
     "sharp": "^0.35.4"
   },
   "devDependencies": {

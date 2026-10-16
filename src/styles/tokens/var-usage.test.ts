@@ -38,6 +38,18 @@ function collectUsedVars(content: string) {
   return names;
 }
 
+/**
+ * Ferramentas com tema próprio (src/styles/tools/): além dos tokens do site,
+ * valem as variáveis declaradas no próprio arquivo (todas sob .cd) e as que o
+ * JS da ferramenta define em tempo de execução, listadas aqui.
+ */
+const toolRuntimeVars: Record<string, string[]> = {
+  // components/tools/color-decomposer/main.js: --s, --t e --b (superfície,
+  // texto e borda de cada tom), --c (amostras de cor), --n (número de tons da
+  // faixa), --caret (seta dos detalhes) e --track (trilho dos controles).
+  'styles/tools/color-decomposer.css': ['s', 't', 'b', 'c', 'n', 'caret', 'track'],
+};
+
 describe('todo var(--token) usado em src/ resolve a um token declarado', () => {
   const declared = new Set([
     ...collectDeclaredVars(readTokenFile('primitives.css')),
@@ -57,7 +69,11 @@ describe('todo var(--token) usado em src/ resolve a um token declarado', () => {
     it(`${relative} não referencia var(--token) indefinido`, () => {
       const content = readFileSync(file, 'utf-8');
       const used = collectUsedVars(content);
-      const undeclared = [...used].filter((name) => !declared.has(name));
+      const runtime = toolRuntimeVars[relative];
+      const allowed = runtime
+        ? new Set([...declared, ...collectDeclaredVars(content), ...runtime])
+        : declared;
+      const undeclared = [...used].filter((name) => !allowed.has(name));
       expect(undeclared, `token(s) indefinido(s): ${undeclared.map((n) => `--${n}`).join(', ')}`).toEqual([]);
     });
   }
