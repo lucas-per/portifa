@@ -44,7 +44,6 @@ const KNOWN_EXCEPTIONS: string[] = [
   'styles/tools/color-decomposer.css::margin-left: .625rem',
   'styles/tools/color-decomposer.css::gap: .375rem',
   'styles/tools/color-decomposer.css::padding-left: .625rem',
-  'styles/tools/color-decomposer.css::padding: 3px',
   'styles/tools/color-decomposer.css::margin-top: -.625rem',
   'styles/tools/color-decomposer.css::padding: .875rem 1rem',
   'styles/tools/color-decomposer.css::gap: .375rem',
