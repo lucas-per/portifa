@@ -1,5 +1,6 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/chrome.js. Mudanças da integração ao site: import do pacote
-// color-decomposer e applyChrome recebe o elemento raiz da ferramenta (no app era o <html>).
+// color-decomposer e applyChrome recebe o elemento raiz da ferramenta (no app era o <html>). Divergência da tag (2026-10-17):
+// --edge é calculado contra o fundo e o painel, como o --muted (docs/design-notes.md).
 // A própria interface usa a paleta gerada: fundo, texto e bordas saem dos neutros da cor escolhida.
 import { contrastRatio } from 'color-decomposer';
 
@@ -32,8 +33,8 @@ export function chromeTokens(theme, name, mode, preset) {
     // texto secundário: o primeiro neutro que chega a 5 para 1 (passa no AA com folga) no fundo e no painel.
     // Em escalas com poucos neutros o painel é mais escuro, então o painel também conta.
     muted: firstLevelWith(n.surface, levels, [bg, panel], 5),
-    // contornos de campos precisam de 3 para 1 contra o fundo (WCAG 1.4.11)
-    edge: firstLevelWith(n.surface, levels, bg, 3.2),
+    // divisores precisam de 3 para 1 contra o fundo e contra o painel (WCAG 1.4.11); o painel é mais escuro e é onde ficam os divisores
+    edge: firstLevelWith(n.surface, levels, [bg, panel], 3.2),
     // divisores decorativos
     line: n.border[levels[0]],
     ring: fg,
