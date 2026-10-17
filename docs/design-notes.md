@@ -389,6 +389,11 @@ Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app
 - **Botões ghost (`.btn--quiet`):** sem padding lateral nem borda, para o texto alinhar com a borda do conteúdo; altura mínima de 44px com padding vertical de 8px. Sem fundo e sem sublinhado fixo (o app sublinhava sempre). Hover muda a cor (de `--fg` para `--muted`, só em `@media (hover: hover)`); pressed e aberto (`aria-expanded`/`aria-pressed`) sublinham; foco com contorno de 2px e `outline-offset` de 2px. Mesmo padrão do `HeaderLink`. O botão de copiar do código da Ajuda deixou de ter 36px de altura.
 - **"Fechar detalhes":** no canto superior direito, na linha do título, também no celular (o app empilhava abaixo). A ordem no DOM não mudou.
 
+**Comportamento da ferramenta (2026-10-17), divergências do app v0.2.0:**
+- **Intensidade:** o número ao lado do rótulo é o valor real. Se o valor pedido passa do máximo da cor, o controle só encaixa no real ao soltar (evento `change`), não durante o arraste; o aviso continua depois do encaixe, até a próxima mudança, num `role="status"`. No teclado cada seta dispara `input` e `change`: acima do máximo o controle volta ao máximo a cada passo.
+- **Auto e Cor viva:** indisponíveis ficam com `aria-disabled="true"` (e não `disabled`), continuam no foco do teclado e do leitor de tela, e não executam a ação. O motivo aparece em texto abaixo dos botões, ligado por `aria-describedby` (`auto-why`, `vivid-why`). Textos em `strings.js` (`tune.autoSupport` a `tune.vividSame`).
+- Desfazer o Auto continua pelo Redefinir ou trocando a cor; um Auto reversível fica para depois.
+- 
 ### Regras do sistema — 2026-10-17
 
 - **Múltiplos de 4:** espaçamento e dimensões que definimos (`padding`, `margin`, `gap`, `width`, `height`, `min-` e `max-`) são múltiplos de 4px (em rem, de 0,25rem), exceto 0, 1 e 2. Fora da regra: a escala de forma (bordas de 2 e 3px, dividers e sombras de 3 e 5px), tipografia e dimensões que vêm do conteúdo. `calc()`, `clamp()`, `min()` e `max()` não são avaliados. Guarda: `src/styles/spacing-scale.test.ts`.

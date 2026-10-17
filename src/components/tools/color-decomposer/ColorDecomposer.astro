@@ -7,7 +7,9 @@
     no <html>, então cabeçalho e rodapé do site não mudam;
   - <main class="stage"> virou <div>, com o mesmo id, classe e tabindex: a
     página já tem o <main> do BaseLayout;
-  - Exportar, Copiar tudo e Baixar arquivo ganharam data-umami-event.
+  - Exportar, Copiar tudo e Baixar arquivo ganharam data-umami-event;
+  - Auto e Cor viva usam aria-disabled (e não disabled) e têm o motivo em texto visível (auto-why, vivid-why);
+  - o aviso da Intensidade (tune-note) é um role="status", sempre presente e vazio quando não há o que avisar.
   O CSS é global, mas com todo seletor começando por .cd (os elementos que o
   JS cria não recebem o atributo de escopo do Astro).
 */
@@ -76,7 +78,7 @@ import '../../../styles/tools/color-decomposer.css';
               <div class="tune__row">
                 <label class="tune__label" for="tuneC">Intensidade <output id="tuneC-out" for="tuneC"></output></label>
                 <input class="range range--tune" type="range" id="tuneC" min="0" max="40" step="1" aria-describedby="tune-note">
-                <p class="field__help" id="tune-note" hidden></p>
+                <p class="field__help" id="tune-note" role="status"></p>
               </div>
               <div class="tune__row">
                 <label class="tune__label" for="tuneH">Matiz <output id="tuneH-out" for="tuneH"></output></label>
@@ -84,8 +86,12 @@ import '../../../styles/tools/color-decomposer.css';
               </div>
             </details>
           <div class="tune__actions">
-            <button type="button" class="btn" id="auto" disabled aria-describedby="tune-status" aria-label="Auto: colocar a cor no melhor nível da paleta">Auto</button>
-            <button type="button" class="btn" id="vivid" disabled aria-pressed="false" aria-describedby="tune-status" aria-label="Cor viva: dar mais intensidade aos tons">Cor viva</button>
+            <button type="button" class="btn" id="auto" aria-disabled="true" aria-describedby="auto-why" aria-label="Auto: colocar a cor no melhor nível da paleta">Auto</button>
+            <button type="button" class="btn" id="vivid" aria-disabled="true" aria-pressed="false" aria-describedby="vivid-why" aria-label="Cor viva: dar mais intensidade aos tons">Cor viva</button>
+          </div>
+          <div class="tune__why">
+            <p class="field__help" id="auto-why" hidden></p>
+            <p class="field__help" id="vivid-why" hidden></p>
           </div>
         </div>
 

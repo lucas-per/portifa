@@ -1,4 +1,4 @@
-// Origem: lucas-per/color-decomposer@v0.2.0, app/strings.js. Cópia literal.
+// Origem: lucas-per/color-decomposer@v0.2.0, app/strings.js. Divergência da tag (2026-10-17): os textos tune.autoSupport a tune.vividSame.
 // Textos dinâmicos da interface (os fixos ficam no index.html). Escritos com a skill ux-microcopy:
 // PT-BR, "você", sentence case, sem pontuação em rótulos e botões.
 
@@ -67,6 +67,14 @@ export const T = {
     some: (n, total, level) => `${n} de ${total} tons quase iguais ao tom ao lado, marcados abaixo da barra.${level ? ` O Auto coloca sua cor no nível ${level} e refaz a paleta.` : ''}`,
     okVivid: (level) => `Tons bem separados. Sua cor está no nível ${level}. Quer mais cor nos tons? Use a Cor viva.`,
     vividOn: 'Cor viva aplicada.',
+    // por que o Auto e a Cor viva não estão disponíveis (texto visível abaixo dos botões)
+    autoSupport: 'Auto indisponível com cor de apoio: o nível fica fixo.',
+    autoBest: 'Auto indisponível: sua cor já está no melhor nível.',
+    autoSeparated: 'Auto indisponível: os tons já estão bem separados.',
+    vividSupport: 'Cor viva indisponível com cor de apoio.',
+    vividAuto: 'Cor viva indisponível: use o Auto antes.',
+    vividNoAuto: 'Cor viva indisponível: ela só vale depois de o Auto mudar o nível da cor.',
+    vividSame: 'Cor viva indisponível: ela não mudaria a paleta de forma visível.',
     auto: 'Auto',
     autoAria: 'Auto: colocar a cor no melhor nível da paleta'
   },
