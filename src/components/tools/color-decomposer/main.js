@@ -504,7 +504,7 @@ function bindControls() {
   });
   for (const id of ['tuneL', 'tuneC', 'tuneH']) {
     $(id).addEventListener('input', () => {
-      tune = { ...tune, L: Number($('tuneL').value), C: Number($('tuneC').value), h: Number($('tuneH').value) };
+      tune = { ...tune, L: Number($('tuneL').value), C: Number($('tuneC').value), h: Number($('tuneH').value), snapped: false };
       const r = oklchToHex(tune.L / 100, tune.C / 100, tune.h);
       tune.hex = r.hex;
       if (editing === 'support' && hasSupport()) {
@@ -517,6 +517,13 @@ function bindControls() {
       update();
     });
   }
+  // Intensidade pedida além do máximo da cor: ao soltar, o controle encaixa no valor real e o aviso continua
+  $('tuneC').addEventListener('change', () => {
+    const used = oklchToHex(tune.L / 100, tune.C / 100, tune.h);
+    if (tune.C / 100 - used.chroma <= 0.005) return;
+    tune = { ...tune, C: Math.round(used.chroma * 100), snapped: true };
+    syncTune();
+  });
   const setSupport = (hex) => { state.support = hex; update(); };
   $('support-hex').addEventListener('input', () => {
     const hex = toHex($('support-hex').value);
@@ -544,11 +551,15 @@ function bindControls() {
   });
   for (const r of document.querySelectorAll('input[name="edit"]')) r.addEventListener('change', () => { editing = r.value; update(); });
   $('auto').addEventListener('click', () => {
+    if ($('auto').getAttribute('aria-disabled') === 'true') return;
     state.lvl = String(suggestBrandLevel(state.color, state.preset));
     update();
     $('tune-status').focus(); // o botão fica desabilitado: o foco vai para o resultado, que é lido em seguida
   });
-  $('vivid').addEventListener('click', () => { state.vivid = !state.vivid; update(); });
+  $('vivid').addEventListener('click', () => {
+    if ($('vivid').getAttribute('aria-disabled') === 'true') return;
+    state.vivid = !state.vivid; update();
+  });
   for (const id of FIELD_SIMPLE) {
     $(id).addEventListener('change', (e) => {
       state[id] = e.target.value;
@@ -579,7 +590,6 @@ function syncTune() {
   }
   $('tuneL').value = tune.L; $('tuneC').value = tune.C; $('tuneH').value = tune.h;
   $('tuneL-out').textContent = `${tune.L}%`;
-  $('tuneC-out').textContent = decimal(tune.C / 100);
   $('tuneH-out').textContent = `${tune.h}°`;
   const L = tune.L / 100, C = tune.C / 100;
   const stops = (arr) => `linear-gradient(to right, ${arr.join(', ')})`;
@@ -587,18 +597,26 @@ function syncTune() {
   $('tuneC').style.setProperty('--track', stops([0, 0.1, 0.2, 0.3, 0.4].map((c) => `oklch(${L} ${c} ${tune.h})`)));
   $('tuneH').style.setProperty('--track', stops(Array.from({ length: 13 }, (_, i) => `oklch(${L} ${C} ${i * 30})`)));
   const used = oklchToHex(L, C, tune.h);
-  const note = $('tune-note');
   const clipped = C - used.chroma > 0.005; // só avisa quando a diferença aparece na escala do controle (0,01)
-  note.hidden = !clipped;
-  if (clipped) note.textContent = T.tune.clipped(decimal(used.chroma));
+  // o valor ao lado do rótulo é o real; o controle só encaixa nele ao soltar (evento change)
+  $('tuneC-out').textContent = decimal(clipped ? used.chroma : C);
+  // o aviso fica depois do encaixe, até a próxima mudança; só se reescreve quando o texto muda (role="status")
+  const text = clipped || tune.snapped ? T.tune.clipped(decimal(used.chroma)) : '';
+  if ($('tune-note').textContent !== text) $('tune-note').textContent = text;
 }
 
 function renderMini() {
   const { sep, suggested, can } = autoState();
   if (!sep) return;
-  $('auto').disabled = !can;
   const vividOk = vividAvailable();
-  $('vivid').disabled = !vividOk;
+  // aria-disabled: o botão continua no foco do teclado e do leitor de tela, sem executar a ação; o motivo fica à vista
+  const why = (id, ok, text) => {
+    $(id).setAttribute('aria-disabled', String(!ok));
+    $(`${id}-why`).hidden = ok;
+    $(`${id}-why`).textContent = ok ? '' : text;
+  };
+  why('auto', can, hasSupport() ? T.tune.autoSupport : suggested === brandLevel() ? T.tune.autoBest : T.tune.autoSeparated);
+  why('vivid', vividOk, hasSupport() ? T.tune.vividSupport : !anchored() ? (can ? T.tune.vividAuto : T.tune.vividNoAuto) : T.tune.vividSame);
   $('vivid').setAttribute('aria-pressed', String(state.vivid));
   const surface = current.theme.colors[NAME][state.mode].palette.surface;
   const flagged = new Set(sep.tones);
