@@ -131,6 +131,14 @@
      dois só ficam alinhados se compartilharem a mesma fórmula. Só é válida
      acima do breakpoint mobile, onde o grid do Skills vira coluna única. */
   --grid-col-4-width: calc((100% - 3 * var(--scale-x10)) / 4);
+
+  /* Altura do cabeçalho mobile (Figma header-mobile, 254:1007): 16px, o
+     miolo de 46px, 16px e o divider de 5px = 83px. Fonte única: o próprio
+     cabeçalho, o scroll-padding-top da página da ferramenta e o accordion
+     dos cases leem estas variáveis. */
+  --header-mobile-core: 2.875rem;
+  --header-mobile-divider: 5px;
+  --header-mobile-height: calc(var(--scale-x4) * 2 + var(--header-mobile-core) + var(--header-mobile-divider));
 }
 
 @media (prefers-color-scheme: dark) {

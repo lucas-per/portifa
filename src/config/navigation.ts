@@ -3,6 +3,10 @@ export type MacroSection = {
   label: string;
   path: string;
   enabled: boolean;
+  /** Entra como link no cabeçalho do site (a home já é o logo). */
+  inHeader?: boolean;
+  /** Rótulo curto, visível no cabeçalho mobile; o nome acessível segue `label`. */
+  shortLabel?: string;
 };
 
 /**
@@ -12,6 +16,15 @@ export type MacroSection = {
  */
 export const macroSections: MacroSection[] = [
   { key: 'portfolio', label: 'Portfólio', path: '/', enabled: true },
+  // Trocar por "Ferramentas" (/ferramentas/) é só mudar label, shortLabel e path.
+  {
+    key: 'color-decomposer',
+    label: 'Color Decomposer',
+    shortLabel: 'Decomposer',
+    path: '/ferramentas/color-decomposer/',
+    enabled: true,
+    inHeader: true,
+  },
   { key: 'artigos', label: 'Artigos', path: '/artigos', enabled: false },
   { key: 'projetos', label: 'Projetos', path: '/projetos', enabled: false },
   { key: 'fotos', label: 'Fotos', path: '/fotos', enabled: false },
@@ -19,4 +32,24 @@ export const macroSections: MacroSection[] = [
 
 export function getEnabledSections(): MacroSection[] {
   return macroSections.filter((section) => section.enabled);
+}
+
+export function getHeaderSections(): MacroSection[] {
+  return getEnabledSections().filter((section) => section.inHeader);
+}
+
+function withTrailingSlash(path: string): string {
+  return path.endsWith('/') ? path : `${path}/`;
+}
+
+/**
+ * `aria-current` do link do cabeçalho: "page" na própria rota, "true" numa
+ * rota filha da seção (ex.: /ferramentas/ quando a página é uma ferramenta).
+ */
+export function getAriaCurrent(pathname: string, sectionPath: string): 'page' | 'true' | undefined {
+  const current = withTrailingSlash(pathname);
+  const section = withTrailingSlash(sectionPath);
+  if (current === section) return 'page';
+  if (section !== '/' && current.startsWith(section)) return 'true';
+  return undefined;
 }
