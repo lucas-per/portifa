@@ -1,24 +1,55 @@
 ---
 import Button from '../ui/Button.astro';
 import logo from '../../assets/icons/logo.svg';
+import logoReduced from '../../assets/icons/logo-reduced.svg';
+import HeaderLink from './HeaderLink.astro';
+import { getAriaCurrent, getHeaderSections } from '../../config/navigation';
+import { getHeaderLinkText } from '../../utils/header-link';
 import mailIcon from '../../assets/icons/mail-on-accent.svg';
+
+const sections = getHeaderSections();
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
     <a href="/" class="site-header__logo clickable-link-internal-home">
-      <img src={logo.src} width="308" height="58" alt="Lucas Pereira" />
+      <img
+        class="site-header__logo-full"
+        src={logo.src}
+        width="308"
+        height="58"
+        alt="Lucas Pereira"
+      />
+      <img
+        class="site-header__logo-reduced"
+        src={logoReduced.src}
+        width="54"
+        height="46"
+        alt="Lucas Pereira"
+      />
     </a>
-    <div class="site-header__cta">
-      <Button href="/#sobre-mim" variant="outline-accent" class="clickable-anchor-aboutme">
-        Sobre mim
-      </Button>
-      <Button href="mailto:oi@lpereira.me" variant="filled-accent" class="clickable-mailto-header">
-        Contato
-        <Fragment slot="icon">
-          <img src={mailIcon.src} width="24" height="24" alt="" />
-        </Fragment>
-      </Button>
+    <div class="site-header__actions">
+      <div class="site-header__pages">
+        {sections.map((section) => (
+          <HeaderLink
+            href={section.path}
+            text={getHeaderLinkText(section, false).text}
+            current={getAriaCurrent(Astro.url.pathname, section.path)}
+            class={`clickable-link-internal-${section.key}`}
+          />
+        ))}
+      </div>
+      <div class="site-header__cta">
+        <Button href="/#sobre-mim" variant="outline-accent" class="clickable-anchor-aboutme">
+          Sobre mim
+        </Button>
+        <Button href="mailto:oi@lpereira.me" variant="filled-accent" class="clickable-mailto-header">
+          Contato
+          <Fragment slot="icon">
+            <img src={mailIcon.src} width="24" height="24" alt="" />
+          </Fragment>
+        </Button>
+      </div>
     </div>
   </div>
 </header>
@@ -37,17 +68,55 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
     box-sizing: border-box;
     max-width: 1440px;
     margin: 0 auto;
-    padding: var(--scale-x8) var(--scale-x20);
+    /* Tablet: o Figma só tem 1440 e 360. Aqui o padding lateral acompanha o
+       do mobile, senão o cabeçalho não cabe em 768px. */
+    padding: var(--scale-x8) var(--scale-x5);
   }
 
   .site-header__logo {
     display: inline-flex;
+    flex-shrink: 0;
   }
 
+  .site-header__logo-full {
+    display: none;
+  }
+
+  /* Figma row-btns (605:1165): 56px entre o link e os botões. */
+  .site-header__actions {
+    display: flex;
+    gap: var(--scale-x14);
+    align-items: center;
+  }
+
+  .site-header__pages {
+    display: flex;
+    gap: var(--scale-x8);
+    align-items: center;
+  }
+
+  /* Figma row-cta (605:1042): 32px entre "Sobre mim" e "Contato". */
   .site-header__cta {
     display: flex;
-    gap: var(--scale-x12);
+    gap: var(--scale-x8);
     align-items: center;
+  }
+
+  /* Logo completo e padding de 88px (Figma 98:398) a partir de 1160px:
+     o menor X medido em que o cabeçalho cabe (1132px) mais folga. Abaixo
+     disso, logo reduzido (o do mobile) e padding de 20px. */
+  @media (min-width: 1160px) {
+    .site-header__inner {
+      padding: var(--scale-x8) var(--scale-x20);
+    }
+
+    .site-header__logo-full {
+      display: block;
+    }
+
+    .site-header__logo-reduced {
+      display: none;
+    }
   }
 
   /* No mobile, o header vira o layout próprio de HeaderMobile.astro

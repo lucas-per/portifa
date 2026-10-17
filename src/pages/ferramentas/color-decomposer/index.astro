@@ -19,12 +19,13 @@ const description =
 </BaseLayout>
 
 <style is:global>
-  /* No celular o cabeçalho do site é sticky (HeaderMobile: 20 + 58 + 20 de
-     altura e 5 de borda = 103px). Sem esta folga, o foco e os atalhos da Ajuda
-     (scrollIntoView) param com o alvo escondido sob ele (WCAG 2.4.11). */
+  /* No celular o cabeçalho do site é sticky e a altura dele vem de
+     --header-mobile-height (HeaderMobile.astro). Sem esta folga, o foco e os
+     atalhos da Ajuda (scrollIntoView) param com o alvo escondido sob ele
+     (WCAG 2.4.11). */
   @media (max-width: 767px) {
     html {
-      scroll-padding-top: calc(103px + var(--scale-x2));
+      scroll-padding-top: calc(var(--header-mobile-height) + var(--scale-x2));
     }
   }
 </style>

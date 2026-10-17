@@ -1,44 +1,51 @@
 ---
-import logoMobile from '../../assets/icons/logo-mobile.svg';
 import logoReduced from '../../assets/icons/logo-reduced.svg';
 import mailIcon from '../../assets/icons/mail-on-accent.svg';
+import HeaderLink from './HeaderLink.astro';
+import { getAriaCurrent, getHeaderSections } from '../../config/navigation';
+import { getHeaderLinkText } from '../../utils/header-link';
+
+const sections = getHeaderSections();
 ---
 
 <header class="site-header-mobile">
   <div class="site-header-mobile__core">
     <a href="/" class="site-header-mobile__logo clickable-link-internal-home">
-      <img
-        class="site-header-mobile__logo-full"
-        src={logoMobile.src}
-        width="160"
-        height="58"
-        alt="Lucas Pereira"
-      />
-      <img
-        class="site-header-mobile__logo-reduced"
-        src={logoReduced.src}
-        width="68"
-        height="58"
-        alt="Lucas Pereira"
-      />
+      <img src={logoReduced.src} width="54" height="46" alt="Lucas Pereira" />
     </a>
-    <a
-      href="mailto:oi@lpereira.me"
-      class="site-header-mobile__cta clickable-mailto-header"
-      aria-label="Enviar e-mail para oi@lpereira.me"
-    >
-      <img src={mailIcon.src} width="24" height="24" alt="" />
-    </a>
+    <div class="site-header-mobile__cta-row">
+      {sections.map((section) => {
+        const { text, ariaLabel } = getHeaderLinkText(section, true);
+        return (
+          <HeaderLink
+            href={section.path}
+            text={text}
+            ariaLabel={ariaLabel}
+            current={getAriaCurrent(Astro.url.pathname, section.path)}
+            size="sm"
+            class={`clickable-link-internal-${section.key}`}
+          />
+        );
+      })}
+      <a
+        href="mailto:oi@lpereira.me"
+        class="site-header-mobile__cta clickable-mailto-header"
+        aria-label="Enviar e-mail para oi@lpereira.me"
+      >
+        <img src={mailIcon.src} width="24" height="24" alt="" />
+      </a>
+    </div>
   </div>
+  <div class="site-header-mobile__divider"></div>
 </header>
 
 <style>
   .site-header-mobile {
     display: none;
     flex-direction: column;
-    padding: var(--scale-x5) 0;
+    gap: var(--scale-x4);
+    padding-top: var(--scale-x4);
     background-color: var(--surface-bg-off-white-primary);
-    border-bottom: 5px solid var(--border-accent-strong);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -48,6 +55,7 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: var(--header-mobile-core);
     padding: 0 var(--scale-x5);
   }
 
@@ -55,36 +63,27 @@ import mailIcon from '../../assets/icons/mail-on-accent.svg';
     display: inline-flex;
   }
 
-  .site-header-mobile__logo-reduced {
-    display: none;
+  .site-header-mobile__cta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--scale-x6);
   }
 
-  /* Telas estreitas (<=360px) + fonte do sistema ampliada apertam o
-     padding/gap (em rem) entre a logo e o botão de contato ao ponto de
-     cortar um dos dois — troca pra logo-reduced (só a marca "LP", sem
-     o nome, Figma node 412:335) dá mais respiro sem quebrar a linha.
-     É uma aproximação fixa por largura de tela, não detecção real de
-     zoom/fonte (que exigiria JS) — aceito como solução deliberada. */
-  @media (max-width: 360px) {
-    .site-header-mobile__logo-full {
-      display: none;
-    }
-
-    .site-header-mobile__logo-reduced {
-      display: inline-flex;
-    }
+  .site-header-mobile__divider {
+    height: var(--header-mobile-divider);
+    background-color: var(--surface-bg-accent-strong);
   }
 
   /* Mesmo visual do button--filled-accent (Button.astro), só que sem
-     label — o header mobile mostra apenas o ícone (Figma, node 236:1784,
-     row-cta), então em vez de reaproveitar o componente Button (que
+     label — o header mobile mostra apenas o ícone (Figma, node 605:1704,
+     78 x 46), então em vez de reaproveitar o componente Button (que
      sempre renderiza um span de label, mesmo vazio, e introduziria um
      gap indesejado) replico as mesmas tokens aqui. */
   .site-header-mobile__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--scale-x3) var(--scale-x6);
+    padding: var(--scale-x2) var(--scale-x6);
     border: 3px solid var(--button-border-neutral-strong);
     background-color: var(--button-bg-accent-filled-regular);
     box-shadow: var(--shadow-comp-neutral);
