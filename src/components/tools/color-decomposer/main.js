@@ -625,8 +625,25 @@ function renderMini() {
   const others = levels.filter((l) => l !== brandLevel());
   const pick = others.length <= 8 ? others : Array.from({ length: 8 }, (_, i) => others[Math.round((i * (others.length - 1)) / 7)]);
   const tones = (list) => list.map((l) => { const sw = document.createElement('i'); sw.style.setProperty('--c', surface[l]); return sw; });
-  $('mini-start').replaceChildren(...tones(pick.slice(0, Math.ceil(pick.length / 2))));
-  $('mini-end').replaceChildren(...tones(pick.slice(Math.ceil(pick.length / 2))));
+  const half = Math.ceil(pick.length / 2);
+  const left = pick.slice(0, half), right = pick.slice(half);
+  $('mini-start').replaceChildren(...tones(left));
+  $('mini-end').replaceChildren(...tones(right));
+  // marcação dos tons quase iguais ao vizinho, sob a faixa; a ordem é a que se vê (faixa, seletor, faixa)
+  const seen = [...left, brandLevel(), ...right];
+  const flagged = new Set(sep.tones);
+  const flagFor = (l, i) => {
+    const f = document.createElement('b');
+    if (flagged.has(l)) {
+      f.className = 'is-flag';
+      if (!flagged.has(seen[i - 1])) f.classList.add('is-start');
+      if (!flagged.has(seen[i + 1])) f.classList.add('is-end');
+    }
+    return f;
+  };
+  $('mini-flags-start').replaceChildren(...left.map((l, i) => flagFor(l, i)));
+  $('mini-flags-mid').replaceChildren(flagFor(brandLevel(), left.length));
+  $('mini-flags-end').replaceChildren(...right.map((l, i) => flagFor(l, left.length + 1 + i)));
   $('mini-support').hidden = !hasSupport();
   if (hasSupport()) $('mini-support').style.setProperty('--c', state.support);
   const shown = (lvl) => (state.mode === 'dark' ? levels[0] + levels.at(-1) - lvl : lvl);

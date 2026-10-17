@@ -396,7 +396,7 @@ Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app
 
 **Mini paleta (2026-10-17), Figma `hexrow-new` (608:231):** quatro tons mais claros, o seletor de cor (44px de toque, amostra de 32px) e quatro mais escuros, tudo num bloco que ocupa a largura que sobra ao lado do campo de HEX (164px em 268px de linha). As faixas usam `flex: 1`; os 13,75 e 14,25px do Figma são resultado de layout. Divergências:
 - Campo de HEX com 96px (6rem), não 98px, para seguir os múltiplos de 4; o bloco continua com 164px.
-- Os 8 tons vêm dos níveis da paleta menos o da marca (que é o seletor); no Aplica, 8 espaçados por igual. A marcação dos tons parecidos sob a faixa saiu; o aviso continua no texto sob o campo e no painel dos tons.
+- Os 8 tons vêm dos níveis da paleta menos o da marca (que é o seletor); no Aplica, 8 espaçados por igual. A marcação amarela dos tons parecidos continua sob a faixa (decisão do Lucas, 2026-10-17), agora sob os 8 tons mostrados e sob o seletor, na ordem em que se vê; o frame novo não a desenha.
 - Cor de apoio (o Figma não desenha): uma amostra decorativa (`aria-hidden`) de 32x44px, no mesmo desenho do seletor (borda de 2px, amostra interna de 20x32px), logo à direita dele; as faixas encolhem para abrir espaço.
 - O seletor da cor de apoio e o da principal passam a ter a amostra de 32px (antes 34px); sai a exceção `padding: 3px` do `KNOWN_EXCEPTIONS`.
 - 
