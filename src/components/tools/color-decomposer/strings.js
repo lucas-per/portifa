@@ -73,8 +73,8 @@ export const T = {
     autoSeparated: 'Auto indisponível: os tons já estão bem separados.',
     vividSupport: 'Cor viva indisponível com cor de apoio.',
     vividAuto: 'Cor viva indisponível: use o Auto antes.',
-    vividNoAuto: 'Cor viva indisponível: ela só vale depois de o Auto mudar o nível da cor.',
-    vividSame: 'Cor viva indisponível: ela não mudaria a paleta de forma visível.',
+    vividNoAuto: 'Cor viva indisponível: ela só vale depois de o Auto mudar o nível.',
+    vividSame: 'Cor viva indisponível: ela quase não mudaria a paleta.',
     auto: 'Auto',
     autoAria: 'Auto: colocar a cor no melhor nível da paleta'
   },
