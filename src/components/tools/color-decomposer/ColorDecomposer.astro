@@ -8,6 +8,7 @@
   - <main class="stage"> virou <div>, com o mesmo id, classe e tabindex: a
     página já tem o <main> do BaseLayout;
   - Exportar, Copiar tudo e Baixar arquivo ganharam data-umami-event;
+  - o seletor de cor fica dentro da mini paleta, entre as faixas de tons (Figma hexrow-new, 608:231); a amostra da cor de apoio (mini-support) é decorativa;
   - Auto e Cor viva usam aria-disabled (e não disabled) e têm o motivo em texto visível (auto-why, vivid-why);
   - o aviso da Intensidade (tune-note) é um role="status", sempre presente e vazio quando não há o que avisar.
   O CSS é global, mas com todo seletor começando por .cd (os elementos que o
@@ -52,8 +53,12 @@ import '../../../styles/tools/color-decomposer.css';
         <div class="field">
           <label class="field__label" for="hex" id="hex-label">Cor da marca</label>
           <div class="hexrow">
-            <input class="color" type="color" id="picker" aria-label="Escolher a cor no seletor">
-            <div class="mini" id="mini" aria-hidden="true"></div>
+            <div class="mini" id="mini">
+              <div class="mini__strip mini__strip--start" id="mini-start" aria-hidden="true"></div>
+              <input class="color" type="color" id="picker" aria-label="Escolher a cor no seletor">
+              <div class="mini__support" id="mini-support" aria-hidden="true" hidden></div>
+              <div class="mini__strip mini__strip--end" id="mini-end" aria-hidden="true"></div>
+            </div>
             <input class="input input--hex" type="text" id="hex" inputmode="text" autocomplete="off" spellcheck="false" maxlength="7" aria-describedby="hex-help hex-error" placeholder="#E7398A">
           </div>
           <p class="field__help" id="hex-help">Use 6 letras ou números, como #E7398A.</p>
