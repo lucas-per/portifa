@@ -291,19 +291,29 @@
   width: .875rem; height: .875rem; background: var(--panel); transform: translateX(-50%) rotate(45deg);
   border: solid var(--fg); border-width: var(--bw) 0 0 var(--bw);
 }
-.cd .detail__head { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; column-gap: 1rem; row-gap: .25rem; }
+.cd .detail__head { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: 1rem; row-gap: .25rem; }
 .cd .detail__title { grid-column: 1; grid-row: 1; }
 .cd .detail__note { grid-column: 2; grid-row: 1; }
-/* canto superior direito, na linha do título; a margem negativa devolve ao cabeçalho os 8 px de cima e de baixo do alvo de 44 px */
-.cd .detail__head .btn--quiet { grid-column: 3; grid-row: 1; margin-block: -.5rem; }
+/* canto superior direito, alinhado pelo topo ao título; o texto fica no topo do alvo de 44 px e o alvo inteiro cabe na linha */
+.cd .detail__head .btn--quiet { grid-column: 3; grid-row: 1; align-items: flex-start; padding-block: .125rem 0; }
 .cd .detail__title { font-family: var(--font-title); font-size: 1.375rem; font-weight: 700; line-height: 1.2; }
 .cd .detail__note { color: var(--muted); font-size: .875rem; }
-.cd .values { display: grid; gap: .5rem; align-content: start; margin: 0; max-width: 28rem; }
-.cd .value { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; align-items: center; gap: .75rem; }
+/* amostra, texto e botão de copiar em três colunas comuns às linhas: o botão fica logo ao lado do código mais largo */
+.cd .values { display: grid; grid-template-columns: 2rem auto var(--control); justify-content: start; align-items: center; gap: .5rem .75rem; align-content: start; margin: 0; max-width: 28rem; }
+.cd .value { display: contents; }
 .cd .value__chip { width: 2rem; height: 2rem; background: var(--c); border: var(--bw) solid var(--fg); forced-color-adjust: none; }
 .cd .value__label { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.2; }
 .cd .value__hex { font-family: var(--font-label); font-weight: 700; font-variant-numeric: tabular-nums; text-transform: uppercase; letter-spacing: .02em; }
-.cd .value .btn { font-size: .875rem; }
+/* Botão só de ícone: alvo de 44 px; hover só em aparelhos com hover (no celular o :hover fica preso depois do toque) */
+.cd .btn--icon { width: var(--control); padding: 0; }
+.cd .btn--icon:hover { transform: none; box-shadow: var(--shadow-comp); }
+@media (hover: hover) {
+  .cd .btn--icon:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-comp-hover); }
+}
+.cd .btn--icon:active { transform: translate(1px, 1px); box-shadow: none; }
+.cd .btn--icon svg { width: 1.5rem; height: 1.5rem; flex: none; }
+.cd .btn--icon .icon-done, .cd .btn--icon.is-done .icon-copy { display: none; }
+.cd .btn--icon.is-done .icon-done { display: block; }
 .cd .verdict { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; font-size: .9375rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .cd .verdict__icon { width: 1.125rem; height: 1.125rem; flex: none; }
 .cd .sample {
@@ -369,6 +379,11 @@
   .cd .detail__head { grid-template-columns: minmax(0, 1fr) auto; }
   .cd .detail__note { grid-column: 1 / -1; grid-row: 2; }
   .cd .detail__head .btn--quiet { grid-column: 2; }
+}
+
+/* Celular (até 767 px): o botão de copiar vai para a borda direita do painel */
+@media (max-width: 47.9375rem) {
+  .cd .values { grid-template-columns: 2rem minmax(0, 1fr) var(--control); justify-content: stretch; max-width: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

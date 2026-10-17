@@ -261,6 +261,8 @@ function setTab(tab) {
 
 /* ---------- Faixa de tons ---------- */
 
+// Ícones no estilo dos do site (rodapé: 24x24, cantos retos, preenchidos com currentColor); no painel de detalhes
+const ICON_COPY_SITE = '<svg class="icon-copy" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 9H15V21H3V9ZM5 11V19H13V11H5Z" fill="currentColor"/><path d="M9 3H21V15H15V13H19V5H11V9H9V3Z" fill="currentColor"/></svg><svg class="icon-done" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10 15.172L19.192 5.979L20.607 7.393L10 18L3.636 11.636L5.05 10.222L10 15.172Z" fill="currentColor"/></svg>';
 const COPY_ICON = '<svg class="swatch__copy-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9" height="9" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/></svg><svg class="swatch__copy-done" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>';
 const COPYABLE = ['palette', 'neutrals'];
 
@@ -398,7 +400,7 @@ function detailPanel(it, index, count) {
     <div class="value">
       <span class="value__chip" style="--c:${hex}"></span>
       <span><span class="value__label">${what}</span><span class="value__hex">${up(hex)}</span></span>
-      <button type="button" class="btn" data-copy="${up(hex)}" aria-label="${T.detail.copyAria(what, up(hex))}">${T.detail.copy}</button>
+      <button type="button" class="btn btn--icon" data-copy="${up(hex)}" aria-label="${T.detail.copyAria(what, up(hex))}">${ICON_COPY_SITE}</button>
     </div>`;
   const otherMode = state.mode === 'dark' ? 'light' : 'dark';
   el.innerHTML = `
@@ -423,7 +425,13 @@ function detailPanel(it, index, count) {
     </div>`;
   el.addEventListener('click', async (e) => {
     const c = e.target.closest('[data-copy]');
-    if (c) { await copyText(c.dataset.copy, T.detail.copied(c.dataset.copy), T.detail.copyFail); return; }
+    if (c) {
+      await copyText(c.dataset.copy, T.detail.copied(c.dataset.copy), T.detail.copyFail); // anunciado no #live (role="status")
+      c.classList.add('is-done');
+      clearTimeout(c.doneTimer);
+      c.doneTimer = setTimeout(() => c.classList.remove('is-done'), 1500);
+      return;
+    }
     if (e.target.closest('[data-close]')) {
       const key = state.sel;
       state.sel = '';
