@@ -373,11 +373,9 @@
   .cd .detail__head .btn--quiet { grid-column: 2; }
 }
 
-/* 320 px não comporta amostra, texto e botão lado a lado: só aí o botão desce para baixo do código */
-@media (max-width: 21.25rem) {
-  .cd .values { grid-template-columns: 2rem minmax(0, 1fr); }
-  .cd .value { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; }
-  .cd .value .btn--icon { grid-column: 2; justify-self: start; }
+/* Celular (até 767 px): o botão de copiar vai para a borda direita do painel */
+@media (max-width: 47.9375rem) {
+  .cd .values { grid-template-columns: 2rem minmax(0, 1fr) var(--control); justify-content: stretch; max-width: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
