@@ -373,7 +373,7 @@ Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desk
 Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app/`) portada sem redesenho, com o motor como dependência (`github:lucas-per/color-decomposer#v0.2.0`). A partir daqui, a interface oficial é esta; o `app/` do repositório da ferramenta fica congelado. Spec: `docs/superpowers/specs/2026-10-16-color-decomposer-page-design.md`.
 
 - **Tema derivado só na área da ferramenta:** fundo, texto e bordas saem dos neutros da cor escolhida e são aplicados no `.cd` (com `data-theme` e `color-scheme`), nunca no `<html>`. Cabeçalho, rodapé e o modo escuro do site não mudam. O CSS do app tem todo seletor prefixado por `.cd` (`src/styles/tools/color-decomposer.css`, garantido por teste).
-- **Duas faixas de 5px, aceitas na fase 1:** a azul do cabeçalho do site e a do cabeçalho da ferramenta, na cor digitada. A segunda muda com a cor, então é comportamento da ferramenta.
+- **Divider colorido do cabeçalho da ferramenta removido (2026-10-17):** sobra só a faixa azul do cabeçalho do site. O espaço do título até o conteúdo é 24px (16 + 8). `--band` continua declarado e definido por `chrome.js`, mas nada o usa. A Ajuda não tinha divider sob o título.
 - **Breakpoints diferentes:** a ferramenta vira coluna única em 900px; o site troca de cabeçalho em 767px. Entre 768 e 900px aparecem o cabeçalho desktop do site e o layout de celular da ferramenta. Unificar fica para a fase 2.
 - **Celular:** a página tem `scroll-padding-top` igual à altura do cabeçalho sticky mais 8px, para os atalhos da Ajuda e o foco não pararem escondidos sob ele.
 - **Exceção de tipografia (decisão do Lucas, 2026-10-16):** os títulos da ferramenta usam **DM Sans**, não Plus Jakarta Sans. Vale para tudo que usa `--font-title` dentro do `.cd`: nome da ferramenta, "Ajustes", títulos dos detalhes, do diálogo e da Ajuda, os "Aa" dos tons e da amostra e os números do guia rápido. É como o app desenhava na prática (ele não pré-carregava a Plus Jakarta Sans e, com `font-display: optional`, caía na DM Sans). Os pesos 700 e 800 pedidos pelo CSS saem como 600, o máximo declarado no `@font-face` do site, sem negrito sintético, igual ao app. Fora do `.cd` nada muda. Guarda: `color-decomposer.test.ts`.
@@ -382,4 +382,9 @@ Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app
   - sombras de 2 e 4px (`--shadow-comp`, `--shadow-comp-hover`, `--shadow-layout` e a sombra do aviso amarelo), em vez de 3 e 5px;
   - bordas de 2px nos botões (`.btn`, botão de copiar dos tons), em vez de 3px;
   - divisores de 2px (linha do painel de ajustes, "Ajustes avançados", linha das abas, seções e perguntas da Ajuda, "No modo …" dos detalhes), em vez de 3px.
-  Campos, painéis, células da faixa e tags já estão em 2px, e a faixa do cabeçalho em 5px.
+  Campos, painéis, células da faixa e tags já estão em 2px.
+
+**Polimento da página (2026-10-17), divergências do app v0.2.0:**
+- **Rodapé:** o `divider-trail` (7px, `surface-bg-tertiary-strong`) passou das páginas (home e cases) para `Footer.astro` e `FooterMobile.astro`, e vale em todas as páginas, inclusive a da ferramenta. Home e cases ficam idênticas.
+- **Botões ghost (`.btn--quiet`):** sem padding lateral nem borda, para o texto alinhar com a borda do conteúdo; altura mínima de 44px com padding vertical de 8px. Sem fundo e sem sublinhado fixo (o app sublinhava sempre). Hover muda a cor (de `--fg` para `--muted`, só em `@media (hover: hover)`); pressed e aberto (`aria-expanded`/`aria-pressed`) sublinham; foco com contorno de 2px e `outline-offset` de 2px. Mesmo padrão do `HeaderLink`. O botão de copiar do código da Ajuda deixou de ter 36px de altura.
+- **"Fechar detalhes":** no canto superior direito, na linha do título, também no celular (o app empilhava abaixo). A ordem no DOM não mudou.

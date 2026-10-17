@@ -1,5 +1,6 @@
 ---
 import Button from '../ui/Button.astro';
+import Divider from '../ui/Divider.astro';
 import { siteVersion } from '../../config/version';
 
 const currentYear = new Date().getFullYear();
@@ -7,6 +8,8 @@ const dividerLines = Array.from({ length: 4 });
 ---
 
 <footer class="site-footer">
+  <!-- divider-trail (Figma desktop 452:938 / mobile 275:1149): faixa vermelha entre o conteúdo e o rodapé, em todas as páginas -->
+  <Divider height="7px" color="var(--surface-bg-tertiary-strong)" />
   <div class="site-footer__buttons">
     <!-- col-dividers, node 305:437 -->
     <div class="site-footer__dividers site-footer__dividers--edge" aria-hidden="true">

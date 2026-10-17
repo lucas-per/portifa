@@ -55,4 +55,28 @@ describe('CSS do Color Decomposer fica restrito à área da ferramenta', () => {
     expect(fontTitle?.split(',')[0].trim()).toBe('"DM Sans"');
     expect(css).not.toMatch(/Plus Jakarta Sans/);
   });
+
+  // Botões ghost: no celular o :hover fica preso depois do toque, então só vale em aparelhos com hover.
+  it('hover dos botões ghost só dentro de @media (hover: hover)', () => {
+    const outside = css.replace(/@media \(hover: hover\) \{[^{}]*\{[^{}]*\}\s*\}/g, '');
+    expect(css).toMatch(/@media \(hover: hover\)[^{]*\{\s*\.cd \.btn--quiet:hover \{ color: var\(--muted\); \}/);
+    // fora da media query, o hover do ghost só repete a cor base (reset de estado), nunca a troca
+    const hoverRules = outside.match(/[^{}]*\.btn--quiet:hover[^{}]*\{[^}]*\}/g) ?? [];
+    for (const rule of hoverRules) {
+      for (const [, value] of rule.matchAll(/(?<![-\w])color:\s*([^;]+);/g)) expect(value.trim()).toBe('var(--fg)');
+    }
+  });
+
+  it('botão ghost: sem padding lateral nem fundo, altura tocável de 44 px', () => {
+    const rule = css.match(/\.cd \.btn--quiet,[^{]*\{([^}]*)\}/)?.[1] ?? '';
+    expect(rule).toMatch(/padding:\s*\.5rem 0;/);
+    expect(rule).toMatch(/min-height:\s*var\(--control\)/);
+    expect(rule).toMatch(/background:\s*transparent/);
+    expect(css).toMatch(/--control:\s*2\.75rem/);
+  });
+
+  it('cabeçalho sem divider colorido abaixo do título', () => {
+    expect(css).not.toMatch(/\.cd \.top\s*\{[^}]*border/);
+    expect(css).not.toMatch(/--band-w/);
+  });
 });
