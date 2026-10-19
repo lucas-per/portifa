@@ -335,6 +335,7 @@ Origem: componente `footer-desktop` (91:581) e texto do copyright (88:720).
 - **Fundo:** o footer (desktop e mobile) passa de `off-white/primary` para `tertiary/subtle`. O mobile segue o desktop de propósito: o frame mobile do Figma está desatualizado e ainda mostra o fundo antigo.
 - **Versão:** o copyright vira "© 2026 Lucas Pereira · v.1.0.1", em maiúsculas como no Figma (`text-transform: uppercase`, igual ao desktop e ao mobile). O formato "v." com ponto vem do Figma. A fonte única é o `version` do `package.json`, lido em `src/config/version.ts` (`siteVersion`) no build; `resolveJsonModule` já vem ligado no `astro/tsconfigs/strict`, então o import tipa sem configuração extra.
 - **Regra de versão (semver manual, a cada PR que vai para a main):** patch para correções e ajustes de texto, minor para seções ou cases novos, major para redesign. A versão inicial é 1.0.1.
+
 ### Sincronização de textos de 2026-10-14 — cards da Home, título do case e "Sobre mim"
 
 Origem: frame `desktop-home` (31:690), nó do "Sobre mim" (31:735) e `desktop-case-pagamentos` (452:216).
@@ -343,6 +344,7 @@ Origem: frame `desktop-home` (31:690), nó do "Sobre mim" (31:735) e `desktop-ca
 - **Cards da Home:** `shortDescription` agora aceita `**negrito**` e o `CaseCard` renderiza com `inlineMarkup`, como o Figma (SemiBold em "+15%", "+20%", "novo modelo de negócio" e "base de pagantes"). As metatags (`description`, `og:description`, `twitter:description`) usam `stripInlineMarkup`, sem os asteriscos.
 - **Dados da empresa:** os cards não citam mais "mais de 100 mil usuários" nem "24 mil". O "Sobre mim" também não cita "24 mil". Os números que aparecem no corpo do case do Redesign ficam para outra tarefa.
 - **"Sobre mim":** duas frases novas (EXA e Serasa) e negritos do Figma em "11 anos", "de 3,6 para 4,7", "60%", "+15%" e "+20%".
+
 ### Sincronização de paleta de 2026-10-14 — primitivos espelham o Figma
 
 Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desktop-home` (31:690) e `desktop-case-pagamentos` (452:216). O Figma prevaleceu.
@@ -400,7 +402,7 @@ Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app
 - Os 8 tons vêm dos níveis da paleta menos o da marca (que é o seletor); no Aplica, 8 espaçados por igual. A marcação amarela dos tons parecidos continua sob a faixa (decisão do Lucas, 2026-10-17), agora sob os 8 tons mostrados e sob o seletor, na ordem em que se vê; o frame novo não a desenha.
 - Cor de apoio (o Figma não desenha): uma amostra decorativa (`aria-hidden`) de 32x44px, no mesmo desenho do seletor (borda de 2px, amostra interna de 20x32px), logo à direita dele; as faixas encolhem para abrir espaço.
 - O seletor da cor de apoio e o da principal passam a ter a amostra de 32px (antes 34px); sai a exceção `padding: 3px` do `KNOWN_EXCEPTIONS`.
-- 
+
 ### Regras do sistema — 2026-10-17
 
 - **Múltiplos de 4:** espaçamento e dimensões que definimos (`padding`, `margin`, `gap`, `width`, `height`, `min-` e `max-`) são múltiplos de 4px (em rem, de 0,25rem), exceto 0, 1 e 2. Fora da regra: a escala de forma (bordas de 2 e 3px, dividers e sombras de 3 e 5px), tipografia e dimensões que vêm do conteúdo. `calc()`, `clamp()`, `min()` e `max()` não são avaliados. Guarda: `src/styles/spacing-scale.test.ts`.
