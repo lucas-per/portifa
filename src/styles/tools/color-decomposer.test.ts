@@ -49,11 +49,19 @@ describe('CSS do Color Decomposer fica restrito à área da ferramenta', () => {
     expect(css).not.toMatch(/@font-face/);
   });
 
-  // Exceção registrada no design-notes.md: os títulos da ferramenta usam DM Sans.
-  it('títulos em DM Sans, sem Plus Jakarta Sans no CSS da ferramenta', () => {
-    const fontTitle = css.match(/--font-title:\s*([^;]+);/)?.[1];
-    expect(fontTitle?.split(',')[0].trim()).toBe('"DM Sans"');
-    expect(css).not.toMatch(/Plus Jakarta Sans/);
+  // Decisões registradas no design-notes.md: os textos de título da ferramenta usam DM Sans (--font-title) e só o título da
+  // página, "Ajustes" e "Paletas" usam a Plus Jakarta Sans (--font-heading).
+  it('--font-title em DM Sans; --font-heading em Plus Jakarta Sans, só nos três títulos da página', () => {
+    const first = (name: string) => css.match(new RegExp(`${name}:\\s*([^;]+);`))?.[1].split(',')[0].trim();
+    expect(first('--font-title')).toBe('"DM Sans"');
+    expect(first('--font-heading')).toBe('"Plus Jakarta Sans"');
+    expect(css.match(/Plus Jakarta Sans/g)).toHaveLength(1); // só a declaração (o teste lê o CSS sem comentários)
+    const users = [...css.matchAll(/([^{}]*)\{[^{}]*font-family:\s*var\(--font-heading\)/g)].map((m) => m[1].trim());
+    expect(users).toEqual(['.cd .brand', '.cd .rail__title', '.cd .stage__label', '.cd .stage__toggle']);
+  });
+
+  it('o rodapé da ferramenta saiu', () => {
+    expect(css).not.toMatch(/\.cd \.foot/);
   });
 
   // Botões ghost: no celular o :hover fica preso depois do toque, então só vale em aparelhos com hover.

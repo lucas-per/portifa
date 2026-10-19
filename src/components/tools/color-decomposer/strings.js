@@ -37,7 +37,7 @@ export const T = {
   // Contraste mínimo: as frases das opções do antigo select ("AA: 4,5 para 1", "AAA: 7 para 1") no formato do Figma
   contrastHelp: { AA: 'AA: contraste de 4,5 para 1 ou mais.', AAA: 'AAA: contraste de 7 para 1 ou mais.' },
 
-  hexError: 'Esse código não funciona. Use 6 letras ou números, como #E7398A.',
+  hexError: 'Esse código não funciona. Use 6 letras ou números, como #057ABD.',
 
   detail: {
     level: (n) => `Nível ${n}`,

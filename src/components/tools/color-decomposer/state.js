@@ -5,7 +5,7 @@
 // Estado da interface e sua cópia na URL (para você compartilhar ou voltar ao mesmo ponto).
 
 export const DEFAULTS = {
-  color: '#e7398a',
+  color: '#057abd',
   preset: 'standard',
   strategy: 'high-contrast',
   level: 'AA',
