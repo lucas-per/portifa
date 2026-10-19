@@ -372,7 +372,7 @@ Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desk
 
 ### Página do Color Decomposer (`/projetos/decomposer/`) — 2026-10-16
 
-A rota era `/ferramentas/color-decomposer/` e passou a `/projetos/decomposer/` em 2026-10-19 ("ferramentas" e "projetos" são a mesma coisa no PRD; o termo é "projetos"). A rota antiga não redireciona: deixou de existir (404).
+A rota era `/ferramentas/color-decomposer/` e passou a `/projetos/decomposer/` em 2026-10-19 ("ferramentas" e "projetos" são a mesma coisa no PRD; o termo é "projetos"). A rota antiga não redireciona e deixou de existir: como o site não tem `404.html`, a Cloudflare Pages serve a home (status 200) para qualquer endereço inexistente, a antiga inclusive.
 
 Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app/`) portada sem redesenho, com o motor como dependência (`github:lucas-per/color-decomposer#v0.2.0`). A partir daqui, a interface oficial é esta; o `app/` do repositório da ferramenta fica congelado. Spec: `docs/superpowers/specs/2026-10-16-color-decomposer-page-design.md`.
 
