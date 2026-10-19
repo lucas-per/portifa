@@ -1,47 +1,12 @@
-// Origem: lucas-per/color-decomposer@v0.2.0, app/strings.js. Divergência da tag (2026-10-17): os textos tune.autoSupport a tune.vividSame.
-// Textos dinâmicos da interface (os fixos ficam no index.html). Escritos com a skill ux-microcopy:
+// Origem: lucas-per/color-decomposer@v0.2.0, app/strings.js. Divergências da tag: os textos do Auto e da Cor viva (2026-10-17);
+// a nova estrutura do Figma (2026-10-19): saem os textos da escala, do "Saiba mais", dos motivos do Auto e da Cor viva,
+// do aviso de tons parecidos, da cor de apoio e dos ajustes avançados; o preset "aplica" aparece como Alternativo.
+// Textos dinâmicos da interface (os fixos ficam no ColorDecomposer.astro). Escritos com a skill ux-microcopy:
 // PT-BR, "você", sentence case, sem pontuação em rótulos e botões.
 
-// A numeração é fixa; o que muda com o modo é qual ponta fica clara.
-const order = (first, last, mode) =>
-  mode === 'dark'
-    ? `No modo escuro, a ordem se inverte: o ${first} é o mais escuro e o ${last}, o mais claro.`
-    : `No modo claro, o ${first} é o mais claro e o ${last}, o mais escuro.`;
-
-const orderShort = (first, mode) =>
-  mode === 'dark' ? `Modo escuro: o ${first} é o mais escuro.` : `Modo claro: o ${first} é o mais claro.`;
-
 export const T = {
-  orderShort,
   tabs: { palette: 'Paleta', neutrals: 'Neutros', behavior: 'Comportamento', grayscale: 'Cinzas' },
-  // Texto curto, sempre visível perto da faixa. No comportamento ele já é o texto inteiro.
-  intro: {
-    behavior: (n) => `${n} tons da paleta com nome de uso. Aparecem em estados como foco, passar o mouse e clicar.`
-  },
-  // Texto completo, no pop-up "Saiba mais".
-  learn: {
-    open: 'Saiba mais',
-    openAria: { palette: 'Saiba mais sobre a paleta', neutrals: 'Saiba mais sobre os neutros', grayscale: 'Saiba mais sobre os cinzas' },
-    title: { palette: 'Sobre a paleta', neutrals: 'Sobre os neutros', grayscale: 'Sobre os cinzas' },
-    body: {
-      palette: (n, first, last, base, mode) => [
-        `${n} tons da sua cor, numerados de ${first} a ${last}.`,
-        order(first, last, mode),
-        mode === 'dark'
-          ? `O nível ${base} é a base da sua cor, ajustada para o modo escuro.`
-          : `O nível ${base} é a cor que você informou.`
-      ],
-      neutrals: (n, first, last, mode) => [
-        `${n} cinzas com um toque da sua cor, numerados de ${first} a ${last}.`,
-        'Servem para fundos, textos e bordas.',
-        order(first, last, mode)
-      ],
-      grayscale: (n, first, last, mode) => [
-        `${n} cinzas puros e fixos, iguais para qualquer cor, numerados de ${first} a ${last}.`,
-        order(first, last, mode)
-      ]
-    }
-  },
+  presetHelp: (pal, neu) => `${pal} tons e ${neu} neutros`,
   groupLabel: {
     palette: 'Tons da paleta, em ordem numérica',
     neutrals: 'Neutros, em ordem numérica',
@@ -54,29 +19,10 @@ export const T = {
   yourColor: 'Sua cor',
   mainColor: 'Cor principal',
   supportColor: 'Cor de apoio',
-  overlapOff: 'Desligado',
-  resetDone: 'Ajustes voltaram ao padrão.',
   tune: {
-    group: 'Ajustar a cor por claridade, intensidade e matiz',
-    lightness: 'Claridade',
-    chroma: 'Intensidade',
-    hue: 'Matiz',
     clipped: (c) => `Essa intensidade passa do máximo possível para esta cor. Ajustamos para ${c}. Para ter mais, mude a claridade ou o matiz.`,
-    ok: 'Tons bem separados.',
-    okAt: (level) => `Tons bem separados. Sua cor está no nível ${level}.`,
-    some: (n, total, level) => `${n} de ${total} tons quase iguais ao tom ao lado, marcados abaixo da barra.${level ? ` O Auto coloca sua cor no nível ${level} e refaz a paleta.` : ''}`,
-    okVivid: (level) => `Tons bem separados. Sua cor está no nível ${level}. Quer mais cor nos tons? Use a Cor viva.`,
-    vividOn: 'Cor viva aplicada.',
-    // por que o Auto e a Cor viva não estão disponíveis (texto visível abaixo dos botões)
-    autoSupport: 'Auto indisponível com cor de apoio: o nível fica fixo.',
-    autoBest: 'Auto indisponível: sua cor já está no melhor nível.',
-    autoSeparated: 'Auto indisponível: os tons já estão bem separados.',
-    vividSupport: 'Cor viva indisponível com cor de apoio.',
-    vividAuto: 'Cor viva indisponível: use o Auto antes.',
-    vividNoAuto: 'Cor viva indisponível: ela só vale depois de o Auto mudar o nível.',
-    vividSame: 'Cor viva indisponível: ela quase não mudaria a paleta.',
-    auto: 'Auto',
-    autoAria: 'Auto: colocar a cor no melhor nível da paleta'
+    // aviso falado (#live) depois do Auto: o botão fica indisponível e o resultado não aparece em texto na tela
+    autoDone: (level) => `Auto aplicado. Sua cor está no nível ${level}.`
   },
 
   normal: {
@@ -84,27 +30,7 @@ export const T = {
     off: (level) => `Desligado: o estado normal usa o nível ${level}, o tom do meio da escala.`
   },
 
-  similar: {
-    msg: (ranges, side, canAuto, hasSupport) => {
-      const tip = hasSupport ? 'Tente ajustar a cor de apoio ou a principal.' : canAuto ? 'Use o Auto, ao lado da barra de tons, para refazer a paleta.' : side === 'lighter' ? 'Tente deixar a cor da marca menos clara.'
-        : side === 'darker' ? 'Tente deixar a cor da marca mais clara.' : 'Tente ajustar a claridade da cor da marca.';
-      return `${ranges.length === 1 ? 'Os tons' : 'Os trechos'} ${ranges.join(' e ')} estão muito parecidos entre si. ${tip}`;
-    }
-  },
-
-  support: {
-    atLevel: (level) => `Fica no nível ${level}.`,
-    sameLevel: (level) => `Cai no mesmo nível da cor principal (${level}).`,
-    outOfOrder: (level) => `Não cabe no nível ${level}.`,
-    tuneOn: 'Tons bem separados. Com a cor de apoio, o Auto e a Cor viva ficam desligados.',
-    warnSame: (level) => `As duas cores caem no mesmo nível (${level}). Escolha uma cor de apoio mais clara ou mais escura.`,
-    warnOrder: (level) => `A cor de apoio não cabe no nível ${level}, porque quebra a ordem de claridade da cor principal. Escolha uma cor de apoio mais clara ou mais escura.`,
-    note: 'Sua cor de apoio, sem alteração.',
-    removed: 'Cor de apoio removida.'
-  },
-
   hexError: 'Esse código não funciona. Use 6 letras ou números, como #E7398A.',
-  pickHint: 'Selecione um tom para ver o texto, a borda e o contraste dele.',
 
   detail: {
     level: (n) => `Nível ${n}`,
@@ -112,16 +38,16 @@ export const T = {
     surface: 'Superfície',
     txtOn: 'Texto sobre a superfície',
     border: 'Borda',
-    copy: 'Copiar',
+    textColor: 'Cor do texto',
+    strategy: { 'high-contrast': 'Preto ou branco', 'brand-tint': 'Tom da cor' },
     copyLevelAria: (title, hex) => `Copiar o código do ${title.toLowerCase()}, ${hex}`,
     copyAria: (what, hex) => `Copiar ${what.toLowerCase()} ${hex}`,
     copied: (hex) => `Copiado: ${hex}`,
     copyFail: 'Não deu para copiar. Selecione o código e use Ctrl+C.',
     close: 'Fechar detalhes',
     sample: 'Texto de exemplo',
-    baseNote: 'Sua cor, sem alteração.',
-    otherMode: (mode) => `No modo ${mode === 'dark' ? 'escuro' : 'claro'}`,
-    contrast: (r) => `Contraste ${fmt(r)} para 1`
+    // nível de contraste que o par alcança, na tag da amostra
+    tag: (r) => `${r >= 7 ? 'AAA' : r >= 4.5 ? 'AA' : 'Abaixo do AA'} (${fmt(r)}:1)`
   },
 
   verdict: {
@@ -135,7 +61,6 @@ export const T = {
   flagBelow: (req) => `Abaixo de ${req}`,
 
   warnings: {
-    title: 'Contraste abaixo do pedido',
     accept: (n, req) => `${n} ${n === 1 ? 'tom não chega' : 'tons não chegam'} a ${req} para 1. Neles, usamos 4,5 para 1 (AA). Eles têm uma marca.`,
     keep: (n, req) => `${n} ${n === 1 ? 'tom não chega' : 'tons não chegam'} a ${req} para 1. Mantivemos o texto gerado. Eles têm uma marca.`,
     short: (n) => `${n} ${n === 1 ? 'tom abaixo' : 'tons abaixo'} do contraste pedido.`,
@@ -143,10 +68,8 @@ export const T = {
     hide: 'Ocultar',
     item: (group, level, ratio) => `${group[0].toUpperCase()}${group.slice(1)}, nível ${level}: ${fmt(ratio)} para 1`,
     groups: { palette: 'paleta', neutrals: 'neutros' },
-    override: (n) => `${n} ${n === 1 ? 'texto informado por você não passa' : 'textos informados por você não passam'} no contraste pedido.`,
-    config: 'Nenhuma cor própria foi preenchida, então usamos a alternativa escolhida em todos os tons.',
     errorTitle: 'Não foi possível gerar os tons',
-    errorHelp: 'Escolha outra opção em “Se o contraste pedido não for possível” ou mude o contraste mínimo para AA.'
+    errorHelp: 'Escolha outra cor ou mude o contraste mínimo para AA.'
   },
 
   export: {
@@ -197,23 +120,23 @@ export function helpText({ standard: S, aplica: A }) {
     steps: [
       {
         title: 'Escolha a cor',
-        text: 'Digite o código em Cor da marca ou use o seletor. Os tons aparecem na hora. Em Ajustar a cor, refine claridade, intensidade e matiz.'
+        text: 'Digite o código em Cor principal. Os tons aparecem na hora, e a mini paleta ao lado do código mostra a escala. Em Refinar cor principal, ajuste claridade, intensidade e matiz.'
       },
       {
         title: 'Escolha o sistema de níveis',
-        text: `Em Ajustes básicos, o Padrão tem ${s.pal} tons e ${s.neu} neutros. O Aplica tem ${a.pal} tons e ${a.neu} neutros e segue as regras do Aplica Design System.`
+        text: `Em Sistema de níveis, o Padrão tem ${s.pal} tons e ${s.neu} neutros. O Alternativo tem ${a.pal} tons e ${a.neu} neutros e segue as regras do Aplica Design System.`
       },
       {
         title: 'Leia os tons',
-        text: 'As abas Paleta, Neutros, Comportamento e Cinzas mostram cada grupo. Troque entre claro e escuro em Modo de cor. Ao escolher um tom, você vê a superfície, o texto, a borda e o contraste, com o veredito em palavras.'
+        text: 'As abas Paleta, Neutros, Comportamento e Cinzas mostram cada grupo. Troque entre claro e escuro em Modo de cor. Ao escolher um tom, você vê a superfície, o texto, a borda e o contraste. No celular, toque no tom para abrir os detalhes.'
       },
       {
         title: 'Ajuste se precisar',
-        text: 'Se os tons ficarem parecidos, use o Auto. Para cores de pouca intensidade, a Cor viva. Para ter duas cores na mesma paleta, Adicionar cor de apoio.'
+        text: 'Se a mini paleta marcar tons parecidos, em amarelo, use o Auto. Para cores de pouca intensidade, a Cor viva.'
       },
       {
         title: 'Leve para o projeto',
-        text: 'Nas abas Paleta e Neutros, cada tom tem um botão para copiar o código. Para tudo de uma vez, use Exportar tokens: JSON do Aplica, variáveis CSS, JSON completo ou variables do Figma.'
+        text: 'Nas abas Paleta e Neutros, cada tom tem um botão para copiar o código. Para tudo de uma vez, use Exportar tokens: JSON do Aplica Design System, variáveis CSS, JSON completo ou variables do Figma.'
       }
     ],
     faq: [
@@ -221,13 +144,13 @@ export function helpText({ standard: S, aplica: A }) {
         q: 'O que é um nível?',
         a: [
           `Cada tom da escala tem um número. No modo claro, quanto menor o número, mais claro o tom. No nível ${base} fica a sua cor, sem alteração.`,
-          `No modo escuro, a escala é espelhada: o nível ${sFirst} recebe a claridade que o ${sLast} tem no claro, e o contrário. A intensidade cai para 85%, por padrão.`
+          `No modo escuro, a escala é espelhada: o nível ${sFirst} recebe a claridade que o ${sLast} tem no claro, e o contrário. A intensidade cai para 85%.`
         ]
       },
       {
-        q: 'Padrão ou Aplica: qual escolher?',
+        q: 'Padrão ou Alternativo: qual escolher?',
         a: [
-          `O Aplica tem ${a.pal} tons e ${a.neu} neutros e reproduz as regras do Aplica Design System (engine 3.23.4). Escolha esse se você precisa dos mesmos tokens do Aplica.`,
+          `O Alternativo tem ${a.pal} tons e ${a.neu} neutros e reproduz as regras do Aplica Design System (engine 3.23.4). Escolha esse se você precisa dos mesmos tokens do Aplica Design System.`,
           `O Padrão tem ${s.pal} tons e ${s.neu} neutros, uma escala menor. O tom mais escuro é menos profundo, o texto usa ${ink.dark} e ${ink.light} em vez de preto e branco, e os tons que não cabem no sRGB mantêm o matiz. Para começar, é o mais simples.`
         ]
       },
@@ -239,9 +162,9 @@ export function helpText({ standard: S, aplica: A }) {
         ]
       },
       {
-        q: 'O que quer dizer o aviso de tons parecidos?',
+        q: 'O que quer dizer a marcação amarela sob a mini paleta?',
         a: [
-          'A diferença entre tons vizinhos ficou pequena demais para o olho separar. Medimos a distância perceptual entre tons a 10 níveis um do outro. Amarelos, âmbar, limões e ciano costumam cair aqui.',
+          'Ela marca os tons quase iguais ao vizinho: a diferença entre eles ficou pequena demais para o olho separar. Medimos a distância perceptual entre tons a 10 níveis um do outro. Amarelos, âmbar, limões e ciano costumam cair aqui.',
           'O limite foi calibrado com cores conhecidas e com o olho de quem usa. Não é um padrão de mercado. Experimente o Auto.'
         ]
       },
@@ -249,15 +172,7 @@ export function helpText({ standard: S, aplica: A }) {
         q: 'O que a Cor viva faz?',
         a: [
           'Dá intensidade aos tons de uma cor com pouca intensidade, como um off-white ou um cinza azulado. Sua cor continua exata, e nenhum tom perde intensidade.',
-          'O botão só liga depois do Auto, quando a opção muda a paleta de forma visível. Ela não vale junto com a cor de apoio.'
-        ]
-      },
-      {
-        q: 'Para que serve a cor de apoio?',
-        a: [
-          'Para quando uma cor só não basta, como um off-white de fundo e um amarelo de destaque. A cor principal fica no nível 100. A de apoio vai para o nível de claridade mais próxima, do lado certo da principal.',
-          'Entre as duas, a claridade muda em passos iguais, e o matiz e a intensidade se misturam aos poucos. Neutros e comportamento vêm da cor principal. Para editar cada cor nos controles, use Cor a ajustar.',
-          'Se as duas caírem no mesmo nível ou a de apoio fizer a claridade subir, a interface avisa e usa só a principal.'
+          'O botão só liga depois do Auto, quando a opção muda a paleta de forma visível.'
         ]
       },
       {
@@ -271,7 +186,7 @@ export function helpText({ standard: S, aplica: A }) {
         q: 'O contraste mínimo é AA?',
         a: [
           'Por padrão, sim: 4,5 para 1. Em Contraste mínimo, você pode pedir AAA (7 para 1).',
-          'Cada tom mostra o veredito em palavras. Se o AAA for impossível em algum tom, avisamos. O que fazer nesse caso você escolhe em Se o contraste pedido não for possível.'
+          'Os detalhes de cada tom mostram o nível que ele alcança. Se o AAA for impossível em algum tom, usamos 4,5 para 1 nele e avisamos.'
         ]
       },
       {
@@ -279,9 +194,9 @@ export function helpText({ standard: S, aplica: A }) {
         a: ['A cor, o sistema de níveis, a aba e os ajustes ficam no endereço da página. Copie o endereço e quem abrir vê o mesmo resultado.']
       },
       {
-        q: `Por que o nível ${hover} se chama Hover no Padrão e Ação no Aplica?`,
+        q: `Por que o nível ${hover} se chama Hover no Padrão e Ação no Alternativo?`,
         a: [
-          `É o mesmo estado: um passo mais escuro que o normal, para o elemento quando o mouse está sobre ele. O Aplica o chama de Ação. No Padrão usamos Hover.`,
+          `É o mesmo estado: um passo mais escuro que o normal, para o elemento quando o mouse está sobre ele. O Alternativo o chama de Ação, como o Aplica Design System. No Padrão usamos Hover.`,
           'Só o rótulo muda. Nos arquivos exportados, a chave continua action.'
         ]
       }

@@ -1,4 +1,5 @@
-// Origem: lucas-per/color-decomposer@v0.2.0, app/state.js. Cópia literal.
+// Origem: lucas-per/color-decomposer@v0.2.0, app/state.js. Divergência da tag (2026-10-19): saíram os ajustes que a
+// interface não tem mais (ajustes avançados e a "Cor própria" do texto); um endereço antigo com eles abre no padrão do motor.
 // Estado da interface e sua cópia na URL (para você compartilhar ou voltar ao mesmo ponto).
 
 export const DEFAULTS = {
@@ -8,37 +9,21 @@ export const DEFAULTS = {
   level: 'AA',
   mode: 'light',
   tab: 'palette',
-  order: 'startDark',
-  overlap: '',
-  darkChroma: 85,
-  borderPalette: '',
-  borderNeutrals: '',
   lvl: '',
   normal: 'mid',
   vivid: false,
   support: '',
-  failure: 'accept-aa',
-  customLight: '',
-  customDark: '',
-  customFallback: 'high-contrast',
-  neutralsOwn: false,
-  neutralsBase: '#6b7280',
-  neutralsRef: '',
-  txt: false,
   sel: '',
   view: ''
 };
 
 const ENUMS = {
   preset: ['standard', 'aplica'],
-  strategy: ['high-contrast', 'brand-tint', 'custom-tint'],
+  strategy: ['high-contrast', 'brand-tint'],
   level: ['AA', 'AAA'],
   mode: ['light', 'dark'],
   tab: ['palette', 'neutrals', 'behavior', 'grayscale'],
-  order: ['startDark', 'startLight'],
   normal: ['mid', 'brand'],
-  failure: ['accept-aa', 'warn', 'throw'],
-  customFallback: ['high-contrast', 'brand-tint'],
   view: ['', 'ajuda']
 };
 const HEX = /^#[0-9a-f]{6}$/;
@@ -52,10 +37,9 @@ export function parseHash(hash, systemMode) {
     const def = DEFAULTS[key];
     if (ENUMS[key]) { if (ENUMS[key].includes(v)) s[key] = v; continue; }
     if (typeof def === 'boolean') { s[key] = v === '1'; continue; }
-    if (key === 'color' || key === 'neutralsBase') { if (HEX.test(`#${v}`)) s[key] = `#${v}`; continue; }
-    if (key === 'customLight' || key === 'customDark' || key === 'support') { if (v === '' || HEX.test(`#${v}`)) s[key] = v ? `#${v}` : ''; continue; }
-    if (key === 'darkChroma') { const n = Number(v); if (n >= 0 && n <= 150) s[key] = n; continue; }
-    if (['overlap', 'borderPalette', 'borderNeutrals', 'neutralsRef', 'lvl'].includes(key)) { if (v === '' || Number.isFinite(Number(v))) s[key] = v; continue; }
+    if (key === 'color') { if (HEX.test(`#${v}`)) s[key] = `#${v}`; continue; }
+    if (key === 'support') { if (v === '' || HEX.test(`#${v}`)) s[key] = v ? `#${v}` : ''; continue; }
+    if (key === 'lvl') { if (v === '' || Number.isFinite(Number(v))) s[key] = v; continue; }
     if (key === 'sel') s[key] = v.slice(0, 40);
   }
   return s;
