@@ -16,12 +16,12 @@ export type MacroSection = {
  */
 export const macroSections: MacroSection[] = [
   { key: 'portfolio', label: 'Portfólio', path: '/', enabled: true },
-  // Trocar por "Ferramentas" (/ferramentas/) é só mudar label, shortLabel e path.
+  // Trocar por "Projetos" (/projetos/) é só mudar label, shortLabel e path.
   {
     key: 'color-decomposer',
     label: 'Color Decomposer',
     shortLabel: 'Decomposer',
-    path: '/ferramentas/color-decomposer/',
+    path: '/projetos/decomposer/',
     enabled: true,
     inHeader: true,
   },
@@ -44,7 +44,7 @@ function withTrailingSlash(path: string): string {
 
 /**
  * `aria-current` do link do cabeçalho: "page" na própria rota, "true" numa
- * rota filha da seção (ex.: /ferramentas/ quando a página é uma ferramenta).
+ * rota filha da seção (ex.: /projetos/ quando a página é um projeto).
  */
 export function getAriaCurrent(pathname: string, sectionPath: string): 'page' | 'true' | undefined {
   const current = withTrailingSlash(pathname);

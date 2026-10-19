@@ -370,7 +370,9 @@ Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desk
 - **Guarda:** `fonts.test.ts` falha se o arquivo perder →, ←, ×, ↑ ou ↓. Caractere novo que apareça em texto de título precisa entrar no subset; o navegador não avisa quando cai numa fonte do sistema.
 - **Levantamento:** nas 4 páginas geradas, a seta era o único caractere fora do subset nas 3 fontes (Plus Jakarta Sans, DM Sans e JetBrains Mono).
 
-### Página do Color Decomposer (`/ferramentas/color-decomposer/`) — 2026-10-16
+### Página do Color Decomposer (`/projetos/decomposer/`) — 2026-10-16
+
+A rota era `/ferramentas/color-decomposer/` e passou a `/projetos/decomposer/` em 2026-10-19 ("ferramentas" e "projetos" são a mesma coisa no PRD; o termo é "projetos"). A rota antiga não redireciona: deixou de existir (404).
 
 Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app/`) portada sem redesenho, com o motor como dependência (`github:lucas-per/color-decomposer#v0.2.0`). A partir daqui, a interface oficial é esta; o `app/` do repositório da ferramenta fica congelado. Spec: `docs/superpowers/specs/2026-10-16-color-decomposer-page-design.md`.
 
