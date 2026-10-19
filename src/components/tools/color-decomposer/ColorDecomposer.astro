@@ -7,6 +7,7 @@
   - <main class="stage"> virou <div>, com o mesmo id, classe e tabindex: a
     página já tem o <main> do BaseLayout;
   - Exportar, Copiar tudo e Baixar arquivo ganharam data-umami-event;
+  - PR 4 (2026-10-19): título em caixa alta com a logo de 28x36, subtítulo (top__lead) e sem o rodapé da ferramenta;
   - PR 3 (2026-10-19): Exportar tokens depois do corpo da paleta; "Paletas" com botão (celular) e texto (computador);
   - Auto usa aria-disabled (e não disabled), com o motivo em texto visível ligado por aria-describedby (auto-why);
   - PR 2 (2026-10-19): "Manter minha cor exata" (role="switch", desligado por padrão) e as linhas de ajuda dinâmicas
@@ -28,14 +29,15 @@ import '../../../styles/tools/color-decomposer.css';
     <header class="top">
       <div class="top__inner">
         <h1 class="brand">
-          <svg class="brand__mark" viewBox="0 0 28 20" aria-hidden="true" focusable="false">
-            <rect x="0" y="0" width="8" height="20" fill="currentColor" opacity=".25"/>
-            <rect x="10" y="0" width="8" height="20" fill="currentColor" opacity=".6"/>
-            <rect x="20" y="0" width="8" height="20" fill="currentColor"/>
+          <svg class="brand__mark" viewBox="0 0 28 36" aria-hidden="true" focusable="false">
+            <rect x="0" y="0" width="8" height="36" fill="currentColor" opacity=".25"/>
+            <rect x="10" y="0" width="8" height="36" fill="currentColor" opacity=".6"/>
+            <rect x="20" y="0" width="8" height="36" fill="currentColor"/>
           </svg>
           Color Decomposer
         </h1>
         <button type="button" class="btn btn--quiet top__help" id="open-help" aria-expanded="false" aria-controls="help">Ajuda</button>
+        <p class="top__lead">Gere paletas de cores acessíveis a partir de uma única cor, com contraste conferido nível por nível.</p>
       </div>
     </header>
 
@@ -76,7 +78,7 @@ import '../../../styles/tools/color-decomposer.css';
                 <div class="mini__flags mini__flags--mid" id="mini-flags-mid"></div>
                 <div class="mini__flags mini__flags--end" id="mini-flags-end"></div>
               </div>
-              <input class="input input--hex" type="text" id="hex" inputmode="text" autocomplete="off" spellcheck="false" maxlength="7" aria-describedby="hex-error" placeholder="#E7398A">
+              <input class="input input--hex" type="text" id="hex" inputmode="text" autocomplete="off" spellcheck="false" maxlength="7" aria-describedby="hex-error" placeholder="#057ABD">
             </div>
             <p class="field__error" id="hex-error" hidden></p>
             <label class="switch switch--end" for="exact">
@@ -143,10 +145,6 @@ import '../../../styles/tools/color-decomposer.css';
     </div>
 
     <section class="help" id="help" aria-labelledby="help-title" hidden></section>
-
-    <footer class="foot">
-      <p>Segue as regras de cor do Aplica Design System (engine 3.23.4). Projeto independente, sem vínculo com a Aplica.</p>
-    </footer>
 
     <dialog class="dialog" id="export" aria-labelledby="export-title">
       <form method="dialog" class="dialog__body" id="export-form">
