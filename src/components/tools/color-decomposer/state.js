@@ -1,5 +1,7 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/state.js. Divergência da tag (2026-10-19): saíram os ajustes que a
-// interface não tem mais (ajustes avançados e a "Cor própria" do texto); um endereço antigo com eles abre no padrão do motor.
+// interface não tem mais (ajustes avançados e a "Cor própria" do texto; na PR 2, cor de apoio, Cor viva e "Usar sua cor no
+// estado normal"); um endereço antigo com eles abre no padrão. O `lvl` antigo (nível escolhido pelo Auto de antes, que
+// mantinha a cor exata) liga o "Manter minha cor exata".
 // Estado da interface e sua cópia na URL (para você compartilhar ou voltar ao mesmo ponto).
 
 export const DEFAULTS = {
@@ -9,10 +11,7 @@ export const DEFAULTS = {
   level: 'AA',
   mode: 'light',
   tab: 'palette',
-  lvl: '',
-  normal: 'mid',
-  vivid: false,
-  support: '',
+  exact: false,
   sel: '',
   view: ''
 };
@@ -23,7 +22,6 @@ const ENUMS = {
   level: ['AA', 'AAA'],
   mode: ['light', 'dark'],
   tab: ['palette', 'neutrals', 'behavior', 'grayscale'],
-  normal: ['mid', 'brand'],
   view: ['', 'ajuda']
 };
 const HEX = /^#[0-9a-f]{6}$/;
@@ -38,10 +36,9 @@ export function parseHash(hash, systemMode) {
     if (ENUMS[key]) { if (ENUMS[key].includes(v)) s[key] = v; continue; }
     if (typeof def === 'boolean') { s[key] = v === '1'; continue; }
     if (key === 'color') { if (HEX.test(`#${v}`)) s[key] = `#${v}`; continue; }
-    if (key === 'support') { if (v === '' || HEX.test(`#${v}`)) s[key] = v ? `#${v}` : ''; continue; }
-    if (key === 'lvl') { if (v === '' || Number.isFinite(Number(v))) s[key] = v; continue; }
     if (key === 'sel') s[key] = v.slice(0, 40);
   }
+  if (!p.has('exact') && p.get('lvl') && Number.isFinite(Number(p.get('lvl')))) s.exact = true;
   return s;
 }
 

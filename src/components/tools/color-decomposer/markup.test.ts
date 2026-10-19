@@ -7,19 +7,47 @@ const script = readFileSync(new URL('./main.js', import.meta.url), 'utf-8');
 const html = markup.split('---')[2];
 const tag = (id: string) => markup.match(new RegExp(`<[a-z]+ [^>]*id="${id}"[^>]*>`))?.[0] ?? '';
 
-describe('Auto e Cor viva: indisponíveis, mas acessíveis', () => {
-  for (const id of ['auto', 'vivid']) {
-    it(`#${id} usa aria-disabled (não disabled) e o botão pequeno comum aos dois`, () => {
-      const button = tag(id);
-      expect(button).toContain('aria-disabled="true"');
-      expect(button).not.toMatch(/\sdisabled[\s>]/);
-      expect(button).toContain('class="btn btn--sm"');
-    });
-  }
+describe('Auto: indisponível, mas acessível', () => {
+  it('usa aria-disabled (não disabled) e aponta para o motivo, em texto visível', () => {
+    const button = tag('auto');
+    expect(button).toContain('aria-disabled="true"');
+    expect(button).not.toMatch(/\sdisabled[\s>]/);
+    expect(button).toContain('aria-describedby="auto-why"');
+    expect(button).toContain('class="btn btn--sm"');
+    expect(tag('auto-why')).toContain('role="status"');
+  });
+
+  it('a Cor viva saiu', () => {
+    expect(html).not.toMatch(/id="vivid"|Cor viva/);
+    expect(script).not.toMatch(/vivid/i);
+  });
 
   it('o aviso da Intensidade é um role="status" sempre presente', () => {
     expect(tag('tune-note')).toContain('role="status"');
     expect(tag('tune-note')).not.toContain('hidden');
+  });
+});
+
+describe('Manter minha cor exata', () => {
+  it('é um role="switch", desligado no markup, descrito pela linha de ajuda dinâmica', () => {
+    const input = tag('exact');
+    expect(input).toContain('type="checkbox"');
+    expect(input).toContain('role="switch"');
+    expect(input).not.toMatch(/\schecked/);
+    expect(input).toContain('aria-describedby="exact-help"');
+    expect(tag('exact-help')).toMatch(/role="status" aria-live="polite"/);
+  });
+
+  it('o switch "Usar sua cor no estado normal" e a cor de apoio saíram', () => {
+    expect(html).not.toMatch(/normal-switch|estado normal/);
+    expect(script).not.toMatch(/support|behaviorFollowsBrand/);
+  });
+});
+
+describe('Contraste mínimo', () => {
+  it('tem a linha de ajuda dinâmica em role="status", ligada ao alternador', () => {
+    expect(tag('level-help')).toMatch(/role="status" aria-live="polite"/);
+    expect(tag('level')).toContain('aria-describedby="level-help"');
   });
 });
 

@@ -1,6 +1,7 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/strings.js. Divergências da tag: os textos do Auto e da Cor viva (2026-10-17);
 // a nova estrutura do Figma (2026-10-19): saem os textos da escala, do "Saiba mais", dos motivos do Auto e da Cor viva,
-// do aviso de tons parecidos, da cor de apoio e dos ajustes avançados; o preset "aplica" aparece como Alternativo.
+// do aviso de tons parecidos, da cor de apoio e dos ajustes avançados; o preset "aplica" aparece como Alternativo. PR 2:
+// "Manter minha cor exata", o Auto que sugere uma cor próxima e a linha do contraste; saem a Cor viva e o estado normal.
 // Textos dinâmicos da interface (os fixos ficam no ColorDecomposer.astro). Escritos com a skill ux-microcopy:
 // PT-BR, "você", sentence case, sem pontuação em rótulos e botões.
 
@@ -17,18 +18,24 @@ export const T = {
   // Rótulos que o preset Padrão troca (a chave do motor continua a do Aplica)
   behaviorNamesByPreset: { standard: { action: 'Hover' } },
   yourColor: 'Sua cor',
-  mainColor: 'Cor principal',
-  supportColor: 'Cor de apoio',
   tune: {
     clipped: (c) => `Essa intensidade passa do máximo possível para esta cor. Ajustamos para ${c}. Para ter mais, mude a claridade ou o matiz.`,
-    // aviso falado (#live) depois do Auto: o botão fica indisponível e o resultado não aparece em texto na tela
-    autoDone: (level) => `Auto aplicado. Sua cor está no nível ${level}.`
+    // aviso falado (#live) depois do Auto: a cor nova aparece no campo e o botão fica indisponível
+    autoDone: (hex) => `Auto: sua cor principal ficou ${hex}.`,
+    autoNone: 'Não achamos uma cor próxima sem tons parecidos.',
+    // por que o Auto não está disponível (texto visível sob o botão, ligado por aria-describedby)
+    autoExact: 'Indisponível com \'Manter minha cor exata\' ligado.',
+    autoNoConflict: 'Disponível quando sua cor gera tons parecidos.'
   },
 
-  normal: {
-    on: (level) => `Ligado: o estado normal usa o nível ${level}, onde está a sua cor. Os outros estados se ajustam junto.`,
-    off: (level) => `Desligado: o estado normal usa o nível ${level}, o tom do meio da escala.`
+  // Manter minha cor exata: onde a cor principal está (no modo escuro, o nível espelhado)
+  exact: {
+    on: (level) => `Ligado: sua cor está no nível ${level}.`,
+    off: (level) => `Desligado: sua cor está no nível ${level}.`
   },
+
+  // Contraste mínimo: as frases das opções do antigo select ("AA: 4,5 para 1", "AAA: 7 para 1") no formato do Figma
+  contrastHelp: { AA: 'AA: contraste de 4,5 para 1 ou mais.', AAA: 'AAA: contraste de 7 para 1 ou mais.' },
 
   hexError: 'Esse código não funciona. Use 6 letras ou números, como #E7398A.',
 
@@ -132,7 +139,7 @@ export function helpText({ standard: S, aplica: A }) {
       },
       {
         title: 'Ajuste se precisar',
-        text: 'Se a mini paleta marcar tons parecidos, em amarelo, use o Auto. Para cores de pouca intensidade, a Cor viva.'
+        text: 'Se a mini paleta marcar tons parecidos, em amarelo, use o Auto: ele sugere uma cor próxima sem esse problema. Se a cor não pode mudar, ligue Manter minha cor exata.'
       },
       {
         title: 'Leve para o projeto',
@@ -143,7 +150,7 @@ export function helpText({ standard: S, aplica: A }) {
       {
         q: 'O que é um nível?',
         a: [
-          `Cada tom da escala tem um número. No modo claro, quanto menor o número, mais claro o tom. No nível ${base} fica a sua cor, sem alteração.`,
+          `Cada tom da escala tem um número. No modo claro, quanto menor o número, mais claro o tom. No nível ${base} fica a sua cor. Com Manter minha cor exata ligado, ela vai para o nível de claridade mais próxima, sem alteração.`,
           `No modo escuro, a escala é espelhada: o nível ${sFirst} recebe a claridade que o ${sLast} tem no claro, e o contrário. A intensidade cai para 85%.`
         ]
       },
@@ -155,24 +162,24 @@ export function helpText({ standard: S, aplica: A }) {
         ]
       },
       {
-        q: 'Por que o Auto muda o nível da minha cor?',
+        q: 'O que o Auto faz?',
         a: [
-          `Em cores muito claras ou muito escuras, o nível ${base} deixa os tons vizinhos colados. O Auto coloca a cor no nível de claridade mais próxima e a escala passa por ela.`,
-          `O botão fica desligado quando a gradação já está boa. Na aba Comportamento, depois do Auto, aparece a opção Usar sua cor no estado normal.`
+          `Em cores muito claras ou muito escuras, o nível ${base} deixa os tons vizinhos colados. O Auto troca a sua cor pela mais próxima dela que não causa esse problema, com o mesmo matiz. A cor nova aparece em Cor principal.`,
+          'O botão fica indisponível quando os tons já estão bem separados ou quando Manter minha cor exata está ligado.'
+        ]
+      },
+      {
+        q: 'Para que serve Manter minha cor exata?',
+        a: [
+          `Para quando a cor não pode mudar. Ligado, sua cor fica exata no nível de claridade mais próxima e o resto da paleta segue as regras a partir dela. Desligado, ela fica no nível ${base}.`,
+          'Os níveis de Comportamento não mudam: continuam os do sistema de níveis.'
         ]
       },
       {
         q: 'O que quer dizer a marcação amarela sob a mini paleta?',
         a: [
           'Ela marca os tons quase iguais ao vizinho: a diferença entre eles ficou pequena demais para o olho separar. Medimos a distância perceptual entre tons a 10 níveis um do outro. Amarelos, âmbar, limões e ciano costumam cair aqui.',
-          'O limite foi calibrado com cores conhecidas e com o olho de quem usa. Não é um padrão de mercado. Experimente o Auto.'
-        ]
-      },
-      {
-        q: 'O que a Cor viva faz?',
-        a: [
-          'Dá intensidade aos tons de uma cor com pouca intensidade, como um off-white ou um cinza azulado. Sua cor continua exata, e nenhum tom perde intensidade.',
-          'O botão só liga depois do Auto, quando a opção muda a paleta de forma visível.'
+          'O limite foi calibrado com cores conhecidas e com o olho de quem usa. Não é um padrão de mercado. Experimente o Auto ou Manter minha cor exata.'
         ]
       },
       {
