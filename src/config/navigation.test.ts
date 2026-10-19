@@ -36,7 +36,7 @@ describe('getHeaderSections', () => {
         key: 'color-decomposer',
         label: 'Color Decomposer',
         shortLabel: 'Decomposer',
-        path: '/ferramentas/color-decomposer/',
+        path: '/projetos/decomposer/',
       }),
     ]);
   });
@@ -47,11 +47,11 @@ describe('getHeaderSections', () => {
 });
 
 describe('getAriaCurrent', () => {
-  const tool = '/ferramentas/color-decomposer/';
+  const tool = '/projetos/decomposer/';
 
   it('"page" na página da ferramenta, com ou sem barra final', () => {
-    expect(getAriaCurrent('/ferramentas/color-decomposer/', tool)).toBe('page');
-    expect(getAriaCurrent('/ferramentas/color-decomposer', tool)).toBe('page');
+    expect(getAriaCurrent('/projetos/decomposer/', tool)).toBe('page');
+    expect(getAriaCurrent('/projetos/decomposer', tool)).toBe('page');
   });
 
   it('nada na home nem em outras páginas', () => {
@@ -59,8 +59,8 @@ describe('getAriaCurrent', () => {
     expect(getAriaCurrent('/cases/pagamentos/', tool)).toBeUndefined();
   });
 
-  it('"true" numa rota filha, para o dia em que o item virar "Ferramentas"', () => {
-    expect(getAriaCurrent('/ferramentas/color-decomposer/', '/ferramentas/')).toBe('true');
-    expect(getAriaCurrent('/ferramentas/', '/ferramentas/')).toBe('page');
+  it('"true" numa rota filha, para o dia em que o item virar "Projetos"', () => {
+    expect(getAriaCurrent('/projetos/decomposer/', '/projetos/')).toBe('true');
+    expect(getAriaCurrent('/projetos/', '/projetos/')).toBe('page');
   });
 });
