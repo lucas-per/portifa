@@ -86,3 +86,35 @@ describe('lista de níveis', () => {
     expect(script).toContain("b.setAttribute('aria-checked', String(on))");
   });
 });
+
+describe('Paletas e Exportar tokens (PR 3)', () => {
+  const css = readFileSync(new URL('../../../styles/tools/color-decomposer.css', import.meta.url), 'utf-8');
+
+  it('"Paletas" tem o botão do celular e o texto do computador; só o botão tem aria-expanded e aria-controls', () => {
+    expect(tag('stage-toggle')).toContain('aria-expanded="true"');
+    expect(tag('stage-toggle')).toContain('aria-controls="stage-body"');
+    expect(html).toMatch(/<span class="stage__label">Paletas<\/span>/);
+    expect(html).not.toMatch(/<span class="stage__label"[^>]*aria-/);
+  });
+
+  it('no computador o botão fica em display: none (fora do foco e da árvore de acessibilidade) e o texto aparece', () => {
+    const desktop = css.slice(css.indexOf('@media (min-width: 56.3125rem)'));
+    expect(desktop).toMatch(/\.cd \.stage__toggle \{ display: none; \}/);
+    expect(desktop).toMatch(/\.cd \.stage__label \{ display: flex; \}/);
+  });
+
+  it('o corpo da paleta só some no celular; no computador fica aberto', () => {
+    expect(script).toMatch(/\$\('stage-body'\)\.hidden = narrow\(\) && !stageOpen/);
+  });
+
+  it('o Exportar tokens vem depois do corpo da paleta no DOM: lista, painel, Exportar', () => {
+    expect(html.indexOf('id="detail-host"')).toBeGreaterThan(-1);
+    expect(html.indexOf('id="open-export"')).toBeGreaterThan(html.indexOf('id="detail-host"'));
+    expect(html.indexOf('id="open-export"')).toBeGreaterThan(html.indexOf('id="ribbon-host"'));
+  });
+
+  it('abas: três dividem a largura e "Comportamento" fica com a do conteúdo', () => {
+    expect(css).toMatch(/\.cd \.tab \{ flex: 1 1 0; min-width: 0; justify-content: center; \}/);
+    expect(css).toMatch(/\.cd \.tab\[data-tab="behavior"\] \{ flex: none; \}/);
+  });
+});

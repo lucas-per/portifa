@@ -426,6 +426,11 @@ function setInvalid(input, on) {
   if (on) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
 }
 
+// "Paletas" só abre e fecha no celular. No computador o corpo fica sempre aberto (o botão está em display: none) e o
+// estado escolhido no celular volta quando a janela estreita de novo.
+let stageOpen = true;
+const applyStage = () => { $('stage-body').hidden = narrow() && !stageOpen; };
+
 function bindControls() {
   const hexInput = $('hex');
   hexInput.addEventListener('input', () => {
@@ -477,9 +482,9 @@ function bindControls() {
     }
   }
   $('stage-toggle').addEventListener('click', (e) => {
-    const open = e.currentTarget.getAttribute('aria-expanded') !== 'true';
-    e.currentTarget.setAttribute('aria-expanded', String(open));
-    $('stage-body').hidden = !open;
+    stageOpen = e.currentTarget.getAttribute('aria-expanded') !== 'true';
+    e.currentTarget.setAttribute('aria-expanded', String(stageOpen));
+    applyStage();
   });
   $('rail').addEventListener('submit', (e) => e.preventDefault());
 }
@@ -678,6 +683,6 @@ function update() {
 bindControls();
 bindExport();
 bindHelp();
-matchMedia('(max-width: 56.25rem)').addEventListener('change', () => { $('ribbon-host').dataset.sig = ''; update(); });
+matchMedia('(max-width: 56.25rem)').addEventListener('change', () => { applyStage(); $('ribbon-host').dataset.sig = ''; update(); });
 update();
 applyView();

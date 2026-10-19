@@ -212,8 +212,10 @@
    com Exportar no topo do detalhe. O painel das abas é um subgrid: o detalhe fica na linha da lista e tem a altura dela. */
 .cd .stage { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; }
 .cd .stage__title { font: inherit; }
+/* "Paletas": botão no celular, texto no computador (o outro fica em display: none) */
+.cd .stage__label { display: none; align-items: center; min-height: var(--control); font-family: var(--font-title); font-size: 1rem; font-weight: 600; line-height: 1.72; letter-spacing: 1px; }
 .cd .stage__body { display: grid; }
-.cd .stage__export { grid-row: 3; width: 100%; margin-top: 1.5rem; }
+.cd .stage__export { width: 100%; margin-top: 1.5rem; }
 .cd .stage__panel { display: flex; flex-direction: column; min-width: 0; }
 .cd .stage__preset { margin-top: 1rem; }
 .cd .tabs { display: flex; flex-wrap: wrap; margin-top: 1rem; margin-bottom: 1.25rem; border-bottom: var(--bw) solid var(--fg); }
@@ -228,13 +230,20 @@
 @media (min-width: 56.3125rem) {
   .cd .stage { grid-template-columns: 24.5rem minmax(0, 1fr); column-gap: 3.5rem; }
   .cd .stage__title { grid-column: 1; grid-row: 1; }
-  .cd .stage__export { grid-column: 2; grid-row: 1 / span 3; justify-self: end; align-self: start; width: auto; margin-top: 0; }
+  .cd .stage__toggle { display: none; }
+  .cd .stage__label { display: flex; }
+  /* Exportar tokens abaixo da lista, na coluna dela (392 px), 32 px depois do fim da linha da lista e do painel (e dos avisos) */
+  .cd .stage__export { grid-column: 1; grid-row: 6; margin-top: 2rem; }
   .cd .stage__body { display: contents; }
   .cd .stage__preset { grid-column: 1; grid-row: 2; margin-top: 2rem; }
   .cd .tabs { grid-column: 1; grid-row: 3; margin-top: 1.75rem; margin-bottom: 1rem; }
+  /* as abas ocupam a largura da lista: "Comportamento" fica com a do conteúdo, as outras três dividem o resto em partes iguais */
+  .cd .tab { flex: 1 1 0; min-width: 0; justify-content: center; }
+  .cd .tab[data-tab="behavior"] { flex: none; }
   .cd .stage__panel { grid-column: 1; grid-row: 4 / span 2; display: grid; grid-template-rows: subgrid; }
   .cd .stage__panel > #ribbon-host { grid-row: 1; }
   .cd .stage__panel > #alerts { grid-row: 2; }
+  /* o painel fica na linha da lista (topo e altura dela); só a altura do conteúdo é o mínimo (aba Comportamento, com menos níveis) */
   .cd .stage__detail { grid-column: 2; grid-row: 4; display: grid; }
 }
 
