@@ -38,30 +38,14 @@ const KNOWN_EXCEPTIONS: string[] = [
   'components/sections/case/CaseDiscoveryTopics.astro::width: 107px',
   // Figma: miolo do case, fecha os 1440px do frame (conta no comentário de [slug].astro)
   'pages/cases/[slug].astro::max-width: 977px',
-  // App v0.2.0, ainda sem migrar para a escala do site (fase 2)
+  // App v0.2.0, ainda sem migrar para a escala do site (fase 2): marca, erro do campo, avisos e diálogo de exportação
   'styles/tools/color-decomposer.css::gap: .625rem',
-  'styles/tools/color-decomposer.css::padding: 0 .875rem',
-  'styles/tools/color-decomposer.css::margin-left: .625rem',
-  'styles/tools/color-decomposer.css::gap: .375rem',
   'styles/tools/color-decomposer.css::padding-left: .625rem',
-  'styles/tools/color-decomposer.css::margin-top: -.625rem',
   'styles/tools/color-decomposer.css::padding: .875rem 1rem',
   'styles/tools/color-decomposer.css::gap: .375rem',
   'styles/tools/color-decomposer.css::gap: .375rem',
-  'styles/tools/color-decomposer.css::width: .625rem',
-  'styles/tools/color-decomposer.css::width: .875rem',
-  'styles/tools/color-decomposer.css::height: .875rem',
-  'styles/tools/color-decomposer.css::width: 1.125rem',
-  'styles/tools/color-decomposer.css::height: 1.125rem',
-  'styles/tools/color-decomposer.css::padding-top: .875rem',
-  'styles/tools/color-decomposer.css::gap: .375rem',
-  'styles/tools/color-decomposer.css::width: 1.125rem',
-  'styles/tools/color-decomposer.css::height: 1.125rem',
   'styles/tools/color-decomposer.css::gap: 1.125rem',
   'styles/tools/color-decomposer.css::gap: .625rem',
-  'styles/tools/color-decomposer.css::padding: .625rem 1rem',
-  'styles/tools/color-decomposer.css::width: 1.125rem',
-  'styles/tools/color-decomposer.css::height: 1.125rem',
 ];
 
 function collectFiles(dir: string, files: string[] = []) {

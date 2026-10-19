@@ -1,5 +1,7 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/main.js. Mudanças da integração ao site: import do pacote
 // color-decomposer e o tema derivado aplicado só no elemento raiz da ferramenta (.cd), não no <html>.
+// Estrutura do Figma (2026-10-19): lista de níveis em todos os tamanhos; no computador o painel de detalhes fica
+// sempre aberto ao lado da lista, no celular abre sob a linha tocada (accordion).
 import {
   decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toFigmaJson, toPlainJson, checkToneSeparation, suggestBrandLevel, supportLevel, oklchToHex, hexToOklch, vividGain, VIVID_VISIBLE_LIMIT
 } from 'color-decomposer';
@@ -19,19 +21,16 @@ const up = (hex) => hex.toUpperCase();
 let state = parseHash(location.hash, systemMode());
 let current = null; // último resultado válido: { theme, preset }
 let lastError = '';
-let tune = null;
-let editing = 'main'; // qual cor os controles de claridade, intensidade e matiz editam: 'main' ou 'support' // { L, C, h, hex }: valores dos controles de claridade, intensidade e matiz
+let tune = null; // { L, C, h, hex }: valores dos controles de claridade, intensidade e matiz
 
 /* ---------- Motor ---------- */
 
+// Os ajustes avançados saíram da interface (2026-10-19): ordem, saturação do escuro, falha de contraste e o token txt
+// ficam no padrão do motor, que é o mesmo que a interface usava.
 function buildOptions(s) {
   const o = {
     txtOnStrategy: s.strategy,
-    accessibilityLevel: s.level,
-    colorContrastDecompose: s.order,
-    darkModeChroma: s.darkChroma / 100,
-    onAccessibilityFailure: s.failure,
-    generateTxt: s.txt
+    accessibilityLevel: s.level
   };
   if (s.support) {
     o.anchors = [{ hex: s.support }]; // com cor de apoio, a principal fica no nível padrão e o Auto e a Cor viva ficam de fora
@@ -40,26 +39,13 @@ function buildOptions(s) {
     o.behaviorFollowsBrand = s.normal === 'brand';
     if (s.vivid) o.vividChroma = true;
   }
-  if (s.overlap !== '') o.overlap = { level: Number(s.overlap) };
-  if (s.strategy === 'custom-tint') {
-    o.txtOnCustomTint = { fallback: s.customFallback, ...(s.customLight && { light: s.customLight }), ...(s.customDark && { dark: s.customDark }) };
-  }
-  const border = {};
-  if (s.borderPalette !== '') border.palette = Number(s.borderPalette);
-  if (s.borderNeutrals !== '') border.neutrals = Number(s.borderNeutrals);
-  if (Object.keys(border).length) o.borderOffset = border;
   return o;
 }
 
 function build(s, name = NAME) {
   const preset = PRESETS[s.preset];
   try {
-    const neutralsOverrides = {};
-    if (s.neutralsOwn) {
-      const block = { baseColor: s.neutralsBase, referenceLevel: Number(s.neutralsRef || preset.neutrals.referenceLevel) };
-      neutralsOverrides[name] = { light: block, dark: block };
-    }
-    const theme = decomposeTheme({ colors: { [name]: s.color }, preset, options: buildOptions(s), neutralsOverrides });
+    const theme = decomposeTheme({ colors: { [name]: s.color }, preset, options: buildOptions(s) });
     return { theme, preset };
   } catch (e) {
     return { error: e.message };
@@ -82,22 +68,20 @@ function pair(group, key) {
 
 function itemsFor(tab, mode) {
   const { theme, preset } = current;
-  const other = mode === 'dark' ? 'light' : 'dark';
   const c = theme.colors[NAME];
-  const mk = (key, num, label, title, a, o, extra = {}) => {
+  const mk = (key, num, label, title, a, extra = {}) => {
     const ratio = contrastRatio(a.s, a.t);
-    return { key: String(key), num, label, title, a, o, ratio, ...extra };
+    return { key: String(key), num, label, title, a, ratio, ...extra };
   };
   if (tab === 'behavior') {
     return Object.entries(c[mode].behavior.level).map(([name, level]) => {
       const nice = T.behaviorNamesByPreset[preset.id]?.[name] ?? T.behaviorNames[name] ?? name;
       return mk(name, level, T.detail.behavior(nice, level), T.detail.behavior(nice, level),
-        pair(c[mode].behavior, name), pair(c[other].behavior, name), { name: nice, base: anchored() ? (state.normal === 'brand' && name === 'normal') : level === preset.palette.baseLevel });
+        pair(c[mode].behavior, name), { name: nice, base: anchored() ? (state.normal === 'brand' && name === 'normal') : level === preset.palette.baseLevel });
     });
   }
   if (tab === 'grayscale') {
-    return preset.neutrals.levels.map((l) =>
-      mk(l, l, T.detail.level(l), T.detail.level(l), pair(theme.grayscale[mode], l), pair(theme.grayscale[other], l)));
+    return preset.neutrals.levels.map((l) => mk(l, l, T.detail.level(l), T.detail.level(l), pair(theme.grayscale[mode], l)));
   }
   const levels = preset[tab].levels;
   return levels.map((l) => {
@@ -105,13 +89,13 @@ function itemsFor(tab, mode) {
     const isSupport = tab === 'palette' && hasSupport() && !supportIssue() && l === supportLevelIn(mode);
     const tag = base ? (hasSupport() ? T.mainColor : T.yourColor) : isSupport ? T.supportColor : '';
     const label = tag ? `${T.detail.level(l)}, ${tag.toLowerCase()}` : T.detail.level(l);
-    return mk(l, l, label, T.detail.level(l), pair(c[mode][tab], l), pair(c[other][tab], l), { base: base || isSupport, tag, support: isSupport });
+    return mk(l, l, label, T.detail.level(l), pair(c[mode][tab], l), { base: base || isSupport, tag });
   });
 }
 
-/* ---------- Nível da cor da marca ---------- */
+/* ---------- Nível da cor principal ---------- */
 
-// Nível onde a marca está na paleta (100 por padrão; outro depois do Auto) e o nível equivalente em cada modo.
+// Nível onde a cor principal está na paleta (100 por padrão; outro depois do Auto) e o nível equivalente em cada modo.
 function brandLevel() {
   const levels = current.preset.palette.levels;
   return state.lvl !== '' && levels.includes(Number(state.lvl)) ? Number(state.lvl) : current.preset.palette.baseLevel;
@@ -123,15 +107,13 @@ function brandLevelIn(mode) {
 const anchored = () => brandLevel() !== current.preset.palette.baseLevel;
 const resetLevel = () => { state.lvl = ''; state.normal = 'mid'; state.vivid = false; };
 
-/* ---------- Cor de apoio ---------- */
+/* ---------- Cor de apoio (sem interface desde 2026-10-19; só um endereço antigo a liga) ---------- */
 
 const hasSupport = () => state.support !== '';
 const mirror = (level) => { const { levels } = current.preset.palette; return levels[0] + levels.at(-1) - level; };
 const supportLevelLight = () => supportLevel(state.color, state.support, current.preset);
 const supportLevelIn = (mode) => (mode === 'dark' ? mirror(supportLevelLight()) : supportLevelLight());
-// Problema da cor de apoio que o motor devolveu: { reason: 'same-level' | 'order' } ou null.
 const supportIssue = () => (hasSupport() && current?.theme.warnings.find((w) => w.type === 'anchors')) || null;
-const colorOf = (which) => (which === 'support' && hasSupport() ? state.support : state.color);
 
 /* ---------- Tons parecidos ---------- */
 
@@ -155,33 +137,26 @@ function vividAvailable() {
   return state.vivid || vividGain(state.color, state.preset, brandLevel()) >= VIVID_VISIBLE_LIMIT;
 }
 
-const rangeText = (r) => `${r.from} a ${r.to}`;
-
 /* ---------- Avisos ---------- */
-
-const WARN_ICON = '<svg class="notice__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5 22 20.5H2L12 3.5Z"/><path d="M12 10v4.5"/><path d="M12 17.6v.01"/></svg>';
 
 function renderAlerts() {
   const host = $('alerts');
-  const similarHost = $('similar-host');
   host.replaceChildren();
-  similarHost.replaceChildren();
-  const add = (html, role, into = host) => {
+  const add = (html, role) => {
     const d = document.createElement('div');
     d.className = 'notice';
     if (role) d.setAttribute('role', role);
     d.innerHTML = html;
-    into.append(d);
+    host.append(d);
     return d;
   };
   if (lastError) {
     add(`<p class="notice__title">${T.warnings.errorTitle}</p><p>${esc(lastError)}</p><p>${T.warnings.errorHelp}</p>`, 'alert');
     return;
   }
-  const ws = current.theme.warnings;
   const acc = [];
   const seen = new Set();
-  for (const w of ws.filter((x) => x.type === 'accessibility' && x.mode === state.mode)) {
+  for (const w of current.theme.warnings.filter((x) => x.type === 'accessibility' && x.mode === state.mode)) {
     const k = `${w.mode}|${w.group}|${w.level}`;
     if (!seen.has(k)) { seen.add(k); acc.push(w); }
   }
@@ -201,21 +176,6 @@ function renderAlerts() {
       btn.textContent = open ? T.warnings.hide : T.warnings.show;
     });
   }
-  const { sep, can } = autoState();
-  if (sep && sep.runs.length) {
-    const sides = new Set(sep.runs.map((r) => r.side));
-    const side = sides.size === 1 ? [...sides][0] : 'both';
-    add(`${WARN_ICON}<p>${T.similar.msg(sep.runs.map(rangeText), side, can, hasSupport())}</p>`, 'status', similarHost).classList.add('notice--warn');
-  }
-  const issue = supportIssue();
-  if (issue) {
-    const level = state.mode === 'dark' ? mirror(issue.level) : issue.level;
-    const text = issue.reason === 'same-level' ? T.support.warnSame(level) : T.support.warnOrder(level);
-    add(`${WARN_ICON}<p>${text}</p>`, 'status', similarHost).classList.add('notice--warn');
-  }
-  const ov = ws.filter((x) => x.type === 'override');
-  if (ov.length) add(`<p>${T.warnings.override(ov.length)}</p>`, 'status').classList.add('notice--compact');
-  if (ws.some((x) => x.type === 'config')) add(`<p>${T.warnings.config}</p>`, 'status').classList.add('notice--compact');
 }
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -259,23 +219,25 @@ function setTab(tab) {
   render();
 }
 
-/* ---------- Faixa de tons ---------- */
+/* ---------- Lista de níveis ---------- */
 
-// Ícones no estilo dos do site (rodapé: 24x24, cantos retos, preenchidos com currentColor); no painel de detalhes
-const ICON_COPY_SITE = '<svg class="icon-copy" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 9H15V21H3V9ZM5 11V19H13V11H5Z" fill="currentColor"/><path d="M9 3H21V15H15V13H19V5H11V9H9V3Z" fill="currentColor"/></svg><svg class="icon-done" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10 15.172L19.192 5.979L20.607 7.393L10 18L3.636 11.636L5.05 10.222L10 15.172Z" fill="currentColor"/></svg>';
-const COPY_ICON = '<svg class="swatch__copy-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9" height="9" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/></svg><svg class="swatch__copy-done" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>';
+// Ícone de copiar do site (24x24, currentColor) e o de confirmação, que aparece por 1,5s depois de copiar
+const ICON_COPY = '<svg class="icon-copy" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M17 21H3V7H17V21ZM5 19H15V9H5V19Z" fill="currentColor"/><path d="M21 18H19V5H6V3H21V18Z" fill="currentColor"/></svg><svg class="icon-done" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10 15.172L19.192 5.979L20.607 7.393L10 18L3.636 11.636L5.05 10.222L10 15.172Z" fill="currentColor"/></svg>';
 const COPYABLE = ['palette', 'neutrals'];
 
 const narrow = () => matchMedia('(max-width: 56.25rem)').matches;
 
+// No computador o painel fica sempre aberto: sem escolha, mostra o nível da cor principal (ou o do meio da escala)
+function defaultKey(items) {
+  return (items.find((it) => it.base) ?? items[Math.floor(items.length / 2)]).key;
+}
+
 function swatchHtml(it, tab) {
-  const flag = it.ratio < requiredRatio();
-  const flagEl = flag ? '<span class="swatch__flag" aria-hidden="true"></span>' : '';
-  const inner = flagEl + (tab === 'behavior'
-    ? `<span class="swatch__num">${it.num}</span><span class="swatch__stack"><span class="swatch__aa" aria-hidden="true">Aa</span><span class="swatch__name">${esc(it.name)}</span></span>`
-    : `<span class="swatch__num">${it.num}</span><span class="swatch__aa" aria-hidden="true">Aa</span>`);
+  const flag = it.ratio < requiredRatio() ? '<span class="swatch__flag" aria-hidden="true"></span>' : '';
+  const name = tab === 'behavior' ? `<span class="swatch__name">${esc(it.name)}</span>` : '';
   const tag = it.base ? `<span class="swatch__tag">${esc(it.tag || T.yourColor)}</span>` : '';
-  return `${inner}<span class="swatch__meta" aria-hidden="true">${tag}<span class="swatch__hex">${up(it.a.s)}</span><br>${fmt(it.ratio)} para 1</span>`;
+  return `${flag}<span class="swatch__num">${it.num}</span><span class="swatch__aa" aria-hidden="true">Aa</span>${name}`
+    + `<span class="swatch__meta" aria-hidden="true"><span class="swatch__line">${tag}<span class="swatch__hex">${up(it.a.s)}</span></span><span>${fmt(it.ratio)} para 1</span></span>`;
 }
 
 function paintSwatch(btn, it, tab) {
@@ -286,11 +248,23 @@ function paintSwatch(btn, it, tab) {
   btn.innerHTML = swatchHtml(it, tab);
 }
 
+// Um só painel de detalhes: no computador fica na coluna da direita; no celular, logo abaixo da linha aberta.
+const detail = document.createElement('section');
+detail.className = 'detail';
+detail.id = 'detail';
+
+function flash(btn) {
+  btn.classList.add('is-done');
+  clearTimeout(btn.doneTimer);
+  btn.doneTimer = setTimeout(() => btn.classList.remove('is-done'), 1500);
+}
+
 function renderRibbon() {
   const host = $('ribbon-host');
   const tab = state.tab;
   const items = itemsFor(tab, state.mode);
-  const sig = `${tab}|${state.preset}|${items.map((i) => `${i.key}:${i.num}${i.base ? '*' : ''}${i.tag ?? ''}`).join(',')}|${narrow()}`;
+  const wide = !narrow();
+  const sig = `${tab}|${state.preset}|${items.map((i) => `${i.key}:${i.num}${i.base ? '*' : ''}${i.tag ?? ''}`).join(',')}|${wide}`;
   const focusedKey = document.activeElement?.closest?.('.swatch')?.dataset.key;
 
   let ribbon = host.firstElementChild;
@@ -298,40 +272,35 @@ function renderRibbon() {
     host.dataset.sig = sig;
     ribbon = document.createElement('div');
     ribbon.className = 'ribbon';
-    ribbon.setAttribute('role', 'radiogroup');
+    // computador: escolher um nível troca o painel ao lado (radiogroup); celular: cada linha abre e fecha o seu (accordion)
+    ribbon.setAttribute('role', wide ? 'radiogroup' : 'group');
     ribbon.setAttribute('aria-label', T.groupLabel[tab]);
-    ribbon.style.setProperty('--n', items.length);
     items.forEach((it, i) => {
       const cell = document.createElement('div');
       cell.className = 'cell';
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'swatch'; b.role = 'radio'; b.dataset.key = it.key; b.dataset.i = i;
+      b.type = 'button'; b.className = 'swatch'; b.dataset.key = it.key; b.dataset.i = i;
+      if (wide) b.role = 'radio'; else b.setAttribute('aria-controls', 'detail');
       cell.append(b);
       if (COPYABLE.includes(tab)) {
         const c = document.createElement('button');
-        c.type = 'button'; c.className = 'swatch__copy'; c.innerHTML = COPY_ICON;
+        c.type = 'button'; c.className = 'swatch__copy'; c.innerHTML = ICON_COPY;
         cell.classList.add('cell--copy');
         cell.append(c);
       }
       ribbon.append(cell);
-      if (it.base && !narrow() && tab !== 'behavior') {
-        const tagEl = document.createElement('span');
-        tagEl.className = 'ribbon__base'; tagEl.style.gridColumn = String(i + 1); tagEl.textContent = it.tag || T.yourColor;
-        tagEl.setAttribute('aria-hidden', 'true');
-        ribbon.append(tagEl);
-      }
     });
     ribbon.addEventListener('click', (e) => {
       const c = e.target.closest('.swatch__copy');
       if (c) {
         copyText(c.dataset.hex, T.detail.copied(c.dataset.hex), T.detail.copyFail);
-        c.classList.add('is-done');
-        clearTimeout(c.doneTimer);
-        c.doneTimer = setTimeout(() => c.classList.remove('is-done'), 1500);
+        flash(c);
         return;
       }
       const b = e.target.closest('.swatch');
-      if (b) select(b.dataset.key);
+      if (!b) return;
+      // no celular, tocar na linha aberta fecha o painel
+      select(!narrow() || b.getAttribute('aria-expanded') !== 'true' ? b.dataset.key : '');
     });
     ribbon.addEventListener('keydown', onRibbonKey);
     host.replaceChildren(ribbon);
@@ -346,23 +315,28 @@ function renderRibbon() {
       copy.setAttribute('aria-label', T.detail.copyLevelAria(it.title, up(it.a.s)));
     }
   });
-  const selIndex = items.findIndex((it) => it.key === state.sel);
+  const sel = state.sel || (wide ? defaultKey(items) : '');
+  const selIndex = items.findIndex((it) => it.key === sel);
   buttons.forEach((b, i) => {
     const on = i === selIndex;
-    b.setAttribute('aria-checked', String(on));
-    b.tabIndex = on || (selIndex < 0 && i === 0) ? 0 : -1;
+    b.parentElement.classList.toggle('is-selected', on);
+    if (wide) {
+      b.setAttribute('aria-checked', String(on));
+      b.tabIndex = on || (selIndex < 0 && i === 0) ? 0 : -1;
+    } else {
+      b.setAttribute('aria-expanded', String(on));
+      b.tabIndex = 0;
+    }
     const copy = b.parentElement.querySelector('.swatch__copy');
-    if (copy) copy.tabIndex = b.tabIndex; // uma só parada de Tab a mais: a do tom ativo
+    if (copy) copy.tabIndex = b.tabIndex; // no computador, uma só parada de Tab a mais: a do tom ativo
   });
 
-  ribbon.querySelectorAll('.detail, .hint').forEach((n) => n.remove());
-  if (selIndex < 0) {
-    const p = document.createElement('p');
-    p.className = 'hint'; p.textContent = T.pickHint;
-    ribbon.append(p);
-  } else {
-    const panel = detailPanel(items[selIndex], selIndex, items.length);
-    if (narrow()) buttons[selIndex].parentElement.after(panel); else ribbon.append(panel);
+  detail.hidden = selIndex < 0;
+  if (selIndex >= 0) fillDetail(items[selIndex]);
+  if (wide) $('detail-host').replaceChildren(detail);
+  else {
+    $('detail-host').replaceChildren();
+    if (selIndex >= 0) buttons[selIndex].parentElement.after(detail); else ribbon.append(detail);
   }
   if (focusedKey) ribbon.querySelector(`.swatch[data-key="${CSS.escape(focusedKey)}"]`)?.focus({ preventScroll: true });
 }
@@ -371,12 +345,13 @@ function onRibbonKey(e) {
   const buttons = [...e.currentTarget.querySelectorAll('.swatch')];
   const i = buttons.indexOf(document.activeElement);
   if (i < 0) return;
-  if (e.key === 'Escape') { if (state.sel) { e.preventDefault(); state.sel = ''; render(); } return; }
+  const wide = !narrow();
+  if (e.key === 'Escape') { if (!wide && state.sel) { e.preventDefault(); state.sel = ''; render(); } return; }
   const target = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: buttons.length - 1 }[e.key];
   if (target === undefined) return;
   e.preventDefault();
   const b = buttons[Math.max(0, Math.min(buttons.length - 1, target))];
-  select(b.dataset.key);
+  if (wide) select(b.dataset.key); // nos rádios a seta escolhe; no accordion só move o foco
   e.currentTarget.querySelector(`.swatch[data-key="${CSS.escape(b.dataset.key)}"]`)?.focus();
 }
 
@@ -387,60 +362,52 @@ function select(key) {
 
 /* ---------- Detalhes ---------- */
 
-const ICON_OK = '<svg class="verdict__icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const ICON_NO = '<svg class="verdict__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2l8.5 15h-17z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 8v4.5M10 14.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-
-function detailPanel(it, index, count) {
-  const v = verdictOf(it.ratio);
-  const el = document.createElement('section');
-  el.className = 'detail';
-  el.setAttribute('aria-label', `Detalhes: ${it.title}`);
-  el.style.setProperty('--caret', String((index + 0.5) / count));
+function fillDetail(it) {
+  detail.setAttribute('aria-label', `Detalhes: ${it.title}`);
   const row = (what, hex) => `
     <div class="value">
       <span class="value__chip" style="--c:${hex}"></span>
       <span><span class="value__label">${what}</span><span class="value__hex">${up(hex)}</span></span>
-      <button type="button" class="btn btn--icon" data-copy="${up(hex)}" aria-label="${T.detail.copyAria(what, up(hex))}">${ICON_COPY_SITE}</button>
+      <button type="button" class="btn btn--icon" data-copy="${up(hex)}" aria-label="${T.detail.copyAria(what, up(hex))}">${ICON_COPY}</button>
     </div>`;
-  const otherMode = state.mode === 'dark' ? 'light' : 'dark';
-  el.innerHTML = `
+  const option = (value) => `<label class="segmented__item"><input type="radio" name="strategy" value="${value}"${state.strategy === value ? ' checked' : ''}><span>${T.detail.strategy[value]}</span></label>`;
+  detail.innerHTML = `
     <div class="detail__head">
       <h3 class="detail__title">${esc(it.title)}</h3>
-      ${it.base && state.tab !== 'behavior' ? `<span class="detail__note">${it.support ? T.support.note : T.detail.baseNote}</span>` : ''}
-      <button type="button" class="btn btn--quiet" data-close>${T.detail.close}</button>
+      <button type="button" class="btn btn--quiet detail__close" data-close>${T.detail.close}</button>
     </div>
-    <div>
-      <div class="values">${row(T.detail.surface, it.a.s)}${row(T.detail.txtOn, it.a.t)}${row(T.detail.border, it.a.b)}</div>
-      <p class="verdict">${v.ok ? ICON_OK : ICON_NO}<span>${T.detail.contrast(it.ratio)}. ${v.text}.</span></p>
+    <div class="sample" style="--s:${it.a.s};--t:${it.a.t}">
+      <span class="sample__text"><span class="sample__big" aria-hidden="true">Aa</span><span class="sample__small">${T.detail.sample}</span></span>
+      <span class="sample__tag">${T.detail.tag(it.ratio)}</span>
     </div>
-    <div class="sample" style="--s:${it.a.s};--t:${it.a.t};--b:${it.a.b}">
-      <span class="sample__big" aria-hidden="true">Aa</span>
-      <span class="sample__small">${T.detail.sample}</span>
+    <div class="field">
+      <span class="field__label" id="strategy-label">${T.detail.textColor}</span>
+      <div class="segmented" role="radiogroup" aria-labelledby="strategy-label">${option('high-contrast')}${option('brand-tint')}</div>
     </div>
-    <div class="other">
-      <span>${T.detail.otherMode(otherMode)}</span>
-      <span class="other__chip"><i style="--c:${it.o.s}"></i>${up(it.o.s)}</span>
-      <span class="other__chip"><i style="--c:${it.o.t}"></i>${up(it.o.t)}</span>
-      <span class="other__chip"><i style="--c:${it.o.b}"></i>${up(it.o.b)}</span>
-    </div>`;
-  el.addEventListener('click', async (e) => {
-    const c = e.target.closest('[data-copy]');
-    if (c) {
-      await copyText(c.dataset.copy, T.detail.copied(c.dataset.copy), T.detail.copyFail); // anunciado no #live (role="status")
-      c.classList.add('is-done');
-      clearTimeout(c.doneTimer);
-      c.doneTimer = setTimeout(() => c.classList.remove('is-done'), 1500);
-      return;
-    }
-    if (e.target.closest('[data-close]')) {
-      const key = state.sel;
-      state.sel = '';
-      render();
-      $('ribbon-host').querySelector(`.swatch[data-key="${CSS.escape(key)}"]`)?.focus();
-    }
-  });
-  return el;
+    <div class="values">${row(T.detail.surface, it.a.s)}${row(T.detail.txtOn, it.a.t)}${row(T.detail.border, it.a.b)}</div>`;
 }
+
+detail.addEventListener('click', async (e) => {
+  const c = e.target.closest('[data-copy]');
+  if (c) {
+    await copyText(c.dataset.copy, T.detail.copied(c.dataset.copy), T.detail.copyFail); // anunciado no #live (role="status")
+    flash(c);
+    return;
+  }
+  if (e.target.closest('[data-close]')) {
+    const key = state.sel;
+    state.sel = '';
+    render();
+    $('ribbon-host').querySelector(`.swatch[data-key="${CSS.escape(key)}"]`)?.focus();
+  }
+});
+// Cor do texto: vale para todos os tons. O painel é refeito a cada mudança, então o foco volta para a opção escolhida.
+detail.addEventListener('change', (e) => {
+  if (e.target.name !== 'strategy') return;
+  state.strategy = e.target.value;
+  update();
+  detail.querySelector('input[name="strategy"]:checked')?.focus();
+});
 
 /* ---------- Área de transferência e avisos falados ---------- */
 
@@ -467,61 +434,28 @@ async function copyText(text, okMsg, failMsg, statusEl) {
 
 /* ---------- Ajustes ---------- */
 
-const FIELD_HEX = [
-  { id: 'hex', key: 'color', optional: false },
-  { id: 'customLight', key: 'customLight', optional: true },
-  { id: 'customDark', key: 'customDark', optional: true },
-  { id: 'neutralsBase', key: 'neutralsBase', optional: false }
-];
-const FIELD_SIMPLE = ['preset', 'strategy', 'level', 'order', 'overlap', 'failure', 'customFallback', 'neutralsRef', 'borderPalette', 'borderNeutrals'];
-
 function setInvalid(input, on) {
-  let err = $(`${input.id}-error`);
-  if (!err) {
-    err = document.createElement('p');
-    err.className = 'field__error'; err.id = `${input.id}-error`; err.hidden = true;
-    err.textContent = T.hexError;
-    input.closest('.field').append(err);
-    input.setAttribute('aria-describedby', `${input.getAttribute('aria-describedby') ?? ''} ${err.id}`.trim());
-  }
+  const err = $(`${input.id}-error`);
   err.hidden = !on;
   err.textContent = T.hexError;
   if (on) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
 }
 
 function bindControls() {
-  for (const f of FIELD_HEX) {
-    const input = $(f.id);
-    input.addEventListener('input', () => {
-      const v = input.value.trim();
-      const hex = toHex(v);
-      if (hex) { if (f.key === 'color' && hex !== state.color) resetLevel(); state[f.key] = hex; setInvalid(input, false); if (f.id === 'hex') $('picker').value = hex; update(); }
-      else if (f.optional && v === '') { state[f.key] = ''; setInvalid(input, false); update(); }
-      else if (v.replace('#', '').length >= 6) setInvalid(input, true);
-    });
-    input.addEventListener('blur', () => {
-      const v = input.value.trim();
-      const ok = toHex(v) || (f.optional && v === '');
-      setInvalid(input, !ok);
-    });
-  }
-  $('picker').addEventListener('input', (e) => {
-    state.color = e.target.value.toLowerCase(); resetLevel();
-    $('hex').value = up(state.color); setInvalid($('hex'), false);
-    update();
+  const hexInput = $('hex');
+  hexInput.addEventListener('input', () => {
+    const hex = toHex(hexInput.value);
+    if (hex) { if (hex !== state.color) resetLevel(); state.color = hex; setInvalid(hexInput, false); update(); }
+    else if (hexInput.value.trim().replace('#', '').length >= 6) setInvalid(hexInput, true);
   });
+  hexInput.addEventListener('blur', () => setInvalid(hexInput, !toHex(hexInput.value)));
   for (const id of ['tuneL', 'tuneC', 'tuneH']) {
     $(id).addEventListener('input', () => {
       tune = { ...tune, L: Number($('tuneL').value), C: Number($('tuneC').value), h: Number($('tuneH').value), snapped: false };
       const r = oklchToHex(tune.L / 100, tune.C / 100, tune.h);
       tune.hex = r.hex;
-      if (editing === 'support' && hasSupport()) {
-        state.support = r.hex;
-        setInvalid($('support-hex'), false);
-      } else {
-        state.color = r.hex; resetLevel();
-        $('hex').value = up(r.hex); setInvalid($('hex'), false);
-      }
+      state.color = r.hex; resetLevel();
+      $('hex').value = up(r.hex); setInvalid($('hex'), false);
       update();
     });
   }
@@ -532,58 +466,30 @@ function bindControls() {
     tune = { ...tune, C: Math.round(used.chroma * 100), snapped: true };
     syncTune();
   });
-  const setSupport = (hex) => { state.support = hex; update(); };
-  $('support-hex').addEventListener('input', () => {
-    const hex = toHex($('support-hex').value);
-    if (hex) { setInvalid($('support-hex'), false); $('support-picker').value = hex; setSupport(hex); }
-    else if ($('support-hex').value.trim().replace('#', '').length >= 6) setInvalid($('support-hex'), true);
-  });
-  $('support-hex').addEventListener('blur', () => setInvalid($('support-hex'), !toHex($('support-hex').value)));
-  $('support-picker').addEventListener('input', (e) => {
-    setInvalid($('support-hex'), false);
-    setSupport(e.target.value.toLowerCase());
-  });
-  $('support-add').addEventListener('click', () => {
-    // Ponto de partida: um tom bem claro da cor principal (ou um bem escuro, se ela já for clara).
-    const o = hexToOklch(state.color);
-    state.support = (o.L > 0.85 ? oklchToHex(0.3, 0.06, o.h) : oklchToHex(0.96, 0.03, o.h)).hex;
-    resetLevel();
-    update();
-    $('support-hex').focus();
-  });
-  $('support-remove').addEventListener('click', () => {
-    state.support = ''; editing = 'main';
-    update();
-    $('support-add').focus();
-    say(T.support.removed);
-  });
-  for (const r of document.querySelectorAll('input[name="edit"]')) r.addEventListener('change', () => { editing = r.value; update(); });
   $('auto').addEventListener('click', () => {
     if ($('auto').getAttribute('aria-disabled') === 'true') return;
     state.lvl = String(suggestBrandLevel(state.color, state.preset));
     update();
-    $('tune-status').focus(); // o botão fica desabilitado: o foco vai para o resultado, que é lido em seguida
+    say(T.tune.autoDone(brandLevelIn(state.mode))); // o botão fica indisponível: o resultado é anunciado
   });
   $('vivid').addEventListener('click', () => {
     if ($('vivid').getAttribute('aria-disabled') === 'true') return;
     state.vivid = !state.vivid; update();
   });
-  for (const id of FIELD_SIMPLE) {
-    $(id).addEventListener('change', (e) => {
-      state[id] = e.target.value;
-      if (id === 'preset') { resetLevel(); state.overlap = ''; state.neutralsRef = ''; state.sel = ''; }
-      update();
-    });
+  for (const name of ['mode', 'level', 'preset']) {
+    for (const r of document.querySelectorAll(`input[name="${name}"]`)) {
+      r.addEventListener('change', () => {
+        state[name] = r.value;
+        if (name === 'preset') { resetLevel(); state.sel = ''; }
+        update();
+      });
+    }
   }
-  $('darkChroma').addEventListener('input', (e) => { state.darkChroma = Number(e.target.value); $('darkChroma-out').textContent = `${state.darkChroma}%`; update(); });
-  for (const id of ['neutralsOwn', 'txt']) $(id).addEventListener('change', (e) => { state[id] = e.target.checked; update(); });
   $('normal-switch').addEventListener('change', (e) => { state.normal = e.target.checked ? 'brand' : 'mid'; update(); });
-  for (const r of document.querySelectorAll('input[name="mode"]')) r.addEventListener('change', () => { state.mode = r.value; update(); });
-  $('reset').addEventListener('click', () => {
-    state = { ...DEFAULTS, mode: state.mode };
-    for (const f of FIELD_HEX) setInvalid($(f.id), false);
-    update();
-    say(T.resetDone);
+  $('stage-toggle').addEventListener('click', (e) => {
+    const open = e.currentTarget.getAttribute('aria-expanded') !== 'true';
+    e.currentTarget.setAttribute('aria-expanded', String(open));
+    $('stage-body').hidden = !open;
   });
   $('rail').addEventListener('submit', (e) => e.preventDefault());
 }
@@ -591,10 +497,9 @@ function bindControls() {
 const decimal = (n) => n.toFixed(2).replace('.', ',');
 
 function syncTune() {
-  const edited = colorOf(editing);
-  if (!tune || tune.hex !== edited) {
-    const o = hexToOklch(edited);
-    tune = { L: Math.round(o.L * 100), C: Math.min(40, Math.round(o.C * 100)), h: Math.round(o.h) % 360, hex: edited };
+  if (!tune || tune.hex !== state.color) {
+    const o = hexToOklch(state.color);
+    tune = { L: Math.round(o.L * 100), C: Math.min(40, Math.round(o.C * 100)), h: Math.round(o.h) % 360, hex: state.color };
   }
   $('tuneL').value = tune.L; $('tuneC').value = tune.C; $('tuneH').value = tune.h;
   $('tuneL-out').textContent = `${tune.L}%`;
@@ -614,21 +519,15 @@ function syncTune() {
 }
 
 function renderMini() {
-  const { sep, suggested, can } = autoState();
+  const { sep, can } = autoState();
   if (!sep) return;
-  const vividOk = vividAvailable();
-  // aria-disabled: o botão continua no foco do teclado e do leitor de tela, sem executar a ação; o motivo fica à vista
-  const why = (id, ok, text) => {
-    $(id).setAttribute('aria-disabled', String(!ok));
-    $(`${id}-why`).hidden = ok;
-    $(`${id}-why`).textContent = ok ? '' : text;
-  };
-  why('auto', can, hasSupport() ? T.tune.autoSupport : suggested === brandLevel() ? T.tune.autoBest : T.tune.autoSeparated);
-  why('vivid', vividOk, hasSupport() ? T.tune.vividSupport : !anchored() ? (can ? T.tune.vividAuto : T.tune.vividNoAuto) : T.tune.vividSame);
+  // aria-disabled: o botão continua no foco do teclado e do leitor de tela, sem executar a ação
+  $('auto').setAttribute('aria-disabled', String(!can));
+  $('vivid').setAttribute('aria-disabled', String(!vividAvailable()));
   $('vivid').setAttribute('aria-pressed', String(state.vivid));
   const surface = current.theme.colors[NAME][state.mode].palette.surface;
   const levels = Object.keys(surface).map(Number).sort((x, y) => x - y);
-  // mini paleta (Figma hexrow-new): 4 tons de cada lado do seletor. Vêm de todos os níveis menos o da marca, que é o seletor;
+  // mini paleta (Figma): 4 tons de cada lado do anel. Vêm de todos os níveis menos o da cor principal, que é o anel;
   // se há mais que 8, escolhe 8 espaçados por igual.
   const others = levels.filter((l) => l !== brandLevel());
   const pick = others.length <= 8 ? others : Array.from({ length: 8 }, (_, i) => others[Math.round((i * (others.length - 1)) / 7)]);
@@ -637,7 +536,8 @@ function renderMini() {
   const left = pick.slice(0, half), right = pick.slice(half);
   $('mini-start').replaceChildren(...tones(left));
   $('mini-end').replaceChildren(...tones(right));
-  // marcação dos tons quase iguais ao vizinho, sob a faixa; a ordem é a que se vê (faixa, seletor, faixa)
+  $('mini-mark').style.setProperty('--c', surface[brandLevel()]);
+  // marcação dos tons quase iguais ao vizinho, sob a faixa; a ordem é a que se vê (faixa, anel, faixa)
   const seen = [...left, brandLevel(), ...right];
   const flagged = new Set(sep.tones);
   const flagFor = (l, i) => {
@@ -652,67 +552,15 @@ function renderMini() {
   $('mini-flags-start').replaceChildren(...left.map((l, i) => flagFor(l, i)));
   $('mini-flags-mid').replaceChildren(flagFor(brandLevel(), left.length));
   $('mini-flags-end').replaceChildren(...right.map((l, i) => flagFor(l, left.length + 1 + i)));
-  $('mini-support').hidden = !hasSupport();
-  if (hasSupport()) $('mini-support').style.setProperty('--c', state.support);
-  const shown = (lvl) => (state.mode === 'dark' ? levels[0] + levels.at(-1) - lvl : lvl);
-  $('tune-status').classList.toggle('is-warn', sep.tones.length > 0);
-  $('tune-status').textContent = sep.tones.length
-    ? T.tune.some(sep.tones.length, sep.total, can ? shown(suggested) : null)
-    : hasSupport() ? T.support.tuneOn
-    : state.vivid ? T.tune.vividOn
-    : anchored() ? (vividOk ? T.tune.okVivid(brandLevelIn(state.mode)) : T.tune.okAt(brandLevelIn(state.mode)))
-    : T.tune.ok;
 }
 
 function syncControls() {
-  const preset = PRESETS[state.preset];
   $('hex').value = up(state.color);
   if (document.activeElement !== $('hex')) setInvalid($('hex'), false);
-  $('picker').value = state.color;
-  if (!hasSupport()) editing = 'main';
-  const sup = hasSupport();
-  $('hex-label').textContent = sup ? T.mainColor : 'Cor da marca';
-  $('support-add').hidden = sup;
-  $('support-add-help').hidden = sup;
-  $('support-field').hidden = !sup;
-  $('edit-wrap').hidden = !sup;
-  document.querySelector(`input[name="edit"][value="${editing}"]`).checked = true;
-  if (sup) {
-    if (document.activeElement !== $('support-hex')) { $('support-hex').value = up(state.support); setInvalid($('support-hex'), false); }
-    $('support-picker').value = state.support;
-    const issue = supportIssue();
-    $('support-status').textContent = !issue ? T.support.atLevel(supportLevelIn(state.mode))
-      : issue.reason === 'same-level' ? T.support.sameLevel(state.mode === 'dark' ? mirror(issue.level) : issue.level)
-      : T.support.outOfOrder(state.mode === 'dark' ? mirror(issue.level) : issue.level);
-  }
   syncTune();
-  for (const id of FIELD_SIMPLE) if (!['overlap', 'neutralsRef'].includes(id)) $(id).value = state[id];
-  $('borderPalette').placeholder = String(preset.palette.step);
-  $('borderNeutrals').placeholder = '1';
-  $('customLight').value = state.customLight ? up(state.customLight) : '';
-  $('customDark').value = state.customDark ? up(state.customDark) : '';
-  $('neutralsBase').value = up(state.neutralsBase);
-  $('darkChroma').value = state.darkChroma;
-  $('darkChroma-out').textContent = `${state.darkChroma}%`;
-  $('neutralsOwn').checked = state.neutralsOwn;
-  $('txt').checked = state.txt;
-  document.querySelector(`input[name="mode"][value="${state.mode}"]`).checked = true;
-
-  const overlap = $('overlap');
-  overlap.replaceChildren(new Option(T.overlapOff, ''), ...preset.palette.levels.map((l) => new Option(String(l), String(l))));
-  overlap.value = preset.palette.levels.includes(Number(state.overlap)) ? state.overlap : '';
-  const ref = $('neutralsRef');
-  ref.replaceChildren(...preset.neutrals.levels.map((l) => new Option(String(l), String(l))));
-  ref.value = String(state.neutralsRef || preset.neutrals.referenceLevel);
-
-  const show = {
-    custom: state.strategy === 'custom-tint',
-    overlap: state.strategy === 'brand-tint' || (state.strategy === 'custom-tint' && state.customFallback === 'brand-tint'),
-    failure: state.level === 'AAA',
-    neutrals: state.neutralsOwn,
-    order: true
-  };
-  for (const el of document.querySelectorAll('[data-when]')) el.hidden = !show[el.dataset.when];
+  for (const name of ['mode', 'level', 'preset']) document.querySelector(`input[name="${name}"][value="${state[name]}"]`).checked = true;
+  const preset = PRESETS[state.preset];
+  $('preset-help').textContent = T.presetHelp(preset.palette.levels.length, preset.neutrals.levels.length);
 }
 
 /* ---------- Exportação ---------- */
@@ -721,7 +569,7 @@ const exp = { name: 'marca' };
 const slug = (s) => String(s).trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'marca';
 
 function exportFile(format, name) {
-  const { theme, error } = build({ ...state, txt: state.txt }, name);
+  const { theme, error } = build(state, name);
   if (error) return { text: error, file: 'erro.txt' };
   if (format === 'css') return { text: toCssVariables(theme), file: `${name}.css` };
   if (format === 'figma') return { text: toFigmaJson(theme), file: `${name}-figma-variables.json` };
@@ -760,19 +608,6 @@ function bindExport() {
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     $('export-status').textContent = T.export.downloaded(file);
-  });
-}
-
-/* ---------- Saiba mais ---------- */
-
-let learn = null;
-
-function bindLearn() {
-  $('learn-open').addEventListener('click', () => {
-    if (!learn) return;
-    $('learn-title').textContent = learn.title;
-    $('learn-text').replaceChildren(...learn.body.map((t) => Object.assign(document.createElement('p'), { textContent: t })));
-    $('learn').showModal();
   });
 }
 
@@ -823,18 +658,6 @@ function bindHelp() {
 /* ---------- Ciclo principal ---------- */
 
 function render() {
-  const preset = current.preset;
-  const n = state.tab === 'behavior' ? Object.keys(preset.behavior).length : (state.tab === 'palette' ? preset.palette.levels.length : preset.neutrals.levels.length);
-  const first = state.tab === 'palette' ? preset.palette.levels[0] : preset.neutrals.levels[0];
-  const last = state.tab === 'palette' ? preset.palette.levels.at(-1) : preset.neutrals.levels.at(-1);
-  const body = state.tab === 'palette'
-    ? T.learn.body.palette(n, first, last, brandLevelIn(state.mode), state.mode)
-    : state.tab === 'behavior' ? null : T.learn.body[state.tab](n, first, last, state.mode);
-  learn = body && { title: T.learn.title[state.tab], body };
-  $('scale-text').textContent = body ? T.orderShort(first, state.mode) : T.intro.behavior(n);
-  const open = $('learn-open');
-  open.hidden = !body;
-  if (body) { open.textContent = T.learn.open; open.setAttribute('aria-label', T.learn.openAria[state.tab]); }
   const choice = $('normal-choice');
   choice.hidden = !(state.tab === 'behavior' && anchored());
   if (!choice.hidden) {
@@ -868,19 +691,9 @@ function update() {
   render();
 }
 
-function placeMore() {
-  const more = $('more');
-  if (!more.dataset.seen) more.open = !narrow(); // aberto no computador, fechado no celular; depois disso, a pessoa decide
-  more.dataset.seen = '1';
-  const tm = $('tune-more');
-  if (!tm.dataset.seen) tm.open = !narrow();
-  tm.dataset.seen = '1';
-}
-placeMore();
 bindControls();
 bindExport();
-bindLearn();
 bindHelp();
-matchMedia('(max-width: 56.25rem)').addEventListener('change', () => { placeMore(); $('ribbon-host').dataset.sig = ''; update(); });
+matchMedia('(max-width: 56.25rem)').addEventListener('change', () => { $('ribbon-host').dataset.sig = ''; update(); });
 update();
 applyView();
