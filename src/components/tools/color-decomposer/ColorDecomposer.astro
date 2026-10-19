@@ -7,6 +7,7 @@
   - <main class="stage"> virou <div>, com o mesmo id, classe e tabindex: a
     página já tem o <main> do BaseLayout;
   - Exportar, Copiar tudo e Baixar arquivo ganharam data-umami-event;
+  - PR 3 (2026-10-19): Exportar tokens depois do corpo da paleta; "Paletas" com botão (celular) e texto (computador);
   - Auto usa aria-disabled (e não disabled), com o motivo em texto visível ligado por aria-describedby (auto-why);
   - PR 2 (2026-10-19): "Manter minha cor exata" (role="switch", desligado por padrão) e as linhas de ajuda dinâmicas
     do contraste e do switch, em role="status"; saem a Cor viva e o "Usar sua cor no estado normal";
@@ -114,10 +115,12 @@ import '../../../styles/tools/color-decomposer.css';
       <div class="shell__divider" role="presentation"></div>
 
       <div class="stage" id="tons" tabindex="-1">
+        <!-- "Paletas": no celular, o botão que abre e fecha o bloco; no computador (a partir de 901 px), só o texto. O CSS mostra
+             um dos dois (o outro fica em display: none, fora da árvore de acessibilidade e do foco). -->
         <h2 class="stage__title">
-          <button type="button" class="disclosure" id="stage-toggle" aria-expanded="true" aria-controls="stage-body">Paletas<svg class="disclosure__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11.7471 17L20.4941 7.15918L19 5.83105L11.7471 13.9902L4.49414 5.83105L3 7.15918L11.7471 17Z" fill="currentColor"/></svg></button>
+          <button type="button" class="disclosure stage__toggle" id="stage-toggle" aria-expanded="true" aria-controls="stage-body">Paletas<svg class="disclosure__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11.7471 17L20.4941 7.15918L19 5.83105L11.7471 13.9902L4.49414 5.83105L3 7.15918L11.7471 17Z" fill="currentColor"/></svg></button>
+          <span class="stage__label">Paletas</span>
         </h2>
-        <button type="button" class="btn stage__export" id="open-export" data-umami-event="color-decomposer-exportar">Exportar tokens</button>
         <div class="stage__body" id="stage-body">
           <div class="field stage__preset">
             <span class="field__label" id="preset-label">Sistema de níveis</span>
@@ -134,6 +137,8 @@ import '../../../styles/tools/color-decomposer.css';
           </div>
           <div class="stage__detail" id="detail-host"></div>
         </div>
+        <!-- depois do corpo: a ordem do DOM é a visual e a do foco (lista, painel, Exportar), no celular e no computador -->
+        <button type="button" class="btn stage__export" id="open-export" data-umami-event="color-decomposer-exportar">Exportar tokens</button>
       </div>
     </div>
 
