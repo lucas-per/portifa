@@ -22,12 +22,6 @@
   --edge: #8c7b80;
   --line: #f7e9ed;
   --ring: #010000;
-  /* alternador ligado: fundo e texto de cada estado (ver chrome.js) */
-  --on-fg: #fff4f8;
-  --fg-hover: #1b1315;
-  --on-fg-hover: #fff4f8;
-  --fg-pressed: #3a2e32;
-  --on-fg-pressed: #fff4f8;
   /* aviso (semântico, fixo: não vem dos neutros da cor escolhida) */
   --warn-bg: #ffe08a;
   --warn-edge: #8a5f00;
@@ -114,11 +108,8 @@
 }
 .cd .btn--quiet:active, .cd .btn--quiet[aria-pressed="true"], .cd .btn--quiet[aria-expanded="true"] { color: var(--fg); text-decoration: underline; }
 .cd .btn--quiet:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-/* Auto e Cor viva: o mesmo botão, com 36 px de altura (decisão de design; exceção aos 44 px de toque) */
+/* Auto: botão pequeno, com 36 px de altura (decisão de design; exceção aos 44 px de toque) */
 .cd .btn--sm { height: 2.25rem; padding: 0 .75rem; font-size: .75rem; }
-.cd .btn[aria-pressed="true"] { background: var(--fg); color: var(--on-fg); }
-.cd .btn[aria-pressed="true"]:not(:disabled):not([aria-disabled="true"]):hover { background: var(--fg-hover); color: var(--on-fg-hover); }
-.cd .btn[aria-pressed="true"]:not(:disabled):not([aria-disabled="true"]):active { background: var(--fg-pressed); color: var(--on-fg-pressed); }
 .cd .btn:disabled, .cd .btn[aria-disabled="true"] { opacity: .5; cursor: default; box-shadow: none; }
 .cd .btn:disabled:hover, .cd .btn:disabled:active, .cd .btn[aria-disabled="true"]:hover, .cd .btn[aria-disabled="true"]:active { transform: none; box-shadow: none; }
 /* Botão só de ícone (copiar): alvo de 44 px, sem sombra (Figma) */
@@ -159,10 +150,11 @@
   .cd .shell__divider { display: block; align-self: stretch; background: var(--edge); }
 }
 
-/* Ajustes: sem caixa, direto sobre o fundo */
+/* Ajustes: sem caixa, direto sobre o fundo. Modo e contraste formam um grupo com a linha de ajuda do contraste. */
 .cd .rail { display: grid; gap: 2rem; align-content: start; }
 .cd .rail__title { display: flex; align-items: center; min-height: var(--control); font-family: var(--font-title); font-size: 1rem; font-weight: 600; line-height: 1.72; letter-spacing: 1px; }
 .cd .rail__body { display: grid; gap: 1.75rem; }
+.cd .group { display: grid; gap: .5rem; }
 .cd .pair { display: flex; gap: 1.25rem; }
 .cd .pair > .field { flex: 1 1 0; min-width: 0; }
 .cd .field { display: grid; gap: .5rem; }
@@ -211,7 +203,10 @@
 /* o polegar de 24 px fica centrado no miolo de 4 px do trilho: (8 - 2 bordas - 24) / 2 */
 .cd .range::-webkit-slider-thumb { -webkit-appearance: none; width: 1.5rem; height: 1.5rem; margin-top: calc((.5rem - 2 * var(--bw) - 1.5rem) / 2); border-radius: 0; background: var(--bg); border: var(--bw) solid var(--fg); }
 .cd .range::-moz-range-thumb { box-sizing: border-box; width: 1.5rem; height: 1.5rem; border-radius: 0; background: var(--bg); border: var(--bw) solid var(--fg); }
-.cd .tune__actions { display: flex; justify-content: flex-end; gap: .5rem; }
+/* Auto à direita e, abaixo dele, o motivo quando está indisponível (o Figma não desenha o motivo) */
+.cd .tune__actions { display: grid; justify-items: end; gap: .5rem; }
+.cd .tune__why { text-align: right; }
+.cd .tune__why:empty { display: none; }
 
 /* Paletas. No celular, uma coluna e Exportar no fim; a partir de 901 px, a lista (392 px) e o detalhe lado a lado,
    com Exportar no topo do detalhe. O painel das abas é um subgrid: o detalhe fica na linha da lista e tem a altura dela. */
@@ -228,8 +223,6 @@
 }
 .cd .tab:hover { color: var(--fg); }
 .cd .tab[aria-selected="true"] { background: var(--fg); color: var(--bg); }
-.cd .choice { display: grid; gap: .25rem; margin-bottom: 1rem; }
-.cd .choice__help { margin: 0; }
 .cd #alerts:not(:empty) { display: grid; gap: .75rem; margin-top: 1rem; }
 
 @media (min-width: 56.3125rem) {
@@ -239,11 +232,10 @@
   .cd .stage__body { display: contents; }
   .cd .stage__preset { grid-column: 1; grid-row: 2; margin-top: 2rem; }
   .cd .tabs { grid-column: 1; grid-row: 3; margin-top: 1.75rem; margin-bottom: 1rem; }
-  .cd .stage__panel { grid-column: 1; grid-row: 4 / span 3; display: grid; grid-template-rows: subgrid; }
-  .cd .stage__panel > .choice { grid-row: 1; }
-  .cd .stage__panel > #ribbon-host { grid-row: 2; }
-  .cd .stage__panel > #alerts { grid-row: 3; }
-  .cd .stage__detail { grid-column: 2; grid-row: 5; display: grid; }
+  .cd .stage__panel { grid-column: 1; grid-row: 4 / span 2; display: grid; grid-template-rows: subgrid; }
+  .cd .stage__panel > #ribbon-host { grid-row: 1; }
+  .cd .stage__panel > #alerts { grid-row: 2; }
+  .cd .stage__detail { grid-column: 2; grid-row: 4; display: grid; }
 }
 
 /* Lista de níveis: linhas de 60 px (o tom em 56 px dentro da borda de 2 px; no Figma ela fica por dentro, sobre o
@@ -307,14 +299,19 @@
 .cd .value__label { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.2; }
 .cd .value__hex { display: block; font-family: var(--font-label); font-weight: 700; line-height: 1.5; font-variant-numeric: tabular-nums; text-transform: uppercase; }
 
+/* Switch (Figma "Manter minha cor exata"): rótulo à esquerda, trilha de 44 x 24 px à direita, polegar de 12 px a 4 px da
+   borda interna. O alvo é a linha inteira (44 px de altura). Ligado: trilha preenchida em --fg e polegar à direita, em
+   --bg (o Figma não desenha o estado ligado). */
 .cd .switch { position: relative; display: flex; width: fit-content; max-width: 100%; align-items: center; gap: .75rem; min-height: var(--control); cursor: pointer; justify-self: start; }
+.cd .switch--end { width: 100%; }
+.cd .switch--end .switch__label { flex: 1; min-width: 0; }
 .cd .switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .cd .switch__track { position: relative; flex: none; width: 2.75rem; height: 1.5rem; border: var(--bw) solid var(--fg); border-radius: 0; background: transparent; transition: background .2s var(--ease); }
-.cd .switch__track::after { content: ""; position: absolute; top: 50%; left: .1875rem; width: 1rem; height: 1rem; border-radius: 0; background: var(--fg); transform: translateY(-50%); transition: transform .2s var(--ease), background .2s var(--ease); }
-.cd .switch input:checked + .switch__track { background: var(--fg); border-color: var(--fg); }
-.cd .switch input:checked + .switch__track::after { background: var(--bg); transform: translate(1.25rem, -50%); }
-.cd .switch input:focus-visible + .switch__track { outline: 2px solid var(--ring); outline-offset: 2px; }
-.cd .switch__label { font-family: var(--font-label); font-weight: 600; font-size: .9375rem; line-height: 1.3; text-transform: uppercase; letter-spacing: .02em; }
+.cd .switch__track::after { content: ""; position: absolute; top: 50%; left: .25rem; width: .75rem; height: .75rem; border-radius: 0; background: var(--fg); transform: translateY(-50%); transition: transform .2s var(--ease), background .2s var(--ease); }
+.cd .switch input:checked ~ .switch__track { background: var(--fg); border-color: var(--fg); }
+.cd .switch input:checked ~ .switch__track::after { background: var(--bg); transform: translate(1.25rem, -50%); }
+.cd .switch input:focus-visible ~ .switch__track { outline: 2px solid var(--ring); outline-offset: 2px; }
+.cd .switch__label { font-family: var(--font-label); font-weight: 700; font-size: .9375rem; line-height: 1.3; text-transform: uppercase; }
 
 /* Avisos */
 .cd .notice { margin: 0; padding: .875rem 1rem; border: var(--bw) solid var(--fg); border-radius: var(--r-panel); box-shadow: var(--shadow-comp); background: var(--panel); display: grid; gap: .375rem; max-width: 62ch; }
@@ -368,6 +365,8 @@
 }
 
 @media (forced-colors: active) {
+  .cd .switch input:checked ~ .switch__track { background: Highlight; forced-color-adjust: none; }
+  .cd .switch input:checked ~ .switch__track::after { background: HighlightText; forced-color-adjust: none; }
   .cd .swatch:focus-visible { outline-color: Highlight; }
   .cd .tab[aria-selected="true"] { background: Highlight; color: HighlightText; }
   .cd .segmented__item input:checked + span { background: Highlight; color: HighlightText; forced-color-adjust: none; }

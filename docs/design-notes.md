@@ -437,3 +437,26 @@ Figma `Decomposer / Paleta / Claro / 1440` (609:258) e `/ 360 — Nível 100 abe
 - **Cabeçalho da ferramenta:** 48px acima e 44px abaixo no computador, 20 e 16 no celular. O conteúdo vai até 1264px (82rem com 24px de margem), o que dá os 88px do frame em 1440. O botão Ajuda já existia; mudou só o tamanho (16px no computador, 14px no celular).
 - **Umami:** nenhum evento saiu; continuam exportar, copiar-tudo e baixar-arquivo.
 - **Escala de 4:** nenhuma exceção nova; 16 do app saíram de `KNOWN_EXCEPTIONS`.
+
+### Color Decomposer — PR 2 (comportamento) — 2026-10-19
+
+**Decisões do Lucas:**
+- **Manter minha cor exata** (switch, `role="switch"`, desligado por padrão) verifica em que nível a cor digitada cai (o de claridade mais próxima, `suggestBrandLevel` do motor), a fixa lá, exata, e gera o resto da paleta pelas regras. É o que o Auto antigo fazia. Substitui a cor de apoio, que saiu com a lógica, o estado da URL, os textos e os testes. O anel da mini paleta, a tag "Sua cor", a lista e o painel de detalhes (com a seta) vão para esse nível. Texto dinâmico: "Desligado: sua cor está no nível 100." e "Ligado: sua cor está no nível {N}." (no modo escuro, o nível espelhado).
+- **Auto** é um botão (ação única) que sugere uma cor principal próxima da digitada quando ela gera tons parecidos. A cor sugerida substitui a digitada no campo, no nível 100. Indisponível (`aria-disabled`, motivo visível por `aria-describedby`):
+  - com o switch ligado: "Indisponível com 'Manter minha cor exata' ligado.";
+  - sem tons parecidos: "Disponível quando sua cor gera tons parecidos.".
+  Ao desligar o switch, o Auto volta a seguir só a regra dos tons parecidos.
+- **Cor viva** saiu inteira: botão, estado, opção `vividChroma`, textos, FAQ e os tokens do alternador ligado (`--on-fg`, `--fg-hover`, `--fg-pressed` e os pares `on-`, em `chrome.js` e no CSS).
+- **"Usar sua cor no estado normal"** saiu: os níveis de Comportamento são sempre os do preset, com ou sem o switch.
+- **Endereços antigos:** `lvl=…` (o Auto antigo) liga o switch; `support`, `normal` e `vivid` são ignorados.
+
+**Implementação:**
+- **Busca do Auto** (`auto.js`, fora do motor, que segue em v0.2.0 sem release): candidatas com o mesmo matiz, claridade até 0,5 para cada lado em passos de 0,005 e intensidade de 100% a 40% da original, testadas em ordem de distância perceptual (ΔE OK). Vale a primeira cuja paleta no nível 100 não tem tons parecidos em nenhum dos dois modos. Na amostra de 146 cores com o problema (dois presets), sempre acha, com ΔE até 0,22 e em até ~75ms; roda só no clique. Exemplo: #FCFBF2 vira #CECDC6. A disponibilidade segue os tons parecidos do modo à vista (a marcação amarela). Guarda: `auto.test.ts`.
+- Depois do Auto, o foco fica no botão (agora indisponível) e o `#live` anuncia "Auto: sua cor principal ficou #XXXXXX.". Se nenhuma candidata servir, anuncia "Não achamos uma cor próxima sem tons parecidos." (não aconteceu na amostra).
+- **Contraste mínimo:** linha de ajuda em `role="status"` (`aria-live="polite"`), ligada ao alternador por `aria-describedby`: "AA: contraste de 4,5 para 1 ou mais." e "AAA: contraste de 7 para 1 ou mais." (frases das opções do antigo select, "AA: 4,5 para 1" e "AAA: 7 para 1", no formato do Figma). As linhas de status só se reescrevem quando o texto muda.
+- **Mini paleta:** o anel fica na posição do nível da cor na escala; as faixas dividem os 168px na proporção dos tons de cada lado, e um lado sem tons some (cor no primeiro ou no último nível).
+- **Escolhas visuais sem desenho no Figma:**
+  - switch ligado: a trilha preenchida em `--fg` e o polegar de 12px à direita, em `--bg`; em `forced-colors`, Highlight e HighlightText;
+  - motivo do Auto: linha de ajuda (12px, JetBrains, maiúsculas, `--muted`), alinhada à direita sob o botão, escondida quando vazia.
+- O switch segue o Figma: rótulo à esquerda (15px), trilha de 44x24 à direita, polegar de 12px a 4px da borda interna; a linha inteira é o alvo, com 44px de altura.
+- Na Ajuda, "Para devs" continua citando `vividChroma` e `anchors` entre as extensões do motor, porque elas existem no pacote.

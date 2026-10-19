@@ -2,10 +2,13 @@
 // color-decomposer e o tema derivado aplicado só no elemento raiz da ferramenta (.cd), não no <html>.
 // Estrutura do Figma (2026-10-19): lista de níveis em todos os tamanhos; no computador o painel de detalhes fica
 // sempre aberto ao lado da lista, no celular abre sob a linha tocada (accordion).
+// PR 2: "Manter minha cor exata" fixa a cor no nível de claridade mais próxima (o que o Auto fazia antes); o Auto sugere
+// uma cor próxima sem tons parecidos (auto.js). Saem a cor de apoio, a Cor viva e o "Usar sua cor no estado normal".
 import {
-  decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toFigmaJson, toPlainJson, checkToneSeparation, suggestBrandLevel, supportLevel, oklchToHex, hexToOklch, vividGain, VIVID_VISIBLE_LIMIT
+  decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toFigmaJson, toPlainJson, checkToneSeparation, suggestBrandLevel, oklchToHex, hexToOklch
 } from 'color-decomposer';
 import { T, fmt, helpText } from './strings.js';
+import { suggestColor } from './auto.js';
 import { buildHelp } from './help.js';
 import { chromeTokens, applyChrome } from './chrome.js';
 import { DEFAULTS, parseHash, serialize } from './state.js';
@@ -27,18 +30,14 @@ let tune = null; // { L, C, h, hex }: valores dos controles de claridade, intens
 
 // Os ajustes avançados saíram da interface (2026-10-19): ordem, saturação do escuro, falha de contraste e o token txt
 // ficam no padrão do motor, que é o mesmo que a interface usava.
+// Com "Manter minha cor exata", a cor vai exata para o nível de claridade mais próxima e o resto da paleta segue as regras
+// a partir dela. Os níveis de Comportamento continuam os do preset.
 function buildOptions(s) {
   const o = {
     txtOnStrategy: s.strategy,
     accessibilityLevel: s.level
   };
-  if (s.support) {
-    o.anchors = [{ hex: s.support }]; // com cor de apoio, a principal fica no nível padrão e o Auto e a Cor viva ficam de fora
-  } else if (s.lvl !== '' && PRESETS[s.preset].palette.levels.includes(Number(s.lvl))) {
-    o.brandLevel = Number(s.lvl);
-    o.behaviorFollowsBrand = s.normal === 'brand';
-    if (s.vivid) o.vividChroma = true;
-  }
+  if (s.exact) o.brandLevel = suggestBrandLevel(s.color, PRESETS[s.preset]);
   return o;
 }
 
@@ -77,7 +76,7 @@ function itemsFor(tab, mode) {
     return Object.entries(c[mode].behavior.level).map(([name, level]) => {
       const nice = T.behaviorNamesByPreset[preset.id]?.[name] ?? T.behaviorNames[name] ?? name;
       return mk(name, level, T.detail.behavior(nice, level), T.detail.behavior(nice, level),
-        pair(c[mode].behavior, name), { name: nice, base: anchored() ? (state.normal === 'brand' && name === 'normal') : level === preset.palette.baseLevel });
+        pair(c[mode].behavior, name), { name: nice, base: level === preset.palette.baseLevel });
     });
   }
   if (tab === 'grayscale') {
@@ -86,34 +85,22 @@ function itemsFor(tab, mode) {
   const levels = preset[tab].levels;
   return levels.map((l) => {
     const base = tab === 'palette' && l === brandLevelIn(mode);
-    const isSupport = tab === 'palette' && hasSupport() && !supportIssue() && l === supportLevelIn(mode);
-    const tag = base ? (hasSupport() ? T.mainColor : T.yourColor) : isSupport ? T.supportColor : '';
-    const label = tag ? `${T.detail.level(l)}, ${tag.toLowerCase()}` : T.detail.level(l);
-    return mk(l, l, label, T.detail.level(l), pair(c[mode][tab], l), { base: base || isSupport, tag });
+    const label = base ? `${T.detail.level(l)}, ${T.yourColor.toLowerCase()}` : T.detail.level(l);
+    return mk(l, l, label, T.detail.level(l), pair(c[mode][tab], l), { base, tag: base ? T.yourColor : '' });
   });
 }
 
 /* ---------- Nível da cor principal ---------- */
 
-// Nível onde a cor principal está na paleta (100 por padrão; outro depois do Auto) e o nível equivalente em cada modo.
+// Nível onde a cor principal está na paleta (100 por padrão; o de claridade mais próxima com "Manter minha cor exata")
+// e o nível equivalente em cada modo.
 function brandLevel() {
-  const levels = current.preset.palette.levels;
-  return state.lvl !== '' && levels.includes(Number(state.lvl)) ? Number(state.lvl) : current.preset.palette.baseLevel;
+  return state.exact ? suggestBrandLevel(state.color, current.preset) : current.preset.palette.baseLevel;
 }
 function brandLevelIn(mode) {
   const { levels } = current.preset.palette;
   return mode === 'dark' ? levels[0] + levels.at(-1) - brandLevel() : brandLevel();
 }
-const anchored = () => brandLevel() !== current.preset.palette.baseLevel;
-const resetLevel = () => { state.lvl = ''; state.normal = 'mid'; state.vivid = false; };
-
-/* ---------- Cor de apoio (sem interface desde 2026-10-19; só um endereço antigo a liga) ---------- */
-
-const hasSupport = () => state.support !== '';
-const mirror = (level) => { const { levels } = current.preset.palette; return levels[0] + levels.at(-1) - level; };
-const supportLevelLight = () => supportLevel(state.color, state.support, current.preset);
-const supportLevelIn = (mode) => (mode === 'dark' ? mirror(supportLevelLight()) : supportLevelLight());
-const supportIssue = () => (hasSupport() && current?.theme.warnings.find((w) => w.type === 'anchors')) || null;
 
 /* ---------- Tons parecidos ---------- */
 
@@ -123,18 +110,16 @@ function separation() {
   return checkToneSeparation(palette, state.color);
 }
 
-// Estado do Auto: só vale a pena quando há tons parecidos e o melhor nível é outro que o atual.
+// Estado do Auto: indisponível com "Manter minha cor exata" ligado (estratégias opostas) e quando não há tons parecidos.
 function autoState() {
   const sep = separation();
-  const suggested = suggestBrandLevel(state.color, state.preset);
-  const can = !hasSupport() && !!sep && sep.runs.length > 0 && suggested !== brandLevel();
-  return { sep, suggested, can };
+  const why = state.exact ? T.tune.autoExact : sep && sep.runs.length > 0 ? '' : T.tune.autoNoConflict;
+  return { sep, can: !why, why };
 }
 
-// Cor viva: só vale a pena depois do Auto e quando a opção muda a paleta de forma visível. Ligada, continua disponível para desligar.
-function vividAvailable() {
-  if (hasSupport() || !anchored()) return false;
-  return state.vivid || vividGain(state.color, state.preset, brandLevel()) >= VIVID_VISIBLE_LIMIT;
+// Linhas em role="status": só reescreve quando o texto muda, para o leitor de tela não repetir o mesmo aviso.
+function setStatus(el, text) {
+  if (el.textContent !== text) el.textContent = text;
 }
 
 /* ---------- Avisos ---------- */
@@ -445,7 +430,7 @@ function bindControls() {
   const hexInput = $('hex');
   hexInput.addEventListener('input', () => {
     const hex = toHex(hexInput.value);
-    if (hex) { if (hex !== state.color) resetLevel(); state.color = hex; setInvalid(hexInput, false); update(); }
+    if (hex) { state.color = hex; setInvalid(hexInput, false); update(); }
     else if (hexInput.value.trim().replace('#', '').length >= 6) setInvalid(hexInput, true);
   });
   hexInput.addEventListener('blur', () => setInvalid(hexInput, !toHex(hexInput.value)));
@@ -454,7 +439,7 @@ function bindControls() {
       tune = { ...tune, L: Number($('tuneL').value), C: Number($('tuneC').value), h: Number($('tuneH').value), snapped: false };
       const r = oklchToHex(tune.L / 100, tune.C / 100, tune.h);
       tune.hex = r.hex;
-      state.color = r.hex; resetLevel();
+      state.color = r.hex;
       $('hex').value = up(r.hex); setInvalid($('hex'), false);
       update();
     });
@@ -466,26 +451,31 @@ function bindControls() {
     tune = { ...tune, C: Math.round(used.chroma * 100), snapped: true };
     syncTune();
   });
+  // Auto: troca a cor principal pela sugestão. A cor nova aparece no campo; o botão fica indisponível (sem tons parecidos)
+  // e o foco continua nele, então o resultado é anunciado.
   $('auto').addEventListener('click', () => {
     if ($('auto').getAttribute('aria-disabled') === 'true') return;
-    state.lvl = String(suggestBrandLevel(state.color, state.preset));
+    const hex = suggestColor(state.color, PRESETS[state.preset]);
+    if (!hex) { say(T.tune.autoNone); return; }
+    state.color = hex;
     update();
-    say(T.tune.autoDone(brandLevelIn(state.mode))); // o botão fica indisponível: o resultado é anunciado
+    say(T.tune.autoDone(up(hex)));
   });
-  $('vivid').addEventListener('click', () => {
-    if ($('vivid').getAttribute('aria-disabled') === 'true') return;
-    state.vivid = !state.vivid; update();
+  // Manter minha cor exata: o painel de detalhes volta para o nível da cor principal, onde quer que ela esteja
+  $('exact').addEventListener('change', (e) => {
+    state.exact = e.target.checked;
+    state.sel = '';
+    update();
   });
   for (const name of ['mode', 'level', 'preset']) {
     for (const r of document.querySelectorAll(`input[name="${name}"]`)) {
       r.addEventListener('change', () => {
         state[name] = r.value;
-        if (name === 'preset') { resetLevel(); state.sel = ''; }
+        if (name === 'preset') state.sel = '';
         update();
       });
     }
   }
-  $('normal-switch').addEventListener('change', (e) => { state.normal = e.target.checked ? 'brand' : 'mid'; update(); });
   $('stage-toggle').addEventListener('click', (e) => {
     const open = e.currentTarget.getAttribute('aria-expanded') !== 'true';
     e.currentTarget.setAttribute('aria-expanded', String(open));
@@ -519,26 +509,29 @@ function syncTune() {
 }
 
 function renderMini() {
-  const { sep, can } = autoState();
+  const { sep, can, why } = autoState();
   if (!sep) return;
-  // aria-disabled: o botão continua no foco do teclado e do leitor de tela, sem executar a ação
+  // aria-disabled: o botão continua no foco do teclado e do leitor de tela, sem executar a ação; o motivo fica à vista
   $('auto').setAttribute('aria-disabled', String(!can));
-  $('vivid').setAttribute('aria-disabled', String(!vividAvailable()));
-  $('vivid').setAttribute('aria-pressed', String(state.vivid));
+  setStatus($('auto-why'), why);
+  setStatus($('exact-help'), (state.exact ? T.exact.on : T.exact.off)(brandLevelIn(state.mode)));
   const surface = current.theme.colors[NAME][state.mode].palette.surface;
   const levels = Object.keys(surface).map(Number).sort((x, y) => x - y);
-  // mini paleta (Figma): 4 tons de cada lado do anel. Vêm de todos os níveis menos o da cor principal, que é o anel;
-  // se há mais que 8, escolhe 8 espaçados por igual.
-  const others = levels.filter((l) => l !== brandLevel());
+  // mini paleta (Figma): 8 tons e o anel no nível da cor principal, na posição dele na escala (no meio com o nível 100).
+  // Os tons vêm de todos os níveis menos o do anel; se há mais que 8, escolhe 8 espaçados por igual.
+  const at = brandLevelIn(state.mode);
+  const others = levels.filter((l) => l !== at);
   const pick = others.length <= 8 ? others : Array.from({ length: 8 }, (_, i) => others[Math.round((i * (others.length - 1)) / 7)]);
   const tones = (list) => list.map((l) => { const sw = document.createElement('i'); sw.style.setProperty('--c', surface[l]); return sw; });
-  const half = Math.ceil(pick.length / 2);
-  const left = pick.slice(0, half), right = pick.slice(half);
+  const left = pick.filter((l) => l < at), right = pick.filter((l) => l > at);
   $('mini-start').replaceChildren(...tones(left));
   $('mini-end').replaceChildren(...tones(right));
-  $('mini-mark').style.setProperty('--c', surface[brandLevel()]);
+  // as faixas dividem a largura na proporção dos tons; um lado sem tons some (cor no primeiro ou no último nível)
+  $('mini').style.gridTemplateColumns = `minmax(0, ${left.length}fr) 2.25rem minmax(0, ${right.length}fr)`;
+  for (const [id, list] of [['start', left], ['end', right]]) { $(`mini-${id}`).hidden = !list.length; $(`mini-flags-${id}`).hidden = !list.length; }
+  $('mini-mark').style.setProperty('--c', surface[at]);
   // marcação dos tons quase iguais ao vizinho, sob a faixa; a ordem é a que se vê (faixa, anel, faixa)
-  const seen = [...left, brandLevel(), ...right];
+  const seen = [...left, at, ...right];
   const flagged = new Set(sep.tones);
   const flagFor = (l, i) => {
     const f = document.createElement('b');
@@ -550,7 +543,7 @@ function renderMini() {
     return f;
   };
   $('mini-flags-start').replaceChildren(...left.map((l, i) => flagFor(l, i)));
-  $('mini-flags-mid').replaceChildren(flagFor(brandLevel(), left.length));
+  $('mini-flags-mid').replaceChildren(flagFor(at, left.length));
   $('mini-flags-end').replaceChildren(...right.map((l, i) => flagFor(l, left.length + 1 + i)));
 }
 
@@ -559,6 +552,8 @@ function syncControls() {
   if (document.activeElement !== $('hex')) setInvalid($('hex'), false);
   syncTune();
   for (const name of ['mode', 'level', 'preset']) document.querySelector(`input[name="${name}"][value="${state[name]}"]`).checked = true;
+  $('exact').checked = state.exact;
+  setStatus($('level-help'), T.contrastHelp[state.level]);
   const preset = PRESETS[state.preset];
   $('preset-help').textContent = T.presetHelp(preset.palette.levels.length, preset.neutrals.levels.length);
 }
@@ -658,13 +653,6 @@ function bindHelp() {
 /* ---------- Ciclo principal ---------- */
 
 function render() {
-  const choice = $('normal-choice');
-  choice.hidden = !(state.tab === 'behavior' && anchored());
-  if (!choice.hidden) {
-    const brand = state.normal === 'brand';
-    $('normal-switch').checked = brand;
-    $('normal-help').textContent = brand ? T.normal.on(brandLevelIn(state.mode)) : T.normal.off(current.preset.palette.baseLevel);
-  }
   renderTabs();
   renderAlerts();
   renderMini();
@@ -683,10 +671,6 @@ function update() {
     applyChrome(ROOT, chromeTokens(r.theme, NAME, state.mode, r.preset), state.mode);
   }
   if (!current) { current = build(DEFAULTS); }
-  if (state.lvl !== '' && !PRESETS[state.preset].palette.levels.includes(Number(state.lvl))) resetLevel();
-  if (hasSupport() && state.lvl !== '') resetLevel();
-  if (state.vivid && !anchored()) state.vivid = false; // a cor viva só existe depois do Auto
-  if (state.lvl === '') state.normal = 'mid';
   syncControls();
   render();
 }

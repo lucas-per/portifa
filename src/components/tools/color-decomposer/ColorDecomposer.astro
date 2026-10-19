@@ -7,7 +7,9 @@
   - <main class="stage"> virou <div>, com o mesmo id, classe e tabindex: a
     página já tem o <main> do BaseLayout;
   - Exportar, Copiar tudo e Baixar arquivo ganharam data-umami-event;
-  - Auto e Cor viva usam aria-disabled (e não disabled);
+  - Auto usa aria-disabled (e não disabled), com o motivo em texto visível ligado por aria-describedby (auto-why);
+  - PR 2 (2026-10-19): "Manter minha cor exata" (role="switch", desligado por padrão) e as linhas de ajuda dinâmicas
+    do contraste e do switch, em role="status"; saem a Cor viva e o "Usar sua cor no estado normal";
   - o aviso da Intensidade (tune-note) é um role="status", sempre presente e vazio quando não há o que avisar.
   Estrutura do Figma (Decomposer / Paleta / Claro / 1440 e 360, 2026-10-19): Ajustes, divisor e Paletas lado a lado;
   a mini paleta com um anel decorativo no nível da cor principal (sem seletor de cor); Contraste mínimo, Sistema de
@@ -41,21 +43,24 @@ import '../../../styles/tools/color-decomposer.css';
         <h2 class="rail__title" id="rail-title">Ajustes</h2>
 
         <div class="rail__body">
-          <div class="pair">
-            <div class="field">
-              <span class="field__label" id="mode-label">Modo de cor</span>
-              <div class="segmented" role="radiogroup" aria-labelledby="mode-label" id="mode">
-                <label class="segmented__item"><input type="radio" name="mode" value="light"><span>Claro</span></label>
-                <label class="segmented__item"><input type="radio" name="mode" value="dark"><span>Escuro</span></label>
+          <div class="group">
+            <div class="pair">
+              <div class="field">
+                <span class="field__label" id="mode-label">Modo de cor</span>
+                <div class="segmented" role="radiogroup" aria-labelledby="mode-label" id="mode">
+                  <label class="segmented__item"><input type="radio" name="mode" value="light"><span>Claro</span></label>
+                  <label class="segmented__item"><input type="radio" name="mode" value="dark"><span>Escuro</span></label>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field__label" id="level-label">Contraste mínimo</span>
+                <div class="segmented" role="radiogroup" aria-labelledby="level-label" aria-describedby="level-help" id="level">
+                  <label class="segmented__item"><input type="radio" name="level" value="AA"><span>AA</span></label>
+                  <label class="segmented__item"><input type="radio" name="level" value="AAA"><span>AAA</span></label>
+                </div>
               </div>
             </div>
-            <div class="field">
-              <span class="field__label" id="level-label">Contraste mínimo</span>
-              <div class="segmented" role="radiogroup" aria-labelledby="level-label" id="level">
-                <label class="segmented__item"><input type="radio" name="level" value="AA"><span>AA</span></label>
-                <label class="segmented__item"><input type="radio" name="level" value="AAA"><span>AAA</span></label>
-              </div>
-            </div>
+            <p class="field__help" id="level-help" role="status" aria-live="polite"></p>
           </div>
 
           <div class="field">
@@ -73,6 +78,12 @@ import '../../../styles/tools/color-decomposer.css';
               <input class="input input--hex" type="text" id="hex" inputmode="text" autocomplete="off" spellcheck="false" maxlength="7" aria-describedby="hex-error" placeholder="#E7398A">
             </div>
             <p class="field__error" id="hex-error" hidden></p>
+            <label class="switch switch--end" for="exact">
+              <input type="checkbox" role="switch" id="exact" aria-describedby="exact-help">
+              <span class="switch__label">Manter minha cor exata</span>
+              <span class="switch__track" aria-hidden="true"></span>
+            </label>
+            <p class="field__help" id="exact-help" role="status" aria-live="polite"></p>
           </div>
 
           <details class="tune" id="tune-more" open>
@@ -92,8 +103,8 @@ import '../../../styles/tools/color-decomposer.css';
                 <input class="range" type="range" id="tuneH" min="0" max="360" step="1">
               </div>
               <div class="tune__actions">
-                <button type="button" class="btn btn--sm" id="auto" aria-disabled="true" aria-label="Auto: colocar a cor no melhor nível da paleta">Auto</button>
-                <button type="button" class="btn btn--sm" id="vivid" aria-disabled="true" aria-pressed="false" aria-label="Cor viva: dar mais intensidade aos tons">Cor viva</button>
+                <button type="button" class="btn btn--sm" id="auto" aria-disabled="true" aria-describedby="auto-why" aria-label="Auto: sugerir uma cor próxima sem tons parecidos">Auto</button>
+                <p class="field__help tune__why" id="auto-why" role="status" aria-live="polite"></p>
               </div>
             </div>
           </details>
@@ -118,14 +129,6 @@ import '../../../styles/tools/color-decomposer.css';
           </div>
           <div class="tabs" role="tablist" aria-label="Grupos de tons" id="tabs"></div>
           <div id="panel" role="tabpanel" tabindex="-1" class="stage__panel">
-            <div class="choice" id="normal-choice" hidden>
-              <label class="switch" for="normal-switch">
-                <input type="checkbox" role="switch" id="normal-switch" aria-describedby="normal-help">
-                <span class="switch__track" aria-hidden="true"></span>
-                <span class="switch__label">Usar sua cor no estado normal</span>
-              </label>
-              <p class="field__help choice__help" id="normal-help"></p>
-            </div>
             <div id="ribbon-host"></div>
             <div id="alerts"></div>
           </div>
