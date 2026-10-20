@@ -85,6 +85,14 @@ describe('lista de níveis', () => {
     expect(script).toContain("b.setAttribute('aria-expanded', String(on))");
     expect(script).toContain("b.setAttribute('aria-checked', String(on))");
   });
+
+  // PR 6: a tag "Sua cor" saiu; o nível da cor principal segue no nome acessível ("..., sua cor") e, para quem vê, no anel da mini paleta
+  it('não há tag "Sua cor" na linha; hex em cima e razão embaixo', () => {
+    expect(script).not.toMatch(/swatch__tag|swatch__line/);
+    expect(script).toContain('<span class="swatch__hex">');
+    expect(script).toContain('<span class="swatch__ratio">');
+    expect(script).toContain("T.yourColor.toLowerCase()");
+  });
 });
 
 describe('Paletas e Exportar tokens (PR 3)', () => {

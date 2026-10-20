@@ -250,49 +250,62 @@
   .cd .stage__detail { grid-column: 2; grid-row: 4; display: grid; }
 }
 
-/* Lista de níveis: linhas de 60 px (o tom em 56 px dentro da borda de 2 px; no Figma ela fica por dentro, sobre o
-   padding de 2 px), a borda de uma sobre a da outra: 9 níveis dão 524 px */
-.cd .cell { position: relative; display: grid; border: var(--bw) solid var(--fg); }
+/* Lista de níveis (Figma swatch-row 648:1062): item de 64 px = borda de 2 + conteúdo de 60 + borda de 2; a borda de um
+   item é a do vizinho (sobreposição de 2), então 9 níveis dão 560 px. Conteúdo: padding de 8 (cima e baixo) e 12 (lados),
+   gap de 4; o grupo da direita (texto e copiar) fica com o resto, com gap de 12. */
+.cd .cell { --pr: .75rem; position: relative; display: grid; border: var(--bw) solid var(--fg); }
 .cd .cell + .cell { margin-top: calc(var(--bw) * -1); }
 .cd .swatch {
-  grid-area: 1 / 1; position: relative; display: flex; align-items: center; gap: 1rem; width: 100%; min-height: 3.5rem; padding: .5rem 1rem; border: 0; margin: 0;
+  grid-area: 1 / 1; position: relative; display: flex; align-items: center; gap: .25rem; width: 100%; min-height: 3.75rem;
+  padding: .5rem calc(var(--pr) + var(--control) + .75rem) .5rem .75rem; border: 0; margin: 0;
   cursor: pointer; text-align: left; background: var(--s); color: var(--t); forced-color-adjust: none;
   transition: background-color .3s var(--ease), color .3s var(--ease);
 }
-/* espaço do botão de copiar (16 + 44 + 16 px) */
-.cd .cell--copy > .swatch { padding-right: 4.75rem; }
-.cd .swatch:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; z-index: 2; }
-.cd .swatch__num { min-width: 2.25rem; font-family: var(--font-label); font-size: .9375rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+/* o aro de foco fica por dentro do item (na cor do texto do tom, que tem contraste com o tom): por fora ele cruzaria a ponta do selecionado */
+.cd .swatch:focus-visible { outline: 2px solid var(--t); outline-offset: -6px; z-index: 2; }
+.cd .swatch__num { flex: none; width: 2.25rem; font-family: var(--font-label); font-size: .9375rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
 .cd .swatch__aa { font-family: var(--font-title); font-size: 1.25rem; font-weight: 600; line-height: 1; }
-.cd .swatch__name { flex: 1; min-width: 0; font-size: .9375rem; font-weight: 600; line-height: 1.2; }
-/* em telas de 320 px a tag "Sua cor" passa para a linha de cima do código, em vez de estourar a largura */
-.cd .swatch__meta { display: flex; flex-direction: column; align-items: flex-end; min-width: 0; margin-left: auto; font-size: .8125rem; line-height: 1.3; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
-.cd .swatch__line { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 0 .5rem; }
+.cd .swatch__name { flex: 1; min-width: 0; padding-left: .5rem; font-size: .9375rem; font-weight: 600; line-height: 1.2; }
+/* hex em cima e razão embaixo, à direita, nos 44 px do conteúdo (padding de 4 em cima e embaixo, sem gap fixo) */
+.cd .swatch__meta {
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; align-self: stretch; min-width: 0; margin-left: auto;
+  padding: .25rem 0; font-size: .875rem; line-height: 1; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
+}
 .cd .swatch__hex { text-transform: uppercase; }
-.cd .swatch__tag { padding: 0 .5rem; border: var(--bw) solid var(--t); background: var(--t); color: var(--s); font-family: var(--font-label); font-size: .6875rem; font-weight: 700; line-height: 1.3; text-transform: uppercase; }
 .cd .swatch__flag { position: absolute; top: .5rem; bottom: .5rem; left: 0; width: 4px; background: currentColor; }
 .cd .swatch__copy {
   grid-area: 1 / 1; justify-self: end; align-self: center; z-index: 1; display: grid; place-items: center;
-  width: var(--control); height: var(--control); padding: 0; margin: 0 1rem 0 0; cursor: pointer;
+  width: var(--control); height: var(--control); padding: 0; margin: 0 var(--pr) 0 0; cursor: pointer;
   background: var(--s); color: var(--t); border: var(--bw) solid currentColor; forced-color-adjust: none;
 }
 .cd .swatch__copy:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 
-/* Seta do detalhe (computador): à direita da linha escolhida, 28 x 56 px, na cor do tom e com o contorno de 2 px.
-   Ocupa metade dos 56 px entre a lista e o painel, então sobram 28 px até ele. Decorativa (pseudo-elementos). */
+/* Selecionado no computador: uma forma só, o item com a ponta (64 px de altura, 28 px de avanço). O item não tem borda
+   direita; a ponta sai do lado direito dele e o vão até o painel é de 28 px (56 px da coluna menos a ponta). Duas camadas
+   (pseudo-elementos, decorativos, sem clique nem foco): a de baixo na cor da borda, com a forma cheia; a de cima na cor do
+   tom, recuada 2 px de cada lado. Uma `border` comum não serve: nas diagonais não dá 2 px visuais. As camadas começam
+   2 px dentro do item (a de cima na cor do tom, a de baixo coberta por ela), então não há emenda: a borda de cima e de
+   baixo do item vira a das diagonais no ponto exato em que a diagonal interna cruza a linha de 2 px, e o miolo
+   sobrepõe o do item em vez de encostar nele. A diagonal vai de (0, 0) a (28, 32) em relação à base da ponta: a ponta
+   interna recua 2 x raiz(28² + 32²) / 32 = 2,66 px na horizontal, e a diagonal interna cruza y = 2 px em x = -0,91 px
+   (1,09 px a partir do início das camadas, que ficam 2 px antes da base). */
 @media (min-width: 56.3125rem) {
+  .cd .cell.is-selected { --pr: calc(.75rem + var(--bw)); border-right: 0; }
   .cd .cell.is-selected::before, .cd .cell.is-selected::after {
-    content: ""; position: absolute; top: 0; left: calc(100% + var(--bw)); width: 1.75rem; height: 3.5rem; pointer-events: none;
+    content: ""; position: absolute; top: calc(var(--bw) * -1); left: calc(100% - var(--bw)); width: calc(1.75rem + var(--bw)); height: 4rem;
+    pointer-events: none; forced-color-adjust: none;
   }
-  .cd .cell.is-selected::before { background: var(--fg); clip-path: polygon(0 0, 100% 50%, 0 100%); }
-  /* o miolo recua 2 px de cada lado inclinado: 2 x raiz de 2 = 2,83 px na horizontal e na vertical */
-  .cd .cell.is-selected::after { background: var(--s); clip-path: polygon(0 2.83px, calc(100% - 2.83px) 50%, 0 calc(100% - 2.83px)); forced-color-adjust: none; }
+  .cd .cell.is-selected::before { background: var(--fg); clip-path: polygon(0 0, 2px 0, 100% 50%, 2px 100%, 0 100%); }
+  .cd .cell.is-selected::after {
+    background: var(--s); transition: background-color .3s var(--ease);
+    clip-path: polygon(0 2px, 1.09px 2px, calc(100% - 2.66px) 50%, 1.09px calc(100% - 2px), 0 calc(100% - 2px));
+  }
 }
 
 /* Painel de detalhes: no computador ocupa a coluna da direita na altura da lista; no celular, abre sob a linha */
 .cd .detail { display: flex; flex-direction: column; gap: 2.5rem; padding: 1.75rem; background: var(--panel); border: var(--bw) solid var(--fg); border-radius: var(--r-panel); }
 .cd .detail__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
-/* altura de linha 1: os alternadores têm 44 px (toque), não os 40 do Figma; assim o painel cabe nos 524 px da lista */
+/* altura de linha 1: os alternadores têm 44 px (toque), não os 40 do Figma; assim o painel cabe nos 560 px da lista */
 .cd .detail__title { font-family: var(--font-title); font-size: 1.375rem; font-weight: 600; line-height: 1; }
 /* "Fechar detalhes" só no celular; o texto fica no topo do alvo de 44 px, alinhado ao título */
 .cd .detail__close { display: none; align-items: flex-start; padding-block: .125rem 0; }
@@ -383,9 +396,9 @@
   .cd .tab[aria-selected="true"] { background: Highlight; color: HighlightText; }
   .cd .segmented__item input:checked + span { background: Highlight; color: HighlightText; forced-color-adjust: none; }
   .cd .swatch__copy { forced-color-adjust: auto; }
-  /* seta do detalhe: contorno em CanvasText e miolo em Canvas, em vez das cores do tom */
-  .cd .cell.is-selected::before { background: CanvasText; forced-color-adjust: none; }
-  .cd .cell.is-selected::after { background: Canvas; forced-color-adjust: none; }
+  /* ponta do detalhe: o contorno (item e ponta) em Highlight e o miolo segue a cor do tom (o item também mantém a dele) */
+  .cd .cell.is-selected { border-color: Highlight; }
+  .cd .cell.is-selected::before { background: Highlight; }
 }
 
 /* Telas muito estreitas: as abas rolam na horizontal em vez de quebrar de linha */
