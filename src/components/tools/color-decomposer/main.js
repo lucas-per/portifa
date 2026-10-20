@@ -5,7 +5,7 @@
 // PR 2: "Manter minha cor exata" fixa a cor no nível de claridade mais próxima (o que o Auto fazia antes); o Auto sugere
 // uma cor próxima sem tons parecidos (auto.js). Saem a cor de apoio, a Cor viva e o "Usar sua cor no estado normal".
 import {
-  decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toFigmaJson, toPlainJson, checkToneSeparation, suggestBrandLevel, oklchToHex, hexToOklch
+  decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toPlainJson, checkToneSeparation, suggestBrandLevel, oklchToHex, hexToOklch
 } from 'color-decomposer';
 import { T, fmt, helpText } from './strings.js';
 import { suggestColor } from './auto.js';
@@ -572,7 +572,6 @@ function exportFile(format, name) {
   const { theme, error } = build(state, name);
   if (error) return { text: error, file: 'erro.txt' };
   if (format === 'css') return { text: toCssVariables(theme), file: `${name}.css` };
-  if (format === 'figma') return { text: toFigmaJson(theme), file: `${name}-figma-variables.json` };
   if (format === 'json') return { text: toPlainJson(theme), file: `${name}-decomposicao.json` };
   const prim = toPrimitiveTheme(theme);
   const gray = toGrayscaleTheme(theme)._color_palette.mode;
@@ -586,8 +585,6 @@ function refreshExport() {
   const { text } = exportFile(format, name);
   $('export-preview').value = text;
   $('export-status').textContent = '';
-  $('format-help').hidden = format !== 'figma';
-  $('format-help').textContent = format === 'figma' ? T.export.figmaHelp : '';
 }
 
 function bindExport() {

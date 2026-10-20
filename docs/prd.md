@@ -23,7 +23,7 @@ A arquitetura de código e de conteúdo deve ser pensada para dois horizontes:
 |---|---|---|---|
 | Portfólio/Home | Atuação profissional + apresentação pessoal + cases | Fase 1 | — |
 | Artigos | Textos sobre temas de Design em estudo | Fase 2 | — |
-| Projetos | Soluções autorais prontas para uso, de uso direto no site. O primeiro é o Color Decomposer, em `/projetos/decomposer` | Fase 2 (o Color Decomposer entrou antes) | 1.1.0 |
+| Projetos | Soluções autorais prontas para uso, de uso direto no site. O primeiro é a Paletaria, em `/projetos/paletaria` | Fase 2 (a Paletaria entrou antes) | 1.1.0 |
 | Fotos | Fotografia autoral | Fase 3 | — |
 
 **Requisito de arquitetura:** a IA deve ser tratada como uma lista extensível de macro-seções, não como um conjunto fixo. Novas seções (além das 4 previstas) devem poder ser adicionadas sem refatoração estrutural — isso deve orientar a modelagem de navegação, rotas e content types desde a Fase 1.
