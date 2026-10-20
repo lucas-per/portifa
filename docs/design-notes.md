@@ -370,9 +370,9 @@ Origem: coleção `primitive` do Figma (`VM0MVYSWiDbznuPZFRyArB`) e frames `desk
 - **Guarda:** `fonts.test.ts` falha se o arquivo perder →, ←, ×, ↑ ou ↓. Caractere novo que apareça em texto de título precisa entrar no subset; o navegador não avisa quando cai numa fonte do sistema.
 - **Levantamento:** nas 4 páginas geradas, a seta era o único caractere fora do subset nas 3 fontes (Plus Jakarta Sans, DM Sans e JetBrains Mono).
 
-### Página do Color Decomposer (`/projetos/decomposer/`) — 2026-10-16
+### Página do Color Decomposer (hoje Paletaria, `/projetos/paletaria/`) — 2026-10-16
 
-A rota era `/ferramentas/color-decomposer/` e passou a `/projetos/decomposer/` em 2026-10-19 ("ferramentas" e "projetos" são a mesma coisa no PRD; o termo é "projetos"). A rota antiga não redireciona e deixou de existir: como o site não tem `404.html`, a Cloudflare Pages serve a home (status 200) para qualquer endereço inexistente, a antiga inclusive.
+A rota era `/ferramentas/color-decomposer/`, passou a `/projetos/decomposer/` em 2026-10-19 e, no mesmo dia, a `/projetos/paletaria/` (a ferramenta agora se chama Paletaria, ver a seção da PR 5) ("ferramentas" e "projetos" são a mesma coisa no PRD; o termo é "projetos"). A rota antiga não redireciona e deixou de existir: como o site não tem `404.html`, a Cloudflare Pages serve a home (status 200) para qualquer endereço inexistente, a antiga inclusive.
 
 Fase 1 da integração: a interface de `lucas-per/color-decomposer@v0.2.0` (`app/`) portada sem redesenho, com o motor como dependência (`github:lucas-per/color-decomposer#v0.2.0`). A partir daqui, a interface oficial é esta; o `app/` do repositório da ferramenta fica congelado. Spec: `docs/superpowers/specs/2026-10-16-color-decomposer-page-design.md`.
 
@@ -487,3 +487,14 @@ Figma `Decomposer / Paleta / Claro / 1440 — Proposta: lista e detalhe alinhado
 - **Rodapé da ferramenta removido:** o texto "Segue as regras de cor do Aplica Design System (engine 3.23.4). Projeto independente, sem vínculo com a Aplica." e o `<footer class="foot">` saíram, com o CSS dele. As menções ao Aplica Design System na Ajuda ficam.
 - **Cor inicial:** `#057ABD` (o azul do site), no lugar de `#E7398A`, no estado padrão (`DEFAULTS.color`), no `placeholder` do campo e no exemplo do aviso de código inválido ("como #057ABD"). Um endereço com `#color=` continua valendo; o estado padrão (sem hash) é que muda. O Auto fica indisponível nessa cor (sem tons parecidos). Os exemplos em `#E7398A` da seção "Para devs" da Ajuda e o nome do arquivo de exportação não mudaram.
 - **Escala de 4:** nenhuma exceção nova.
+
+### Paletaria — PR 5 (nome novo e sem logo) — 2026-10-19
+
+Figma `642:966` (marca da página): o nome da ferramenta passa de "Color Decomposer" para **Paletaria**. As seções anteriores deste arquivo ficam como foram escritas e usam o nome antigo; daqui em diante vale Paletaria. Sem mudança na lógica de cor.
+
+- **Nome em todo texto visível** (decisão do Lucas): `<h1>` ("Paletaria", em caixa alta por CSS), `<title>` ("Paletaria: uma cor vira paleta, neutros e estados", que alimenta `og:title` e `twitter:title`), título da aba da Ajuda ("Ajuda · Paletaria") e o link do cabeçalho do site, que é "Paletaria" no computador e no celular (o rótulo curto passou a ser igual ao completo, então não há `aria-label` extra no celular).
+- **Rota** `/projetos/paletaria/` (antes `/projetos/decomposer/`). A rota antiga não redireciona: a Cloudflare Pages serve a home para qualquer endereço inexistente.
+- **Sem logo:** a marca de três barras saiu do título, com o CSS dela (`.brand__mark`). O `<h1>` é só texto. Como "PALETARIA" é bem mais curto que "COLOR DECOMPOSER", o título de 32px cabe em uma linha até em 320px, e a regra que o reduzia para 24px abaixo de 380px (PR 4) saiu.
+- **Plugin do Figma:** as citações saíram, a pedido do Lucas (o plugin não será feito por enquanto). Saiu o formato de exportação "Variables do Figma (para o plugin)" do diálogo de exportar (restam Tokens do Aplica, Variáveis CSS e JSON completo), com o texto de ajuda dele, a pergunta "Como uso no Figma?" da Ajuda e a menção a "variables do Figma" no guia rápido. A função `toFigmaJson` continua no motor e na lista de funções da seção "Para devs". Para trazer o formato de volta, é só recolocar a opção no diálogo e o ramo `figma` em `exportFile` (`main.js`).
+- **Não mudaram (internos):** os eventos do Umami (`color-decomposer-exportar`, `-copiar-tudo` e `-baixar-arquivo`), a pasta do componente `tools/color-decomposer`, o pacote do motor `color-decomposer`, a chave `color-decomposer` em `macroSections` (e a classe de clique derivada dela) e o nome do arquivo de exportação.
+- **Escala de 4:** nenhuma exceção nova; saiu uma antiga (`gap: .625rem`, do `.brand`).

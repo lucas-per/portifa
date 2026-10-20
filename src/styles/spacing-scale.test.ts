@@ -39,7 +39,6 @@ const KNOWN_EXCEPTIONS: string[] = [
   // Figma: miolo do case, fecha os 1440px do frame (conta no comentário de [slug].astro)
   'pages/cases/[slug].astro::max-width: 977px',
   // App v0.2.0, ainda sem migrar para a escala do site (fase 2): marca, erro do campo, avisos e diálogo de exportação
-  'styles/tools/color-decomposer.css::gap: .625rem',
   'styles/tools/color-decomposer.css::padding-left: .625rem',
   'styles/tools/color-decomposer.css::padding: .875rem 1rem',
   'styles/tools/color-decomposer.css::gap: .375rem',

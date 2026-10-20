@@ -30,13 +30,13 @@ describe('getEnabledSections', () => {
 });
 
 describe('getHeaderSections', () => {
-  it('traz o Color Decomposer, com rótulo completo, rótulo curto e caminho da ferramenta', () => {
+  it('traz a Paletaria, com rótulo completo, rótulo curto e caminho da ferramenta', () => {
     expect(getHeaderSections()).toEqual([
       expect.objectContaining({
         key: 'color-decomposer',
-        label: 'Color Decomposer',
-        shortLabel: 'Decomposer',
-        path: '/projetos/decomposer/',
+        label: 'Paletaria',
+        shortLabel: 'Paletaria',
+        path: '/projetos/paletaria/',
       }),
     ]);
   });
@@ -47,11 +47,11 @@ describe('getHeaderSections', () => {
 });
 
 describe('getAriaCurrent', () => {
-  const tool = '/projetos/decomposer/';
+  const tool = '/projetos/paletaria/';
 
   it('"page" na página da ferramenta, com ou sem barra final', () => {
-    expect(getAriaCurrent('/projetos/decomposer/', tool)).toBe('page');
-    expect(getAriaCurrent('/projetos/decomposer', tool)).toBe('page');
+    expect(getAriaCurrent('/projetos/paletaria/', tool)).toBe('page');
+    expect(getAriaCurrent('/projetos/paletaria', tool)).toBe('page');
   });
 
   it('nada na home nem em outras páginas', () => {
@@ -60,7 +60,7 @@ describe('getAriaCurrent', () => {
   });
 
   it('"true" numa rota filha, para o dia em que o item virar "Projetos"', () => {
-    expect(getAriaCurrent('/projetos/decomposer/', '/projetos/')).toBe('true');
+    expect(getAriaCurrent('/projetos/paletaria/', '/projetos/')).toBe('true');
     expect(getAriaCurrent('/projetos/', '/projetos/')).toBe('page');
   });
 });

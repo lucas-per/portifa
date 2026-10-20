@@ -79,10 +79,9 @@
   max-width: 82rem; margin: 0 auto; padding: 3rem 1.5rem 2.75rem;
 }
 .cd .brand {
-  display: flex; align-items: center; gap: .625rem; min-width: 0;
+  min-width: 0;
   font-family: var(--font-heading); font-size: 2.25rem; font-weight: 800; letter-spacing: 0; line-height: 1.24; text-transform: uppercase; overflow-wrap: anywhere;
 }
-.cd .brand__mark { flex: none; width: 1.75rem; height: 2.25rem; }
 .cd .top__lead { grid-column: 1 / -1; font-size: 1.25rem; line-height: 1.48; }
 .cd .top__help { font-size: 1rem; }
 
@@ -354,8 +353,7 @@
 @media (max-width: 56.25rem) {
   .cd .top__inner { gap: 1rem; padding: 1.25rem 1rem 1rem; }
   /* celular: os mesmos estilos de título em tamanho de celular, como os do site (h2 32px, h3 24px em 700) */
-  .cd .brand { gap: .5rem; font-size: 2rem; }
-  .cd .brand__mark { width: 1.5rem; height: 2rem; }
+  .cd .brand { font-size: 2rem; }
   .cd .top__lead { font-size: 1rem; }
   .cd .top__help { font-size: .875rem; }
   .cd .stage__toggle { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; line-height: 1.24; letter-spacing: 0; }
@@ -392,9 +390,6 @@
 
 /* Telas muito estreitas: as abas rolam na horizontal em vez de quebrar de linha */
 @media (max-width: 23.75rem) {
-  /* o título em caixa alta a 32 px não cabe ao lado do Ajuda em 320 px: desce para 24 px (o h3 mobile do site) */
-  .cd .brand { font-size: 1.5rem; }
-  .cd .brand__mark { width: 1.25rem; height: 1.75rem; }
   .cd .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .cd .tab { flex: none; }
 }

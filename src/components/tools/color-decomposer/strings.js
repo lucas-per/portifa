@@ -82,7 +82,6 @@ export const T = {
   export: {
     copied: 'Copiado para a área de transferência.',
     copyFail: 'Não deu para copiar. Selecione o texto e use Ctrl+C.',
-    figmaHelp: 'Cole este arquivo no plugin Color Decomposer, dentro do Figma. Ele cria as coleções Primitivos e Semântica, cada uma com os modos Claro e Escuro.',
     downloaded: (file) => `Arquivo ${file} baixado.`
   },
 };
@@ -109,7 +108,7 @@ export function helpText({ standard: S, aplica: A }) {
     linkAria: 'Abrir a ajuda',
     back: 'Voltar para a paleta',
     title: 'Ajuda',
-    docTitle: 'Ajuda · Color Decomposer',
+    docTitle: 'Ajuda · Paletaria',
     intro: 'Um guia de cinco passos e as respostas para as dúvidas mais comuns. A última parte é para quem usa o motor no código.',
     toc: 'Nesta página',
     openAll: 'Abrir todas',
@@ -143,7 +142,7 @@ export function helpText({ standard: S, aplica: A }) {
       },
       {
         title: 'Leve para o projeto',
-        text: 'Nas abas Paleta e Neutros, cada tom tem um botão para copiar o código. Para tudo de uma vez, use Exportar tokens: JSON do Aplica Design System, variáveis CSS, JSON completo ou variables do Figma.'
+        text: 'Nas abas Paleta e Neutros, cada tom tem um botão para copiar o código. Para tudo de uma vez, use Exportar tokens: JSON do Aplica Design System, variáveis CSS ou JSON completo.'
       }
     ],
     faq: [
@@ -259,13 +258,6 @@ export function helpText({ standard: S, aplica: A }) {
             q: 'Quais formatos de exportação existem?',
             a: [
               'toPrimitiveTheme e toGrayscaleTheme (tokens do Aplica), toCssVariables (variáveis CSS), toPlainJson (JSON completo) e toFigmaJson (variables do Figma). auditResult lista o contraste de cada par de superfície e texto.'
-            ]
-          },
-          {
-            q: 'Como uso no Figma?',
-            a: [
-              'Em Exportar tokens, escolha Variables do Figma e copie o arquivo. No Figma desktop, importe o plugin de figma-plugin/manifest.json em Plugins, Desenvolvimento, e cole o arquivo. Rodar de novo atualiza as variables, sem duplicar.',
-              'A lógica foi testada num arquivo do Figma. A interface do plugin ainda não foi aberta lá.'
             ]
           },
           {

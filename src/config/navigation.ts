@@ -19,9 +19,9 @@ export const macroSections: MacroSection[] = [
   // Trocar por "Projetos" (/projetos/) é só mudar label, shortLabel e path.
   {
     key: 'color-decomposer',
-    label: 'Color Decomposer',
-    shortLabel: 'Decomposer',
-    path: '/projetos/decomposer/',
+    label: 'Paletaria',
+    shortLabel: 'Paletaria',
+    path: '/projetos/paletaria/',
     enabled: true,
     inHeader: true,
   },
