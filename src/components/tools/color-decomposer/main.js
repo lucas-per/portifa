@@ -86,7 +86,7 @@ function itemsFor(tab, mode) {
   return levels.map((l) => {
     const base = tab === 'palette' && l === brandLevelIn(mode);
     const label = base ? `${T.detail.level(l)}, ${T.yourColor.toLowerCase()}` : T.detail.level(l);
-    return mk(l, l, label, T.detail.level(l), pair(c[mode][tab], l), { base, tag: base ? T.yourColor : '' });
+    return mk(l, l, label, T.detail.level(l), pair(c[mode][tab], l), { base });
   });
 }
 
@@ -220,9 +220,8 @@ function defaultKey(items) {
 function swatchHtml(it, tab) {
   const flag = it.ratio < requiredRatio() ? '<span class="swatch__flag" aria-hidden="true"></span>' : '';
   const name = tab === 'behavior' ? `<span class="swatch__name">${esc(it.name)}</span>` : '';
-  const tag = it.base ? `<span class="swatch__tag">${esc(it.tag || T.yourColor)}</span>` : '';
   return `${flag}<span class="swatch__num">${it.num}</span><span class="swatch__aa" aria-hidden="true">Aa</span>${name}`
-    + `<span class="swatch__meta" aria-hidden="true"><span class="swatch__line">${tag}<span class="swatch__hex">${up(it.a.s)}</span></span><span>${fmt(it.ratio)} para 1</span></span>`;
+    + `<span class="swatch__meta" aria-hidden="true"><span class="swatch__hex">${up(it.a.s)}</span><span class="swatch__ratio">${fmt(it.ratio)} para 1</span></span>`;
 }
 
 function paintSwatch(btn, it, tab) {
@@ -249,7 +248,7 @@ function renderRibbon() {
   const tab = state.tab;
   const items = itemsFor(tab, state.mode);
   const wide = !narrow();
-  const sig = `${tab}|${state.preset}|${items.map((i) => `${i.key}:${i.num}${i.base ? '*' : ''}${i.tag ?? ''}`).join(',')}|${wide}`;
+  const sig = `${tab}|${state.preset}|${items.map((i) => `${i.key}:${i.num}${i.base ? '*' : ''}`).join(',')}|${wide}`;
   const focusedKey = document.activeElement?.closest?.('.swatch')?.dataset.key;
 
   let ribbon = host.firstElementChild;
