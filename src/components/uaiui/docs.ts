@@ -72,6 +72,92 @@ if (root) {
     setOpen(false);
   }
 
+  // Abas Preview / Código: setas, Home e End movem e ativam; o foco acompanha.
+  root.querySelectorAll<HTMLElement>('[data-example]').forEach((example) => {
+    const tabs = [...example.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const select = (tab: HTMLButtonElement, focus = false) => {
+      for (const other of tabs) {
+        const on = other === tab;
+        other.setAttribute('aria-selected', String(on));
+        other.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(other.getAttribute('aria-controls')!);
+        if (panel) panel.hidden = !on;
+      }
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        const target = { ArrowRight: index === last ? 0 : index + 1, ArrowLeft: index === 0 ? last : index - 1, Home: 0, End: last }[event.key];
+        if (target === undefined) return;
+        event.preventDefault();
+        select(tabs[target], true);
+      });
+    });
+  });
+
+  // Accordion: Enter e Espaço são do <button>; aqui só aria-expanded e hidden. aria-disabled não abre.
+  root.addEventListener('click', (event) => {
+    const trigger = (event.target as HTMLElement).closest<HTMLButtonElement>('.uai-accordion-trigger');
+    if (!trigger || trigger.getAttribute('aria-disabled') === 'true') return;
+    const open = trigger.getAttribute('aria-expanded') !== 'true';
+    trigger.setAttribute('aria-expanded', String(open));
+    const panel = document.getElementById(trigger.getAttribute('aria-controls')!);
+    if (panel) panel.hidden = !open;
+  });
+
+  // Toast. O preview segue o padrão que a página ensina: a região viva já está na
+  // página e o aviso entra nela (o anúncio vem da região; o toast não tem role).
+  // Fechar (botão ou Esc) tira o aviso e devolve o foco ao botão que o abriu. Nada
+  // é posicionado sobre o conteúdo e o foco nunca fica preso.
+  const closeToast = (toast: HTMLElement) => {
+    const region = toast.closest<HTMLElement>('[aria-live], [role="alert"]');
+    if (region) {
+      const demo = region.closest<HTMLElement>('.uaiui-docs__stage');
+      toast.remove();
+      demo?.querySelector<HTMLButtonElement>('[data-toast-show]')?.focus();
+      return;
+    }
+    // Toast estático dos exemplos de tons: some e volta depois de 2 s, como no site de docs do DS.
+    const stage = toast.closest<HTMLElement>('.uaiui-docs__stage');
+    if (stage) {
+      stage.tabIndex = -1;
+      stage.focus({ preventScroll: true });
+    }
+    toast.hidden = true;
+    window.setTimeout(() => {
+      toast.hidden = false;
+    }, 2000);
+  };
+
+  root.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const show = target.closest<HTMLButtonElement>('[data-toast-show]');
+    if (show) {
+      const stage = show.closest<HTMLElement>('.uaiui-docs__stage');
+      const region = stage?.querySelector<HTMLElement>('[aria-live]');
+      const template = stage?.querySelector<HTMLTemplateElement>('template[data-toast-template]');
+      if (!region || !template) return;
+      region.replaceChildren(template.content.cloneNode(true));
+      return;
+    }
+    const toast = target.closest<HTMLElement>('.uai-toast');
+    if (!toast) return;
+    // O botão de fechar e a ação do preview (Desfazer) tiram o aviso.
+    if (target.closest('[data-toast-close]') || (toast.closest('[aria-live]') && target.closest('.uai-toast__content .uai-button'))) {
+      closeToast(toast);
+    }
+  });
+
+  root.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    const toast = (event.target as HTMLElement).closest<HTMLElement>('.uai-toast');
+    if (!toast) return;
+    event.preventDefault();
+    closeToast(toast);
+  });
+
   // Copiar código
   root.addEventListener('click', async (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');

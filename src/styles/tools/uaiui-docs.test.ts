@@ -97,12 +97,45 @@ describe('o CSS do DS só entra nas páginas do UaiUI', () => {
     return files;
   }
 
-  it('só o layout do UaiUI e as páginas dele importam uaiui-ds, uaiui-docs.css e uaiui-code-font.css', () => {
+  // Qualquer import do pacote: `import 'uaiui-ds/...'`, `import css from 'uaiui-ds/...?raw'` e `@import`.
+  const importsDs = /(?:import|from)\s+['"][^'"]*(?:uaiui-ds|uaiui-docs\.css|uaiui-code-font\.css)[^'"]*['"]|@import\s+['"]uaiui-ds/;
+
+  it('só o layout do UaiUI e as páginas dele importam uaiui-ds, uaiui-docs.css e uaiui-code-font.css (inclusive com ?raw)', () => {
     const importers = collect(srcDir)
-      .filter((file) => /import\s+['"][^'"]*(uaiui-ds|uaiui-docs\.css|uaiui-code-font\.css)['"]|@import\s+['"]uaiui-ds/.test(readFileSync(file, 'utf-8')))
+      .filter((file) => importsDs.test(readFileSync(file, 'utf-8')))
       .map((file) => file.slice(srcDir.length).replace(/\\/g, '/'));
     expect(importers.length).toBeGreaterThan(0);
     expect(importers.filter((file) => !allowed.some((path) => file.startsWith(path)))).toEqual([]);
+  });
+
+  it('o teste enxerga os dois jeitos de importar o pacote (sanity check do regex)', () => {
+    expect(importsDs.test("import 'uaiui-ds/components/button.css';")).toBe(true);
+    expect(importsDs.test("import css from 'uaiui-ds/components/button.css?raw';")).toBe(true);
+    expect(importsDs.test("@import 'uaiui-ds/tokens-wrapper.css';")).toBe(true);
+    expect(importsDs.test("import { x } from './outra-coisa';")).toBe(false);
+  });
+
+  // O CSS de cada componente entra só na página dele (e o do button também na do toast,
+  // que usa a ação e o fechar do button): Introdução, Tokens e o layout não pesam com ele.
+  const componentCssImports = (file: string) =>
+    // Só linhas de import de verdade: a página de Tokens cita esses caminhos num exemplo de código.
+    [...readFileSync(file, 'utf-8').matchAll(/^import\s+(?:\w+\s+from\s+)?['"]uaiui-ds\/components\/(\w+)\.css(\?raw)?['"]/gm)].map((m) => m[1] + (m[2] ?? ''));
+  const pageDir = join(srcDir, 'pages/projetos/uaiui');
+
+  it('cada página de componente importa o CSS dele (para estilizar e com ?raw para o código) e só o necessário', () => {
+    const expected: Record<string, string[]> = {
+      'accordion.astro': ['accordion', 'accordion?raw'],
+      'button.astro': ['button', 'button?raw'],
+      'toast.astro': ['button', 'toast', 'toast?raw'],
+    };
+    for (const [file, css] of Object.entries(expected)) {
+      expect(componentCssImports(join(pageDir, 'componentes', file)).sort(), file).toEqual([...css].sort());
+    }
+  });
+
+  it('nenhuma outra página nem o layout importa CSS de componente', () => {
+    const others = [join(srcDir, 'layouts/UaiuiDocsLayout.astro'), join(pageDir, 'index.astro'), join(pageDir, 'tokens.astro')];
+    for (const file of others) expect(componentCssImports(file), file).toEqual([]);
   });
 
   it('o BaseLayout (todas as páginas) não importa nada do UaiUI', () => {
