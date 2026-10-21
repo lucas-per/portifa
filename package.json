@@ -17,7 +17,7 @@
     "astro": "^7.3.1",
     "color-decomposer": "github:lucas-per/color-decomposer#v0.2.0",
     "sharp": "^0.35.4",
-    "uaiui-ds": "github:lucas-per/uaiui-ds#v0.2.0"
+    "uaiui-ds": "github:lucas-per/uaiui-ds#v0.2.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
