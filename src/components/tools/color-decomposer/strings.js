@@ -1,7 +1,7 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/strings.js. Divergências da tag: os textos do Auto e da Cor viva (2026-10-17);
 // a nova estrutura do Figma (2026-10-19): saem os textos da escala, do "Saiba mais", dos motivos do Auto e da Cor viva,
 // do aviso de tons parecidos, da cor de apoio e dos ajustes avançados; o preset "aplica" aparece como Alternativo. PR 2:
-// "Manter minha cor exata", o Auto que sugere uma cor próxima e a linha do contraste; saem a Cor viva e o estado normal.
+// o Auto que sugere uma cor próxima e a linha do contraste; saem a Cor viva e o estado normal.
 // Textos dinâmicos da interface (os fixos ficam no ColorDecomposer.astro). Escritos com a skill ux-microcopy:
 // PT-BR, "você", sentence case, sem pontuação em rótulos e botões.
 
@@ -24,14 +24,7 @@ export const T = {
     autoDone: (hex) => `Auto: sua cor principal ficou ${hex}.`,
     autoNone: 'Não achamos uma cor próxima sem tons parecidos.',
     // por que o Auto não está disponível (texto visível sob o botão, ligado por aria-describedby)
-    autoExact: 'Indisponível com \'Manter minha cor exata\' ligado.',
     autoNoConflict: 'Disponível quando sua cor gera tons parecidos.'
-  },
-
-  // Manter minha cor exata: onde a cor principal está (no modo escuro, o nível espelhado)
-  exact: {
-    on: (level) => `Ligado: sua cor está no nível ${level}.`,
-    off: (level) => `Desligado: sua cor está no nível ${level}.`
   },
 
   // Contraste mínimo: as frases das opções do antigo select ("AA: 4,5 para 1", "AAA: 7 para 1") no formato do Figma
@@ -45,8 +38,7 @@ export const T = {
     surface: 'Superfície',
     txtOn: 'Texto sobre a superfície',
     border: 'Borda',
-    textColor: 'Cor do texto',
-    strategy: { 'high-contrast': 'Preto ou branco', 'brand-tint': 'Tom da cor' },
+    tintText: 'Texto com tom da cor',
     copyLevelAria: (title, hex) => `Copiar o código do ${title.toLowerCase()}, ${hex}`,
     copyAria: (what, hex) => `Copiar ${what.toLowerCase()} ${hex}`,
     copied: (hex) => `Copiado: ${hex}`,
@@ -138,18 +130,18 @@ export function helpText({ standard: S, aplica: A }) {
       },
       {
         title: 'Ajuste se precisar',
-        text: 'Se a mini paleta marcar tons parecidos, em amarelo, use o Auto: ele sugere uma cor próxima sem esse problema. Se a cor não pode mudar, ligue Manter minha cor exata.'
+        text: 'Se a mini paleta marcar tons parecidos, em amarelo, use o Auto: ele sugere uma cor próxima sem esse problema.'
       },
       {
         title: 'Leve para o projeto',
-        text: 'Nas abas Paleta e Neutros, cada tom tem um botão para copiar o código. Para tudo de uma vez, use Exportar tokens: JSON do Aplica Design System, variáveis CSS ou JSON completo.'
+        text: 'Em todas as abas, cada tom tem um botão para copiar o código. Para tudo de uma vez, use Exportar tokens: JSON do Aplica Design System, variáveis CSS ou JSON completo.'
       }
     ],
     faq: [
       {
         q: 'O que é um nível?',
         a: [
-          `Cada tom da escala tem um número. No modo claro, quanto menor o número, mais claro o tom. No nível ${base} fica a sua cor. Com Manter minha cor exata ligado, ela vai para o nível de claridade mais próxima, sem alteração.`,
+          `Cada tom da escala tem um número. No modo claro, quanto menor o número, mais claro o tom. No nível ${base} fica a sua cor.`,
           `No modo escuro, a escala é espelhada: o nível ${sFirst} recebe a claridade que o ${sLast} tem no claro, e o contrário. A intensidade cai para 85%.`
         ]
       },
@@ -164,21 +156,14 @@ export function helpText({ standard: S, aplica: A }) {
         q: 'O que o Auto faz?',
         a: [
           `Em cores muito claras ou muito escuras, o nível ${base} deixa os tons vizinhos colados. O Auto troca a sua cor pela mais próxima dela que não causa esse problema, com o mesmo matiz. A cor nova aparece em Cor principal.`,
-          'O botão fica indisponível quando os tons já estão bem separados ou quando Manter minha cor exata está ligado.'
-        ]
-      },
-      {
-        q: 'Para que serve Manter minha cor exata?',
-        a: [
-          `Para quando a cor não pode mudar. Ligado, sua cor fica exata no nível de claridade mais próxima e o resto da paleta segue as regras a partir dela. Desligado, ela fica no nível ${base}.`,
-          'Os níveis de Comportamento não mudam: continuam os do sistema de níveis.'
+          'O botão fica indisponível quando os tons já estão bem separados.'
         ]
       },
       {
         q: 'O que quer dizer a marcação amarela sob a mini paleta?',
         a: [
           'Ela marca os tons quase iguais ao vizinho: a diferença entre eles ficou pequena demais para o olho separar. Medimos a distância perceptual entre tons a 10 níveis um do outro. Amarelos, âmbar, limões e ciano costumam cair aqui.',
-          'O limite foi calibrado com cores conhecidas e com o olho de quem usa. Não é um padrão de mercado. Experimente o Auto ou Manter minha cor exata.'
+          'O limite foi calibrado com cores conhecidas e com o olho de quem usa. Não é um padrão de mercado. Experimente o Auto.'
         ]
       },
       {

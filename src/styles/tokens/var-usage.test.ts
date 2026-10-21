@@ -45,8 +45,9 @@ function collectUsedVars(content: string) {
  */
 const toolRuntimeVars: Record<string, string[]> = {
   // components/tools/color-decomposer/main.js: --s e --t (superfície e texto
-  // de cada tom), --c (amostras de cor) e --track (trilho dos controles).
-  'styles/tools/color-decomposer.css': ['s', 't', 'c', 'track'],
+  // de cada tom), --c (amostras de cor), --track (trilho dos controles) e
+  // --on-bg e --on-fg (trilha e polegar do toggle "Texto com tom da cor" ligado).
+  'styles/tools/color-decomposer.css': ['s', 't', 'c', 'track', 'on-bg', 'on-fg'],
 };
 
 describe('todo var(--token) usado em src/ resolve a um token declarado', () => {
