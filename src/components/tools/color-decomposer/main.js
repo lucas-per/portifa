@@ -208,7 +208,6 @@ function setTab(tab) {
 
 // Ícone de copiar do site (24x24, currentColor) e o de confirmação, que aparece por 1,5s depois de copiar
 const ICON_COPY = '<svg class="icon-copy" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M17 21H3V7H17V21ZM5 19H15V9H5V19Z" fill="currentColor"/><path d="M21 18H19V5H6V3H21V18Z" fill="currentColor"/></svg><svg class="icon-done" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10 15.172L19.192 5.979L20.607 7.393L10 18L3.636 11.636L5.05 10.222L10 15.172Z" fill="currentColor"/></svg>';
-const COPYABLE = ['palette', 'neutrals'];
 
 const narrow = () => matchMedia('(max-width: 56.25rem)').matches;
 
@@ -266,12 +265,10 @@ function renderRibbon() {
       b.type = 'button'; b.className = 'swatch'; b.dataset.key = it.key; b.dataset.i = i;
       if (wide) b.role = 'radio'; else b.setAttribute('aria-controls', 'detail');
       cell.append(b);
-      if (COPYABLE.includes(tab)) {
-        const c = document.createElement('button');
-        c.type = 'button'; c.className = 'swatch__copy'; c.innerHTML = ICON_COPY;
-        cell.classList.add('cell--copy');
-        cell.append(c);
-      }
+      const c = document.createElement('button');
+      c.type = 'button'; c.className = 'swatch__copy'; c.innerHTML = ICON_COPY;
+      cell.classList.add('cell--copy');
+      cell.append(c);
       ribbon.append(cell);
     });
     ribbon.addEventListener('click', (e) => {
