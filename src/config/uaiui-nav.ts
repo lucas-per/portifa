@@ -4,8 +4,9 @@
  * pager e a seção "Componentes" da Introdução. Os caminhos já são os do site
  * (/projetos/uaiui/...), então o withBase do repositório do DS não veio junto.
  *
- * Só entra aqui página que existe: um grupo sem itens não aparece. Accordion,
- * Button e Toast entram no grupo "Componentes" junto com as páginas deles.
+ * Só entra aqui página que existe (uaiui-nav.test.ts): um grupo sem itens não
+ * aparece. Componentes novos entram no grupo "Componentes" junto com a página
+ * deles, em pages/projetos/uaiui/componentes/.
  */
 export interface DocsNavItem {
   title: string;
@@ -29,7 +30,11 @@ export const docsNav: DocsNavGroup[] = [
   },
   {
     title: 'Componentes',
-    items: [],
+    items: [
+      { title: 'Accordion', href: '/projetos/uaiui/componentes/accordion/', description: 'Esconde conteúdo secundário que a pessoa consulta sob demanda.' },
+      { title: 'Button', href: '/projetos/uaiui/componentes/button/', description: 'Dispara uma ação. Três tipos (filled, outlined, ghost) e três estilos.' },
+      { title: 'Toast', href: '/projetos/uaiui/componentes/toast/', description: 'Aviso curto depois de uma ação ou de um evento; some sozinho.', status: 'novo' },
+    ],
   },
 ];
 

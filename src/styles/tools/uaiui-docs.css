@@ -384,6 +384,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--scale-x2);
+  /* Título de uma palavra só ("Accordion") com o texto a 200% passa da coluna. */
+  overflow-wrap: anywhere;
 }
 
 .uaiui-docs .uaiui-docs__title h1 {
@@ -409,6 +411,9 @@
   font-size: var(--scale-x4);
   line-height: var(--line-height-comfortable);
   letter-spacing: var(--letter-spacing-comfortable);
+  /* Com o texto ampliado, palavra ou trecho de código maior que a coluna
+     quebra em vez de passar da tela. */
+  overflow-wrap: anywhere;
 }
 
 .uaiui-docs .uaiui-docs__body > h2 {
@@ -631,6 +636,153 @@
   width: 72px;
   height: 40px;
   border: var(--border-width-default) solid var(--ui-border-strong);
+}
+
+/* ---------- Exemplo: Preview / Código (Figma 666:133 e 667:242) ---------- */
+
+.uaiui-docs .uaiui-docs__example {
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  box-shadow: var(--uaiui-docs-layout-shadow);
+  /* Os componentes do DS trazem a própria tipografia: nada do corpo da página
+     (espaçamento entre letras, caixa) pode vazar para dentro do preview. */
+  letter-spacing: 0;
+  line-height: normal;
+  text-transform: none;
+  overflow-wrap: normal;
+}
+
+.uaiui-docs .uaiui-docs__example-bar {
+  display: flex;
+  background-color: var(--ui-bg-panel);
+  border-bottom: var(--border-width-default) solid var(--ui-border-strong);
+}
+
+.uaiui-docs .uaiui-docs__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* Aba de 44px (o site de docs do DS tinha 36), indicador de 4px na cor da marca. */
+.uaiui-docs .uaiui-docs__tab {
+  position: relative;
+  min-height: 44px;
+  padding: 0 var(--scale-x4);
+  border: 0;
+  border-right: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: transparent;
+  color: var(--ui-fg-default);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: 0.875rem;
+  line-height: var(--line-height-none);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__tab:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__tab[aria-selected='true'] {
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+}
+
+.uaiui-docs .uaiui-docs__tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: var(--scale-base);
+  background-color: var(--ui-brand-band);
+}
+
+.uaiui-docs .uaiui-docs__tab:focus-visible {
+  outline-offset: calc(-2 * var(--focus-ring-width));
+}
+
+.uaiui-docs .uaiui-docs__example [role='tabpanel'][hidden] {
+  display: none;
+}
+
+/* Palco: o componente na densidade escolhida. Sem overflow próprio (rolagem
+   interna precisaria de foco pelo teclado): o que não cabe quebra linha. */
+.uaiui-docs .uaiui-docs__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--scale-x4);
+  padding: var(--scale-x6) var(--scale-x4);
+  background-color: var(--ui-bg-page);
+}
+
+.uaiui-docs .uaiui-docs__stage--col {
+  flex-direction: column;
+  /* Sem quebra: num contêiner flex que quebra linha, a largura da coluna vem do
+     item mais largo (o toast de 400px) e ele passaria da tela. */
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+/* Botão sozinho numa coluna (o "Mostrar aviso" do toast) não estica. */
+.uaiui-docs .uaiui-docs__stage--col > .uai-button {
+  align-self: flex-start;
+}
+
+/* Região viva vazia (o toast ainda não entrou): fica na árvore de acessibilidade,
+   mas sem a folga do gap, que só aparece quando há aviso. */
+.uaiui-docs .uaiui-docs__stage--col > [aria-live]:empty {
+  margin-top: calc(-1 * var(--scale-x4));
+}
+
+/* O código dentro do exemplo usa a moldura do exemplo. */
+.uaiui-docs .uaiui-docs__code--bare {
+  border: 0;
+  box-shadow: none;
+}
+
+.uaiui-docs .uaiui-docs__code--bare pre {
+  max-height: 520px;
+}
+
+/* Tabela de props: larguras do Figma (666:166) e nota do celular. */
+.uaiui-docs .uaiui-docs__table--props {
+  min-width: 640px;
+  overflow-wrap: normal;
+}
+
+/* As larguras do Figma incluem o padding das células. */
+.uaiui-docs .uaiui-docs__table--props th {
+  box-sizing: border-box;
+}
+
+.uaiui-docs .uaiui-docs__table--props th:nth-child(1) {
+  width: 128px;
+}
+
+.uaiui-docs .uaiui-docs__table--props th:nth-child(2) {
+  width: 208px;
+}
+
+.uaiui-docs .uaiui-docs__table--props th:nth-child(3) {
+  width: 100px;
+}
+
+.uaiui-docs .uaiui-docs__table code {
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-400);
+  font-size: var(--scale-x3);
+  letter-spacing: 0;
+}
+
+.uaiui-docs .uaiui-docs__table-note {
+  color: var(--ui-fg-muted);
+  font-size: 0.875rem;
+  line-height: var(--line-height-comfortable);
 }
 
 /* ---------- Pager ---------- */
@@ -894,6 +1046,16 @@
   }
 }
 
+@media (min-width: 768px) {
+  .uaiui-docs .uaiui-docs__stage {
+    padding: var(--scale-x8) var(--scale-x6);
+  }
+
+  .uaiui-docs .uaiui-docs__table-note {
+    display: none;
+  }
+}
+
 /* Padding de 88px a partir do mesmo ponto em que o cabeçalho do site passa ao logo completo. */
 @media (min-width: 1184px) {
   .uaiui-docs {
@@ -999,6 +1161,11 @@
 
   .uaiui-docs .uaiui-docs__toc-list a[aria-current='true'] {
     border-left-color: Highlight;
+  }
+
+  .uaiui-docs .uaiui-docs__tab[aria-selected='true']::after {
+    forced-color-adjust: none;
+    background-color: Highlight;
   }
 
   /* A borda transparente vira CanvasText nesse modo; a do item não atual some de novo. */
