@@ -362,12 +362,12 @@ function fillDetail(it) {
       <span class="sample__text"><span class="sample__big" aria-hidden="true">Aa</span><span class="sample__small">${T.detail.sample}</span></span>
       <span class="sample__tag">${T.detail.tag(it.ratio)}</span>
     </div>
+    <div class="values">${row(T.detail.surface, it.a.s)}${row(T.detail.txtOn, it.a.t)}${row(T.detail.border, it.a.b)}</div>
     <label class="switch switch--end" style="--on-bg:${track};--on-fg:${thumb}">
       <input type="checkbox" role="switch" name="strategy"${state.strategy === 'brand-tint' ? ' checked' : ''}>
       <span class="switch__label">${T.detail.tintText}</span>
       <span class="switch__track" aria-hidden="true"></span>
-    </label>
-    <div class="values">${row(T.detail.surface, it.a.s)}${row(T.detail.txtOn, it.a.t)}${row(T.detail.border, it.a.b)}</div>`;
+    </label>`;
 }
 
 detail.addEventListener('click', async (e) => {
@@ -645,6 +645,7 @@ function bindHelp() {
 /* ---------- Ciclo principal ---------- */
 
 function render() {
+  $('tons').dataset.tab = state.tab; // o CSS do computador posiciona o Exportar pela aba (Comportamento)
   renderTabs();
   renderAlerts();
   renderMini();

@@ -25,6 +25,9 @@
   /* aviso (semântico, fixo: não vem dos neutros da cor escolhida) */
   --warn-bg: #ffe08a;
   --warn-edge: #8a5f00;
+  /* opção ativa dos seletores e aba ativa: o nível 100 de Comportamento e o texto dele (ver chrome.js) */
+  --active-bg: #057abd;
+  --active-fg: #fff;
 
   --font: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-title: "DM Sans", system-ui, sans-serif;
@@ -130,7 +133,9 @@
   display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;
   font-family: var(--font-label); font-size: .875rem; font-weight: 700; line-height: 1.2; text-transform: uppercase;
 }
-.cd .segmented__item input:checked + span { background: var(--fg); color: var(--bg); }
+.cd .segmented__item input:checked + span { background: var(--active-bg); color: var(--active-fg); }
+/* cor ativa parecida com o fundo (menos de 3 para 1): contorno de 2 px por dentro, para a opção ativa nunca ficar indistinguível */
+.cd[data-active-weak="1"] .segmented__item input:checked + span { box-shadow: inset 0 0 0 var(--bw) var(--fg); }
 .cd .segmented__item input:focus-visible + span { outline: 2px solid var(--ring); outline-offset: 2px; }
 
 /* Abrir e fechar ("Refinar cor principal" e "Paletas"): título com o chevron do site, para cima quando aberto */
@@ -227,7 +232,8 @@
   font-family: var(--font-label); font-size: .875rem; font-weight: 700; text-transform: uppercase; color: var(--muted); border-radius: var(--r-control) var(--r-control) 0 0;
 }
 .cd .tab:hover { color: var(--fg); }
-.cd .tab[aria-selected="true"] { background: var(--fg); color: var(--bg); }
+.cd .tab[aria-selected="true"] { background: var(--active-bg); color: var(--active-fg); }
+.cd[data-active-weak="1"] .tab[aria-selected="true"] { box-shadow: inset 0 0 0 var(--bw) var(--fg); }
 .cd #alerts:not(:empty) { display: grid; gap: .75rem; margin-top: 1rem; }
 
 @media (min-width: 56.3125rem) {
@@ -246,6 +252,11 @@
   .cd .stage__panel { grid-column: 1; grid-row: 4 / span 2; display: grid; grid-template-rows: subgrid; }
   .cd .stage__panel > #ribbon-host { grid-row: 1; }
   .cd .stage__panel > #alerts { grid-row: 2; }
+  /* Comportamento (Figma 658:1353): lista e avisos na linha do painel, que tem a altura do conteúdo (482 px); o Exportar fica
+     na coluna da lista, com a base na do painel e ao menos 32 px abaixo da lista e dos avisos (44 + 32 de reserva). A página
+     encolhe ao entrar nessa aba (as linhas de baixo ficam vazias). */
+  .cd .stage[data-tab="behavior"] .stage__panel { grid-row: 4; display: block; padding-bottom: 4.75rem; }
+  .cd .stage[data-tab="behavior"] .stage__export { grid-row: 4; align-self: end; margin-top: 0; }
   /* o painel fica na linha da lista (topo e altura dela); só a altura do conteúdo é o mínimo (aba Comportamento, com menos níveis) */
   .cd .stage__detail { grid-column: 2; grid-row: 4; display: grid; }
 }
@@ -339,6 +350,9 @@
 .cd .switch input:checked ~ .switch__track::after { background: var(--on-fg, var(--bg)); transform: translate(1.25rem, -50%); }
 .cd .switch input:focus-visible ~ .switch__track { outline: 2px solid var(--ring); outline-offset: 2px; }
 .cd .switch__label { font-family: var(--font-label); font-weight: 700; font-size: .9375rem; line-height: 1.3; text-transform: uppercase; }
+/* no painel de detalhes o toggle ocupa 24 px (a trilha, como no Figma 658:1353); o alvo de 44 px vai 10 px para cima e para baixo, sobre o espaço entre os blocos */
+.cd .detail .switch { min-height: 1.5rem; }
+.cd .detail .switch input { inset: -.625rem 0 auto 0; height: calc(100% + 1.25rem); }
 
 /* Avisos */
 .cd .notice { margin: 0; padding: .875rem 1rem; border: var(--bw) solid var(--fg); border-radius: var(--r-panel); box-shadow: var(--shadow-comp); background: var(--panel); display: grid; gap: .375rem; max-width: 62ch; }

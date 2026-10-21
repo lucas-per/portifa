@@ -1,7 +1,8 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/chrome.js. Mudanças da integração ao site: import do pacote
 // color-decomposer e applyChrome recebe o elemento raiz da ferramenta (no app era o <html>). Divergência da tag (2026-10-17):
 // --edge é calculado contra o fundo e o painel, como o --muted (docs/design-notes.md). Sem os tokens do alternador ligado
-// da Cor viva, que saiu (2026-10-19).
+// da Cor viva, que saiu (2026-10-19). PR 9 (2026-10-20): --active-bg e --active-fg, a opção e a aba ativas (nível 100 de
+// Comportamento) e o aviso `weak` para quando essa cor não se separa do fundo.
 // A própria interface usa a paleta gerada: fundo, texto e bordas saem dos neutros da cor escolhida.
 import { contrastRatio } from 'color-decomposer';
 
@@ -12,6 +13,19 @@ function firstLevelWith(scale, levels, bgs, min) {
   return scale[levels.at(-1)];
 }
 
+// Opção ativa dos seletores e aba ativa: o nível 100 de Comportamento, no par que o motor já calculou (no escuro, o espelhado de
+// 100 é o próprio 100). O texto precisa de 4,5 para 1: se o do motor fica abaixo (o motor avisa "abaixo do AA"), vale o melhor
+// entre o fundo e o texto da interface e, por fim, preto ou branco (um dos dois sempre passa de 4,5). `weak`: a cor ativa não
+// chega a 3 para 1 contra o fundo (cor muito clara no claro, muito escura no escuro); o CSS então desenha um contorno.
+export function activeTokens(theme, name, mode, bg, fg) {
+  const behavior = theme.colors[name][mode].behavior;
+  const key = Object.keys(behavior.level).find((k) => behavior.level[k] === 100);
+  const active = behavior.surface[key];
+  const own = behavior.txtOn[key];
+  const text = [own, bg, fg, '#000000', '#ffffff'].find((c) => contrastRatio(active, c) >= 4.5);
+  return { activeBg: active, activeFg: text, weak: contrastRatio(active, bg) < 3 };
+}
+
 export function chromeTokens(theme, name, mode, preset) {
   const levels = preset.neutrals.levels;
   const n = theme.colors[name][mode].neutrals;
@@ -19,6 +33,7 @@ export function chromeTokens(theme, name, mode, preset) {
   const panel = n.surface[levels[1]] ?? bg;
   // as pontas da escala de neutros são sempre as de maior contraste, em qualquer modo
   const fg = n.surface[levels.at(-1)];
+  const a = activeTokens(theme, name, mode, bg, fg);
   return {
     bg,
     panel,
@@ -31,6 +46,10 @@ export function chromeTokens(theme, name, mode, preset) {
     // divisores decorativos
     line: n.border[levels[0]],
     ring: fg,
+    'active-bg': a.activeBg,
+    'active-fg': a.activeFg,
+    // não é uma variável de CSS: o applyChrome o grava em data-active-weak
+    weak: a.weak,
     // faixa do cabeçalho: a cor da marca digitada, sem alteração
     band: theme.colors[name].base
   };
@@ -39,5 +58,7 @@ export function chromeTokens(theme, name, mode, preset) {
 export function applyChrome(root, tokens, mode) {
   root.dataset.theme = mode;
   root.style.colorScheme = mode;
-  for (const [k, v] of Object.entries(tokens)) root.style.setProperty(`--${k}`, v);
+  const { weak, ...vars } = tokens;
+  root.dataset.activeWeak = weak ? '1' : '0';
+  for (const [k, v] of Object.entries(vars)) root.style.setProperty(`--${k}`, v);
 }

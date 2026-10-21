@@ -136,10 +136,34 @@ describe('Paletas e Exportar tokens (PR 3)', () => {
     expect(script).toMatch(/\$\('stage-body'\)\.hidden = narrow\(\) && !stageOpen/);
   });
 
-  it('o Exportar tokens vem depois do corpo da paleta no DOM: lista, painel, Exportar', () => {
-    expect(html.indexOf('id="detail-host"')).toBeGreaterThan(-1);
-    expect(html.indexOf('id="open-export"')).toBeGreaterThan(html.indexOf('id="detail-host"'));
-    expect(html.indexOf('id="open-export"')).toBeGreaterThan(html.indexOf('id="ribbon-host"'));
+  // PR 9: a coluna da esquerda (lista e avisos, Exportar) vem antes do painel de detalhes; no celular o host do detalhe fica vazio
+  // (o detalhe abre dentro da lista) e o Exportar fica fora do corpo, que fecha com "Paletas"
+  it('o Exportar tokens vem depois da lista e dos avisos e antes do painel de detalhes, fora do corpo', () => {
+    const at = (id: string) => html.indexOf(`id="${id}"`);
+    expect(at('ribbon-host')).toBeGreaterThan(-1);
+    expect(at('alerts')).toBeGreaterThan(at('ribbon-host'));
+    expect(at('open-export')).toBeGreaterThan(at('alerts'));
+    expect(at('detail-host')).toBeGreaterThan(at('open-export'));
+    expect(html.slice(html.indexOf('id="stage-body"'), at('open-export'))).toMatch(/<\/div>\s*<!--[^>]*-->\s*<button[^>]*$|<\/div>\s*<\/div>\s*<!--[\s\S]*$/);
+  });
+
+  it('Comportamento no computador: Exportar na linha do painel, com a base na dele e 32 px de reserva', () => {
+    expect(css).toMatch(/\.cd \.stage\[data-tab="behavior"\] \.stage__panel \{ grid-row: 4; display: block; padding-bottom: 4\.75rem; \}/);
+    expect(css).toMatch(/\.cd \.stage\[data-tab="behavior"\] \.stage__export \{ grid-row: 4; align-self: end; margin-top: 0; \}/);
+    expect(script).toContain("$('tons').dataset.tab = state.tab");
+  });
+
+  it('o toggle "Texto com tom da cor" é o último bloco do painel de detalhes (depois dos valores)', () => {
+    const detail = script.slice(script.indexOf('detail.innerHTML = `'));
+    expect(detail.indexOf('class="values"')).toBeGreaterThan(-1);
+    expect(detail.indexOf('class="switch switch--end"')).toBeGreaterThan(detail.indexOf('class="values"'));
+  });
+
+  it('opção ativa e aba ativa usam --active-bg e --active-fg, com contorno quando a cor é fraca', () => {
+    expect(css).toMatch(/input:checked \+ span \{ background: var\(--active-bg\); color: var\(--active-fg\); \}/);
+    expect(css).toMatch(/\.tab\[aria-selected="true"\] \{ background: var\(--active-bg\); color: var\(--active-fg\); \}/);
+    expect(css).toMatch(/\[data-active-weak="1"\] \.tab\[aria-selected="true"\] \{ box-shadow: inset 0 0 0 var\(--bw\) var\(--fg\); \}/);
+    expect(css).toMatch(/\[data-active-weak="1"\] \.segmented__item input:checked \+ span \{ box-shadow: inset 0 0 0 var\(--bw\) var\(--fg\); \}/);
   });
 
   it('abas: três dividem a largura e "Comportamento" fica com a do conteúdo', () => {
