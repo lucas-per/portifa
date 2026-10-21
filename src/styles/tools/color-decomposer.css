@@ -253,7 +253,7 @@
 /* Lista de níveis (Figma swatch-row 648:1062): item de 64 px = borda de 2 + conteúdo de 60 + borda de 2; a borda de um
    item é a do vizinho (sobreposição de 2), então 9 níveis dão 560 px. Conteúdo: padding de 8 (cima e baixo) e 12 (lados),
    gap de 4; o grupo da direita (texto e copiar) fica com o resto, com gap de 12. */
-.cd .cell { --pr: .75rem; position: relative; display: grid; border: var(--bw) solid var(--fg); }
+.cd .cell { --pr: .75rem; position: relative; display: grid; grid-template-columns: minmax(0, 1fr); border: var(--bw) solid var(--fg); }
 .cd .cell + .cell { margin-top: calc(var(--bw) * -1); }
 .cd .swatch {
   grid-area: 1 / 1; position: relative; display: flex; align-items: center; gap: .25rem; width: 100%; min-height: 3.75rem;
@@ -265,7 +265,7 @@
 .cd .swatch:focus-visible { outline: 2px solid var(--t); outline-offset: -6px; z-index: 2; }
 .cd .swatch__num { flex: none; width: 2.25rem; font-family: var(--font-label); font-size: .9375rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
 .cd .swatch__aa { font-family: var(--font-title); font-size: 1.25rem; font-weight: 600; line-height: 1; }
-.cd .swatch__name { flex: 1; min-width: 0; padding-left: .5rem; font-size: .9375rem; font-weight: 600; line-height: 1.2; }
+.cd .swatch__name { flex: 1; min-width: 0; font-size: .875rem; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
 /* hex em cima e razão embaixo, à direita, nos 44 px do conteúdo (padding de 4 em cima e embaixo, sem gap fixo) */
 .cd .swatch__meta {
   display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; align-self: stretch; min-width: 0; margin-left: auto;

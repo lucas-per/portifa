@@ -86,6 +86,15 @@ describe('lista de níveis', () => {
     expect(script).toContain("b.setAttribute('aria-checked', String(on))");
   });
 
+  // PR 7: o copiar existia só em Paleta e Neutros (COPYABLE); Comportamento e Cinzas ficavam sem ele
+  it('toda linha de toda aba tem o botão de copiar (sem lista de abas que copiam)', () => {
+    expect(script).not.toMatch(/COPYABLE/);
+    expect(script).toMatch(/c\.className = 'swatch__copy'/);
+    const build = script.slice(script.indexOf("b.className = 'swatch'; b.dataset.key"), script.indexOf("ribbon.append(cell)"));
+    expect(build).toContain("cell.append(c)");
+    expect(build.slice(build.indexOf('cell.append(b)'))).not.toMatch(/\bif \(/); // nada condiciona o copiar à aba
+  });
+
   // PR 6: a tag "Sua cor" saiu; o nível da cor principal segue no nome acessível ("..., sua cor") e, para quem vê, no anel da mini paleta
   it('não há tag "Sua cor" na linha; hex em cima e razão embaixo', () => {
     expect(script).not.toMatch(/swatch__tag|swatch__line/);

@@ -514,3 +514,12 @@ Figma `642:963` (layout) e componente `swatch-row` (`648:1062`; variantes Padrã
 - **Celular:** o mesmo item padrão, sem ponta; o painel abre abaixo e a indicação de selecionado é a de antes (`aria-expanded`).
 - **Escala de 4:** nenhuma exceção nova. Fora da regra por serem forma: os vértices do polígono (px dentro de `clip-path`).
 - **Versão:** 1.1.5 para 1.1.6 (patch).
+
+### Paletaria — PR 7 (copiar em todas as abas) — 2026-10-20
+
+- **Bug:** em Comportamento e Cinzas as linhas não tinham o botão de copiar. A causa era `COPYABLE = ['palette', 'neutrals']` em `main.js`, que vinha da página original (não da PR 6): só as linhas dessas duas abas criavam o `.swatch__copy`. A PR 1 diz que o copiar "fica sempre visível" e o Figma tem um componente de item só (`swatch-row`), então o comportamento esperado é o mesmo nas 4 abas. *(Substitui, na PR 1, a leitura de que o copiar era só das abas Paleta e Neutros.)*
+- **Correção:** `COPYABLE` saiu; toda linha de toda aba ganha o botão (44x44px, borda de 2px, ícone de 24px, mesmo `aria-label` por nível, mesmo `tabIndex` do item e a confirmação de 1,5s). Contagem medida: Paleta 9, Neutros 9, Comportamento 6 e Cinzas 9, em 1440 e 360px.
+- **Ajuste que veio junto (Comportamento em 360px):** com o botão de copiar, "Pressionado" estourava a linha e empurrava o botão da última coluna para a direita. A grade do item passou a ter uma coluna `minmax(0, 1fr)` (o botão nunca se desloca), o nome do comportamento ficou em 14px, sem o recuo de 8px que eu tinha dado à esquerda, e quebra só quando não cabe (`overflow-wrap: anywhere`). Em 320px "Início da escala" e "Fim da escala" já quebravam em duas linhas e a linha cresce até 87px; nos outros tamanhos todas têm 64px.
+- **Teste:** `markup.test.ts` confere que não há lista de abas com copiar e que nada condiciona a criação do botão.
+- **Versão:** 1.1.6 para 1.1.7 (patch). Sem exceção nova em `KNOWN_EXCEPTIONS`.
+
