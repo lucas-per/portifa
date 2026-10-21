@@ -1,0 +1,17 @@
+/*
+  JetBrains Mono 400, a fonte do código na documentação do UaiUI. Só as
+  páginas do UaiUI importam este arquivo (UaiuiDocsLayout.astro), e o
+  navegador só baixa a fonte quando um código aparece. O site carrega só a 700
+  (fonts.css), dos rótulos.
+
+  Subset: o mesmo recorte de 230 caracteres da jetbrains-mono-700.woff2 (a
+  faixa "latin" do Google Fonts, versão 2.211), instanciado em wght 400 a partir
+  da fonte variável. Como regerar: design-notes.md, seção do UaiUI (PR A).
+*/
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../../assets/fonts/jetbrains-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

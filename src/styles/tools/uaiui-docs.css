@@ -1,0 +1,1012 @@
+/*
+  Shell da documentação do UaiUI (/projetos/uaiui/). Porte do site de docs do
+  uaiui-ds v0.2.0 (src/styles/site.css), redesenhado pelo Figma (666:17 e
+  667:178), sem os globais de lá (*, html, body, a, h1–h4, :focus-visible).
+
+  Regras deste arquivo (guardadas por uaiui-docs.test.ts):
+  - todo seletor começa por .uaiui-docs, o mesmo elemento do wrapper .uaiui
+    do DS (tokens em uaiui-ds/tokens-wrapper.css);
+  - cores só por tokens do wrapper (--ui-*, --interface-function-*); nada fixo;
+  - tipografia do site (fontes e escala em src/styles/tokens/);
+  - sombras na escala do DS: --shadow-offset-component (2px) e
+    --shadow-offset-layout (4px), não a escala de forma do site (3 e 5px);
+  - espaçamentos em múltiplos de 4 (spacing-scale.test.ts).
+*/
+
+.uaiui-docs {
+  --uaiui-docs-gutter: var(--scale-x5);
+  --uaiui-docs-layout-shadow: var(--shadow-offset-layout) var(--shadow-offset-layout) 0 0 var(--ui-shadow-color);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  font-family: var(--font-family-body);
+}
+
+.uaiui-docs h1,
+.uaiui-docs h2,
+.uaiui-docs h3,
+.uaiui-docs p,
+.uaiui-docs ul,
+.uaiui-docs ol,
+.uaiui-docs figure {
+  margin: 0;
+}
+
+.uaiui-docs :focus-visible {
+  outline: var(--focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.uaiui-docs .uaiui-docs__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.uaiui-docs .uaiui-docs__icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- Bloco de título (cabeçalho da área, Figma 666:70 / 667:212) ---------- */
+
+.uaiui-docs .uaiui-docs__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x4);
+  box-sizing: border-box;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--scale-x8) var(--uaiui-docs-gutter) var(--scale-x4);
+}
+
+/* "UAIUI": não é título (o h1 é o da página); estilo do h2 do site em caixa alta. */
+.uaiui-docs .uaiui-docs__brand {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-800);
+  font-size: var(--scale-x8);
+  line-height: var(--line-height-compact);
+  text-transform: uppercase;
+}
+
+.uaiui-docs .uaiui-docs__lead {
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-regular);
+}
+
+.uaiui-docs .uaiui-docs__tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x4);
+}
+
+/* ---------- Busca (botão) ---------- */
+
+.uaiui-docs .uaiui-docs__search-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--scale-x3);
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 0 var(--scale-x3);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  font: inherit;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__search-open:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__search-open--full {
+  display: none;
+  width: 320px;
+  justify-content: flex-start;
+}
+
+.uaiui-docs .uaiui-docs__search-text {
+  flex: 1 1 auto;
+  color: var(--ui-fg-muted);
+  font-size: 0.875rem;
+  line-height: var(--line-height-comfortable);
+  letter-spacing: var(--letter-spacing-comfortable);
+  text-align: left;
+}
+
+.uaiui-docs .uaiui-docs__search-open--full:hover .uaiui-docs__search-text {
+  color: inherit;
+}
+
+.uaiui-docs .uaiui-docs__kbd {
+  padding: 0 var(--scale-base);
+  border: var(--border-width-default) solid var(--ui-border-field);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-regular);
+}
+
+.uaiui-docs .uaiui-docs__search-open--icon {
+  width: 44px;
+  padding: 0;
+}
+
+/* ---------- Densidade (fieldset com rádios nativos) ---------- */
+
+.uaiui-docs .uaiui-docs__density {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.uaiui-docs .uaiui-docs__density-legend {
+  padding: 0 0 var(--scale-x2);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-none);
+  text-transform: uppercase;
+}
+
+.uaiui-docs .uaiui-docs__segments {
+  display: flex;
+  flex-wrap: wrap;
+  border: var(--border-width-default) solid var(--ui-border-strong);
+}
+
+/* Cada opção tem 44px de alvo (o Figma desktop desenha 40, com a borda por
+   dentro); o <input> cobre a opção inteira e fica invisível. */
+.uaiui-docs .uaiui-docs__segment {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  /* Larguras iguais (Figma 667:231); com o texto ampliado, a opção que não
+     cabe vai para a linha de baixo em vez de estourar a tela. */
+  min-width: max-content;
+  min-height: 44px;
+  padding: 0 var(--scale-x4);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: 0.875rem;
+  line-height: var(--line-height-none);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__segment-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__segment:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked) {
+  background-color: var(--interface-function-primary-normal-background);
+  color: var(--interface-function-primary-normal-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  z-index: 1;
+}
+
+/* ---------- Shell: menu lateral, conteúdo, "Nesta página" ---------- */
+
+.uaiui-docs .uaiui-docs__shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x8);
+  box-sizing: border-box;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--uaiui-docs-gutter) var(--scale-x16);
+}
+
+.uaiui-docs .uaiui-docs__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x3);
+}
+
+/* Celular: "Páginas" abre a lista no lugar, sem sobrepor o conteúdo (nota 668:358). */
+.uaiui-docs .uaiui-docs__pages-row {
+  display: flex;
+  gap: var(--scale-x3);
+}
+
+.uaiui-docs .uaiui-docs__pages-toggle {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: var(--scale-x3);
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 var(--scale-x3);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__pages-toggle:hover,
+.uaiui-docs .uaiui-docs__pages-toggle[aria-expanded='true'] {
+  background-color: var(--ui-bg-panel);
+}
+
+.uaiui-docs .uaiui-docs__pages-label {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.uaiui-docs .uaiui-docs__pages-kicker {
+  color: var(--ui-fg-muted);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-none);
+  text-transform: uppercase;
+}
+
+.uaiui-docs .uaiui-docs__pages-current {
+  overflow: hidden;
+  font-weight: var(--weight-600);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uaiui-docs .uaiui-docs__pages-toggle[aria-expanded='true'] .uaiui-docs__chevron {
+  transform: rotate(180deg);
+}
+
+/* A lista é a mesma do menu lateral: no celular, um painel com borda e sombra;
+   fechada, fica com `hidden` (fora do Tab). */
+.uaiui-docs .uaiui-docs__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x8);
+  padding: var(--scale-x3);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  box-shadow: var(--uaiui-docs-layout-shadow);
+}
+
+.uaiui-docs .uaiui-docs__sidebar[hidden] {
+  display: none;
+}
+
+.uaiui-docs .uaiui-docs__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x2);
+}
+
+.uaiui-docs .uaiui-docs__group-title {
+  color: var(--ui-fg-muted);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-none);
+  text-transform: uppercase;
+}
+
+.uaiui-docs .uaiui-docs__group-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-base);
+  padding: 0;
+  list-style: none;
+}
+
+.uaiui-docs .uaiui-docs__nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--scale-x2);
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 0 var(--scale-x3);
+  border: var(--border-width-default) solid transparent;
+  color: var(--ui-fg-default);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-comfortable);
+  letter-spacing: var(--letter-spacing-comfortable);
+  text-decoration: none;
+}
+
+.uaiui-docs .uaiui-docs__nav-link:hover {
+  border-color: var(--ui-border-strong);
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__nav-link[aria-current='page'] {
+  border-color: var(--ui-border-strong);
+  background-color: var(--interface-function-ghost-active-background);
+  color: var(--interface-function-ghost-active-txtOn);
+  font-weight: var(--weight-600);
+}
+
+.uaiui-docs .uaiui-docs__badge {
+  padding: 0 var(--scale-base);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--interface-function-primary-normal-background);
+  color: var(--interface-function-primary-normal-txtOn);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-regular);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+/* "Nesta página": só no desktop largo. Fica escondido até o script montar a lista. */
+.uaiui-docs .uaiui-docs__toc {
+  display: none;
+}
+
+/* ---------- Conteúdo ---------- */
+
+.uaiui-docs .uaiui-docs__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x12);
+  min-width: 0;
+}
+
+.uaiui-docs .uaiui-docs__title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x2);
+}
+
+.uaiui-docs .uaiui-docs__title h1 {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-800);
+  font-size: var(--scale-x7);
+  line-height: var(--line-height-compact);
+}
+
+.uaiui-docs .uaiui-docs__title p {
+  color: var(--ui-fg-muted);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-regular);
+}
+
+/* Corpo das páginas: o HTML vem plano (h2, p, listas, blocos), como no site
+   de origem. Cada h2 abre uma seção (Figma "seção / …"): divisor de 2px,
+   24px até o título e 16px entre os blocos; 48px entre as seções. */
+.uaiui-docs .uaiui-docs__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x4);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-comfortable);
+  letter-spacing: var(--letter-spacing-comfortable);
+}
+
+.uaiui-docs .uaiui-docs__body > h2 {
+  margin-top: var(--scale-x8);
+  padding-top: var(--scale-x6);
+  border-top: var(--border-width-default) solid var(--ui-border-divider);
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x6);
+  line-height: var(--line-height-compact);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+.uaiui-docs .uaiui-docs__body > h2:first-child {
+  margin-top: 0;
+}
+
+.uaiui-docs .uaiui-docs__body h3 {
+  font-family: var(--font-family-title);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x5);
+  line-height: var(--line-height-compact);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
+/* Listas de texto; as com classe (amostras, cards) têm layout próprio. */
+.uaiui-docs .uaiui-docs__body ul:not([class]),
+.uaiui-docs .uaiui-docs__body ol:not([class]) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x2);
+  padding-left: var(--scale-x6);
+}
+
+.uaiui-docs .uaiui-docs__body strong {
+  font-weight: var(--weight-600);
+}
+
+.uaiui-docs .uaiui-docs__body a {
+  color: var(--ui-fg-brand);
+  text-underline-offset: 3px;
+}
+
+.uaiui-docs .uaiui-docs__body a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Código em linha: JetBrains Mono 400 (uaiui-code-font.css), sem fundo, como no Figma. */
+.uaiui-docs .uaiui-docs__body :not(pre) > code {
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-400);
+  font-size: 0.875em;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.uaiui-docs .uaiui-docs__callout {
+  padding: var(--scale-x4) var(--scale-x5);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  border-left-width: var(--scale-x2);
+  background-color: var(--ui-bg-panel);
+}
+
+/* Tabela: rola na horizontal no celular; a região recebe foco pelo teclado. */
+.uaiui-docs .uaiui-docs__table-wrap {
+  overflow-x: auto;
+  border: var(--border-width-default) solid var(--ui-border-strong);
+}
+
+.uaiui-docs .uaiui-docs__table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: var(--line-height-comfortable);
+}
+
+.uaiui-docs .uaiui-docs__table th,
+.uaiui-docs .uaiui-docs__table td {
+  padding: var(--scale-x3) var(--scale-x4);
+  border-bottom: var(--border-width-default) solid var(--ui-border-divider);
+  text-align: left;
+  vertical-align: top;
+}
+
+.uaiui-docs .uaiui-docs__table th {
+  background-color: var(--ui-bg-panel);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-regular);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.uaiui-docs .uaiui-docs__table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Bloco de código: monocromático (Figma), fundo e texto invertidos do tema. */
+.uaiui-docs .uaiui-docs__code {
+  border: var(--border-width-default) solid var(--ui-fg-default);
+  background-color: var(--ui-fg-default);
+  color: var(--ui-bg-page);
+  box-shadow: var(--uaiui-docs-layout-shadow);
+}
+
+.uaiui-docs .uaiui-docs__code-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--scale-x4);
+  padding-left: var(--scale-x4);
+  border-bottom: var(--border-width-default) solid var(--ui-fg-muted);
+}
+
+.uaiui-docs .uaiui-docs__code-lang {
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-none);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.uaiui-docs .uaiui-docs__copy {
+  margin-left: auto;
+  min-height: 44px;
+  padding: 0 var(--scale-x4);
+  border: 0;
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: 0.875rem;
+  line-height: var(--line-height-none);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__copy:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+/* O anel de fora sumiria sobre a barra escura: aqui ele fica por dentro do botão claro. */
+.uaiui-docs .uaiui-docs__copy:focus-visible {
+  outline-offset: calc(-2 * var(--focus-ring-width));
+}
+
+.uaiui-docs .uaiui-docs__code pre {
+  margin: 0;
+  padding: var(--scale-x4);
+  overflow: auto;
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-400);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.uaiui-docs .uaiui-docs__code pre:focus-visible {
+  outline-color: var(--ui-bg-page);
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+
+/* Cards da Introdução (seção "Componentes", entra com as páginas da PR B). */
+.uaiui-docs .uaiui-docs__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--scale-x6);
+  padding: 0;
+  list-style: none;
+}
+
+.uaiui-docs .uaiui-docs__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x2);
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--scale-x5);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  box-shadow: var(--uaiui-docs-layout-shadow);
+  text-decoration: none;
+}
+
+.uaiui-docs .uaiui-docs__card:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__card p {
+  color: inherit;
+  font-size: 0.875rem;
+}
+
+/* Amostra de cores (Tokens e temas). */
+.uaiui-docs .uaiui-docs__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--scale-x2);
+}
+
+.uaiui-docs .uaiui-docs__swatch {
+  display: grid;
+  gap: var(--scale-base);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-400);
+  font-size: var(--scale-x3);
+  line-height: var(--line-height-regular);
+  letter-spacing: 0;
+}
+
+.uaiui-docs .uaiui-docs__swatch-color {
+  width: 72px;
+  height: 40px;
+  border: var(--border-width-default) solid var(--ui-border-strong);
+}
+
+/* ---------- Pager ---------- */
+
+.uaiui-docs .uaiui-docs__pager {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scale-x4);
+  padding-top: var(--scale-x4);
+}
+
+.uaiui-docs .uaiui-docs__pager-link {
+  display: flex;
+  align-items: center;
+  gap: var(--scale-x3);
+  box-sizing: border-box;
+  padding: var(--scale-x4);
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  box-shadow: var(--uaiui-docs-layout-shadow);
+  text-decoration: none;
+}
+
+.uaiui-docs .uaiui-docs__pager-link:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__pager-link--next {
+  margin-left: auto;
+}
+
+.uaiui-docs .uaiui-docs__pager-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--scale-base);
+  min-width: 0;
+}
+
+.uaiui-docs .uaiui-docs__pager-link--next .uaiui-docs__pager-text {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.uaiui-docs .uaiui-docs__pager-kicker {
+  color: var(--ui-fg-muted);
+  font-size: 0.875rem;
+  line-height: var(--line-height-comfortable);
+  letter-spacing: var(--letter-spacing-comfortable);
+}
+
+.uaiui-docs .uaiui-docs__pager-link:hover .uaiui-docs__pager-kicker {
+  color: inherit;
+}
+
+.uaiui-docs .uaiui-docs__pager-title {
+  font-weight: var(--weight-600);
+  font-size: var(--scale-x4);
+  line-height: var(--line-height-regular);
+}
+
+/* ---------- Busca (diálogo modal) ---------- */
+
+.uaiui-docs .uaiui-docs__search {
+  box-sizing: border-box;
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100dvh - 64px);
+  margin-top: 12vh;
+  padding: 0;
+  border: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  box-shadow: var(--uaiui-docs-layout-shadow);
+}
+
+.uaiui-docs .uaiui-docs__search::backdrop {
+  background-color: color-mix(in srgb, var(--ui-fg-default) 50%, transparent);
+}
+
+.uaiui-docs .uaiui-docs__search-form {
+  display: flex;
+  align-items: stretch;
+  border-bottom: var(--border-width-default) solid var(--ui-border-strong);
+}
+
+.uaiui-docs .uaiui-docs__search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--scale-x4) var(--scale-x5);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--scale-x4);
+}
+
+.uaiui-docs .uaiui-docs__search-input:focus-visible {
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+
+.uaiui-docs .uaiui-docs__search-close {
+  min-width: 44px;
+  padding: 0 var(--scale-x4);
+  border: 0;
+  border-left: var(--border-width-default) solid var(--ui-border-strong);
+  background-color: var(--ui-bg-page);
+  color: var(--ui-fg-default);
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__search-close:hover {
+  background-color: var(--interface-function-ghost-action-background);
+  color: var(--interface-function-ghost-action-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__search-close:focus-visible {
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+
+.uaiui-docs .uaiui-docs__search-results {
+  max-height: 50vh;
+  margin: 0;
+  padding: var(--scale-x2);
+  overflow: auto;
+  list-style: none;
+}
+
+.uaiui-docs .uaiui-docs__search-results a {
+  display: grid;
+  gap: var(--scale-half);
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: var(--scale-x2) var(--scale-x3);
+  color: inherit;
+  text-decoration: none;
+}
+
+.uaiui-docs .uaiui-docs__search-results a:hover,
+.uaiui-docs .uaiui-docs__search-results [aria-selected='true'] a {
+  background-color: var(--interface-function-ghost-active-background);
+  color: var(--interface-function-ghost-active-txtOn);
+}
+
+.uaiui-docs .uaiui-docs__search-results small {
+  font-size: 0.875rem;
+  line-height: var(--line-height-regular);
+}
+
+.uaiui-docs .uaiui-docs__search-empty {
+  padding: var(--scale-x5);
+  color: var(--ui-fg-muted);
+}
+
+/* ---------- Tablet: menu lateral e conteúdo (sem "Nesta página") ---------- */
+
+@media (min-width: 768px) {
+  /* Tablet: título, subtítulo e, numa linha própria, busca e densidade (a
+     linha única do Figma precisa de uns 880px; ver o bloco de 1184px). */
+  .uaiui-docs .uaiui-docs__top {
+    gap: var(--scale-x6);
+    padding: var(--scale-x12) var(--uaiui-docs-gutter) var(--scale-x11);
+  }
+
+  .uaiui-docs .uaiui-docs__brand {
+    font-size: var(--scale-x9);
+  }
+
+  .uaiui-docs .uaiui-docs__lead {
+    font-size: var(--scale-x5);
+  }
+
+  .uaiui-docs .uaiui-docs__tools {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--scale-x6);
+  }
+
+  .uaiui-docs .uaiui-docs__search-open--full {
+    display: inline-flex;
+  }
+
+  .uaiui-docs .uaiui-docs__search-open--icon,
+  .uaiui-docs .uaiui-docs__pages-row {
+    display: none;
+  }
+
+  /* Legenda à esquerda dos segmentos, como no Figma (666:81). */
+  .uaiui-docs .uaiui-docs__density-legend {
+    float: left;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    margin-right: var(--scale-x3);
+    padding: 0;
+  }
+
+  .uaiui-docs .uaiui-docs__shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--scale-x12);
+  }
+
+  /* No desktop o menu lateral está sempre aberto, sem borda nem sombra; o
+     `hidden` que o script põe no celular não vale aqui. */
+  .uaiui-docs .uaiui-docs__sidebar,
+  .uaiui-docs .uaiui-docs__sidebar[hidden] {
+    display: flex;
+    position: sticky;
+    top: var(--scale-x8);
+    max-height: calc(100vh - 64px);
+    overflow: auto;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .uaiui-docs .uaiui-docs__title h1 {
+    font-size: var(--scale-x8);
+  }
+
+  .uaiui-docs .uaiui-docs__title p {
+    font-size: var(--scale-x5);
+  }
+
+  .uaiui-docs .uaiui-docs__title {
+    gap: var(--scale-x3);
+  }
+
+  .uaiui-docs .uaiui-docs__body > h2 {
+    font-size: var(--scale-x7);
+  }
+
+  .uaiui-docs .uaiui-docs__code-bar {
+    padding-left: var(--scale-x6);
+  }
+
+  .uaiui-docs .uaiui-docs__code pre {
+    padding: var(--scale-x5) var(--scale-x6);
+  }
+
+  .uaiui-docs .uaiui-docs__pager {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .uaiui-docs .uaiui-docs__pager-link {
+    width: 240px;
+  }
+
+  .uaiui-docs .uaiui-docs__pager-title {
+    font-size: var(--scale-x5);
+  }
+}
+
+/* Padding de 88px a partir do mesmo ponto em que o cabeçalho do site passa ao logo completo. */
+@media (min-width: 1184px) {
+  .uaiui-docs {
+    --uaiui-docs-gutter: var(--scale-x20);
+  }
+
+  /* Figma 666:71: título à esquerda e busca e densidade à direita, na mesma
+     linha; o subtítulo embaixo. No DOM as ferramentas vêm depois do
+     subtítulo, que não tem nada focável: a ordem do Tab segue a visual. */
+  .uaiui-docs .uaiui-docs__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .uaiui-docs .uaiui-docs__brand {
+    grid-row: 1;
+  }
+
+  .uaiui-docs .uaiui-docs__lead {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .uaiui-docs .uaiui-docs__tools {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* ---------- Desktop largo: três colunas (240 + 728 + 200 em 1440) ---------- */
+
+@media (min-width: 1280px) {
+  .uaiui-docs .uaiui-docs__shell {
+    grid-template-columns: 240px minmax(0, 728px) 200px;
+    justify-content: space-between;
+  }
+
+  .uaiui-docs .uaiui-docs__toc:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x3);
+    position: sticky;
+    top: var(--scale-x8);
+  }
+
+  .uaiui-docs .uaiui-docs__toc-title {
+    color: var(--ui-fg-muted);
+    font-family: var(--font-family-label);
+    font-weight: var(--weight-700);
+    font-size: var(--scale-x3);
+    line-height: var(--line-height-none);
+    text-transform: uppercase;
+  }
+
+  .uaiui-docs .uaiui-docs__toc-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    list-style: none;
+  }
+
+  .uaiui-docs .uaiui-docs__toc-list a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-left: var(--scale-x3);
+    border-left: var(--border-width-default) solid var(--ui-border-divider);
+    color: var(--ui-fg-muted);
+    font-size: 0.875rem;
+    line-height: var(--line-height-comfortable);
+    letter-spacing: var(--letter-spacing-comfortable);
+    text-decoration: none;
+  }
+
+  .uaiui-docs .uaiui-docs__toc-list a:hover {
+    color: var(--ui-fg-default);
+  }
+
+  .uaiui-docs .uaiui-docs__toc-list a[aria-current='true'] {
+    border-left-color: var(--ui-border-strong);
+    color: var(--ui-fg-default);
+    font-weight: var(--weight-600);
+  }
+}
+
+/* ---------- Movimento e cores forçadas ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .uaiui-docs .uaiui-docs__chevron {
+    transition: transform var(--motion-duration-press);
+  }
+}
+
+@media (forced-colors: active) {
+  .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked),
+  .uaiui-docs .uaiui-docs__nav-link[aria-current='page'],
+  .uaiui-docs .uaiui-docs__search-results [aria-selected='true'] a {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  .uaiui-docs .uaiui-docs__toc-list a[aria-current='true'] {
+    border-left-color: Highlight;
+  }
+
+  /* A borda transparente vira CanvasText nesse modo; a do item não atual some de novo. */
+  .uaiui-docs .uaiui-docs__nav-link:not([aria-current]):not(:hover) {
+    border-color: Canvas;
+  }
+
+  .uaiui-docs .uaiui-docs__code-bar {
+    border-bottom-color: CanvasText;
+  }
+}

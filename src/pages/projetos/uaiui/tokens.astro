@@ -1,0 +1,64 @@
+---
+// Tokens e temas (porte de src/pages/docs/tokens.astro do uaiui-ds v0.2.0).
+// Duas mudanças, registradas no design-notes.md: "Usar no projeto" mostra o
+// uso por wrapper (.uaiui), com o texto do README do DS, em vez de tokens.css
+// com data-theme no <html>; e saiu "Mude o tema no cabeçalho para ver as cores
+// trocarem.", porque aqui não há seletor de tema.
+import UaiuiDocsLayout from '../../../layouts/UaiuiDocsLayout.astro';
+import CodeBlock from '../../../components/uaiui/CodeBlock.astro';
+
+const sample = ['--ui-bg-page', '--ui-bg-panel', '--ui-fg-default', '--ui-fg-muted', '--ui-brand-band', '--interface-function-primary-normal-background', '--interface-function-secondary-normal-background', '--interface-function-error-normal-background', '--success-behavior-normal-surface', '--warning-behavior-normal-surface', '--info-behavior-normal-surface'];
+
+const importCode = `@import 'uaiui-ds/tokens-wrapper.css';
+@import 'uaiui-ds/components/button.css';
+@import 'uaiui-ds/components/accordion.css';
+@import 'uaiui-ds/components/toast.css';`;
+
+const wrapperCode = `<div class="uaiui">…componentes…</div>
+<div class="uaiui" data-uaiui-theme="dark" data-uaiui-density="compact">…</div>`;
+---
+
+<UaiuiDocsLayout lead="As variables do Figma são a fonte de verdade. Um script as converte em tokens.css, e os componentes só leem essas propriedades.">
+  <h2 id="camadas">Camadas</h2>
+  <div class="uaiui-docs__table-wrap" tabindex="0" role="region" aria-label="Camadas de tokens">
+    <table class="uaiui-docs__table">
+      <thead><tr><th scope="col">Coleção no Figma</th><th scope="col">Modos</th><th scope="col">Papel</th></tr></thead>
+      <tbody>
+        <tr><td>Escala</td><td>Valor</td><td>Medidas base: 0, 2, 4, 8, 12, 16, 24 e 44 px.</td></tr>
+        <tr><td>Dimensões</td><td>Valor</td><td>Borda, sombra, raio, anel de foco e movimento.</td></tr>
+        <tr><td>Primitivos</td><td>Claro, Escuro</td><td>Paletas por família, papel (surface, txtOn, border, txt) e nível (20 a 180).</td></tr>
+        <tr><td>Semântica</td><td>Positiva</td><td>Papéis de interface e níveis de comportamento (lightest, active, normal, action, pressed, darkest).</td></tr>
+        <tr><td>Componente</td><td>Valor</td><td>Um token por parte do componente, apontando para a semântica.</td></tr>
+        <tr><td>Densidade</td><td>Desktop, Mobile, Compacto</td><td>Todos os tamanhos dos componentes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>As propriedades CSS seguem o nome da variable com barras trocadas por hífens: <code>button/padding-x</code> vira <code>--button-padding-x</code>.</p>
+
+  <h2 id="usar">Usar no projeto</h2>
+  <p>O pacote publica só os tokens e o CSS dos componentes.</p>
+  <CodeBlock lang="css" code={importCode} />
+  <p>Os tokens valem só dentro do wrapper <code>.uaiui</code>; nada vai para o <code>:root</code>:</p>
+  <CodeBlock lang="html" code={wrapperCode} />
+  <ul>
+    <li>Tema: <code>data-uaiui-theme="dark"</code>. Sem atributo vale o claro, sem seguir <code>prefers-color-scheme</code>.</li>
+    <li>Densidade: <code>data-uaiui-density="mobile|compact"</code>. Sem atributo, Desktop.</li>
+  </ul>
+
+  <h2 id="atualizar">Atualizar a partir do Figma</h2>
+  <ol>
+    <li>Exporte as variables para <code>tokens/figma-variables.txt</code> (uma linha por variable, um valor por modo).</li>
+    <li>Rode <code>npm run tokens</code>. O script gera <code>src/styles/tokens.css</code>.</li>
+  </ol>
+  <div class="uaiui-docs__callout"><p>Só entram no arquivo os tokens que os componentes publicados usam. Ao documentar um componente novo, acrescente as variables dele ao arquivo de exportação.</p></div>
+
+  <h2 id="amostra">Amostra de cores</h2>
+  <ul class="uaiui-docs__swatches" role="list">
+    {sample.map((name) => (
+      <li class="uaiui-docs__swatch">
+        <span class="uaiui-docs__swatch-color" style={{ backgroundColor: `var(${name})` }}></span>
+        {name.replace('--', '')}
+      </li>
+    ))}
+  </ul>
+</UaiuiDocsLayout>

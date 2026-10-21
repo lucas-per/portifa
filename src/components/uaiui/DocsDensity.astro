@@ -1,0 +1,40 @@
+---
+/**
+ * Controle de densidade (Figma 666:81 / 667:229). Muda data-uaiui-density no
+ * wrapper .uaiui: sem atributo é Desktop (o padrão), "mobile" e "compact" são
+ * os outros modos dos tokens do DS. A escolha fica em localStorage
+ * (uaiui-density); o script inline logo depois dos rádios marca a opção salva
+ * antes da pintura, e o do wrapper (UaiuiDocsLayout) já aplicou o atributo.
+ */
+const densityOptions = [
+  { value: 'desktop', label: 'Desktop' },
+  { value: 'mobile', label: 'Mobile' },
+  { value: 'compact', label: 'Compacto' },
+] as const;
+---
+
+<fieldset class="uaiui-docs__density" data-density>
+  <legend class="uaiui-docs__density-legend">Densidade</legend>
+  <div class="uaiui-docs__segments">
+    {densityOptions.map((option) => (
+      <label class="uaiui-docs__segment">
+        <input
+          class="uaiui-docs__segment-input"
+          type="radio"
+          name="uaiui-density"
+          value={option.value}
+          checked={option.value === 'desktop'}
+        />
+        {option.label}
+      </label>
+    ))}
+  </div>
+  <script is:inline>
+    (function () {
+      var saved = document.currentScript.closest('.uaiui').getAttribute('data-uaiui-density');
+      if (!saved) return;
+      var input = document.currentScript.parentElement.querySelector('input[value="' + saved + '"]');
+      if (input) input.checked = true;
+    })();
+  </script>
+</fieldset>

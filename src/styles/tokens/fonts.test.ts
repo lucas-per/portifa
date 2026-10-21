@@ -11,6 +11,7 @@ const fontFiles = [
   '../../assets/fonts/plus-jakarta-sans-variable.woff2',
   '../../assets/fonts/dm-sans-variable.woff2',
   '../../assets/fonts/jetbrains-mono-700.woff2',
+  '../../assets/fonts/jetbrains-mono-400.woff2',
 ];
 
 // Tags conhecidas do diretório de tabelas WOFF2 (índices 0 a 62). Só precisamos
@@ -135,5 +136,40 @@ describe('fonts.css', () => {
     for (const [char, codepoint] of [['→', 0x2192], ['←', 0x2190], ['×', 0x00d7], ['↑', 0x2191], ['↓', 0x2193]] as const) {
       expect(has(codepoint), `plus-jakarta-sans-variable.woff2 não tem "${char}" (U+${codepoint.toString(16).toUpperCase().padStart(4, '0')})`).toBe(true);
     }
+  });
+});
+
+// JetBrains Mono 400: a fonte do código na documentação do UaiUI. Fica fora do
+// fonts.css (todas as páginas) e entra só pelo uaiui-code-font.css, que só o
+// layout do UaiUI importa (uaiui-docs.test.ts). O recorte é o mesmo do 700.
+describe('JetBrains Mono 400 (código do UaiUI)', () => {
+  const codeFontCss = readFileSync(fileURLToPath(new URL('../tools/uaiui-code-font.css', import.meta.url)), 'utf-8');
+  const read = (name: string) => readFileSync(fileURLToPath(new URL(`../../assets/fonts/${name}`, import.meta.url)));
+
+  it('não está no fonts.css: o resto do site não declara nem baixa a 400', () => {
+    expect(css).not.toMatch(/jetbrains-mono-400/);
+  });
+
+  it('declarada só em uaiui-code-font.css, peso 400, com font-display: swap', () => {
+    const blocks = codeFontCss.match(/@font-face\s*\{[^}]*\}/g) ?? [];
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0]).toMatch(/font-family:\s*'JetBrains Mono'/);
+    expect(blocks[0]).toMatch(/jetbrains-mono-400\.woff2/);
+    expect(blocks[0]).toMatch(/font-weight:\s*400;/);
+    expect(blocks[0]).toMatch(/font-display:\s*swap;/);
+  });
+
+  it('tem o mesmo recorte de caracteres da 700', () => {
+    const has400 = woff2HasCodepoint(read('jetbrains-mono-400.woff2'));
+    const has700 = woff2HasCodepoint(read('jetbrains-mono-700.woff2'));
+    const sample = [];
+    for (let cp = 0x20; cp <= 0x2215; cp++) sample.push(cp);
+    const differ = sample.filter((cp) => has400(cp) !== has700(cp));
+    expect(differ.map((cp) => `U+${cp.toString(16).toUpperCase()}`)).toEqual([]);
+    for (const char of 'abcxyzABC019{}<>/=;:"\'#-–—…ãçéõú') expect(has400(char.codePointAt(0)!), char).toBe(true);
+  });
+
+  it('pequena (subset): até 24 KB', () => {
+    expect(statSync(fileURLToPath(new URL('../../assets/fonts/jetbrains-mono-400.woff2', import.meta.url))).size).toBeLessThan(24 * 1024);
   });
 });

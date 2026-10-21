@@ -1,0 +1,191 @@
+---
+import { getCollection } from 'astro:content';
+import Divider from '../ui/Divider.astro';
+import ContactIcon from '../ui/ContactIcon.astro';
+import HeaderLink from './HeaderLink.astro';
+import { getAriaCurrent, getHeaderSections } from '../../config/navigation';
+import { contactLinks, copyrightHolder, copyrightYear } from '../../config/contact';
+import { getHeaderLinkText } from '../../utils/header-link';
+import { getMenuCases } from '../../utils/cases';
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const cases = getMenuCases(await getCollection('cases'));
+const sections = getHeaderSections();
+---
+
+<!-- header-mobile-menu (Figma 676:514). Disclosure: o botão do cabeçalho
+     alterna `hidden`; fechado, nada aqui entra na ordem do Tab. -->
+<div id={id} class="site-menu-mobile" hidden>
+  <nav class="site-menu-mobile__links" aria-label="Menu do site">
+    <ul class="site-menu-mobile__group" role="list">
+      {cases.map((item) => (
+        <li>
+          <HeaderLink
+            href={item.href}
+            text={item.label}
+            current={getAriaCurrent(Astro.url.pathname, item.href)}
+            size="sm"
+            class={`site-menu-mobile__link clickable-link-internal-case-${item.key}`}
+          />
+        </li>
+      ))}
+    </ul>
+    <!-- divider de 3px entre cases e projetos (Divider.astro, cor padrão) -->
+    <Divider />
+    <ul class="site-menu-mobile__group" role="list">
+      {sections.map((section) => {
+        const { text, ariaLabel } = getHeaderLinkText(section, true);
+        return (
+          <li>
+            <HeaderLink
+              href={section.path}
+              text={text}
+              ariaLabel={ariaLabel}
+              current={getAriaCurrent(Astro.url.pathname, section.path)}
+              size="sm"
+              class={`site-menu-mobile__link clickable-link-internal-${section.key}`}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+  <!-- divider-trail, a mesma faixa de 7px do rodapé -->
+  <Divider height="7px" color="var(--surface-bg-tertiary-strong)" />
+  <!-- row-mini-footer: links e ano vêm de config/contact.ts, como nos rodapés -->
+  <div class="site-menu-mobile__footer">
+    <ul class="site-menu-mobile__icons" role="list">
+      {contactLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class={`site-menu-mobile__icon-button ${link.className}`}
+            aria-label={link.ariaLabel}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+            download={link.download ? true : undefined}
+          >
+            <ContactIcon name={link.menuIcon} />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="site-menu-mobile__copyright text-body-caption">&copy; {copyrightYear} {copyrightHolder}</p>
+  </div>
+  <div class="site-menu-mobile__bottom" aria-hidden="true"></div>
+</div>
+
+<style>
+  /* Fica dentro do cabeçalho sticky: a altura é limitada à da tela e o painel
+     rola sozinho em telas baixas e com o texto ampliado. */
+  .site-menu-mobile {
+    max-height: calc(100dvh - var(--header-mobile-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--surface-bg-off-white-primary);
+  }
+
+  .site-menu-mobile[hidden] {
+    display: none;
+  }
+
+  /* col-links: 12px em cima e embaixo, 20px nas laterais, 12px entre os grupos e o divisor. */
+  .site-menu-mobile__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x3);
+    padding: var(--scale-x3) var(--scale-x5);
+  }
+
+  .site-menu-mobile__group {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Link de 44px (link-button-mobile, via HeaderLink size="sm") na largura
+     toda da linha, como no Figma: o alvo é a linha, não só o texto. */
+  .site-menu-mobile :global(.site-menu-mobile__link) {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* row-mini-footer: botões à esquerda e o © à direita, na mesma linha. O ©
+     ocupa o que sobra e quebra em mais linhas nas telas estreitas. */
+  .site-menu-mobile__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--scale-x2);
+    padding: var(--scale-x4);
+  }
+
+  /* Com o texto ampliado (o padding é em rem), os botões e o © quebram linha
+     em vez de estourar; no tamanho normal fica tudo numa linha só. */
+  .site-menu-mobile__icons {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 0 1 auto;
+    min-width: 0;
+    gap: var(--scale-x2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Botão de ícone outline-primary do site (46x46: 8 + 24 + 8 e borda de 3px),
+     com as mesmas tokens e interação do Button.astro. Sem o componente pelo
+     mesmo motivo do botão de e-mail do cabeçalho: ele sempre tem rótulo. */
+  .site-menu-mobile__icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--scale-x2);
+    border: 3px solid var(--button-border-primary-strong);
+    background-color: var(--button-bg-primary-outline-regular);
+    color: var(--text-label-primary);
+    box-shadow: var(--shadow-comp-primary);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .site-menu-mobile__icon-button:hover {
+    box-shadow: var(--shadow-comp-primary-hover);
+    transform: translate(-2px, -2px);
+  }
+
+  .site-menu-mobile__icon-button:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+  }
+
+  .site-menu-mobile__icon-button:focus-visible {
+    outline: 2px solid var(--border-focus-strong);
+    outline-offset: 2px;
+  }
+
+  .site-menu-mobile__copyright {
+    flex: 1 1 0;
+    min-width: 0;
+    color: var(--text-body-primary-strong);
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  /* divider de 5px que fecha o painel (Figma 676:512), na cor do cabeçalho */
+  .site-menu-mobile__bottom {
+    height: var(--header-mobile-divider);
+    background-color: var(--surface-bg-accent-strong);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-menu-mobile__icon-button {
+      transition: none;
+    }
+  }
+</style>

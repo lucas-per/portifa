@@ -3,9 +3,12 @@ export type MacroSection = {
   label: string;
   path: string;
   enabled: boolean;
-  /** Entra como link no cabeçalho do site (a home já é o logo). */
+  /**
+   * Entra como link no cabeçalho do site: na barra do desktop e no menu do
+   * mobile (a barra do mobile não tem links de seção). A home já é o logo.
+   */
   inHeader?: boolean;
-  /** Rótulo curto, visível no cabeçalho mobile; o nome acessível segue `label`. */
+  /** Rótulo curto, usado no menu mobile; o nome acessível segue `label`. */
   shortLabel?: string;
 };
 
@@ -22,6 +25,14 @@ export const macroSections: MacroSection[] = [
     label: 'Paletaria',
     shortLabel: 'Paletaria',
     path: '/projetos/paletaria/',
+    enabled: true,
+    inHeader: true,
+  },
+  {
+    key: 'uaiui',
+    label: 'UaiUI',
+    shortLabel: 'UaiUI',
+    path: '/projetos/uaiui/',
     enabled: true,
     inHeader: true,
   },
