@@ -1,0 +1,115 @@
+---
+/**
+ * Layout da documentação do UaiUI (/projetos/uaiui/). Usa o BaseLayout, então
+ * cabeçalho, rodapé, Umami e Open Graph são os do site; o DocsLayout do
+ * uaiui-ds não foi portado. O CSS do DS entra só aqui (e, na PR B, o de cada
+ * componente na página dele): as outras páginas do site não o carregam.
+ *
+ * Wrapper: .uaiui (tokens do DS, uaiui-ds/tokens-wrapper.css) e .uaiui-docs
+ * (shell, src/styles/tools/uaiui-docs.css), no mesmo elemento. Sem
+ * data-uaiui-theme: a área segue o tema claro do site.
+ */
+import 'uaiui-ds/tokens-wrapper.css';
+import '../styles/tools/uaiui-code-font.css';
+import '../styles/tools/uaiui-docs.css';
+import BaseLayout from './BaseLayout.astro';
+import DocsSidebar from '../components/uaiui/DocsSidebar.astro';
+import DocsSearch from '../components/uaiui/DocsSearch.astro';
+import DocsDensity from '../components/uaiui/DocsDensity.astro';
+import DocsIcon from '../components/uaiui/DocsIcon.astro';
+import { getDocsPage } from '../config/uaiui-nav';
+
+interface Props {
+  /** Linha de apoio sob o título da página (o "lead" das páginas do DS). */
+  lead: string;
+}
+
+const { lead } = Astro.props;
+const { current, prev, next } = getDocsPage(Astro.url.pathname);
+if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.url.pathname}`);
+---
+
+<BaseLayout title={`${current.title} · UaiUI`} description={current.description} path={current.href}>
+  <div class="uaiui uaiui-docs">
+    <script is:inline>
+      // Densidade salva aplicada antes da pintura (sem piscar). Sem armazenamento, fica o padrão (Desktop).
+      (function () {
+        var wrapper = document.currentScript.parentElement;
+        try {
+          var saved = localStorage.getItem('uaiui-density');
+          if (saved === 'mobile' || saved === 'compact') wrapper.setAttribute('data-uaiui-density', saved);
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- cabeçalho (Figma 666:70 / 667:212). "UaiUI" não é título: o h1 é o da página. -->
+    <div class="uaiui-docs__top">
+      <p class="uaiui-docs__brand">UaiUI</p>
+      <p class="uaiui-docs__lead">
+        Sistema de design com bordas retas, sombras duras e temas por tokens. Cada componente tem preview, código e
+        requisitos de acessibilidade.
+      </p>
+      <div class="uaiui-docs__tools">
+        <button
+          type="button"
+          class="uaiui-docs__search-open uaiui-docs__search-open--full"
+          aria-haspopup="dialog"
+          data-search-open
+        >
+          <DocsIcon name="search" />
+          <span class="uaiui-docs__search-text">Buscar na documentação</span>
+          <kbd class="uaiui-docs__kbd" aria-hidden="true">Ctrl K</kbd>
+        </button>
+        <DocsDensity />
+      </div>
+    </div>
+
+    <div class="uaiui-docs__shell">
+      <DocsSidebar currentHref={current.href} currentTitle={current.title} />
+
+      <div class="uaiui-docs__content">
+        <div class="uaiui-docs__title">
+          <h1>{current.title}</h1>
+          <p>{lead}</p>
+        </div>
+        <div class="uaiui-docs__body">
+          <slot />
+        </div>
+        {(prev || next) && (
+          <nav class="uaiui-docs__pager" aria-label="Páginas anterior e seguinte">
+            {prev && (
+              <a class="uaiui-docs__pager-link" href={prev.href} rel="prev">
+                <DocsIcon name="arrow-left" />
+                <span class="uaiui-docs__pager-text">
+                  <span class="uaiui-docs__pager-kicker">Anterior</span>
+                  <span class="uaiui-docs__pager-title">{prev.title}</span>
+                </span>
+              </a>
+            )}
+            {next && (
+              <a class="uaiui-docs__pager-link uaiui-docs__pager-link--next" href={next.href} rel="next">
+                <span class="uaiui-docs__pager-text">
+                  <span class="uaiui-docs__pager-kicker">Próxima</span>
+                  <span class="uaiui-docs__pager-title">{next.title}</span>
+                </span>
+                <DocsIcon name="arrow-right" />
+              </a>
+            )}
+          </nav>
+        )}
+      </div>
+
+      <nav class="uaiui-docs__toc" aria-labelledby="uaiui-docs-toc-title" data-toc hidden>
+        <p class="uaiui-docs__toc-title" id="uaiui-docs-toc-title">Nesta página</p>
+        <ul class="uaiui-docs__toc-list" role="list"></ul>
+      </nav>
+    </div>
+
+    <p id="uaiui-docs-live" class="uaiui-docs__sr-only" role="status"></p>
+    <DocsSearch />
+  </div>
+</BaseLayout>
+
+<script>
+  import '../components/uaiui/docs.ts';
+</script>

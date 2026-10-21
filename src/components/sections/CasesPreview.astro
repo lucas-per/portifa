@@ -1,10 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import CaseCard from './CaseCard.astro';
-
-// Ordem visual da Home no Figma (esquerda -> direita), não a ordem
-// alfabética dos arquivos: Área de pagamentos, Redesign, GoSafe DS.
-const homeCaseOrder = ['jornada-pagamentos', 'redesign', 'gosafe-ds'];
+import { caseHref, sortCasesForHome } from '../../utils/cases';
 
 // Sufixo do wrap do botão no Figma (clickable-link-internal-case-<sufixo>).
 const linkSuffix: Record<string, string> = {
@@ -12,9 +9,8 @@ const linkSuffix: Record<string, string> = {
   redesign: 'redesign',
 };
 
-const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-case')).sort(
-  (a, b) => homeCaseOrder.indexOf(a.id) - homeCaseOrder.indexOf(b.id)
-);
+// Ordem visual da Home no Figma (utils/cases.ts), a mesma do menu mobile.
+const cases = sortCasesForHome(await getCollection('cases'));
 ---
 
 <div class="cases-preview">
@@ -28,7 +24,7 @@ const cases = (await getCollection('cases', (entry) => entry.id !== 'exemplo-cas
         tags={caseEntry.data.cardTags ?? caseEntry.data.tags}
         highlights={caseEntry.data.highlights}
         shadow={caseEntry.data.status === 'published' ? 'accent' : 'neutral'}
-        href={caseEntry.data.status === 'published' ? `/cases/${caseEntry.id}` : undefined}
+        href={caseEntry.data.status === 'published' ? caseHref(caseEntry.id) : undefined}
         linkClass={`clickable-link-internal-case-${linkSuffix[caseEntry.id] ?? caseEntry.id}`}
       />
     ))}

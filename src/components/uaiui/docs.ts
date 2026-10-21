@@ -1,0 +1,215 @@
+// Comportamento do shell da documentação do UaiUI (porte de src/scripts/site.ts
+// do uaiui-ds, sem tema, menu lateral em gaveta e demos de componentes, que
+// entram com as páginas da PR B).
+
+const root = document.querySelector<HTMLElement>('.uaiui-docs');
+
+const store = {
+  get: (key: string) => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  set: (key: string, value: string) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* sem armazenamento: a escolha vale só nesta página */
+    }
+  },
+  remove: (key: string) => {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* sem armazenamento */
+    }
+  },
+};
+
+/** Mensagem para leitor de tela (role="status" do layout). */
+function announce(message: string) {
+  const live = document.getElementById('uaiui-docs-live');
+  if (!live) return;
+  live.textContent = '';
+  window.setTimeout(() => (live.textContent = message), 50);
+}
+
+if (root) {
+  // Densidade: sem atributo é Desktop. O script inline do layout já aplicou a escolha salva.
+  root.querySelectorAll<HTMLInputElement>('input[name="uaiui-density"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      if (input.value === 'desktop') {
+        root.removeAttribute('data-uaiui-density');
+        store.remove('uaiui-density');
+      } else {
+        root.setAttribute('data-uaiui-density', input.value);
+        store.set('uaiui-density', input.value);
+      }
+    });
+  });
+
+  // "Páginas" (celular): disclosure que abre a lista do menu lateral no lugar.
+  // A lista fica com `hidden` quando fechada; do tablet em diante o CSS a mostra sempre.
+  const pagesToggle = root.querySelector<HTMLButtonElement>('[data-pages-toggle]');
+  const pagesList = pagesToggle && document.getElementById(pagesToggle.getAttribute('aria-controls')!);
+  if (pagesToggle && pagesList) {
+    const narrow = window.matchMedia('(max-width: 767px)');
+    const setOpen = (open: boolean) => {
+      pagesToggle.setAttribute('aria-expanded', String(open));
+      pagesList.hidden = narrow.matches && !open;
+    };
+    pagesToggle.addEventListener('click', () => setOpen(pagesToggle.getAttribute('aria-expanded') !== 'true'));
+    pagesList.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !narrow.matches) return;
+      event.preventDefault();
+      setOpen(false);
+      pagesToggle.focus();
+    });
+    narrow.addEventListener('change', () => setOpen(false));
+    setOpen(false);
+  }
+
+  // Copiar código
+  root.addEventListener('click', async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+    if (!button) return;
+    const label = button.getAttribute('aria-label') ?? '';
+    const text = button.closest('.uaiui-docs__code')?.querySelector('pre')?.textContent ?? '';
+    try {
+      await navigator.clipboard.writeText(text);
+      button.textContent = 'Copiado';
+      button.setAttribute('aria-label', 'Código copiado');
+      announce('Código copiado.');
+    } catch {
+      button.textContent = 'Erro';
+      button.setAttribute('aria-label', 'Erro ao copiar');
+      announce('Não foi possível copiar o código.');
+    }
+    window.setTimeout(() => {
+      button.textContent = 'Copiar';
+      button.setAttribute('aria-label', label);
+    }, 1600);
+  });
+
+  // "Nesta página": montado a partir dos h2 com id do corpo; a seção visível fica com aria-current.
+  const toc = root.querySelector<HTMLElement>('[data-toc]');
+  const heads = [...root.querySelectorAll<HTMLElement>('.uaiui-docs__body > h2[id]')];
+  if (toc && heads.length) {
+    const list = toc.querySelector('ul')!;
+    for (const head of heads) {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = `#${head.id}`;
+      link.textContent = head.textContent;
+      item.append(link);
+      list.append(item);
+    }
+    toc.hidden = false;
+    const links = [...list.querySelectorAll('a')];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          for (const link of links) {
+            if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'true');
+            else link.removeAttribute('aria-current');
+          }
+        }
+      },
+      { rootMargin: '0px 0px -70% 0px' },
+    );
+    heads.forEach((head) => observer.observe(head));
+  }
+
+  // Busca (Ctrl/⌘ + K)
+  const dialog = root.querySelector<HTMLDialogElement>('[data-search]');
+  if (dialog) {
+    type Item = { title: string; href: string; description: string; group: string };
+    const items: Item[] = JSON.parse(document.getElementById('uaiui-docs-search-index')!.textContent!);
+    const input = dialog.querySelector('input')!;
+    const list = dialog.querySelector('ul')!;
+    const status = document.getElementById('uaiui-docs-search-status')!;
+    let shown: Item[] = [];
+    let selected = 0;
+    const normalize = (text: string) => text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+    const escape = (text: string) =>
+      text.replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char]!);
+
+    const render = () => {
+      const query = normalize(input.value.trim());
+      shown = items.filter((item) => !query || normalize(`${item.title} ${item.description} ${item.group}`).includes(query));
+      selected = Math.min(selected, Math.max(shown.length - 1, 0));
+      list.innerHTML = shown.length
+        ? shown
+            .map(
+              (item, index) =>
+                `<li role="option" id="uaiui-docs-r${index}" aria-selected="${index === selected}"><a href="${escape(item.href)}" tabindex="-1"><strong>${escape(item.title)}</strong><small>${escape(item.group)} · ${escape(item.description)}</small></a></li>`,
+            )
+            .join('')
+        : '<li class="uaiui-docs__search-empty" role="presentation">Nada encontrado.</li>';
+      if (shown.length) input.setAttribute('aria-activedescendant', `uaiui-docs-r${selected}`);
+      else input.removeAttribute('aria-activedescendant');
+      const message = shown.length === 1 ? '1 resultado.' : shown.length ? `${shown.length} resultados.` : 'Nada encontrado.';
+      if (status.textContent !== message) status.textContent = message;
+    };
+
+    // Quem abriu a busca recebe o foco de volta ao fechar (pelo atalho, sem botão, o foco sai do campo).
+    let opener: HTMLElement | null = null;
+    dialog.addEventListener('close', () => {
+      if (opener && opener !== document.body && opener.isConnected) opener.focus();
+      else if (dialog.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
+      opener = null;
+    });
+
+    const open = () => {
+      opener = document.activeElement as HTMLElement | null;
+      dialog.showModal();
+      input.value = '';
+      selected = 0;
+      render();
+      input.focus();
+    };
+
+    root.querySelectorAll('[data-search-open]').forEach((button) => button.addEventListener('click', open));
+    document.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (dialog.open) dialog.close();
+        else open();
+      }
+    });
+    input.addEventListener('input', () => {
+      selected = 0;
+      render();
+    });
+    input.addEventListener('keydown', (event) => {
+      // No <input type="search">, o primeiro Esc só limpa o campo; aqui ele fecha a busca de uma vez.
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        dialog.close();
+        return;
+      }
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        selected = Math.min(selected + 1, shown.length - 1);
+        render();
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        selected = Math.max(selected - 1, 0);
+        render();
+      }
+      if (event.key === 'Enter' && shown[selected]) {
+        event.preventDefault();
+        window.location.href = shown[selected].href;
+      }
+    });
+    // Clique fora do diálogo (no fundo) fecha.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+}

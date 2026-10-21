@@ -1,0 +1,37 @@
+---
+// Introdução (porte de src/pages/docs/index.astro do uaiui-ds v0.2.0). Texto
+// do DS, com uma mudança registrada no design-notes.md: saiu "Use o seletor
+// no cabeçalho para ver.", porque aqui não há seletor de tema.
+import UaiuiDocsLayout from '../../../layouts/UaiuiDocsLayout.astro';
+import { docsComponents } from '../../../config/uaiui-nav';
+---
+
+<UaiuiDocsLayout lead="UaiUI é um sistema de design com bordas retas, sombras duras e temas por tokens. Esta documentação mostra cada componente funcionando, com o código para copiar.">
+  <h2 id="principios">Princípios</h2>
+  <ul>
+    <li><strong>Uma fonte de verdade.</strong> As cores, medidas e densidades vêm das variables do Figma, exportadas para CSS. O CSS dos componentes só lê tokens.</li>
+    <li><strong>Tema e densidade por modo.</strong> Claro e Escuro mudam as cores; Desktop, Mobile e Compacto mudam tamanhos.</li>
+    <li><strong>Cor nunca é o único sinal.</strong> Estados e tons também mudam forma, ícone ou texto.</li>
+    <li><strong>Forma fixa.</strong> Borda de 2 px, raio zero e sombra reta de 2 a 4 px.</li>
+  </ul>
+
+  {docsComponents.length > 0 && (
+    <Fragment>
+      <h2 id="componentes">Componentes</h2>
+      <ul class="uaiui-docs__cards" role="list">
+        {docsComponents.map((component) => (
+          <li>
+            <a class="uaiui-docs__card" href={component.href}>
+              <h3>{component.title}</h3>
+              <p>{component.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Fragment>
+  )}
+
+  <h2 id="como-ler">Como ler cada página</h2>
+  <p>Cada componente traz o <strong>Preview</strong> e o <strong>Código</strong> do mesmo exemplo, a instalação, quando usar e quando não usar, os atributos, e os requisitos de acessibilidade que ficam fora do Figma (papéis ARIA, teclado, movimento).</p>
+  <div class="uaiui-docs__callout"><p>Esta é a primeira versão, com três componentes: accordion, button (com o botão de ícone) e toast. Os demais componentes do arquivo do Figma entram em seguida.</p></div>
+</UaiuiDocsLayout>

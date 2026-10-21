@@ -6,15 +6,17 @@ describe('macroSections', () => {
     expect(macroSections.map((section) => section.key)).toEqual([
       'portfolio',
       'color-decomposer',
+      'uaiui',
       'artigos',
       'projetos',
       'fotos',
     ]);
   });
 
-  it('só "portfolio" e "color-decomposer" estão habilitados', () => {
+  it('só "portfolio", "color-decomposer" e "uaiui" estão habilitados', () => {
     expect(macroSections.find((section) => section.key === 'portfolio')?.enabled).toBe(true);
     expect(macroSections.find((section) => section.key === 'color-decomposer')?.enabled).toBe(true);
+    expect(macroSections.find((section) => section.key === 'uaiui')?.enabled).toBe(true);
     expect(macroSections.find((section) => section.key === 'artigos')?.enabled).toBe(false);
     expect(macroSections.find((section) => section.key === 'projetos')?.enabled).toBe(false);
     expect(macroSections.find((section) => section.key === 'fotos')?.enabled).toBe(false);
@@ -24,19 +26,25 @@ describe('macroSections', () => {
 describe('getEnabledSections', () => {
   it('retorna só as seções habilitadas', () => {
     const enabled = getEnabledSections();
-    expect(enabled.map((section) => section.key)).toEqual(['portfolio', 'color-decomposer']);
+    expect(enabled.map((section) => section.key)).toEqual(['portfolio', 'color-decomposer', 'uaiui']);
     expect(enabled[0].path).toBe('/');
   });
 });
 
 describe('getHeaderSections', () => {
-  it('traz a Paletaria, com rótulo completo, rótulo curto e caminho da ferramenta', () => {
+  it('traz a Paletaria e o UaiUI, nessa ordem, com rótulo completo, rótulo curto e caminho', () => {
     expect(getHeaderSections()).toEqual([
       expect.objectContaining({
         key: 'color-decomposer',
         label: 'Paletaria',
         shortLabel: 'Paletaria',
         path: '/projetos/paletaria/',
+      }),
+      expect.objectContaining({
+        key: 'uaiui',
+        label: 'UaiUI',
+        shortLabel: 'UaiUI',
+        path: '/projetos/uaiui/',
       }),
     ]);
   });
@@ -62,5 +70,11 @@ describe('getAriaCurrent', () => {
   it('"true" numa rota filha, para o dia em que o item virar "Projetos"', () => {
     expect(getAriaCurrent('/projetos/paletaria/', '/projetos/')).toBe('true');
     expect(getAriaCurrent('/projetos/', '/projetos/')).toBe('page');
+  });
+
+  it('"true" nas páginas internas do UaiUI', () => {
+    expect(getAriaCurrent('/projetos/uaiui/', '/projetos/uaiui/')).toBe('page');
+    expect(getAriaCurrent('/projetos/uaiui/tokens/', '/projetos/uaiui/')).toBe('true');
+    expect(getAriaCurrent('/projetos/uaiui/tokens/', '/projetos/paletaria/')).toBeUndefined();
   });
 });

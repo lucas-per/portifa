@@ -6,8 +6,10 @@ import HeaderLink from './HeaderLink.astro';
 import { getAriaCurrent, getHeaderSections } from '../../config/navigation';
 import { getHeaderLinkText } from '../../utils/header-link';
 import mailIcon from '../../assets/icons/mail-on-accent.svg';
+import { getContact } from '../../config/contact';
 
 const sections = getHeaderSections();
+const email = getContact('email');
 ---
 
 <header class="site-header">
@@ -43,7 +45,7 @@ const sections = getHeaderSections();
         <Button href="/#sobre-mim" variant="outline-accent" class="clickable-anchor-aboutme">
           Sobre mim
         </Button>
-        <Button href="mailto:oi@lpereira.me" variant="filled-accent" class="clickable-mailto-header">
+        <Button href={email.href} variant="filled-accent" class="clickable-mailto-header">
           Contato
           <Fragment slot="icon">
             <img src={mailIcon.src} width="24" height="24" alt="" />
@@ -82,10 +84,12 @@ const sections = getHeaderSections();
     display: none;
   }
 
-  /* Figma row-btns (605:1165): 56px entre o link e os botões. */
+  /* Figma row-btns (605:1165): 56px entre os links e os botões. Abaixo do
+     ponto de quebra do logo completo (tablet, sem frame no Figma), 32px: com
+     Paletaria e UaiUI, 56px deixariam só 3px de folga em 768px. */
   .site-header__actions {
     display: flex;
-    gap: var(--scale-x14);
+    gap: var(--scale-x8);
     align-items: center;
   }
 
@@ -102,12 +106,17 @@ const sections = getHeaderSections();
     align-items: center;
   }
 
-  /* Logo completo e padding de 88px (Figma 98:398) a partir de 1160px:
-     o menor X medido em que o cabeçalho cabe (1132px) mais folga. Abaixo
-     disso, logo reduzido (o do mobile) e padding de 20px. */
-  @media (min-width: 1160px) {
+  /* Logo completo, padding de 88px e 56px entre links e botões (Figma
+     98:398) a partir de 1184px: com Paletaria e UaiUI o cabeçalho precisa
+     de 1140px, mais 15px da barra de rolagem, mais folga. Abaixo disso, logo
+     reduzido (o do mobile), padding de 20px e 32px entre links e botões. */
+  @media (min-width: 1184px) {
     .site-header__inner {
       padding: var(--scale-x8) var(--scale-x20);
+    }
+
+    .site-header__actions {
+      gap: var(--scale-x14);
     }
 
     .site-header__logo-full {

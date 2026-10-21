@@ -138,9 +138,9 @@ Convenção geral, válida para todo `clickable-*` do tipo botão (não é inten
 
 ---
 
-## Escala de forma (UaiUI)
+## Escala de forma do site
 
-Decisão fechada em 2026-10-16. Vale para o site e para tudo que entrar nele (ferramentas incluídas), e é a base da UaiUI.
+Decisão fechada em 2026-10-16. Vale para o site e para tudo que entrar nele (ferramentas incluídas). *(Até 2026-10-21 esta seção se chamava "Escala de forma (UaiUI)" e dizia ser a base da UaiUI. O pacote `uaiui-ds` ficou com a escala própria, 2 e 4px, e na área do DS vale a dele; ver a seção "UaiUI — PR A". A unificação dos tokens fica para depois.)*
 
 | Elemento | Espessura |
 |---|---|
@@ -548,4 +548,66 @@ Figma `642:963` (desktop), `658:1353` (aba Comportamento) e `610:2300` (celular)
 - **Ordem do DOM e do Tab:** o botão Exportar vem antes do host do detalhe (e depois da lista e dos avisos), mantendo-se fora do corpo da paleta, que fecha com "Paletas" no celular. No celular o host do detalhe fica vazio (o detalhe abre dentro da lista), então a ordem de lá é a mesma. No desktop o Tab segue a coluna da esquerda e depois a do painel: lista, Exportar, valores copiáveis e o toggle.
 - **Escala de 4:** nenhuma exceção nova (`inset: -.625rem` não é medida da regra).
 - **Versão:** 1.1.8 para 1.1.9 (patch).
+
+### UaiUI — PR A (shell da documentação e menu mobile) — 2026-10-21
+
+Figma, página "UaiUI": `666:17` (desktop, página de Button, usada como referência do shell), `667:178` (mobile), `667:418` (menu lateral aberto no mobile) e `668:351` (notas); página "Prototype — Mobile": `676:3863` (menu aberto) e os componentes `254:1007` (header-mobile), `98:398` (header-desktop) e `676:514` (header-mobile-menu). Origem das páginas: o site de docs do `lucas-per/uaiui-ds` v0.2.0 (sem deploy), portado sem o `DocsLayout` próprio.
+
+**Rota e conteúdo:** `/projetos/uaiui/` (Introdução) e `/projetos/uaiui/tokens/` (Tokens e temas). Accordion, Button e Toast entram na PR B, que depende desta. O menu lateral, a busca, o pager e a seção "Componentes" da Introdução saem de `src/config/uaiui-nav.ts` (porte do `nav.ts`), e só entra ali página que existe (teste). Grupo sem itens não aparece: "Componentes" some nesta PR e volta sozinho na PR B. Os caminhos já são os do site, então o `url.ts` (`withBase`) não foi portado. `Example.astro`, `PropsTable.astro` e `icons.ts` ficam para a PR B, junto com as páginas que os usam.
+
+**Dependência:** `"uaiui-ds": "github:lucas-per/uaiui-ds#v0.2.0"` (repositório público; o pnpm baixa o tarball do codeload, como o `color-decomposer`). O pacote publica só CSS: `tokens-wrapper.css` (tudo sob `.uaiui`) e `components/{button,accordion,toast}.css`.
+
+**Wrapper e escopo (decisões do Lucas):**
+- A área do DS é `<div class="uaiui uaiui-docs">` dentro do `<main>`: `.uaiui` é o wrapper dos tokens do DS e `.uaiui-docs` é a classe do shell. Sem `data-uaiui-theme`: a área segue o tema do site, hoje sempre claro. O tema minimalista vem numa fase futura, com um botão que muda só a área do DS (ao lado de Densidade, nota do Figma).
+- O CSS do DS entra só nas páginas do UaiUI: o `UaiuiDocsLayout.astro` importa `uaiui-ds/tokens-wrapper.css`, `uaiui-docs.css` e `uaiui-code-font.css`; o CSS de cada componente vai entrar na página dele. Conferido no build: home, cases e Paletaria não carregam CSS com `.uaiui`. Guarda: `uaiui-docs.test.ts` (só o layout e as páginas do UaiUI importam esses arquivos; o `BaseLayout` não cita o UaiUI).
+- `src/styles/tools/uaiui-docs.css`: todo seletor começa por `.uaiui-docs`; os globais do site de docs do DS (`*`, `html`, `body`, `a`, `h1`–`h4`, `:focus-visible`) não vieram. Cores só por tokens do wrapper (`--ui-*`, `--interface-function-*`), sem cor fixa; fontes só por `var(--font-family-*)`. Guarda: `uaiui-docs.test.ts`. O `var-usage.test.ts` aceita os tokens do wrapper (lidos do pacote) só nos arquivos do UaiUI.
+- O wrapper redeclara `--font-family-body` e `--font-family-label` com os mesmos valores do site (DM Sans e JetBrains Mono); não muda nada.
+- **Tipografia:** a do site (Plus Jakarta Sans nos títulos, DM Sans no corpo, JetBrains Mono 700 nos rótulos). Os componentes do DS mantêm a tipografia e a densidade deles.
+- **Cor de referência da marca UaiUI:** `#057ABD`, já nos tokens do DS.
+- **Sombras:** na área do DS vale a escala do DS (2px nos componentes, 4px no layout: `--shadow-offset-component` e `--shadow-offset-layout`), não a escala de forma do site (3 e 5px). Faltavam dois valores da origem (6px no hover do card, 8px no diálogo de busca) e nenhum token novo foi criado: o diálogo usa `--shadow-offset-layout` (4px), pager e cards ficam fixos em 4px e o hover troca o fundo (`ghost-action`).
+- **Foco:** dentro da área, o anel do DS (`--ui-focus-ring`, 2px e 2px de afastamento); no cabeçalho e no rodapé, o do site.
+
+**Shell (Figma 666:17 e 667:178):**
+- Bloco de título: "UAIUI" (Plus Jakarta Sans 800, 36px; 32px no celular) é um `<p>`, não título; o `<h1>` é o da página ("Introdução", "Tokens e temas"), que também dá o `<title>` ("Introdução · UaiUI"). Subtítulo do Figma 666:90. A partir de 1184px, busca e densidade ficam à direita do título; de 768 a 1183px, numa linha própria abaixo do subtítulo (a linha do Figma precisa de uns 880px).
+- Colunas: menu lateral (240px), conteúdo (até 728px) e "Nesta página" (200px) a partir de 1280px; de 768 a 1279px, sem "Nesta página"; abaixo de 768px, uma coluna. Padding lateral de 88px a partir de 1184px (o mesmo ponto do logo completo do cabeçalho) e 20px abaixo.
+- No celular, o menu lateral vira o botão "Páginas" (com a página atual), que abre a lista no lugar, sem sobrepor o conteúdo (disclosure com `aria-expanded`, `aria-controls` e `hidden`; Esc fecha e devolve o foco). Do tablet em diante a lista fica sempre visível. A origem do DS usava uma gaveta lateral; vale o Figma.
+- "Nesta página" é montado no navegador a partir dos `h2` com `id`, com `aria-current` na seção visível.
+- **Densidade (decisão do Lucas):** `fieldset` com rádios nativos, rótulos do Figma (Desktop, Mobile, Compacto), padrão Desktop (sem atributo) em qualquer tela. A escolha muda `data-uaiui-density` no wrapper e fica em `localStorage` (`uaiui-density`, com try/catch); um script inline na abertura do wrapper aplica a escolha antes da pintura (sem piscar). Cada opção tem 44px de altura (o Figma desktop desenha 40, com a borda por dentro), e o grupo quebra linha quando o texto é ampliado.
+- **Busca:** diálogo modal (Ctrl/⌘ + K ou o botão), combobox com lista de resultados e a contagem num `role="status"`. Esc fecha de uma vez (no `<input type="search">` o primeiro Esc só limparia o campo), e o foco volta para quem abriu. Ganhou o botão "Fechar" (44px), para fechar no toque.
+- **Código:** blocos monocromáticos, como no Figma (fundo `--ui-fg-default`, texto `--ui-bg-page`), sem o realce do `<Code>`/Shiki da origem, que traria cores fixas. "Copiar" anuncia "Código copiado." num `role="status"`.
+- Tabela rola na horizontal no celular (largura mínima de 560px), numa região com foco pelo teclado.
+- **Fonte de código (decisão do Lucas):** JetBrains Mono 400, só nas páginas do UaiUI (`uaiui-code-font.css`), sem preload, com `swap`. `jetbrains-mono-400.woff2` (19.664 bytes) tem o mesmo recorte de 230 caracteres do 700 (a faixa "latin" do Google Fonts, versão 2.211). Foi gerado a partir do arquivo "latin" atual do Google Fonts, que é a fonte variável 2.211 (`wght` 400 a 800), instanciado em 400 com o harfbuzz (`subset-font`, `variationAxes: { wght: 400 }`, mesmos caracteres e as features `calt ccmp frac mark`). Validação: o mesmo processo em 700 reproduz o arquivo 700 atual em 227 dos 228 glifos (no "0" a diferença é de uma unidade de arredondamento). Guarda: `fonts.test.ts` (mesmo recorte do 700, fora do `fonts.css`).
+
+**Textos do DS (decisão do Lucas):** o conteúdo é o do DS, com duas mudanças:
+- Introdução: saiu "Use o seletor no cabeçalho para ver." (do princípio "Tema e densidade por modo"), porque aqui não há seletor de tema.
+- Tokens e temas: "Usar no projeto" passou a mostrar o uso por wrapper (`.uaiui`, `data-uaiui-theme`, `data-uaiui-density`), com o texto do README do DS, no lugar de `tokens.css` com `data-theme` no `<html>`; e saiu "Mude o tema no cabeçalho para ver as cores trocarem." da amostra de cores.
+
+**Cabeçalho desktop:**
+- Link "UaiUI" ao lado de Paletaria (`macroSections`, `inHeader`). **Decisão do Lucas:** não há campo novo em `navigation.ts`; `inHeader` passa a significar "barra do desktop e menu do mobile", e a barra do mobile não tem mais links de seção.
+- Logo completo, padding de 88px e 56px entre links e botões a partir de **1184px** (antes 1160): com Paletaria e UaiUI o cabeçalho precisa de 1140px, mais 15px da barra de rolagem. Abaixo disso, logo reduzido, padding de 20px e **32px** entre links e botões (decisão do Lucas; com 56px sobravam 3px em 768). Folga medida (largura útil menos a necessária, com a barra de rolagem de 15px): 27px em 768, 283px em 1024, 442px em 1183 e 29px em 1184.
+- Os links do desktop têm 24px de altura (Figma 605:861); a área de clique cresce 10px para cima e para baixo (`::before`), sem mudar o layout, e chega a 44px.
+
+**Cabeçalho mobile e menu (Figma 254:1007, 676:514 e 676:3863):**
+- A barra tem o logo, o botão de menu e o de e-mail (16px entre eles, como no Figma; antes 24px). Paletaria e UaiUI saíram da barra e vivem no menu.
+- Botão de menu: 46x46px. Fechado, é o outline-primary do site, com o ícone `ico-out-menu`; aberto, é o filled-primary com o `ico-out-close`. `aria-expanded`, `aria-controls` e nome "Abrir menu"/"Fechar menu".
+- **Menu do tipo disclosure (não modal; decisão do Lucas):** o painel (`#site-menu-mobile`) fica dentro do cabeçalho sticky e abre e fecha só por `hidden`, sem depender de animação; fechado, fica fora do Tab. Fecha com Esc (o foco volta ao botão; com a busca do UaiUI aberta, o Esc é dela), ao escolher um link e quando a tela passa a 768px. A altura é limitada à da tela e o painel rola sozinho em telas baixas e com o texto ampliado.
+- Conteúdo (decisão do Lucas): os cases publicados, na ordem da Home (Área de pagamentos, Redesign de produto; "Criando um design system" fica de fora por não estar publicado), um divisor de 3px e as seções `inHeader` (Paletaria, UaiUI), dentro de `<nav aria-label="Menu do site">`. Os rótulos vêm do YAML dos cases e de `navigation.ts`, e a ordem e a rota dos cases, de `src/utils/cases.ts`, que a Home também usa.
+- **Links do menu:** `HeaderLink` mobile (44px, `text-body-accent-strong`, blue/6). O Figma usava `text/label/accent` (blue/5, 4,47:1 em 16px) e já foi corrigido. **O sublinhado** do hover e do pressed (Figma `link-button-mobile`, 2026-10-21) foi aplicado no próprio `HeaderLink` mobile: o pressed e a página atual já sublinhavam, e o hover não mudava nada visível (a cor do regular já é a do hover). Agora o hover também sublinha, só em `@media (hover: hover)`.
+- **Mini-rodapé (decisão do Lucas):** abaixo do `divider-trail` (7px), os botões ícone E-mail, LinkedIn (`ico-fill-in`), GitHub (`ic-fill-gh`) e Baixar CV, de 46x46px (outline-primary do site), à esquerda, e "© 2026 Lucas Pereira", sem a versão, à direita (12px, `text-body-primary-strong`, maiúsculas), tudo numa linha. O © quebra em 2 linhas em 360px e em 3 em 320px. Com o texto ampliado, botões e © quebram linha em vez de estourar. Fecha com um divisor de 5px.
+- **Fonte única dos contatos:** `src/config/contact.ts` (href, rótulo, nome acessível, classe, ícone de cada contexto, titular e ano do ©) alimenta o rodapé desktop, o rodapé mobile, o mini-rodapé e o e-mail dos cabeçalhos. Os rodapés ficaram idênticos (HTML e capturas em 360 e 1440, home e Paletaria). Nome acessível novo: "Abrir perfil do LinkedIn em nova aba" (no padrão do GitHub), usado só no mini-rodapé. Guarda: `contact.test.ts`.
+- Ícones novos do Assets (`ico-out-menu` 675:441, `ico-out-close` 675:445, `ico-fill-in` 677:26, `ic-fill-gh` 677:38) e os do shell (`uai/ic-search`, `uai/ic-chevron-down`, `uai/ic-menu`, `uai/ic-arrow-left`, `uai/ic-arrow-right`): SVG em linha com `currentColor`, como os demais do site.
+
+**Divergências do Figma que ficaram:**
+- No celular, Densidade fica **acima** de "Páginas" (no Figma 667:178 vem abaixo). Com a lista de páginas abrindo logo abaixo do botão, a ordem do Figma faria a ordem do Tab divergir da visual num dos tamanhos (a densidade fica no topo no desktop). Sugestão: inverter no frame mobile.
+- No celular, o subtítulo do bloco de título é o texto completo do desktop (666:90); o frame 667:214 corta a segunda frase.
+- Segmentos de densidade com 44px também no desktop (o Figma desenha 40).
+- A barra do bloco de código usa `--ui-fg-muted` no divisor (o Figma usa `#2A3136`, que não é token do wrapper).
+- Os frames mostram o rodapé com "v.1.0.1"; o código usa `siteVersion` (o Figma será corrigido).
+
+**Observações:**
+- Com o texto a 200% em 320px, o cabeçalho mobile ainda passa 9px da largura (na `main`, com o link da Paletaria na barra, eram 136px). Em 360px não passa.
+- Em `forced-colors`, o ícone de e-mail do cabeçalho (um `<img>`, `mail-on-accent.svg`) some; já era assim e ficou fora desta PR.
+- Em 768px, o rodapé desktop gera rolagem horizontal (942px), como na `main`; tema à parte.
+- **Escala de 4:** nenhuma exceção nova. O divisor de 3px do menu usa o `Divider.astro`.
+- **Versão:** 1.1.9 para 1.2.0 (minor, seção nova).
 
