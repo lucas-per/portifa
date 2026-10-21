@@ -11,6 +11,7 @@
   - PR 4 (2026-10-19): título em caixa alta com a logo de 28x36, subtítulo (top__lead) e sem o rodapé da ferramenta;
   - PR 3 (2026-10-19): Exportar tokens depois do corpo da paleta; "Paletas" com botão (celular) e texto (computador);
   - Auto usa aria-disabled (e não disabled), com o motivo em texto visível ligado por aria-describedby (auto-why);
+  - PR 9 (2026-10-20): Exportar tokens vem antes do host do detalhe no DOM (ordem visual do computador na aba Comportamento);
   - PR 8 (2026-10-20): sai o "Manter minha cor exata" (e a ajuda dele); o painel de detalhes ganha o toggle "Texto com tom da cor";
   - PR 2 (2026-10-19): as linhas de ajuda dinâmicas do contraste, em role="status"; saem a Cor viva e o "Usar sua cor no estado normal";
   - o aviso da Intensidade (tune-note) é um role="status", sempre presente e vazio quando não há o que avisar.
@@ -125,10 +126,11 @@ import '../../../styles/tools/color-decomposer.css';
             <div id="ribbon-host"></div>
             <div id="alerts"></div>
           </div>
-          <div class="stage__detail" id="detail-host"></div>
         </div>
-        <!-- depois do corpo: a ordem do DOM é a visual e a do foco (lista, painel, Exportar), no celular e no computador -->
+        <!-- fora do corpo, que no celular fecha com "Paletas" (Exportar continua). A ordem do DOM é a da coluna da esquerda
+             e depois a do painel: lista e avisos, Exportar e o detalhe. No celular o detalhe abre dentro da lista, então o host fica vazio. -->
         <button type="button" class="btn stage__export" id="open-export" data-umami-event="color-decomposer-exportar">Exportar tokens</button>
+        <div class="stage__detail" id="detail-host"></div>
       </div>
     </div>
 

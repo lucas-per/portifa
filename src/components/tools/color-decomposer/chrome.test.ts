@@ -27,4 +27,30 @@ describe('tema derivado da interface (chrome.js)', () => {
       });
     }
   }
+
+  // PR 9: opção ativa e aba ativa (nível 100 de Comportamento)
+  for (const presetId of ['standard', 'aplica'] as const) {
+    for (const mode of ['light', 'dark'] as const) {
+      it(`${presetId}, ${mode}: a cor ativa é o nível 100 de Comportamento, com texto de 4,5 para 1 e aviso de contraste fraco`, () => {
+        const preset = PRESETS[presetId];
+        for (const hex of colors) {
+          const theme = decomposeTheme({ colors: { marca: hex }, preset });
+          const t = chromeTokens(theme, 'marca', mode, preset);
+          const b = theme.colors.marca[mode].behavior;
+          expect(t['active-bg'], hex).toBe(b.surface.normal);
+          expect(contrastRatio(t['active-bg'], t['active-fg']), `${hex}: ${t['active-bg']} / ${t['active-fg']}`).toBeGreaterThanOrEqual(4.5);
+          expect(t.weak, hex).toBe(contrastRatio(t['active-bg'], t.bg) < 3);
+        }
+      });
+    }
+  }
+
+  it('cores muito claras e muito escuras ficam com o aviso de contraste fraco (o contorno entra)', () => {
+    const preset = PRESETS.standard;
+    const weak = (hex: string, mode: 'light' | 'dark') =>
+      chromeTokens(decomposeTheme({ colors: { marca: hex }, preset }), 'marca', mode, preset).weak;
+    expect(weak('#fcfbf2', 'light')).toBe(true);
+    expect(weak('#001018', 'dark')).toBe(true);
+    expect(weak('#057abd', 'light')).toBe(false);
+  });
 });
