@@ -10,13 +10,13 @@ describe('parseHash', () => {
     expect(parseHash('', 'dark')).toEqual({ ...DEFAULTS, mode: 'dark' });
   });
 
-  it('"Manter minha cor exata" começa desligado', () => {
-    expect(DEFAULTS.exact).toBe(false);
+  it('o "Manter minha cor exata" saiu do estado', () => {
+    expect(DEFAULTS).not.toHaveProperty('exact');
   });
 
   it('lê um ajuste completo', () => {
     const s = parseHash(
-      '#color=1a73e8&preset=aplica&strategy=brand-tint&level=AAA&mode=dark&tab=neutrals&exact=1&sel=300&view=ajuda',
+      '#color=1a73e8&preset=aplica&strategy=brand-tint&level=AAA&mode=dark&tab=neutrals&sel=300&view=ajuda',
       'light',
     );
     expect(s).toEqual({
@@ -26,7 +26,6 @@ describe('parseHash', () => {
       level: 'AAA',
       mode: 'dark',
       tab: 'neutrals',
-      exact: true,
       sel: '300',
       view: 'ajuda',
     });
@@ -48,11 +47,10 @@ describe('parseHash', () => {
     expect(s).toEqual({ ...DEFAULTS, mode: 'light' });
   });
 
-  // O Auto de antes mantinha a cor exata e mudava o nível (lvl): é o que o switch faz agora.
-  it('um lvl antigo liga "Manter minha cor exata"', () => {
-    expect(parseHash('#color=fcfbf2&lvl=20', 'light').exact).toBe(true);
-    expect(parseHash('#lvl=abc', 'light').exact).toBe(false);
-    expect(parseHash('#lvl=20&exact=0', 'light').exact).toBe(false);
+  // PR 8: `exact` e `lvl` (da cor exata e do Auto antigo) são ignorados, sem erro e sem aviso
+  it('exact e lvl antigos são ignorados', () => {
+    expect(parseHash('#color=fcfbf2&lvl=20&exact=1', 'light')).toEqual({ ...DEFAULTS, mode: 'light', color: '#fcfbf2' });
+    expect(parseHash('#lvl=abc&exact=0', 'light')).toEqual({ ...DEFAULTS, mode: 'light' });
   });
 
   it('corta a seleção em 40 caracteres', () => {
@@ -70,14 +68,12 @@ describe('serialize', () => {
     expect(serialize({ ...DEFAULTS, mode: 'light' }, 'dark')).toBe('#mode=light');
   });
 
-  it('grava cores sem # e booleanos como 1 e 0', () => {
-    expect(serialize({ ...DEFAULTS, mode: 'light', color: '#1a73e8', exact: true }, 'light')).toBe(
-      '#color=1a73e8&exact=1',
-    );
+  it('grava cores sem #', () => {
+    expect(serialize({ ...DEFAULTS, mode: 'light', color: '#1a73e8' }, 'light')).toBe('#color=1a73e8');
   });
 
   it('volta ao mesmo hash depois de ler (ida e volta)', () => {
-    const hash = '#color=1a73e8&preset=aplica&level=AAA&mode=dark&tab=behavior&exact=1&sel=normal&view=ajuda';
+    const hash = '#color=1a73e8&preset=aplica&level=AAA&mode=dark&tab=behavior&sel=normal&view=ajuda';
     expect(serialize(parseHash(hash, 'light'), 'light')).toBe(hash);
   });
 });

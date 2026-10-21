@@ -11,8 +11,8 @@
   - PR 4 (2026-10-19): título em caixa alta com a logo de 28x36, subtítulo (top__lead) e sem o rodapé da ferramenta;
   - PR 3 (2026-10-19): Exportar tokens depois do corpo da paleta; "Paletas" com botão (celular) e texto (computador);
   - Auto usa aria-disabled (e não disabled), com o motivo em texto visível ligado por aria-describedby (auto-why);
-  - PR 2 (2026-10-19): "Manter minha cor exata" (role="switch", desligado por padrão) e as linhas de ajuda dinâmicas
-    do contraste e do switch, em role="status"; saem a Cor viva e o "Usar sua cor no estado normal";
+  - PR 8 (2026-10-20): sai o "Manter minha cor exata" (e a ajuda dele); o painel de detalhes ganha o toggle "Texto com tom da cor";
+  - PR 2 (2026-10-19): as linhas de ajuda dinâmicas do contraste, em role="status"; saem a Cor viva e o "Usar sua cor no estado normal";
   - o aviso da Intensidade (tune-note) é um role="status", sempre presente e vazio quando não há o que avisar.
   Estrutura do Figma (Decomposer / Paleta / Claro / 1440 e 360, 2026-10-19): Ajustes, divisor e Paletas lado a lado;
   a mini paleta com um anel decorativo no nível da cor principal (sem seletor de cor); Contraste mínimo, Sistema de
@@ -75,12 +75,6 @@ import '../../../styles/tools/color-decomposer.css';
               <input class="input input--hex" type="text" id="hex" inputmode="text" autocomplete="off" spellcheck="false" maxlength="7" aria-describedby="hex-error" placeholder="#057ABD">
             </div>
             <p class="field__error" id="hex-error" hidden></p>
-            <label class="switch switch--end" for="exact">
-              <input type="checkbox" role="switch" id="exact" aria-describedby="exact-help">
-              <span class="switch__label">Manter minha cor exata</span>
-              <span class="switch__track" aria-hidden="true"></span>
-            </label>
-            <p class="field__help" id="exact-help" role="status" aria-live="polite"></p>
           </div>
 
           <details class="tune" id="tune-more" open>

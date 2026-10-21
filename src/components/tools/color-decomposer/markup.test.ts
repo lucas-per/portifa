@@ -28,14 +28,26 @@ describe('Auto: indisponível, mas acessível', () => {
   });
 });
 
-describe('Manter minha cor exata', () => {
-  it('é um role="switch", desligado no markup, descrito pela linha de ajuda dinâmica', () => {
-    const input = tag('exact');
-    expect(input).toContain('type="checkbox"');
-    expect(input).toContain('role="switch"');
-    expect(input).not.toMatch(/\schecked/);
-    expect(input).toContain('aria-describedby="exact-help"');
-    expect(tag('exact-help')).toMatch(/role="status" aria-live="polite"/);
+describe('Manter minha cor exata saiu; Texto com tom da cor (PR 8)', () => {
+  const strings = readFileSync(new URL('./strings.js', import.meta.url), 'utf-8');
+
+  it('o switch de Ajustes, a ajuda dele e os textos saíram', () => {
+    expect(html).not.toMatch(/id="exact"|exact-help|cor exata/);
+    expect(script).not.toMatch(/state\.exact|suggestBrandLevel|\$\('exact'\)/);
+    expect(strings).not.toMatch(/autoExact|exact:|cor exata/);
+  });
+
+  it('o painel de detalhes tem um role="switch" nativo (sem aria-checked à mão), com o rótulo novo', () => {
+    expect(script).toMatch(/<input type="checkbox" role="switch" name="strategy"/);
+    expect(script).not.toMatch(/aria-checked="\$\{/);
+    expect(strings).toContain("tintText: 'Texto com tom da cor'");
+    expect(strings).not.toMatch(/textColor|Cor do texto|Preto ou branco/);
+    expect(script).toContain("e.target.checked ? 'brand-tint' : 'high-contrast'");
+  });
+
+  it('a trilha ligada vem do primeiro nível de Comportamento no claro e do último no escuro', () => {
+    expect(script).toContain("names[state.mode === 'dark' ? names.length - 1 : 0]");
+    expect(script).toContain('--on-bg:${track};--on-fg:${thumb}');
   });
 
   it('o switch "Usar sua cor no estado normal" e a cor de apoio saíram', () => {

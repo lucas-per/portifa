@@ -2,10 +2,10 @@
 // color-decomposer e o tema derivado aplicado só no elemento raiz da ferramenta (.cd), não no <html>.
 // Estrutura do Figma (2026-10-19): lista de níveis em todos os tamanhos; no computador o painel de detalhes fica
 // sempre aberto ao lado da lista, no celular abre sob a linha tocada (accordion).
-// PR 2: "Manter minha cor exata" fixa a cor no nível de claridade mais próxima (o que o Auto fazia antes); o Auto sugere
-// uma cor próxima sem tons parecidos (auto.js). Saem a cor de apoio, a Cor viva e o "Usar sua cor no estado normal".
+// PR 2: o Auto sugere uma cor próxima sem tons parecidos (auto.js). Saem a cor de apoio, a Cor viva e o "Usar sua cor no
+// estado normal". PR 8: sai o "Manter minha cor exata"; a cor principal fica sempre no nível 100.
 import {
-  decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toPlainJson, checkToneSeparation, suggestBrandLevel, oklchToHex, hexToOklch
+  decomposeTheme, contrastRatio, PRESETS, toPrimitiveTheme, toGrayscaleTheme, toCssVariables, toPlainJson, checkToneSeparation, oklchToHex, hexToOklch
 } from 'color-decomposer';
 import { T, fmt, helpText } from './strings.js';
 import { suggestColor } from './auto.js';
@@ -30,15 +30,11 @@ let tune = null; // { L, C, h, hex }: valores dos controles de claridade, intens
 
 // Os ajustes avançados saíram da interface (2026-10-19): ordem, saturação do escuro, falha de contraste e o token txt
 // ficam no padrão do motor, que é o mesmo que a interface usava.
-// Com "Manter minha cor exata", a cor vai exata para o nível de claridade mais próxima e o resto da paleta segue as regras
-// a partir dela. Os níveis de Comportamento continuam os do preset.
 function buildOptions(s) {
-  const o = {
+  return {
     txtOnStrategy: s.strategy,
     accessibilityLevel: s.level
   };
-  if (s.exact) o.brandLevel = suggestBrandLevel(s.color, PRESETS[s.preset]);
-  return o;
 }
 
 function build(s, name = NAME) {
@@ -92,10 +88,9 @@ function itemsFor(tab, mode) {
 
 /* ---------- Nível da cor principal ---------- */
 
-// Nível onde a cor principal está na paleta (100 por padrão; o de claridade mais próxima com "Manter minha cor exata")
-// e o nível equivalente em cada modo.
+// Nível onde a cor principal está na paleta (sempre o base do sistema de níveis, 100 nos dois) e o equivalente em cada modo.
 function brandLevel() {
-  return state.exact ? suggestBrandLevel(state.color, current.preset) : current.preset.palette.baseLevel;
+  return current.preset.palette.baseLevel;
 }
 function brandLevelIn(mode) {
   const { levels } = current.preset.palette;
@@ -110,10 +105,10 @@ function separation() {
   return checkToneSeparation(palette, state.color);
 }
 
-// Estado do Auto: indisponível com "Manter minha cor exata" ligado (estratégias opostas) e quando não há tons parecidos.
+// Estado do Auto: indisponível quando não há tons parecidos.
 function autoState() {
   const sep = separation();
-  const why = state.exact ? T.tune.autoExact : sep && sep.runs.length > 0 ? '' : T.tune.autoNoConflict;
+  const why = sep && sep.runs.length > 0 ? '' : T.tune.autoNoConflict;
   return { sep, can: !why, why };
 }
 
@@ -351,7 +346,13 @@ function fillDetail(it) {
       <span><span class="value__label">${what}</span><span class="value__hex">${up(hex)}</span></span>
       <button type="button" class="btn btn--icon" data-copy="${up(hex)}" aria-label="${T.detail.copyAria(what, up(hex))}">${ICON_COPY}</button>
     </div>`;
-  const option = (value) => `<label class="segmented__item"><input type="radio" name="strategy" value="${value}"${state.strategy === value ? ' checked' : ''}><span>${T.detail.strategy[value]}</span></label>`;
+  // Texto com tom da cor (desligado = preto ou branco): a trilha ligada é a superfície do primeiro nível de Comportamento
+  // (20) no claro e do último (180) no escuro, e o polegar, o texto sobre ela (escuro nos dois modos)
+  const behavior = current.theme.colors[NAME][state.mode].behavior;
+  const names = Object.keys(behavior.level);
+  const edge = names[state.mode === 'dark' ? names.length - 1 : 0];
+  const track = behavior.surface[edge];
+  const thumb = behavior.txtOn[edge];
   detail.innerHTML = `
     <div class="detail__head">
       <h3 class="detail__title">${esc(it.title)}</h3>
@@ -361,10 +362,11 @@ function fillDetail(it) {
       <span class="sample__text"><span class="sample__big" aria-hidden="true">Aa</span><span class="sample__small">${T.detail.sample}</span></span>
       <span class="sample__tag">${T.detail.tag(it.ratio)}</span>
     </div>
-    <div class="field">
-      <span class="field__label" id="strategy-label">${T.detail.textColor}</span>
-      <div class="segmented" role="radiogroup" aria-labelledby="strategy-label">${option('high-contrast')}${option('brand-tint')}</div>
-    </div>
+    <label class="switch switch--end" style="--on-bg:${track};--on-fg:${thumb}">
+      <input type="checkbox" role="switch" name="strategy"${state.strategy === 'brand-tint' ? ' checked' : ''}>
+      <span class="switch__label">${T.detail.tintText}</span>
+      <span class="switch__track" aria-hidden="true"></span>
+    </label>
     <div class="values">${row(T.detail.surface, it.a.s)}${row(T.detail.txtOn, it.a.t)}${row(T.detail.border, it.a.b)}</div>`;
 }
 
@@ -382,12 +384,12 @@ detail.addEventListener('click', async (e) => {
     $('ribbon-host').querySelector(`.swatch[data-key="${CSS.escape(key)}"]`)?.focus();
   }
 });
-// Cor do texto: vale para todos os tons. O painel é refeito a cada mudança, então o foco volta para a opção escolhida.
+// Texto com tom da cor: vale para todos os tons. O painel é refeito a cada mudança, então o foco volta para o toggle.
 detail.addEventListener('change', (e) => {
   if (e.target.name !== 'strategy') return;
-  state.strategy = e.target.value;
+  state.strategy = e.target.checked ? 'brand-tint' : 'high-contrast';
   update();
-  detail.querySelector('input[name="strategy"]:checked')?.focus();
+  detail.querySelector('input[name="strategy"]')?.focus();
 });
 
 /* ---------- Área de transferência e avisos falados ---------- */
@@ -462,12 +464,6 @@ function bindControls() {
     update();
     say(T.tune.autoDone(up(hex)));
   });
-  // Manter minha cor exata: o painel de detalhes volta para o nível da cor principal, onde quer que ela esteja
-  $('exact').addEventListener('change', (e) => {
-    state.exact = e.target.checked;
-    state.sel = '';
-    update();
-  });
   for (const name of ['mode', 'level', 'preset']) {
     for (const r of document.querySelectorAll(`input[name="${name}"]`)) {
       r.addEventListener('change', () => {
@@ -515,7 +511,6 @@ function renderMini() {
   // aria-disabled: o botão continua no foco do teclado e do leitor de tela, sem executar a ação; o motivo fica à vista
   $('auto').setAttribute('aria-disabled', String(!can));
   setStatus($('auto-why'), why);
-  setStatus($('exact-help'), (state.exact ? T.exact.on : T.exact.off)(brandLevelIn(state.mode)));
   const surface = current.theme.colors[NAME][state.mode].palette.surface;
   const levels = Object.keys(surface).map(Number).sort((x, y) => x - y);
   // mini paleta (Figma): 8 tons e o anel no nível da cor principal, na posição dele na escala (no meio com o nível 100).
@@ -553,7 +548,6 @@ function syncControls() {
   if (document.activeElement !== $('hex')) setInvalid($('hex'), false);
   syncTune();
   for (const name of ['mode', 'level', 'preset']) document.querySelector(`input[name="${name}"][value="${state[name]}"]`).checked = true;
-  $('exact').checked = state.exact;
   setStatus($('level-help'), T.contrastHelp[state.level]);
   const preset = PRESETS[state.preset];
   $('preset-help').textContent = T.presetHelp(preset.palette.levels.length, preset.neutrals.levels.length);

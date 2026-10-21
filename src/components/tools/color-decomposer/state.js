@@ -1,7 +1,7 @@
 // Origem: lucas-per/color-decomposer@v0.2.0, app/state.js. Divergência da tag (2026-10-19): saíram os ajustes que a
 // interface não tem mais (ajustes avançados e a "Cor própria" do texto; na PR 2, cor de apoio, Cor viva e "Usar sua cor no
-// estado normal"); um endereço antigo com eles abre no padrão. O `lvl` antigo (nível escolhido pelo Auto de antes, que
-// mantinha a cor exata) liga o "Manter minha cor exata".
+// estado normal"); um endereço antigo com eles abre no padrão. PR 8: sai também o "Manter minha cor exata" (`exact`), e
+// o `lvl` antigo (nível escolhido pelo Auto de antes) passa a ser ignorado, sem aviso: a cor principal fica sempre no nível 100.
 // Estado da interface e sua cópia na URL (para você compartilhar ou voltar ao mesmo ponto).
 
 export const DEFAULTS = {
@@ -11,7 +11,6 @@ export const DEFAULTS = {
   level: 'AA',
   mode: 'light',
   tab: 'palette',
-  exact: false,
   sel: '',
   view: ''
 };
@@ -34,11 +33,9 @@ export function parseHash(hash, systemMode) {
     const v = p.get(key);
     const def = DEFAULTS[key];
     if (ENUMS[key]) { if (ENUMS[key].includes(v)) s[key] = v; continue; }
-    if (typeof def === 'boolean') { s[key] = v === '1'; continue; }
     if (key === 'color') { if (HEX.test(`#${v}`)) s[key] = `#${v}`; continue; }
     if (key === 'sel') s[key] = v.slice(0, 40);
   }
-  if (!p.has('exact') && p.get('lvl') && Number.isFinite(Number(p.get('lvl')))) s.exact = true;
   return s;
 }
 
@@ -48,8 +45,7 @@ export function serialize(state, systemMode) {
     const v = state[key];
     const baseline = key === 'mode' ? systemMode : def;
     if (v === baseline) continue;
-    if (typeof v === 'boolean') p.set(key, v ? '1' : '0');
-    else if (typeof v === 'string' && v.startsWith('#')) p.set(key, v.slice(1));
+    if (typeof v === 'string' && v.startsWith('#')) p.set(key, v.slice(1));
     else p.set(key, String(v));
   }
   const q = p.toString();
