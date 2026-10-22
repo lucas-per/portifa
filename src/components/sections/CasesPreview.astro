@@ -60,7 +60,10 @@ const cases = sortCasesForHome(await getCollection('cases'));
     flex: 1 1 0%;
   }
 
-  @media (max-width: 767px) {
+  /* Até 1087px (mobile e tablet): 1 coluna. Com 3 colunas, "pagamentos" (32px,
+     199px) pede card de 251px e quebrava no meio da palavra abaixo de ~1024px;
+     a 1088px o card tem 272px. Mesmo corte do resumo dos cases. */
+  @media (max-width: 1087px) {
     .cases-preview__grid {
       flex-direction: column;
       gap: var(--scale-x8);

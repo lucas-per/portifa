@@ -683,3 +683,15 @@ A home e os cases estouravam a largura a 100% de 768 a 1088px (documento de 1021
 - **Resumo dos cases (abaixo de 1088px):** os três cards empilham, com as mesmas regras do celular. Em vez de duplicar o CSS, o bloco de grade de `CaseSummary.astro` subiu para `max-width: 1087px`; o `padding-left` de 20px continua só no celular (767px).
 - **Limite conhecido:** o piso das três colunas depende das palavras de cada case (a palavra mais longa dos títulos de 28px). Hoje: redesign 1021px, gosafe-ds 1037px, jornada-pagamentos 1059px de documento; a 1088px todos cabem. Um case novo com palavra muito longa pode precisar de um breakpoint maior. Para reavaliar: abrir o case sem a regra empilhada, medir `document.documentElement.scrollWidth` com a viewport estreitando e usar a menor largura em que ele cabe em 3 colunas como novo limite (a 1087px o novo case precisa ter `scrollWidth <= clientWidth`).
 - **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.3 para 1.3.4.
+
+### Cards de "Cases selecionados" em tablet sem palavra quebrada (site 1.3.5)
+
+De 768 a 1016px o título dos cards da home quebrava no meio da palavra ("pagamentos", "Redesign", "produto", "Criando", "system"). Os três cards são `flex: 1 1 0%` com `min-width: 0` e gap de 40px; o texto tem `largura do card − 52px` (padding de 24px dos dois lados e borda de 2px) e o `overflow-wrap: break-word` de `.text-title-h3` quebra a palavra que não cabe. A mais larga, "pagamentos" (32px, peso 800), mede 199px e pede um card de 251px. O defeito já existia antes da PR #47.
+
+- **Correção (layout):** o bloco que empilha os cards (`flex-direction: column`, gap de 32px) passou de `max-width: 767px` para `max-width: 1087px`, sem duplicar CSS. É só layout: o bloco não tinha padding, fonte nem largura, então o padding de 24px do card e a tipografia seguem como estão. Abaixo de 768px nada muda; de 1088px para cima (card de 272px) também não.
+- **Layout de tablet para o Figma (768 a 1087px):** 1 coluna, cards com a largura total do conteúdo (viewport − 176px: 577px a 768px), gap de 32px, o resto do card igual.
+- **Por que 1088px e não 1024px:** a 1024px com barra de rolagem de 17px o card tem 250px, menos que os 251px de "pagamentos".
+- **Não foi usado** `overflow-wrap`/`hyphens` nem redução da fonte (24px ainda quebraria a 768px, com card de 166px).
+- **Limite conhecido:** o piso depende da palavra mais larga dos títulos. Ao incluir um case novo, medir se `card >= largura da palavra mais larga + 52px` na menor largura de 3 colunas (card de 272px a 1088px; o card é `(viewport − barra − 256px) / 3`); se não, subir o corte de 1087px.
+- **Cabeçalho:** os links do desktop têm 24px de caixa e 44px de área de clique (`::before`, medida com `elementFromPoint`: 108×44 e 60×44); não é defeito e ficou como está.
+- **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.4 para 1.3.5.
