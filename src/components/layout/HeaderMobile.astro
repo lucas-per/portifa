@@ -102,7 +102,11 @@ const menuId = 'site-menu-mobile';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--header-mobile-core);
+    /* Com o texto a 200% em 320px logo e botões não cabem numa linha: o
+       bloco quebra e os botões descem, em vez de estourar a largura. */
+    flex-wrap: wrap;
+    row-gap: var(--scale-x4);
+    min-height: var(--header-mobile-core);
     padding: 0 var(--scale-x5);
   }
 

@@ -659,3 +659,13 @@ Figma, página "UaiUI": `666:17` (Button desktop, molde das três páginas), `66
 
 **Escala de 4:** nenhuma exceção nova. **Versão:** 1.2.0 para 1.3.0 (minor: três rotas novas com comportamento novo).
 
+
+### Rodapé de 768 a 959px e cabeçalho mobile a 320px com 200% (site 1.3.2)
+
+Dois estouros de largura que já existiam antes do UaiUI.
+
+- **Rodapé, 768 a 959px:** a linha única (divisor fixo de 64px, quatro botões, divisor fixo de 64px e 8 gaps de 24px) soma 942px e só cabe a partir de uns 960px. De 768 a 959px os botões passam a duas linhas de dois: e-mail e LinkedIn em cima, GitHub e Baixar CV embaixo, numa grade de três colunas (botão, divisores, botão). Os dois divisores das pontas e o divisor entre os pares saem; ficam os dois de 3px, um entre os botões de cada linha. O respiro lateral é um padding de 88px (o que os divisores fixos mais o gap davam). A coluna da esquerda alinha com a borda esquerda do bloco e a da direita com a borda direita; os botões ocupam a largura da coluna, então GitHub tem a largura do e-mail e Baixar CV a do LinkedIn. Alvos de 46px de altura, como antes. A partir de 960px e abaixo de 768px nada muda. Decisão de desenho do Lucas (opção 1); o Figma não tem esse tamanho.
+- **Cabeçalho mobile, 320px com 200%:** logo (54px) e a linha de menu e e-mail (220px com a raiz a 32px) mais o padding de 40px não cabem em 305px e a linha passava 9px. `.site-header-mobile__core` ganhou `flex-wrap`, `row-gap` de 16px e `min-height` no lugar de `height`: quando não cabe, o menu e o e-mail descem para uma segunda linha (o cabeçalho passa de 161 para 209px). Quando cabe, nada muda.
+- **Fora do escopo (ficam para outras PRs):** a home e o case estouram a 768px (e a home a 1024px) já a 100%, e quase tudo a partir de 768px com a raiz a 200%. A lista está na PR.
+
+**Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.1 para 1.3.2 (patch).
