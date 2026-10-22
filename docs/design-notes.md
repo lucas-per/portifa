@@ -606,7 +606,7 @@ Figma, página "UaiUI": `666:17` (desktop, página de Button, usada como referê
 
 **Observações:**
 - Com o texto a 200% em 320px, o cabeçalho mobile ainda passa 9px da largura (na `main`, com o link da Paletaria na barra, eram 136px). Em 360px não passa.
-- Em `forced-colors`, o ícone de e-mail do cabeçalho (um `<img>`, `mail-on-accent.svg`) some; já era assim e ficou fora desta PR.
+- Em `forced-colors`, o ícone de e-mail do cabeçalho (um `<img>`, `mail-on-accent.svg`) sumia no esquema claro (1,04:1); corrigido no site 1.3.3, com SVG inline (`ContactIcon`) em `currentColor`.
 - Em 768px, o rodapé desktop gera rolagem horizontal (942px), como na `main`; tema à parte.
 - **Escala de 4:** nenhuma exceção nova. O divisor de 3px do menu usa o `Divider.astro`.
 - **Versão:** 1.1.9 para 1.2.0 (minor, seção nova).
@@ -669,3 +669,7 @@ Dois estouros de largura que já existiam antes do UaiUI.
 - **Fora do escopo (ficam para outras PRs):** a home e o case estouram a 768px (e a home a 1024px) já a 100%, e quase tudo a partir de 768px com a raiz a 200%. A lista está na PR.
 
 **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.1 para 1.3.2 (patch).
+
+### Ícone de e-mail do cabeçalho em alto contraste (site 1.3.3)
+
+O ícone de e-mail dos dois cabeçalhos era um `<img>` (`mail-on-accent.svg`, traço fixo `#FDFAFA`), que o Chromium não recolore em `forced-colors`: no esquema claro ficava claro sobre branco (1,04:1) e sumia; no escuro já era visível (20,2:1). Passou a ser o SVG inline do `ContactIcon` (`mail`, `currentColor`), como no rodapé. No cabeçalho mobile, `.site-header-mobile__cta` ganhou `color: var(--text-label-neutral-1)` (antes herdava o azul de link). Decisão do Lucas: o traço passa de `#FDFAFA` para `--text-label-neutral-1` (`#fcfeff`), igual ao rótulo "Contato". O arquivo `mail-on-accent.svg` foi removido (nada mais o usava). **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.2 para 1.3.3.
