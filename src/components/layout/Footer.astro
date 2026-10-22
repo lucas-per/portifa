@@ -146,6 +146,33 @@ const dividerLines = Array.from({ length: 4 });
     text-transform: uppercase;
   }
 
+  /* 768 a 959px: a linha única (64 + 4 botões + 64 + 8 gaps = 942px) não cabe
+     e estourava a largura do documento. Os botões passam a duas linhas de
+     dois (e-mail + LinkedIn, GitHub + CV), numa grade de 3 colunas
+     (botão, divisores, botão). Os dois divisores fixos das pontas e o
+     divisor entre os pares saem; o respiro lateral vira o padding (88px, o
+     mesmo que os dois divisores fixos + gap davam). A coluna da esquerda
+     alinha à esquerda e a da direita à direita do bloco. */
+  @media (min-width: 768px) and (max-width: 959px) {
+    .site-footer__buttons-content {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      row-gap: var(--scale-x4);
+      padding: 0 var(--scale-x20);
+    }
+
+    .site-footer__buttons-content > :first-child,
+    .site-footer__buttons-content > :last-child,
+    .site-footer__buttons-content > :nth-child(5) {
+      display: none;
+    }
+
+    .site-footer__buttons-content > :nth-child(4),
+    .site-footer__buttons-content > :nth-child(8) {
+      justify-self: end;
+    }
+  }
+
   /* No mobile, o footer vira o layout próprio de FooterMobile.astro
      (Figma: footer-mobile, node 254:1006) — não é este componente
      encolhendo, então ele só some abaixo do breakpoint. */
