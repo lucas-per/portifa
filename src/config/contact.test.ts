@@ -1,12 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { contactLinks, copyrightHolder, getContact } from './contact';
+import { contactLinks, copyrightHolder, getContact, menuFooterLinks } from './contact';
 
 const read = (path: string) => readFileSync(new URL(path, import.meta.url), 'utf-8');
 
 describe('contactLinks', () => {
   it('ordem do Figma: E-mail, LinkedIn, GitHub, Baixar CV', () => {
     expect(contactLinks.map((link) => link.key)).toEqual(['email', 'linkedin', 'github', 'cv']);
+  });
+
+  it('mini-rodapé do menu mobile: GitHub, LinkedIn, E-mail, sem o CV, cada um com ícone', () => {
+    expect(menuFooterLinks.map((link) => link.key)).toEqual(['github', 'linkedin', 'email']);
+    expect(menuFooterLinks.map((link) => link.menuIcon)).toEqual(['github', 'linkedin', 'mail']);
   });
 
   it('todo contato tem nome acessível (o mini-rodapé do menu mostra só o ícone)', () => {
