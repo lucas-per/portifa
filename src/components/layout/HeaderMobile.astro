@@ -1,6 +1,6 @@
 ---
 import logoReduced from '../../assets/icons/logo-reduced.svg';
-import mailIcon from '../../assets/icons/mail-on-accent.svg';
+import ContactIcon from '../ui/ContactIcon.astro';
 import HeaderMobileMenu from './HeaderMobileMenu.astro';
 import { getContact } from '../../config/contact';
 
@@ -38,7 +38,7 @@ const menuId = 'site-menu-mobile';
           class="site-header-mobile__cta clickable-mailto-header"
           aria-label={email.ariaLabel}
         >
-          <img src={mailIcon.src} width="24" height="24" alt="" />
+          <ContactIcon name="mail" />
         </a>
       </div>
     </div>
@@ -138,6 +138,7 @@ const menuId = 'site-menu-mobile';
     padding: var(--scale-x2) var(--scale-x6);
     border: 3px solid var(--button-border-neutral-strong);
     background-color: var(--button-bg-accent-filled-regular);
+    color: var(--text-label-neutral-1);
     box-shadow: var(--shadow-comp-neutral);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
   }
