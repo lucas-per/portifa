@@ -102,8 +102,13 @@ const { challenge, solution, results } = Astro.props;
          [slug].astro sobre os dividers estreitos entre seções. */
       padding-left: var(--scale-x5);
     }
+  }
 
-    /* Empilhado: cada card volta a ter as próprias linhas. */
+  /* Até 1087px (mobile e tablet): empilhado, cada card volta a ter as
+     próprias linhas. Com o menu lateral, as três colunas pedem de 1021 a
+     1059px de documento (o piso é a palavra mais longa de cada título);
+     a 1088px todos os cases já cabem. */
+  @media (max-width: 1087px) {
     .case-summary__grid {
       grid-template-columns: minmax(0, 1fr);
       grid-template-rows: none;

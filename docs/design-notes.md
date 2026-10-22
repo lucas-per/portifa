@@ -673,3 +673,13 @@ Dois estouros de largura que já existiam antes do UaiUI.
 ### Ícone de e-mail do cabeçalho em alto contraste (site 1.3.3)
 
 O ícone de e-mail dos dois cabeçalhos era um `<img>` (`mail-on-accent.svg`, traço fixo `#FDFAFA`), que o Chromium não recolore em `forced-colors`: no esquema claro ficava claro sobre branco (1,04:1) e sumia; no escuro já era visível (20,2:1). Passou a ser o SVG inline do `ContactIcon` (`mail`, `currentColor`), como no rodapé. No cabeçalho mobile, `.site-header-mobile__cta` ganhou `color: var(--text-label-neutral-1)` (antes herdava o azul de link). Decisão do Lucas: o traço passa de `#FDFAFA` para `--text-label-neutral-1` (`#fcfeff`), igual ao rótulo "Contato". O arquivo `mail-on-accent.svg` foi removido (nada mais o usava). **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.2 para 1.3.3.
+
+### Rolagem horizontal em tablet: home e cases (site 1.3.4)
+
+A home e os cases estouravam a largura a 100% de 768 a 1088px (documento de 1021 a 1132px). Não há desenho do Figma para 768 a 1087px; as três decisões são do Lucas e só valem nessas faixas (de 1152px para cima e abaixo de 768px nada muda).
+
+- **Skills da home (abaixo de 1152px):** as quatro colunas pedem 1132px (palavra mais longa do título de 32px + padding, 4 colunas e 3 gaps de 40px). Viram grade de 2 colunas `minmax(0, 1fr)`, na ordem do DOM (Estratégia, Design Systems / Colaboração, Ferramentas). No celular volta a coluna única em flex.
+- **Hero da home (abaixo de 960px):** "transformando" tem 455px, o avatar 260px e o gap 48px, então o hero pede 939px. O avatar desce para baixo do título, alinhado à esquerda, com o mesmo gap de 48px. O hero fica mais alto (768px: 1794 para 2022px; 832px: 1665 para 1815px; 959px: 1541 para 1690px).
+- **Resumo dos cases (abaixo de 1088px):** os três cards empilham, com as mesmas regras do celular. Em vez de duplicar o CSS, o bloco de grade de `CaseSummary.astro` subiu para `max-width: 1087px`; o `padding-left` de 20px continua só no celular (767px).
+- **Limite conhecido:** o piso das três colunas depende das palavras de cada case (a palavra mais longa dos títulos de 28px). Hoje: redesign 1021px, gosafe-ds 1037px, jornada-pagamentos 1059px de documento; a 1088px todos cabem. Um case novo com palavra muito longa pode precisar de um breakpoint maior. Para reavaliar: abrir o case sem a regra empilhada, medir `document.documentElement.scrollWidth` com a viewport estreitando e usar a menor largura em que ele cabe em 3 colunas como novo limite (a 1087px o novo case precisa ter `scrollWidth <= clientWidth`).
+- **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.3 para 1.3.4.

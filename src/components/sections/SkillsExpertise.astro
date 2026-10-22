@@ -183,12 +183,22 @@ const tools = [
     flex: 1;
   }
 
+  /* Abaixo de 1152px as quatro colunas (mínimo de 1132px) não cabem: grade
+     de 2 colunas, na ordem do DOM. */
+  @media (max-width: 1151px) {
+    .skills__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 767px) {
     .skills__inner {
       padding: var(--scale-x12) var(--scale-x5);
     }
 
     .skills__grid {
+      display: flex;
       flex-direction: column;
       gap: var(--scale-x8);
     }
