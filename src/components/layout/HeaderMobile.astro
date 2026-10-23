@@ -48,17 +48,37 @@ const menuId = 'site-menu-mobile';
 </header>
 
 <script>
-  // Menu do cabeçalho mobile: disclosure (não modal). Abre e fecha só por
-  // `hidden`, sem depender de animação. Fecha com Esc (o foco volta ao botão),
-  // ao escolher um link e quando a tela passa para o cabeçalho desktop.
+  // Menu do cabeçalho mobile: painel de tela cheia. Abre e fecha por `hidden`,
+  // sem depender de animação, e deixa o resto da página `inert` enquanto está
+  // aberto (o painel cobre a página; sem isso o Tab iria para o conteúdo
+  // escondido). Não prende o foco: depois do último item o Tab sai da página.
+  // Fecha com Esc (o foco volta ao botão), ao escolher um link, quando a tela
+  // passa para o cabeçalho desktop e quando a página volta do cache do histórico.
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const panel = toggle && document.getElementById(toggle.getAttribute('aria-controls')!);
+  const header = toggle?.closest<HTMLElement>('.site-header-mobile');
 
-  if (toggle && panel) {
+  if (toggle && panel && header) {
+    let inerted: HTMLElement[] = [];
+
     const setOpen = (open: boolean) => {
       panel.hidden = !open;
+      header.toggleAttribute('data-menu-open', open);
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+
+      inerted.forEach((element) => (element.inert = false));
+      inerted = [];
+      if (open) {
+        inerted = Array.from(document.body.children).filter(
+          (element): element is HTMLElement =>
+            element instanceof HTMLElement &&
+            !element.contains(header) &&
+            !['SCRIPT', 'STYLE'].includes(element.tagName) &&
+            !element.inert,
+        );
+        inerted.forEach((element) => (element.inert = true));
+      }
     };
 
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
@@ -77,6 +97,11 @@ const menuId = 'site-menu-mobile';
 
     window.matchMedia('(min-width: 768px)').addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
+    });
+
+    // Voltar pelo histórico pode trazer a página do cache com o menu aberto.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) setOpen(false);
     });
   }
 </script>
@@ -123,6 +148,18 @@ const menuId = 'site-menu-mobile';
   .site-header-mobile__divider {
     height: var(--header-mobile-divider);
     background-color: var(--surface-bg-accent-strong);
+  }
+
+  /* Menu aberto (Figma 695:990): a barra fica só com o logo e o X (62px, sem o
+     e-mail nem o divisor de 5px e o gap acima dele). display: none tira o
+     e-mail do Tab e da árvore de acessibilidade; ao fechar, tudo volta. */
+  .site-header-mobile[data-menu-open] .site-header-mobile__bar {
+    gap: 0;
+  }
+
+  .site-header-mobile[data-menu-open] .site-header-mobile__divider,
+  .site-header-mobile[data-menu-open] .site-header-mobile__cta {
+    display: none;
   }
 
   /* Mesmo visual do button--filled-accent (Button.astro), só que sem

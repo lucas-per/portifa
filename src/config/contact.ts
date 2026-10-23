@@ -16,13 +16,14 @@ export type ContactLink = {
   download?: boolean;
   /** Ícone nos rodapés (LinkedIn e GitHub com a seta de "abre fora"). */
   footerIcon: 'mail' | 'external' | 'download';
-  /** Ícone no mini-rodapé do menu mobile (marcas do LinkedIn e do GitHub). */
-  menuIcon: 'mail' | 'linkedin' | 'github' | 'download';
+  /** Ícone no mini-rodapé do menu mobile (marcas do LinkedIn e do GitHub). O CV não entra lá. */
+  menuIcon?: 'mail' | 'linkedin' | 'github';
 };
 
 /**
  * Fonte única dos contatos: rodapé desktop, rodapé mobile e mini-rodapé do
- * menu mobile. Ordem do Figma nos três: E-mail → LinkedIn → GitHub → Baixar CV.
+ * menu mobile. Ordem do Figma nos rodapés: E-mail → LinkedIn → GitHub → Baixar CV;
+ * o mini-rodapé do menu tem a própria (`menuFooterLinks`).
  */
 export const contactLinks: ContactLink[] = [
   {
@@ -63,14 +64,21 @@ export const contactLinks: ContactLink[] = [
     className: 'clickable-download-cv',
     download: true,
     footerIcon: 'download',
-    menuIcon: 'download',
   },
 ];
 
-/** Titular e ano do ©, nos rodapés e no mini-rodapé (o ano é o do build). */
+/** Titular e ano do ©, nos rodapés; o mini-rodapé do menu usa só o ano (o ano é o do build). */
 export const copyrightHolder = 'Lucas Pereira';
 export const copyrightYear = new Date().getFullYear();
 
 export function getContact(key: ContactLink['key']): ContactLink {
   return contactLinks.find((link) => link.key === key)!;
 }
+
+export type MenuFooterLink = ContactLink & { menuIcon: NonNullable<ContactLink['menuIcon']> };
+
+/** Mini-rodapé do menu mobile (Figma 695:953): GitHub → LinkedIn → E-mail, sem o CV. */
+export const menuFooterLinks: MenuFooterLink[] = (['github', 'linkedin', 'email'] as const).map((key) => {
+  const link = getContact(key);
+  return { ...link, menuIcon: link.menuIcon! };
+});
