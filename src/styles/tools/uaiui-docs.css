@@ -100,9 +100,11 @@
   cursor: pointer;
 }
 
-.uaiui-docs .uaiui-docs__search-open:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__search-open:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__search-open--full {
@@ -120,8 +122,10 @@
   text-align: left;
 }
 
-.uaiui-docs .uaiui-docs__search-open--full:hover .uaiui-docs__search-text {
-  color: inherit;
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__search-open--full:hover .uaiui-docs__search-text {
+    color: inherit;
+  }
 }
 
 .uaiui-docs .uaiui-docs__kbd {
@@ -194,9 +198,11 @@
   cursor: pointer;
 }
 
-.uaiui-docs .uaiui-docs__segment:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__segment:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked) {
@@ -251,7 +257,12 @@
   cursor: pointer;
 }
 
-.uaiui-docs .uaiui-docs__pages-toggle:hover,
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__pages-toggle:hover {
+    background-color: var(--ui-bg-panel);
+  }
+}
+
 .uaiui-docs .uaiui-docs__pages-toggle[aria-expanded='true'] {
   background-color: var(--ui-bg-panel);
 }
@@ -340,10 +351,12 @@
   text-decoration: none;
 }
 
-.uaiui-docs .uaiui-docs__nav-link:hover {
-  border-color: var(--ui-border-strong);
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__nav-link:hover {
+    border-color: var(--ui-border-strong);
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__nav-link[aria-current='page'] {
@@ -457,8 +470,10 @@
   text-underline-offset: 3px;
 }
 
-.uaiui-docs .uaiui-docs__body a:hover {
-  text-decoration-thickness: 2px;
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__body a:hover {
+    text-decoration-thickness: 2px;
+  }
 }
 
 /* Código em linha: JetBrains Mono 400 (uaiui-code-font.css), sem fundo, como no Figma. */
@@ -556,9 +571,11 @@
   cursor: pointer;
 }
 
-.uaiui-docs .uaiui-docs__copy:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__copy:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 /* O anel de fora sumiria sobre a barra escura: aqui ele fica por dentro do botão claro. */
@@ -605,9 +622,11 @@
   text-decoration: none;
 }
 
-.uaiui-docs .uaiui-docs__card:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__card:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__card p {
@@ -681,9 +700,11 @@
   cursor: pointer;
 }
 
-.uaiui-docs .uaiui-docs__tab:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__tab:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__tab[aria-selected='true'] {
@@ -807,9 +828,11 @@
   text-decoration: none;
 }
 
-.uaiui-docs .uaiui-docs__pager-link:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__pager-link:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__pager-link--next {
@@ -836,8 +859,10 @@
   letter-spacing: var(--letter-spacing-comfortable);
 }
 
-.uaiui-docs .uaiui-docs__pager-link:hover .uaiui-docs__pager-kicker {
-  color: inherit;
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__pager-link:hover .uaiui-docs__pager-kicker {
+    color: inherit;
+  }
 }
 
 .uaiui-docs .uaiui-docs__pager-title {
@@ -900,9 +925,11 @@
   cursor: pointer;
 }
 
-.uaiui-docs .uaiui-docs__search-close:hover {
-  background-color: var(--interface-function-ghost-action-background);
-  color: var(--interface-function-ghost-action-txtOn);
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__search-close:hover {
+    background-color: var(--interface-function-ghost-action-background);
+    color: var(--interface-function-ghost-action-txtOn);
+  }
 }
 
 .uaiui-docs .uaiui-docs__search-close:focus-visible {
@@ -927,7 +954,13 @@
   text-decoration: none;
 }
 
-.uaiui-docs .uaiui-docs__search-results a:hover,
+@media (hover: hover) {
+  .uaiui-docs .uaiui-docs__search-results a:hover {
+    background-color: var(--interface-function-ghost-active-background);
+    color: var(--interface-function-ghost-active-txtOn);
+  }
+}
+
 .uaiui-docs .uaiui-docs__search-results [aria-selected='true'] a {
   background-color: var(--interface-function-ghost-active-background);
   color: var(--interface-function-ghost-active-txtOn);
@@ -1131,8 +1164,10 @@
     text-decoration: none;
   }
 
-  .uaiui-docs .uaiui-docs__toc-list a:hover {
-    color: var(--ui-fg-default);
+  @media (hover: hover) {
+    .uaiui-docs .uaiui-docs__toc-list a:hover {
+      color: var(--ui-fg-default);
+    }
   }
 
   .uaiui-docs .uaiui-docs__toc-list a[aria-current='true'] {
@@ -1169,8 +1204,15 @@
   }
 
   /* A borda transparente vira CanvasText nesse modo; a do item não atual some de novo. */
-  .uaiui-docs .uaiui-docs__nav-link:not([aria-current]):not(:hover) {
+  .uaiui-docs .uaiui-docs__nav-link:not([aria-current]) {
     border-color: Canvas;
+  }
+
+  /* Depois da regra acima e com especificidade maior, para a borda do hover voltar (só com mouse). */
+  @media (hover: hover) {
+    .uaiui-docs .uaiui-docs__nav-link:not([aria-current]):hover {
+      border-color: var(--ui-border-strong);
+    }
   }
 
   .uaiui-docs .uaiui-docs__code-bar {
