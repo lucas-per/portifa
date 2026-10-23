@@ -158,4 +158,14 @@ describe('menu do cabeçalho mobile (painel de tela cheia)', () => {
       expect(source.slice(0, block.start)).not.toMatch(/:active\s*[,{]/);
     }
   });
+
+  it('a barra pinta acima do painel (position + z-index), para a sombra do X não ficar cortada com o menu aberto', () => {
+    const rule = header.match(/\.site-header-mobile__bar \{([^}]*)\}/)?.[1] ?? '';
+    expect(rule).toMatch(/position: relative;/);
+    expect(rule).toMatch(/z-index: 1;/);
+    // O painel é absoluto e não pode ter z-index próprio acima da barra.
+    const panel = menu.match(/\.site-menu-mobile \{([^}]*)\}/)?.[1] ?? '';
+    expect(panel).toMatch(/position: absolute;/);
+    expect(panel).not.toMatch(/z-index/);
+  });
 });
