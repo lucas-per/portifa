@@ -80,7 +80,13 @@ const { href, text, ariaLabel, current, size = 'md', class: className } = Astro.
     opacity: 0;
   }
 
-  .header-link:hover,
+  /* Hover só com mouse: no toque a cor ficaria presa depois do toque. */
+  @media (hover: hover) {
+    .header-link:hover {
+      color: var(--text-body-accent-strong);
+    }
+  }
+
   .header-link:active,
   .header-link[aria-current] {
     color: var(--text-body-accent-strong);

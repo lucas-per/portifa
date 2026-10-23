@@ -96,18 +96,27 @@
   transition: transform .1s ease, box-shadow .1s ease;
   font-family: var(--font-label); font-size: .875rem; font-weight: 700; text-transform: uppercase; line-height: 1.2; white-space: nowrap;
 }
-.cd .btn:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-comp-hover); }
+/* Hover só com mouse: no toque ficaria preso no último botão tocado. Os resets de hover (ghost, desativado, ícone) vão em blocos
+   próprios logo depois, e o :active vem depois de todos. */
+@media (hover: hover) {
+  .cd .btn:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-comp-hover); }
+}
 .cd .btn:active { transform: translate(1px, 1px); box-shadow: none; }
 .cd .btn--solid { background: var(--fg); color: var(--bg); border-color: var(--bg); } /* o aro cria o vão entre o corpo e a sombra */
 /* Ghost (só texto): sem padding lateral nem borda, o texto alinha com a borda do conteúdo; a altura de 44 px vem do
    min-height e do padding vertical. Sem fundo em nenhum estado: hover muda a cor, pressed e aberto sublinham.
    Mesmo padrão do link do cabeçalho do site (HeaderLink.astro). */
 .cd .btn--quiet,
-.cd .btn--quiet:hover,
 .cd .btn--quiet:active,
 .cd .btn--quiet[aria-pressed="true"] {
   height: auto; min-height: var(--control); padding: .5rem 0; border: 0; background: transparent; color: var(--fg);
   box-shadow: none; transform: none; text-underline-offset: .2em;
+}
+@media (hover: hover) {
+  .cd .btn--quiet:hover {
+    height: auto; min-height: var(--control); padding: .5rem 0; border: 0; background: transparent; color: var(--fg);
+    box-shadow: none; transform: none; text-underline-offset: .2em;
+  }
 }
 @media (hover: hover) {
   .cd .btn--quiet:hover { color: var(--muted); }
@@ -117,9 +126,15 @@
 /* Auto: botão pequeno, com 36 px de altura (decisão de design; exceção aos 44 px de toque) */
 .cd .btn--sm { height: 2.25rem; padding: 0 .75rem; font-size: .75rem; }
 .cd .btn:disabled, .cd .btn[aria-disabled="true"] { opacity: .5; cursor: default; box-shadow: none; }
-.cd .btn:disabled:hover, .cd .btn:disabled:active, .cd .btn[aria-disabled="true"]:hover, .cd .btn[aria-disabled="true"]:active { transform: none; box-shadow: none; }
+.cd .btn:disabled:active, .cd .btn[aria-disabled="true"]:active { transform: none; box-shadow: none; }
+@media (hover: hover) {
+  .cd .btn:disabled:hover, .cd .btn[aria-disabled="true"]:hover { transform: none; box-shadow: none; }
+}
 /* Botão só de ícone (copiar): alvo de 44 px, sem sombra (Figma) */
-.cd .btn--icon, .cd .btn--icon:hover, .cd .btn--icon:active { width: var(--control); padding: 0; background: transparent; box-shadow: none; transform: none; }
+.cd .btn--icon, .cd .btn--icon:active { width: var(--control); padding: 0; background: transparent; box-shadow: none; transform: none; }
+@media (hover: hover) {
+  .cd .btn--icon:hover { width: var(--control); padding: 0; background: transparent; box-shadow: none; transform: none; }
+}
 .cd .btn--icon svg, .cd .swatch__copy svg { width: 1.5rem; height: 1.5rem; flex: none; grid-area: 1 / 1; }
 /* depois de copiar, o ícone vira o de confirmação por 1,5 s */
 .cd .icon-done, .cd .is-done .icon-copy { display: none; }
@@ -231,7 +246,9 @@
   position: relative; display: inline-flex; align-items: center; height: var(--control); padding: 0 .5rem; border: 0; background: none; cursor: pointer;
   font-family: var(--font-label); font-size: .875rem; font-weight: 700; text-transform: uppercase; color: var(--muted); border-radius: var(--r-control) var(--r-control) 0 0;
 }
-.cd .tab:hover { color: var(--fg); }
+@media (hover: hover) {
+  .cd .tab:hover { color: var(--fg); }
+}
 .cd .tab[aria-selected="true"] { background: var(--active-bg); color: var(--active-fg); }
 .cd[data-active-weak="1"] .tab[aria-selected="true"] { box-shadow: inset 0 0 0 var(--bw) var(--fg); }
 .cd #alerts:not(:empty) { display: grid; gap: .75rem; margin-top: 1rem; }
@@ -395,7 +412,10 @@
   .cd .detail__close { display: inline-flex; }
   .cd .sample__small { font-size: .9375rem; }
   .cd .values { row-gap: .5rem; }
-  .cd .btn--icon, .cd .btn--icon:hover, .cd .btn--icon:active { background: var(--bg); }
+  .cd .btn--icon, .cd .btn--icon:active { background: var(--bg); }
+  @media (hover: hover) {
+    .cd .btn--icon:hover { background: var(--bg); }
+  }
 }
 @media (min-width: 56.3125rem) {
   .cd .rail { max-width: 23rem; }

@@ -103,8 +103,10 @@ const hasIcon = Astro.slots.has('icon');
     box-shadow: var(--shadow-comp-neutral);
   }
 
-  .button--filled-accent:hover {
-    box-shadow: var(--shadow-comp-neutral-hover);
+  @media (hover: hover) {
+    .button--filled-accent:hover {
+      box-shadow: var(--shadow-comp-neutral-hover);
+    }
   }
 
   .button--outline-accent {
@@ -114,8 +116,10 @@ const hasIcon = Astro.slots.has('icon');
     box-shadow: var(--shadow-comp-accent);
   }
 
-  .button--outline-accent:hover {
-    box-shadow: var(--shadow-comp-accent-hover);
+  @media (hover: hover) {
+    .button--outline-accent:hover {
+      box-shadow: var(--shadow-comp-accent-hover);
+    }
   }
 
   .button--outline-primary {
@@ -125,8 +129,10 @@ const hasIcon = Astro.slots.has('icon');
     box-shadow: var(--shadow-comp-primary);
   }
 
-  .button--outline-primary:hover {
-    box-shadow: var(--shadow-comp-primary-hover);
+  @media (hover: hover) {
+    .button--outline-primary:hover {
+      box-shadow: var(--shadow-comp-primary-hover);
+    }
   }
 
   .button--ghost-accent {
@@ -142,8 +148,11 @@ const hasIcon = Astro.slots.has('icon');
     padding: var(--scale-x2) var(--scale-x4);
   }
 
-  .button:hover {
-    transform: translate(-2px, -2px);
+  /* Hover só com mouse: no toque ficaria preso no último botão tocado. */
+  @media (hover: hover) {
+    .button:hover {
+      transform: translate(-2px, -2px);
+    }
   }
 
   .button:active {
