@@ -208,18 +208,22 @@ const menuId = 'site-menu-mobile';
     display: block;
   }
 
-  .site-header-mobile__cta:hover {
-    box-shadow: var(--shadow-comp-neutral-hover);
-    transform: translate(-2px, -2px);
-  }
+  /* Hover só com mouse: no toque o navegador deixa o :hover preso no último
+     elemento tocado. Fica antes do :active, que precisa vencê-lo. */
+  @media (hover: hover) {
+    .site-header-mobile__cta:hover {
+      box-shadow: var(--shadow-comp-neutral-hover);
+      transform: translate(-2px, -2px);
+    }
 
-  .site-header-mobile__menu:hover {
-    box-shadow: var(--shadow-comp-primary-hover);
-    transform: translate(-2px, -2px);
-  }
+    .site-header-mobile__menu:hover {
+      box-shadow: var(--shadow-comp-primary-hover);
+      transform: translate(-2px, -2px);
+    }
 
-  .site-header-mobile__menu[aria-expanded='true']:hover {
-    box-shadow: var(--shadow-comp-neutral-hover);
+    .site-header-mobile__menu[aria-expanded='true']:hover {
+      box-shadow: var(--shadow-comp-neutral-hover);
+    }
   }
 
   .site-header-mobile__cta:active,

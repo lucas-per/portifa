@@ -114,4 +114,48 @@ describe('menu do cabeçalho mobile (painel de tela cheia)', () => {
     expect(rule).toMatch(/padding: var\(--scale-x2\);/);
     expect(rule).toMatch(/border: 3px solid/);
   });
+
+  it('o hover dos botões só vale com mouse: está em @media (hover: hover), antes do :active que o vence', () => {
+    // Pega o conteúdo do bloco por chaves balanceadas.
+    const hoverBlocks = (source: string) => {
+      const blocks: { start: number; body: string }[] = [];
+      const marker = '@media (hover: hover) {';
+      let from = 0;
+      for (;;) {
+        const start = source.indexOf(marker, from);
+        if (start === -1) return blocks;
+        let depth = 1;
+        let i = start + marker.length;
+        for (; i < source.length && depth > 0; i++) {
+          if (source[i] === '{') depth++;
+          else if (source[i] === '}') depth--;
+        }
+        blocks.push({ start, body: source.slice(start + marker.length, i - 1) });
+        from = i;
+      }
+    };
+    const selectors: [string, string, string[]][] = [
+      ['HeaderMobile', header, [
+        '.site-header-mobile__cta:hover',
+        '.site-header-mobile__menu:hover',
+        ".site-header-mobile__menu[aria-expanded='true']:hover",
+      ]],
+      ['HeaderMobileMenu', menu, ['.site-menu-mobile__icon-button:hover']],
+    ];
+    for (const [, raw, hovers] of selectors) {
+      const source = raw.replace(/\/\*[\s\S]*?\*\//g, '');
+      const blocks = hoverBlocks(source);
+      expect(blocks).toHaveLength(1);
+      const [block] = blocks;
+      const order = hovers.map((selector) => block.body.indexOf(`${selector} {`));
+      for (const position of order) expect(position).toBeGreaterThan(-1);
+      expect([...order].sort((a, b) => a - b)).toEqual(order);
+      // Nenhum :hover fora do bloco.
+      const outside = source.slice(0, block.start) + source.slice(block.start + block.body.length);
+      expect(outside).not.toMatch(/:hover\s*[,{]/);
+      // O :active vem depois do bloco de hover.
+      expect(source.indexOf(':active', block.start + block.body.length)).toBeGreaterThan(block.start);
+      expect(source.slice(0, block.start)).not.toMatch(/:active\s*[,{]/);
+    }
+  });
 });

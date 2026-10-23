@@ -204,9 +204,12 @@ const projectsLabelId = `${id}-projetos`;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
   }
 
-  .site-menu-mobile__icon-button:hover {
-    box-shadow: var(--shadow-comp-primary-hover);
-    transform: translate(-2px, -2px);
+  /* Hover só com mouse (no toque ficaria preso); antes do :active, que o vence. */
+  @media (hover: hover) {
+    .site-menu-mobile__icon-button:hover {
+      box-shadow: var(--shadow-comp-primary-hover);
+      transform: translate(-2px, -2px);
+    }
   }
 
   .site-menu-mobile__icon-button:active {
