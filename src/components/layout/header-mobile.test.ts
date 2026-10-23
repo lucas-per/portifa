@@ -13,6 +13,14 @@ describe('menu do cabeçalho mobile (painel de tela cheia)', () => {
     expect(button).toMatch(/aria-label="Abrir menu"/);
   });
 
+  it('a barra tem o e-mail antes do botão de menu no DOM (ordem do Figma 254:1007; o Tab segue a visual)', () => {
+    const mail = header.indexOf('site-header-mobile__cta ');
+    const button = header.indexOf('<button');
+    expect(mail).toBeGreaterThan(-1);
+    expect(mail).toBeLessThan(button);
+    expect(header.indexOf('site-header-mobile__logo')).toBeLessThan(mail);
+  });
+
   it('o script alterna o nome entre "Abrir menu" e "Fechar menu" e só usa hidden', () => {
     expect(header).toMatch(/open \? 'Fechar menu' : 'Abrir menu'/);
     expect(header).toMatch(/panel\.hidden = !open/);
