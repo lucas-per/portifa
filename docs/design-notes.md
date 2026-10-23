@@ -721,3 +721,10 @@ De 768 a 1016px o título dos cards da home quebrava no meio da palavra ("pagame
 - **Limite conhecido:** o piso depende da palavra mais larga dos títulos. Ao incluir um case novo, medir se `card >= largura da palavra mais larga + 52px` na menor largura de 3 colunas (card de 272px a 1088px; o card é `(viewport − barra − 256px) / 3`); se não, subir o corte de 1087px.
 - **Cabeçalho:** os links do desktop têm 24px de caixa e 44px de área de clique (`::before`, medida com `elementFromPoint`: 108×44 e 60×44); não é defeito e ficou como está.
 - **Escala de 4:** nenhuma exceção nova. **Versão:** 1.3.4 para 1.3.5.
+
+### Hover só com mouse nos botões do cabeçalho mobile (site 1.3.8)
+
+- **Causa:** no toque o navegador mantém o `:hover` no último elemento tocado. Sem `@media (hover: hover)`, depois de tocar no botão de menu ele ficava 2px acima e à esquerda do botão de e-mail, com a sombra de 5px, até um toque em outro lugar ou um recarregamento. Acontecia em todos os botões com `transform` no hover: menu, e-mail e os três ícones do mini-rodapé do menu.
+- **Decisão:** o hover dos controles com `transform` ou sombra só vale em `@media (hover: hover)`, o mesmo padrão do `HeaderLink`. Aqui: `.site-header-mobile__cta`, `.site-header-mobile__menu` (fechado e `aria-expanded='true'`) e `.site-menu-mobile__icon-button`. Com mouse nada muda; no toque o botão não se move.
+- **Cascata:** o bloco de hover fica antes do `:active`, que precisa vencê-lo. Com o menu aberto o `[aria-expanded='true']:hover` tem especificidade (0,3,0) e quem o vence é o `[aria-expanded='true']:active`, também (0,3,0), que vem depois. `header-mobile.test.ts` trava isso (bloco único, ordem das regras e nenhum `:hover` fora dele).
+- **Fora desta correção:** `Button.astro` e os demais botões do site seguem como estavam. A generalização, com um teste global, é a PR seguinte.
