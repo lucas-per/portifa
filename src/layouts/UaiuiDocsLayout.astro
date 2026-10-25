@@ -30,7 +30,7 @@ const { current, prev, next } = getDocsPage(Astro.url.pathname);
 if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.url.pathname}`);
 ---
 
-<BaseLayout title={`${current.title} · UaiUI`} description={current.description} path={current.href}>
+<BaseLayout title={`${current.title} · UaiUI DS`} description={current.description} path={current.href}>
   <div class="uaiui uaiui-docs">
     <script is:inline>
       // Densidade salva aplicada antes da pintura (sem piscar). Sem armazenamento, fica o padrão (Desktop).
@@ -43,25 +43,15 @@ if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.ur
       })();
     </script>
 
-    <!-- cabeçalho (Figma 666:70 / 667:212). "UaiUI" não é título: o h1 é o da página. -->
+    <!-- Cabeçalho da área (Figma 666:70). "UaiUI design system" não é título: o h1 é o da página. -->
     <div class="uaiui-docs__top">
-      <p class="uaiui-docs__brand">UaiUI</p>
-      <p class="uaiui-docs__lead">
-        Sistema de design com bordas retas, sombras duras e temas por tokens. Cada componente tem preview, código e
-        requisitos de acessibilidade.
-      </p>
-      <div class="uaiui-docs__tools">
-        <button
-          type="button"
-          class="uaiui-docs__search-open uaiui-docs__search-open--full"
-          aria-haspopup="dialog"
-          data-search-open
-        >
-          <DocsIcon name="search" />
-          <span class="uaiui-docs__search-text">Buscar na documentação</span>
-          <kbd class="uaiui-docs__kbd" aria-hidden="true">Ctrl K</kbd>
-        </button>
+      <div class="uaiui-docs__top-inner">
+        <p class="uaiui-docs__brand">UaiUI design system</p>
+        <p class="uaiui-docs__lead">
+          Meu sistema de design multitema e agnóstico para projetos pessoais, estudos e em breve disponível no GitHub.
+        </p>
       </div>
+      <div class="uaiui-docs__top-divider"></div>
     </div>
 
     <div class="uaiui-docs__shell">
@@ -98,11 +88,6 @@ if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.ur
           </nav>
         )}
       </div>
-
-      <nav class="uaiui-docs__toc" aria-labelledby="uaiui-docs-toc-title" data-toc hidden>
-        <p class="uaiui-docs__toc-title" id="uaiui-docs-toc-title">Nesta página</p>
-        <ul class="uaiui-docs__toc-list" role="list"></ul>
-      </nav>
     </div>
 
     <p id="uaiui-docs-live" class="uaiui-docs__sr-only" role="status"></p>

@@ -90,7 +90,8 @@ describe('CSS do shell do UaiUI fica restrito à área do DS (os dois arquivos)'
     expect(css).not.toMatch(/\b(rgba?|hsla?|oklch|lab|lch)\(/i);
     const named = /\b(black|white|red|blue|green|gray|grey|yellow|purple|pink|orange)\b/i;
     const colorProps = collectDeclarations(css).filter((d) => /(^|-)color$|^background$|^border(-\w+)?$|^outline$|^box-shadow$/.test(d.prop));
-    expect(colorProps.filter((d) => named.test(d.value))).toEqual([]);
+    // Os nomes dos tokens (var(--surface-bg-off-white-primary)) não contam como nome de cor.
+    expect(colorProps.filter((d) => named.test(d.value.replace(/var\([^)]*\)/g, '')))).toEqual([]);
   });
 
   it('não declara fontes e usa as famílias por token', () => {
@@ -235,5 +236,183 @@ describe('o CSS do DS só entra nas páginas do UaiUI', () => {
 
   it('o BaseLayout (todas as páginas) não importa nada do UaiUI', () => {
     expect(readFileSync(join(srcDir, 'layouts/BaseLayout.astro'), 'utf-8')).not.toMatch(/uaiui/i);
+  });
+});
+
+describe('shell da documentação (PR O2, Figma 666:17)', () => {
+  const layout = read('../../layouts/UaiuiDocsLayout.astro');
+  const sidebar = read('../../components/uaiui/DocsSidebar.astro');
+  const script = read('../../components/uaiui/docs.ts');
+  const block = (text: string, selector: string) => {
+    const start = text.indexOf(`${selector} {`);
+    expect(start, selector).toBeGreaterThanOrEqual(0);
+    return text.slice(start, text.indexOf('}', start));
+  };
+  const forced = chromeCss.slice(chromeCss.lastIndexOf('@media (forced-colors: active)'));
+
+  it('cabeçalho da área: "UaiUI design system" e o subtítulo novo, sem busca e sem densidade', () => {
+    expect(layout).toMatch(/<p class="uaiui-docs__brand">UaiUI design system<\/p>/);
+    expect(layout).toContain('Meu sistema de design multitema e agnóstico para projetos pessoais, estudos e em breve disponível no GitHub.');
+    expect(layout).not.toMatch(/data-search-open|DocsDensity|uaiui-docs__tools/);
+    expect(layout).toMatch(/<div class="uaiui-docs__top-divider"><\/div>/);
+  });
+
+  it('o título da página termina em "· UaiUI DS"', () => {
+    expect(layout).toMatch(/title=\{`\$\{current\.title\} · UaiUI DS`\}/);
+  });
+
+  it('o menu: aria-label "Documentação do UaiUI DS", busca como primeiro item, com aria-keyshortcuts, e o <kbd> oculto', () => {
+    expect(sidebar).toContain('aria-label="Documentação do UaiUI DS"');
+    const nav = sidebar.slice(sidebar.indexOf('<nav id={listId}'));
+    expect(nav.indexOf('data-search-open')).toBeGreaterThan(-1);
+    expect(nav.indexOf('data-search-open')).toBeLessThan(nav.indexOf('uaiui-docs__group'));
+    expect(sidebar.match(/aria-keyshortcuts="Control\+K Meta\+K"/g)).toHaveLength(2);
+    expect(nav).toMatch(/<kbd class="uaiui-docs__kbd" hidden>Ctrl K<\/kbd>/);
+    expect(script).toMatch(/event\.ctrlKey \|\| event\.metaKey/);
+  });
+
+  it('a busca não aparece em dois lugares: o campo do menu só a partir de 768px, a lupa só abaixo disso', () => {
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__search-open--full')).toMatch(/display: none;/);
+    const tablet = chromeCss.slice(chromeCss.indexOf('@media (min-width: 768px)'));
+    expect(tablet).toMatch(/\.uaiui-docs__search-open--full \{\s*display: inline-flex;/);
+    expect(tablet).toMatch(/\.uaiui-docs__search-open--icon,\s*\.uaiui-docs \.uaiui-docs__pages-row \{\s*display: none;/);
+  });
+
+  it('o "Nesta página" saiu: sem nav, script, CSS nem grade de três colunas', () => {
+    expect(layout).not.toMatch(/toc|Nesta página/);
+    expect(script).not.toMatch(/data-toc|Nesta página|IntersectionObserver/);
+    expect(chromeCss).not.toMatch(/__toc|Nesta página|min-width: 1280px/);
+    expect(chromeCss).not.toMatch(/728px|200px/);
+  });
+
+  it('os ids dos h2 continuam (âncoras #id) e o aviso role="status" também', () => {
+    expect(layout).toMatch(/id="uaiui-docs-live"[^>]*role="status"/);
+    for (const page of ['index', 'tokens', 'componentes/accordion', 'componentes/button', 'componentes/toast']) {
+      expect(read(`../../pages/projetos/uaiui/${page}.astro`), page).toMatch(/<h2 id="[\w-]+">/);
+    }
+  });
+
+  it('grade: menu de 288px (tablet) e 360px (1184px+), conteúdo até a borda direita, linha vertical de 3px', () => {
+    expect(chromeCss).toMatch(/grid-template-columns: 0 288px minmax\(0, 1fr\);/);
+    expect(chromeCss).toMatch(/grid-template-columns: max\(0px, calc\(\(100% - 1440px\) \/ 2\)\) 360px minmax\(0, 1fr\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__nav::after')).toMatch(/width: 3px;[\s\S]*background-color: var\(--surface-bg-accent-strong\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__content')).toMatch(/background-color: var\(--surface-bg-neutral-subtle\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__content')).not.toMatch(/max-width/);
+  });
+
+  it('divisores: 156×3 no h2::before, na borda esquerda da coluna do conteúdo; o de baixo do cabeçalho, de largura total', () => {
+    const before = block(chromeCss, '.uaiui-docs .uaiui-docs__body > h2::before');
+    expect(before).toMatch(/width: 156px;\s*height: 3px;/);
+    expect(before).toMatch(/margin: 0 0 var\(--scale-x6\) calc\(-1 \* var\(--uaiui-docs-inset\)\);/);
+    expect(before).toMatch(/background-color: var\(--surface-bg-accent-strong\);/);
+    expect(chromeCss).not.toMatch(/border-top: var\(--border-width-default\) solid var\(--ui-border-divider\)/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__top-divider')).toMatch(/height: 3px;\s*background-color: var\(--surface-bg-accent-strong\);/);
+  });
+
+  it('forced-colors: os quatro fundos decorativos usam cor de sistema, e o indicador do item é uma borda', () => {
+    expect(forced).toMatch(/\.uaiui-docs__top-divider,\s*\.uaiui-docs \.uaiui-docs__nav::after,\s*\.uaiui-docs \.uaiui-docs__body > h2::before \{\s*forced-color-adjust: none;\s*background-color: CanvasText;/);
+    expect(block(chromeCss, ".uaiui-docs .uaiui-docs__nav-link[aria-current='page']")).toMatch(/border-left: 3px solid var\(--border-accent-subtle\);/);
+    expect(forced).toMatch(/\.uaiui-docs__nav-link\[aria-current='page'\] \{\s*forced-color-adjust: none;\s*border-left-color: Highlight;/);
+    expect(forced).toMatch(/\.uaiui-docs__nav-text \{\s*border-color: Canvas;/);
+  });
+
+  it('menu: itens em JetBrains Mono Bold 16 maiúsculas (--text-label-primary); o ativo em blue/6, sem hover próprio; hover purple-2 só com mouse', () => {
+    const text = block(chromeCss, '.uaiui-docs .uaiui-docs__nav-text');
+    expect(text).toMatch(/font-family: var\(--font-family-label\);[\s\S]*font-weight: var\(--weight-700\);[\s\S]*font-size: var\(--scale-x4\);[\s\S]*text-transform: uppercase;/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__nav-link')).toMatch(/color: var\(--text-label-primary\);/);
+    expect(block(chromeCss, ".uaiui-docs .uaiui-docs__nav-link[aria-current='page']")).toMatch(/color: var\(--text-body-accent-strong\);/);
+    expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__nav-link:not\(\[aria-current='page'\]\):hover \.uaiui-docs__nav-text \{\s*border-color: var\(--button-border-primary-subtle\);\s*background-color: var\(--button-bg-primary-outline-hovered\);/);
+  });
+
+  it('tag "novo": a secondary outlined do site', () => {
+    const badge = block(chromeCss, '.uaiui-docs .uaiui-docs__badge');
+    expect(badge).toMatch(/border: var\(--border-width-default\) solid var\(--tag-border-subtle\);/);
+    expect(badge).toMatch(/background-color: var\(--tag-bg-secondary\);/);
+    expect(badge).toMatch(/color: var\(--text-label-extra-1\);/);
+  });
+
+  it('paginação: borda accent, sombra de 5px do site, rótulo e título em blue/6, hover accent/subtle só com mouse', () => {
+    const link = block(chromeCss, '.uaiui-docs .uaiui-docs__pager-link');
+    expect(link).toMatch(/border: var\(--border-width-default\) solid var\(--border-accent-subtle\);/);
+    expect(link).toMatch(/background-color: var\(--surface-bg-off-white-primary\);/);
+    expect(link).toMatch(/box-shadow: var\(--shadow-layout-accent\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__pager-kicker')).toMatch(/color: var\(--text-body-accent-strong\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__pager-title')).toMatch(/color: var\(--text-body-accent-strong\);/);
+    expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__pager-link:hover \{\s*background-color: var\(--surface-bg-accent-subtle\);/);
+    expect(chromeCss).toMatch(/\.uaiui-docs__pager-link \{\s*width: 240px;\s*max-width: 100%;/);
+  });
+
+  it('âncoras: no celular o h2 (com o divisor) não fica sob o cabeçalho sticky do site', () => {
+    expect(chromeCss).toMatch(/@media \(max-width: 767px\) \{\s*\.uaiui-docs \.uaiui-docs__body > h2 \{\s*scroll-margin-top: calc\(var\(--header-mobile-height\) \+ var\(--scale-x2\)\);/);
+  });
+});
+
+describe('contraste do shell, a partir dos primitivos (texto 4,5:1; borda e indicador 3:1)', () => {
+  const semantics = read('../tokens/semantics.css');
+  const primitives = read('../tokens/primitives.css');
+
+  /** Resolve --token até o oklch() do primitivo. */
+  function resolve(name: string): string {
+    const source = new RegExp(`--${name}:\\s*([^;]+);`);
+    const value = (semantics.match(source) ?? primitives.match(source))?.[1].trim();
+    if (!value) throw new Error(`token sem valor: ${name}`);
+    const ref = value.match(/^var\(--([\w-]+)\)$/);
+    return ref ? resolve(ref[1]) : value;
+  }
+
+  function luminance(name: string) {
+    const [, l, c, h] = resolve(name).match(/^oklch\(([\d.]+)%\s+([\d.]+)\s+([\d.]+)\)/)!.map(Number);
+    const L = l / 100;
+    const a = c * Math.cos((h * Math.PI) / 180);
+    const b = c * Math.sin((h * Math.PI) / 180);
+    const l_ = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+    const m_ = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+    const s_ = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+    const rgb = [
+      4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_,
+      -1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_,
+      -0.0041960863 * l_ - 0.7034186147 * m_ + 1.707614701 * s_,
+    ].map((v) => Math.min(1, Math.max(0, v)));
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  }
+
+  const ratio = (fg: string, bg: string) => {
+    const [hi, lo] = [luminance(fg), luminance(bg)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  const text: Array<[string, string, string]> = [
+    ['item do menu', 'text-label-primary', 'surface-bg-off-white-primary'],
+    ['item do menu no hover (purple-2)', 'text-label-primary', 'button-bg-primary-outline-hovered'],
+    ['item atual do menu (blue/6)', 'text-body-accent-strong', 'surface-bg-off-white-primary'],
+    ['rótulo e título da paginação (blue/6)', 'text-body-accent-strong', 'surface-bg-off-white-primary'],
+    ['rótulo e título da paginação no hover', 'text-body-accent-strong', 'surface-bg-accent-subtle'],
+    ['rótulo de grupo do menu', 'text-body-neutral-subtle', 'surface-bg-off-white-primary'],
+    ['busca (texto)', 'text-body-neutral-subtle', 'surface-bg-neutral-subtle'],
+    ['busca no hover (purple-2)', 'text-body-neutral-strong', 'button-bg-primary-outline-hovered'],
+    ['ícone da busca no hover (purple-2)', 'icon-neutral-3', 'button-bg-primary-outline-hovered'],
+    ['tag "novo"', 'text-label-extra-1', 'tag-bg-secondary'],
+    ['título da área', 'text-body-primary-strong', 'surface-bg-off-white-primary'],
+    ['h1 e h2', 'text-body-primary-strong', 'surface-bg-neutral-subtle'],
+    ['subtítulo da área', 'text-body-neutral-strong', 'surface-bg-off-white-primary'],
+    ['linha de apoio', 'text-body-neutral-strong', 'surface-bg-neutral-subtle'],
+  ];
+  it.each(text)('%s: %s sobre %s, ao menos 4,5:1', (_label, fg, bg) => {
+    expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  const nonText: Array<[string, string, string]> = [
+    ['indicador do item atual', 'border-accent-subtle', 'surface-bg-off-white-primary'],
+    ['borda da paginação', 'border-accent-subtle', 'surface-bg-neutral-subtle'],
+    ['borda da busca', 'border-neutral-strong', 'surface-bg-off-white-primary'],
+    ['borda da tag "novo"', 'tag-border-subtle', 'surface-bg-off-white-primary'],
+  ];
+  it.each(nonText)('%s: %s sobre %s, ao menos 3:1', (_label, fg, bg) => {
+    expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
+  });
+
+  it('o item atual não muda no hover (blue/5 sobre purple-2 daria menos de 4,5:1) e os divisores azuis ficam abaixo de 3:1 (decorativos, registrados no design-notes)', () => {
+    expect(ratio('text-label-accent', 'button-bg-primary-outline-hovered')).toBeLessThan(4.5);
+    expect(ratio('surface-bg-accent-strong', 'surface-bg-off-white-primary')).toBeLessThan(3);
   });
 });

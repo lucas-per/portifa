@@ -1,7 +1,7 @@
 /*
   Chrome da documentação do UaiUI (/projetos/uaiui/): cabeçalho da área, menu
-  lateral, conteúdo (títulos, corpo, callouts, cards), paginação, busca e o
-  controle de densidade de cada exemplo. Porte do site de docs do uaiui-ds
+  lateral (com a busca), conteúdo (títulos, corpo, callouts, cards), paginação
+  e o controle de densidade de cada exemplo. Porte do site de docs do uaiui-ds
   v0.2.0 (src/styles/site.css), redesenhado pelo Figma (666:17 e 667:178), sem
   os globais de lá (*, html, body, a, h1–h4, :focus-visible). O exemplo, o
   bloco de código e as tabelas (a zona do DS) ficam em uaiui-docs-ds.css.
@@ -18,9 +18,13 @@
 */
 
 .uaiui-docs {
+  /* Gutter (cabeçalho da área, menu e lado direito do conteúdo) e recuo do conteúdo
+     à esquerda, que é também o quanto o divisor das seções sai para a esquerda:
+     mudam por largura (tablet e desktop abaixo). */
   --uaiui-docs-gutter: var(--scale-x5);
+  --uaiui-docs-inset: var(--scale-x5);
   --uaiui-docs-layout-shadow: var(--shadow-offset-layout) var(--shadow-offset-layout) 0 0 var(--ui-shadow-color);
-  background-color: var(--ui-bg-page);
+  /* O fundo da área é o do site (off-white); só o conteúdo ganha o neutral/subtle. */
   color: var(--ui-fg-default);
   font-family: var(--font-family-body);
 }
@@ -55,37 +59,48 @@
   flex-shrink: 0;
 }
 
-/* ---------- Bloco de título (cabeçalho da área, Figma 666:70 / 667:212) ---------- */
+/* ---------- Cabeçalho da área (Figma 666:70) ----------
+   Título e subtítulo; o divisor de 3px de largura total fica logo abaixo. A
+   busca vive no menu e a densidade, dentro de cada exemplo. */
 
 .uaiui-docs .uaiui-docs__top {
+  position: relative;
+}
+
+.uaiui-docs .uaiui-docs__top-inner {
   display: flex;
   flex-direction: column;
   gap: var(--scale-x4);
   box-sizing: border-box;
   max-width: 1440px;
   margin: 0 auto;
-  padding: var(--scale-x8) var(--uaiui-docs-gutter) var(--scale-x4);
+  padding: var(--scale-x8) var(--uaiui-docs-gutter);
 }
 
-/* "UAIUI": não é título (o h1 é o da página); estilo do h2 do site em caixa alta. */
+.uaiui-docs .uaiui-docs__top-divider {
+  height: 3px;
+  background-color: var(--surface-bg-accent-strong);
+}
+
+/* "UAIUI DESIGN SYSTEM": não é título (o h1 é o da página); estilo do h2 do site em caixa alta. */
 .uaiui-docs .uaiui-docs__brand {
+  color: var(--text-body-primary-strong);
   font-family: var(--font-family-title);
   font-weight: var(--weight-800);
   font-size: var(--scale-x8);
   line-height: var(--line-height-compact);
   text-transform: uppercase;
+  /* Com o texto a 200% uma palavra só ("SYSTEM") passa da coluna. */
+  overflow-wrap: anywhere;
 }
 
 .uaiui-docs .uaiui-docs__lead {
+  color: var(--text-body-neutral-strong);
   font-size: var(--scale-x4);
   line-height: var(--line-height-regular);
 }
 
-.uaiui-docs .uaiui-docs__tools {
-  display: none;
-}
-
-/* ---------- Busca (botão) ---------- */
+/* ---------- Busca (botão do menu e lupa do celular) ---------- */
 
 .uaiui-docs .uaiui-docs__search-open {
   display: inline-flex;
@@ -109,27 +124,41 @@
   }
 }
 
+/* Campo do menu (Figma 703:2050): só a partir de 768px; abaixo disso a lupa ao lado de "Páginas" faz o mesmo. */
 .uaiui-docs .uaiui-docs__search-open--full {
   display: none;
-  width: 320px;
+  width: 100%;
   justify-content: flex-start;
+  border-color: var(--border-neutral-strong);
+  background-color: var(--surface-bg-neutral-subtle);
+  color: var(--icon-neutral-3);
 }
 
 .uaiui-docs .uaiui-docs__search-text {
   flex: 1 1 auto;
-  color: var(--ui-fg-muted);
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-body-neutral-subtle);
   font-size: 0.875rem;
   line-height: var(--line-height-comfortable);
   letter-spacing: var(--letter-spacing-comfortable);
   text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (hover: hover) {
+  .uaiui-docs .uaiui-docs__search-open--full:hover {
+    background-color: var(--button-bg-primary-outline-hovered);
+    color: var(--icon-neutral-3);
+  }
+
   .uaiui-docs .uaiui-docs__search-open--full:hover .uaiui-docs__search-text {
-    color: inherit;
+    color: var(--text-body-neutral-strong);
   }
 }
 
+/* "Ctrl K": o Figma o deixa oculto (aria-keyshortcuts diz o atalho). */
 .uaiui-docs .uaiui-docs__kbd {
   padding: 0 var(--scale-base);
   border: var(--border-width-default) solid var(--ui-border-field);
@@ -230,22 +259,21 @@
   z-index: 1;
 }
 
-/* ---------- Shell: menu lateral, conteúdo, "Nesta página" ---------- */
+/* ---------- Shell: menu lateral e conteúdo (Figma 666:91) ----------
+   Celular: uma coluna, com "Páginas" e a lupa no alto e a lista abrindo no
+   lugar. A partir de 768px: menu (288px; 360px a partir de 1184px) e conteúdo,
+   que vai até a borda direita da tela. */
 
 .uaiui-docs .uaiui-docs__shell {
   display: flex;
   flex-direction: column;
-  gap: var(--scale-x8);
-  box-sizing: border-box;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 var(--uaiui-docs-gutter) var(--scale-x16);
 }
 
 .uaiui-docs .uaiui-docs__nav {
   display: flex;
   flex-direction: column;
   gap: var(--scale-x3);
+  padding: var(--scale-x6) var(--uaiui-docs-gutter);
 }
 
 /* Celular: "Páginas" abre a lista no lugar, sem sobrepor o conteúdo (nota 668:358). */
@@ -316,7 +344,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--scale-x8);
-  padding: var(--scale-x3);
+  padding: var(--scale-x4);
   border: var(--border-width-default) solid var(--ui-border-strong);
   background-color: var(--ui-bg-page);
   box-shadow: var(--uaiui-docs-layout-shadow);
@@ -332,12 +360,13 @@
   gap: var(--scale-x2);
 }
 
+/* Rótulo do grupo (Figma 666:94): DM Sans Medium 12, maiúsculas. */
 .uaiui-docs .uaiui-docs__group-title {
-  color: var(--ui-fg-muted);
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-700);
+  color: var(--text-body-neutral-subtle);
+  font-weight: var(--weight-500);
   font-size: var(--scale-x3);
-  line-height: var(--line-height-none);
+  line-height: var(--line-height-regular);
+  letter-spacing: var(--letter-spacing-comfortable);
   text-transform: uppercase;
 }
 
@@ -349,62 +378,81 @@
   list-style: none;
 }
 
+/* Item (Figma 704:670): o texto é o botão ghost do site (JetBrains Mono Bold 16,
+   caixa alta, 46px = 8 + 24 + 8 e a borda de 3px); a tag "novo" fica fora da caixa. */
 .uaiui-docs .uaiui-docs__nav-link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--scale-x2);
+  gap: var(--scale-x4);
   box-sizing: border-box;
-  min-height: 44px;
-  padding: 0 var(--scale-x3);
-  border: var(--border-width-default) solid transparent;
-  color: var(--ui-fg-default);
-  font-size: var(--scale-x4);
-  line-height: var(--line-height-comfortable);
-  letter-spacing: var(--letter-spacing-comfortable);
+  /* O anel de foco e a área do item acompanham o texto (e a tag), como o botão do Figma. */
+  width: fit-content;
+  max-width: 100%;
+  color: var(--text-label-primary);
   text-decoration: none;
 }
 
+.uaiui-docs .uaiui-docs__nav-text {
+  box-sizing: border-box;
+  padding: var(--scale-x2) 0;
+  border: 3px solid transparent;
+  font-family: var(--font-family-label);
+  font-weight: var(--weight-700);
+  font-size: var(--scale-x4);
+  line-height: var(--scale-x6);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  /* Com o texto a 200% o nome quebra em vez de passar da coluna. */
+  overflow-wrap: anywhere;
+}
+
+/* Só nos itens não marcados: o texto accent sobre o roxo do hover daria 2,96:1. */
 @media (hover: hover) {
-  .uaiui-docs .uaiui-docs__nav-link:hover {
-    border-color: var(--ui-border-strong);
-    background-color: var(--interface-function-ghost-action-background);
-    color: var(--interface-function-ghost-action-txtOn);
+  .uaiui-docs .uaiui-docs__nav-link:not([aria-current='page']):hover .uaiui-docs__nav-text {
+    border-color: var(--button-border-primary-subtle);
+    background-color: var(--button-bg-primary-outline-hovered);
   }
 }
 
+/* Item atual: indicador de 3px à esquerda (a borda) e 12px até o texto. */
 .uaiui-docs .uaiui-docs__nav-link[aria-current='page'] {
-  border-color: var(--ui-border-strong);
-  background-color: var(--interface-function-ghost-active-background);
-  color: var(--interface-function-ghost-active-txtOn);
-  font-weight: var(--weight-600);
+  padding-left: var(--scale-x3);
+  border-left: 3px solid var(--border-accent-subtle);
+  color: var(--text-body-accent-strong);
 }
 
+/* Tag "novo": a secondary outlined do site (Figma 704:728). */
 .uaiui-docs .uaiui-docs__badge {
-  padding: 0 var(--scale-base);
-  border: var(--border-width-default) solid var(--ui-border-strong);
-  background-color: var(--interface-function-primary-normal-background);
-  color: var(--interface-function-primary-normal-txtOn);
+  flex-shrink: 0;
+  padding: var(--scale-half) var(--scale-base);
+  border: var(--border-width-default) solid var(--tag-border-subtle);
+  background-color: var(--tag-bg-secondary);
+  color: var(--text-label-extra-1);
   font-family: var(--font-family-label);
   font-weight: var(--weight-700);
   font-size: var(--scale-x3);
-  line-height: var(--line-height-regular);
+  line-height: var(--line-height-none);
   letter-spacing: 0;
   text-transform: uppercase;
 }
 
-/* "Nesta página": só no desktop largo. Fica escondido até o script montar a lista. */
-.uaiui-docs .uaiui-docs__toc {
-  display: none;
-}
-
 /* ---------- Conteúdo ---------- */
 
+/* Fundo neutral/subtle até a borda direita da tela; o texto fica numa coluna de
+   até 944px (Figma 666:119: padding 40/88/88/48 em 1440px). */
 .uaiui-docs .uaiui-docs__content {
   display: flex;
   flex-direction: column;
   gap: var(--scale-x12);
   min-width: 0;
+  padding: var(--scale-x8) var(--uaiui-docs-gutter) var(--scale-x16) var(--uaiui-docs-inset);
+  background-color: var(--surface-bg-neutral-subtle);
+}
+
+.uaiui-docs .uaiui-docs__content > * {
+  width: 100%;
+  max-width: 944px;
+  box-sizing: border-box;
 }
 
 .uaiui-docs .uaiui-docs__title {
@@ -416,6 +464,7 @@
 }
 
 .uaiui-docs .uaiui-docs__title h1 {
+  color: var(--text-body-primary-strong);
   font-family: var(--font-family-title);
   font-weight: var(--weight-800);
   font-size: var(--scale-x7);
@@ -423,14 +472,15 @@
 }
 
 .uaiui-docs .uaiui-docs__title p {
-  color: var(--ui-fg-muted);
+  color: var(--text-body-neutral-strong);
   font-size: var(--scale-x4);
   line-height: var(--line-height-regular);
 }
 
 /* Corpo das páginas: o HTML vem plano (h2, p, listas, blocos), como no site
-   de origem. Cada h2 abre uma seção (Figma "seção / …"): divisor de 2px,
-   24px até o título e 16px entre os blocos; 48px entre as seções. */
+   de origem. Cada h2 abre uma seção (Figma "seção / …"): divisor curto de
+   156×3px (h2::before), 24px até o título e 16px entre os blocos; 48px entre as
+   seções (o ritmo de 40px do Figma entra na PR O3). */
 .uaiui-docs .uaiui-docs__body {
   display: flex;
   flex-direction: column;
@@ -445,13 +495,22 @@
 
 .uaiui-docs .uaiui-docs__body > h2 {
   margin-top: var(--scale-x8);
-  padding-top: var(--scale-x6);
-  border-top: var(--border-width-default) solid var(--ui-border-divider);
+  color: var(--text-body-primary-strong);
   font-family: var(--font-family-title);
   font-weight: var(--weight-700);
   font-size: var(--scale-x6);
   line-height: var(--line-height-compact);
   letter-spacing: var(--letter-spacing-regular);
+}
+
+/* O divisor começa na borda esquerda da coluna do conteúdo, fora do recuo (Figma 704:749). */
+.uaiui-docs .uaiui-docs__body > h2::before {
+  content: '';
+  display: block;
+  width: 156px;
+  height: 3px;
+  margin: 0 0 var(--scale-x6) calc(-1 * var(--uaiui-docs-inset));
+  background-color: var(--surface-bg-accent-strong);
 }
 
 .uaiui-docs .uaiui-docs__body > h2:first-child {
@@ -564,7 +623,7 @@
   border: var(--border-width-default) solid var(--ui-border-strong);
 }
 
-/* ---------- Pager ---------- */
+/* ---------- Paginação (Figma 666:215) ---------- */
 
 .uaiui-docs .uaiui-docs__pager {
   display: flex;
@@ -579,17 +638,20 @@
   gap: var(--scale-x3);
   box-sizing: border-box;
   padding: var(--scale-x4);
-  border: var(--border-width-default) solid var(--ui-border-strong);
-  background-color: var(--ui-bg-page);
-  color: var(--ui-fg-default);
-  box-shadow: var(--uaiui-docs-layout-shadow);
+  border: var(--border-width-default) solid var(--border-accent-subtle);
+  background-color: var(--surface-bg-off-white-primary);
+  color: var(--text-body-accent-strong);
+  box-shadow: var(--shadow-layout-accent);
   text-decoration: none;
+}
+
+.uaiui-docs .uaiui-docs__pager-link .uaiui-docs__icon {
+  color: var(--icon-accent);
 }
 
 @media (hover: hover) {
   .uaiui-docs .uaiui-docs__pager-link:hover {
-    background-color: var(--interface-function-ghost-action-background);
-    color: var(--interface-function-ghost-action-txtOn);
+    background-color: var(--surface-bg-accent-subtle);
   }
 }
 
@@ -611,22 +673,19 @@
 }
 
 .uaiui-docs .uaiui-docs__pager-kicker {
-  color: var(--ui-fg-muted);
+  color: var(--text-body-accent-strong);
   font-size: 0.875rem;
   line-height: var(--line-height-comfortable);
   letter-spacing: var(--letter-spacing-comfortable);
 }
 
-@media (hover: hover) {
-  .uaiui-docs .uaiui-docs__pager-link:hover .uaiui-docs__pager-kicker {
-    color: inherit;
-  }
-}
-
 .uaiui-docs .uaiui-docs__pager-title {
+  color: var(--text-body-accent-strong);
   font-weight: var(--weight-600);
   font-size: var(--scale-x4);
   line-height: var(--line-height-regular);
+  letter-spacing: var(--letter-spacing-regular);
+  overflow-wrap: anywhere;
 }
 
 /* ---------- Busca (diálogo modal) ---------- */
@@ -734,14 +793,25 @@
   color: var(--ui-fg-muted);
 }
 
-/* ---------- Tablet: menu lateral e conteúdo (sem "Nesta página") ---------- */
+/* ---------- Celular: o divisor de uma âncora não fica sob o cabeçalho sticky do site ---------- */
+
+@media (max-width: 767px) {
+  .uaiui-docs .uaiui-docs__body > h2 {
+    scroll-margin-top: calc(var(--header-mobile-height) + var(--scale-x2));
+  }
+}
+
+/* ---------- Tablet: menu de 288px e conteúdo ---------- */
 
 @media (min-width: 768px) {
-  /* Tablet: título, subtítulo e, numa linha própria, busca e densidade (a
-     linha única do Figma precisa de uns 880px; ver o bloco de 1184px). */
-  .uaiui-docs .uaiui-docs__top {
+  .uaiui-docs {
+    --uaiui-docs-inset: var(--scale-x8);
+  }
+
+  .uaiui-docs .uaiui-docs__top-inner {
     gap: var(--scale-x6);
-    padding: var(--scale-x12) var(--uaiui-docs-gutter) var(--scale-x11);
+    padding-top: var(--scale-x12);
+    padding-bottom: var(--scale-x12);
   }
 
   .uaiui-docs .uaiui-docs__brand {
@@ -750,13 +820,6 @@
 
   .uaiui-docs .uaiui-docs__lead {
     font-size: var(--scale-x5);
-  }
-
-  .uaiui-docs .uaiui-docs__tools {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--scale-x6);
   }
 
   .uaiui-docs .uaiui-docs__search-open--full {
@@ -772,24 +835,51 @@
     padding: 0 var(--scale-x6) var(--scale-x8);
   }
 
+  /* Três colunas: a primeira só absorve a sobra das telas maiores que 1440px. */
   .uaiui-docs .uaiui-docs__shell {
     display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    align-items: start;
-    gap: var(--scale-x12);
+    grid-template-columns: 0 288px minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .uaiui-docs .uaiui-docs__nav {
+    position: relative;
+    display: block;
+    grid-column: 2;
+    /* O lado direito inclui a linha de 3px: o campo fica com 233px no tablet e 221px a partir de 1184px (Figma 704:736). */
+    padding: var(--scale-x10) calc(var(--scale-x8) + 3px) var(--scale-x10) var(--uaiui-docs-gutter);
+  }
+
+  /* Linha vertical de 3px na borda direita do menu, na altura toda (Figma 704:734). */
+  .uaiui-docs .uaiui-docs__nav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--surface-bg-accent-strong);
+  }
+
+  .uaiui-docs .uaiui-docs__content {
+    grid-column: 3;
+    padding-top: var(--scale-x10);
   }
 
   /* No desktop o menu lateral está sempre aberto, sem borda nem sombra; o
-     `hidden` que o script põe no celular não vale aqui. */
+     `hidden` que o script põe no celular não vale aqui. O espaço de 4px em
+     volta dá lugar ao anel de foco dos itens, que o overflow cortaria. */
   .uaiui-docs .uaiui-docs__sidebar,
   .uaiui-docs .uaiui-docs__sidebar[hidden] {
     display: flex;
     position: sticky;
-    top: var(--scale-x8);
-    max-height: calc(100vh - 64px);
+    top: var(--scale-x10);
+    max-height: calc(100vh - 80px);
+    margin: calc(-1 * var(--scale-base));
+    padding: var(--scale-base);
     overflow: auto;
-    padding: 0;
     border: 0;
+    background-color: transparent;
     box-shadow: none;
   }
 
@@ -809,13 +899,15 @@
     font-size: var(--scale-x7);
   }
 
+  /* Com o texto a 200% os dois cartões não cabem lado a lado: o segundo desce, em vez de passar da tela. */
   .uaiui-docs .uaiui-docs__pager {
-    flex-direction: row;
+    flex-flow: row wrap;
     justify-content: space-between;
   }
 
   .uaiui-docs .uaiui-docs__pager-link {
     width: 240px;
+    max-width: 100%;
   }
 
   .uaiui-docs .uaiui-docs__pager-title {
@@ -823,91 +915,24 @@
   }
 }
 
-/* Padding de 88px a partir do mesmo ponto em que o cabeçalho do site passa ao logo completo. */
+/* Padding de 88px a partir do mesmo ponto em que o cabeçalho do site passa ao
+   logo completo; menu de 360px e recuo de 48px do conteúdo (Figma 666:91). */
 @media (min-width: 1184px) {
   .uaiui-docs {
     --uaiui-docs-gutter: var(--scale-x20);
-  }
-
-  /* Figma 666:71: título à esquerda e busca e densidade à direita, na mesma
-     linha; o subtítulo embaixo. No DOM as ferramentas vêm depois do
-     subtítulo, que não tem nada focável: a ordem do Tab segue a visual. */
-  .uaiui-docs .uaiui-docs__top {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-  }
-
-  .uaiui-docs .uaiui-docs__brand {
-    grid-row: 1;
+    --uaiui-docs-inset: var(--scale-x12);
   }
 
   .uaiui-docs .uaiui-docs__lead {
-    grid-column: 1 / -1;
-    grid-row: 2;
+    font-size: var(--scale-x6);
   }
 
-  .uaiui-docs .uaiui-docs__tools {
-    grid-column: 2;
-    grid-row: 1;
-  }
-}
-
-/* ---------- Desktop largo: três colunas (240 + 728 + 200 em 1440) ---------- */
-
-@media (min-width: 1280px) {
   .uaiui-docs .uaiui-docs__shell {
-    grid-template-columns: 240px minmax(0, 728px) 200px;
-    justify-content: space-between;
+    grid-template-columns: max(0px, calc((100% - 1440px) / 2)) 360px minmax(0, 1fr);
   }
 
-  .uaiui-docs .uaiui-docs__toc:not([hidden]) {
-    display: flex;
-    flex-direction: column;
-    gap: var(--scale-x3);
-    position: sticky;
-    top: var(--scale-x8);
-  }
-
-  .uaiui-docs .uaiui-docs__toc-title {
-    color: var(--ui-fg-muted);
-    font-family: var(--font-family-label);
-    font-weight: var(--weight-700);
-    font-size: var(--scale-x3);
-    line-height: var(--line-height-none);
-    text-transform: uppercase;
-  }
-
-  .uaiui-docs .uaiui-docs__toc-list {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    list-style: none;
-  }
-
-  .uaiui-docs .uaiui-docs__toc-list a {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding-left: var(--scale-x3);
-    border-left: var(--border-width-default) solid var(--ui-border-divider);
-    color: var(--ui-fg-muted);
-    font-size: 0.875rem;
-    line-height: var(--line-height-comfortable);
-    letter-spacing: var(--letter-spacing-comfortable);
-    text-decoration: none;
-  }
-
-  @media (hover: hover) {
-    .uaiui-docs .uaiui-docs__toc-list a:hover {
-      color: var(--ui-fg-default);
-    }
-  }
-
-  .uaiui-docs .uaiui-docs__toc-list a[aria-current='true'] {
-    border-left-color: var(--ui-border-strong);
-    color: var(--ui-fg-default);
-    font-weight: var(--weight-600);
+  .uaiui-docs .uaiui-docs__nav {
+    padding-right: calc(var(--scale-x12) + 3px);
   }
 }
 
@@ -920,15 +945,25 @@
 }
 
 @media (forced-colors: active) {
-  .uaiui-docs .uaiui-docs__nav-link[aria-current='page'],
+  /* Divisores e linha vertical são fundos, que esse modo troca: cor de sistema. */
+  .uaiui-docs .uaiui-docs__top-divider,
+  .uaiui-docs .uaiui-docs__nav::after,
+  .uaiui-docs .uaiui-docs__body > h2::before {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+
   .uaiui-docs .uaiui-docs__search-results [aria-selected='true'] a {
     forced-color-adjust: none;
     background-color: Highlight;
     color: HighlightText;
   }
 
-  .uaiui-docs .uaiui-docs__toc-list a[aria-current='true'] {
+  /* Item atual: o indicador é a borda esquerda, que persiste; texto e borda em Highlight. */
+  .uaiui-docs .uaiui-docs__nav-link[aria-current='page'] {
+    forced-color-adjust: none;
     border-left-color: Highlight;
+    color: Highlight;
   }
 
   /* Densidade: as bordas transparentes viram CanvasText nesse modo, então a
@@ -953,15 +988,15 @@
     color: Highlight;
   }
 
-  /* A borda transparente vira CanvasText nesse modo; a do item não atual some de novo. */
-  .uaiui-docs .uaiui-docs__nav-link:not([aria-current]) {
+  /* A borda transparente do item vira CanvasText nesse modo; volta a Canvas. */
+  .uaiui-docs .uaiui-docs__nav-text {
     border-color: Canvas;
   }
 
   /* Depois da regra acima e com especificidade maior, para a borda do hover voltar (só com mouse). */
   @media (hover: hover) {
-    .uaiui-docs .uaiui-docs__nav-link:not([aria-current]):hover {
-      border-color: var(--ui-border-strong);
+    .uaiui-docs .uaiui-docs__nav-link:not([aria-current='page']):hover .uaiui-docs__nav-text {
+      border-color: ButtonText;
     }
 
     .uaiui-docs .uaiui-docs__segment:not(:has(.uaiui-docs__segment-input:checked)):hover .uaiui-docs__segment-text {

@@ -13,8 +13,7 @@ import PropsTable from '../../../../components/uaiui/PropsTable.astro';
 import { svg } from '../../../../components/uaiui/icons';
 
 // O DS deixa o nível do título por conta da página. O primeiro exemplo fica logo
-// abaixo do h1, então seus itens são h2 (sem id: não entram em "Nesta página");
-// os exemplos de dentro de uma seção "h2" usam h3, sem pular nível.
+// abaixo do h1, então seus itens são h2; os exemplos de dentro de uma seção "h2" usam h3, sem pular nível.
 type Level = 'h2' | 'h3';
 const item = (level: Level, id: string, title: string, body: string, open = false, disabled = false) => `<div class="uai-accordion-item">
   <${level}>
