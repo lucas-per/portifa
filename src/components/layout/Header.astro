@@ -32,14 +32,18 @@ const email = getContact('email');
     </a>
     <div class="site-header__actions">
       <div class="site-header__pages">
-        {sections.map((section) => (
-          <HeaderLink
-            href={section.path}
-            text={getHeaderLinkText(section, false).text}
-            current={getAriaCurrent(Astro.url.pathname, section.path)}
-            class={`clickable-link-internal-${section.key}`}
-          />
-        ))}
+        {sections.map((section) => {
+          const { text, ariaLabel } = getHeaderLinkText(section, false);
+          return (
+            <HeaderLink
+              href={section.path}
+              text={text}
+              ariaLabel={ariaLabel}
+              current={getAriaCurrent(Astro.url.pathname, section.path)}
+              class={`clickable-link-internal-${section.key}`}
+            />
+          );
+        })}
       </div>
       <div class="site-header__cta">
         <Button href="/#sobre-mim" variant="outline-accent" class="clickable-anchor-aboutme">

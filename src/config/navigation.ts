@@ -10,6 +10,12 @@ export type MacroSection = {
   inHeader?: boolean;
   /** Rótulo curto, usado no menu mobile; o nome acessível segue `label`. */
   shortLabel?: string;
+  /**
+   * Nome acessível do link do cabeçalho (desktop e menu mobile), quando ele
+   * expande o texto visível. Precisa começar pelo texto visível, sem diferença
+   * de caixa (WCAG 2.5.3); navigation.test.ts guarda isso.
+   */
+  accessibleName?: string;
 };
 
 /**
@@ -19,20 +25,23 @@ export type MacroSection = {
  */
 export const macroSections: MacroSection[] = [
   { key: 'portfolio', label: 'Portfólio', path: '/', enabled: true },
+  /* A ordem do array é a do cabeçalho do desktop e do menu mobile: UaiUI DS
+     primeiro, Paletaria depois (Figma 98:398, 695:953 e 676:514). */
+  {
+    key: 'uaiui',
+    label: 'UaiUI DS',
+    shortLabel: 'UaiUI DS',
+    accessibleName: 'UaiUI DS, design system',
+    path: '/projetos/uaiui/',
+    enabled: true,
+    inHeader: true,
+  },
   // Trocar por "Projetos" (/projetos/) é só mudar label, shortLabel e path.
   {
     key: 'color-decomposer',
     label: 'Paletaria',
     shortLabel: 'Paletaria',
     path: '/projetos/paletaria/',
-    enabled: true,
-    inHeader: true,
-  },
-  {
-    key: 'uaiui',
-    label: 'UaiUI',
-    shortLabel: 'UaiUI',
-    path: '/projetos/uaiui/',
     enabled: true,
     inHeader: true,
   },
