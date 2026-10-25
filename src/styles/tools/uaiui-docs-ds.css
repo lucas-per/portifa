@@ -19,7 +19,9 @@
   --uaiui-docs-layout-shadow: var(--shadow-offset-layout) var(--shadow-offset-layout) 0 0 var(--ui-shadow-color);
 }
 
-/* Tabela: rola na horizontal no celular; a região recebe foco pelo teclado. */
+/* Tabela (Figma 666:166): borda externa de 2px; o cabeçalho tem a borda de baixo
+   forte e as linhas se separam pela borda de campo. Colunas fluidas (table-layout:
+   auto). Rola na horizontal no celular; a região recebe foco pelo teclado. */
 .uaiui-docs .uaiui-docs__table-wrap {
   overflow-x: auto;
   border: var(--border-width-default) solid var(--ui-border-strong);
@@ -36,12 +38,13 @@
 .uaiui-docs .uaiui-docs__table th,
 .uaiui-docs .uaiui-docs__table td {
   padding: var(--scale-x3) var(--scale-x4);
-  border-bottom: var(--border-width-default) solid var(--ui-border-divider);
+  border-bottom: var(--border-width-default) solid var(--ui-border-field);
   text-align: left;
   vertical-align: top;
 }
 
 .uaiui-docs .uaiui-docs__table th {
+  border-bottom-color: var(--ui-border-strong);
   background-color: var(--ui-bg-panel);
   font-family: var(--font-family-label);
   font-weight: var(--weight-700);
@@ -239,27 +242,21 @@
   max-height: 520px;
 }
 
-/* Tabela de props: larguras do Figma (666:166) e nota do celular. */
+/* Tabela de props: colunas fluidas, sem as larguras do Figma (128/261/100/451). Nome,
+   valores e padrão não quebram (a coluna fica do tamanho do código) e a descrição
+   fica com o resto; sem espaço, a tabela rola. */
 .uaiui-docs .uaiui-docs__table--props {
   min-width: 640px;
   overflow-wrap: normal;
 }
 
-/* As larguras do Figma incluem o padding das células. */
-.uaiui-docs .uaiui-docs__table--props th {
-  box-sizing: border-box;
+.uaiui-docs .uaiui-docs__table--props td:not(:last-child) code {
+  white-space: nowrap;
 }
 
-.uaiui-docs .uaiui-docs__table--props th:nth-child(1) {
-  width: 128px;
-}
-
-.uaiui-docs .uaiui-docs__table--props th:nth-child(2) {
-  width: 208px;
-}
-
-.uaiui-docs .uaiui-docs__table--props th:nth-child(3) {
-  width: 100px;
+/* Descrição: largura mínima para não ficar estreita demais; se faltar espaço, a tabela rola. */
+.uaiui-docs .uaiui-docs__table--props th:last-child {
+  min-width: 320px;
 }
 
 .uaiui-docs .uaiui-docs__table code {

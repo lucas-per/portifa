@@ -443,7 +443,7 @@
 .uaiui-docs .uaiui-docs__content {
   display: flex;
   flex-direction: column;
-  gap: var(--scale-x12);
+  gap: var(--scale-x6);
   min-width: 0;
   padding: var(--scale-x8) var(--uaiui-docs-gutter) var(--scale-x16) var(--uaiui-docs-inset);
   background-color: var(--surface-bg-neutral-subtle);
@@ -479,8 +479,9 @@
 
 /* Corpo das páginas: o HTML vem plano (h2, p, listas, blocos), como no site
    de origem. Cada h2 abre uma seção (Figma "seção / …"): divisor curto de
-   156×3px (h2::before), 24px até o título e 16px entre os blocos; 48px entre as
-   seções (o ritmo de 40px do Figma entra na PR O3). */
+   156×3px (h2::before) com 40px acima e 40px abaixo, 24px do título ao primeiro
+   bloco e 16px entre os blocos da seção. O primeiro bloco da página fica a 24px
+   do título (o exemplo, como o col-intro do Figma) ou a 40px (o divisor). */
 .uaiui-docs .uaiui-docs__body {
   display: flex;
   flex-direction: column;
@@ -494,7 +495,8 @@
 }
 
 .uaiui-docs .uaiui-docs__body > h2 {
-  margin-top: var(--scale-x8);
+  margin-top: var(--scale-x6);
+  margin-bottom: var(--scale-x2);
   color: var(--text-body-primary-strong);
   font-family: var(--font-family-title);
   font-weight: var(--weight-700);
@@ -509,15 +511,16 @@
   display: block;
   width: 156px;
   height: 3px;
-  margin: 0 0 var(--scale-x6) calc(-1 * var(--uaiui-docs-inset));
+  margin: 0 0 var(--scale-x10) calc(-1 * var(--uaiui-docs-inset));
   background-color: var(--surface-bg-accent-strong);
 }
 
 .uaiui-docs .uaiui-docs__body > h2:first-child {
-  margin-top: 0;
+  margin-top: var(--scale-x4);
 }
 
 .uaiui-docs .uaiui-docs__body h3 {
+  color: var(--text-body-primary-strong);
   font-family: var(--font-family-title);
   font-weight: var(--weight-700);
   font-size: var(--scale-x5);
@@ -558,14 +561,25 @@
   overflow-wrap: anywhere;
 }
 
+/* Callouts (Figma 666:160 e 666:162): neutro em --ui-bg-panel; "Quando usar" (--use) em
+   verde e "Quando não usar" (--avoid) em rosa. A cor não é o único sinal: o texto abre com o rótulo. */
 .uaiui-docs .uaiui-docs__callout {
   padding: var(--scale-x4) var(--scale-x5);
-  border: var(--border-width-default) solid var(--ui-border-strong);
+  border: var(--border-width-default) solid var(--border-neutral-strong);
   border-left-width: var(--scale-x2);
   background-color: var(--ui-bg-panel);
+  color: var(--text-body-neutral-strong);
 }
 
-/* Cards da Introdução (seção "Componentes", entra com as páginas da PR B). */
+.uaiui-docs .uaiui-docs__callout--use {
+  background-color: var(--surface-bg-quaternary-subtle);
+}
+
+.uaiui-docs .uaiui-docs__callout--avoid {
+  background-color: var(--surface-bg-tertiary-subtle);
+}
+
+/* Cards da Introdução: o mesmo visual dos cartões da paginação. */
 .uaiui-docs .uaiui-docs__cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -580,24 +594,32 @@
   gap: var(--scale-x2);
   height: 100%;
   box-sizing: border-box;
-  padding: var(--scale-x5);
-  border: var(--border-width-default) solid var(--ui-border-strong);
-  background-color: var(--ui-bg-page);
-  color: var(--ui-fg-default);
-  box-shadow: var(--uaiui-docs-layout-shadow);
+  padding: var(--scale-x4);
+  border: var(--border-width-default) solid var(--border-accent-subtle);
+  background-color: var(--surface-bg-off-white-primary);
+  box-shadow: var(--shadow-layout-accent);
   text-decoration: none;
 }
 
 @media (hover: hover) {
   .uaiui-docs .uaiui-docs__card:hover {
-    background-color: var(--interface-function-ghost-action-background);
-    color: var(--interface-function-ghost-action-txtOn);
+    background-color: var(--surface-bg-accent-subtle);
   }
 }
 
+/* Nome do componente: DM Sans SemiBold 20 em blue/6, como o título da paginação. */
+.uaiui-docs .uaiui-docs__body .uaiui-docs__card h3 {
+  color: var(--text-body-accent-strong);
+  font-family: var(--font-family-body);
+  font-weight: var(--weight-600);
+  font-size: var(--scale-x5);
+  line-height: var(--line-height-regular);
+  letter-spacing: var(--letter-spacing-regular);
+}
+
 .uaiui-docs .uaiui-docs__card p {
-  color: inherit;
-  font-size: 0.875rem;
+  color: var(--text-body-neutral-strong);
+  font-size: var(--scale-x4);
 }
 
 /* Amostra de cores (Tokens e temas). */
@@ -629,7 +651,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--scale-x4);
-  padding-top: var(--scale-x4);
+  margin-top: var(--scale-x4);
 }
 
 .uaiui-docs .uaiui-docs__pager-link {
@@ -864,6 +886,7 @@
   .uaiui-docs .uaiui-docs__content {
     grid-column: 3;
     padding-top: var(--scale-x10);
+    padding-bottom: var(--scale-x20);
   }
 
   /* No desktop o menu lateral está sempre aberto, sem borda nem sombra; o
@@ -897,6 +920,10 @@
 
   .uaiui-docs .uaiui-docs__body > h2 {
     font-size: var(--scale-x7);
+  }
+
+  .uaiui-docs .uaiui-docs__body h3 {
+    font-size: var(--scale-x6);
   }
 
   /* Com o texto a 200% os dois cartões não cabem lado a lado: o segundo desce, em vez de passar da tela. */
@@ -951,6 +978,11 @@
   .uaiui-docs .uaiui-docs__body > h2::before {
     forced-color-adjust: none;
     background-color: CanvasText;
+  }
+
+  /* Callouts: o fundo colorido some, e as bordas de 2px e de 8px continuam em cor de sistema. */
+  .uaiui-docs .uaiui-docs__callout {
+    border-color: CanvasText;
   }
 
   .uaiui-docs .uaiui-docs__search-results [aria-selected='true'] a {

@@ -239,17 +239,18 @@ describe('o CSS do DS só entra nas páginas do UaiUI', () => {
   });
 });
 
+/** Corpo da primeira regra com este seletor (até a primeira chave que fecha). */
+const block = (text: string, selector: string) => {
+  const start = text.indexOf(`${selector} {`);
+  expect(start, selector).toBeGreaterThanOrEqual(0);
+  return text.slice(start, text.indexOf('}', start));
+};
+const forced = chromeCss.slice(chromeCss.lastIndexOf('@media (forced-colors: active)'));
+
 describe('shell da documentação (PR O2, Figma 666:17)', () => {
   const layout = read('../../layouts/UaiuiDocsLayout.astro');
   const sidebar = read('../../components/uaiui/DocsSidebar.astro');
   const script = read('../../components/uaiui/docs.ts');
-  const block = (text: string, selector: string) => {
-    const start = text.indexOf(`${selector} {`);
-    expect(start, selector).toBeGreaterThanOrEqual(0);
-    return text.slice(start, text.indexOf('}', start));
-  };
-  const forced = chromeCss.slice(chromeCss.lastIndexOf('@media (forced-colors: active)'));
-
   it('cabeçalho da área: "UaiUI design system" e o subtítulo novo, sem busca e sem densidade', () => {
     expect(layout).toMatch(/<p class="uaiui-docs__brand">UaiUI design system<\/p>/);
     expect(layout).toContain('Meu sistema de design multitema e agnóstico para projetos pessoais, estudos e em breve disponível no GitHub.');
@@ -303,7 +304,7 @@ describe('shell da documentação (PR O2, Figma 666:17)', () => {
   it('divisores: 156×3 no h2::before, na borda esquerda da coluna do conteúdo; o de baixo do cabeçalho, de largura total', () => {
     const before = block(chromeCss, '.uaiui-docs .uaiui-docs__body > h2::before');
     expect(before).toMatch(/width: 156px;\s*height: 3px;/);
-    expect(before).toMatch(/margin: 0 0 var\(--scale-x6\) calc\(-1 \* var\(--uaiui-docs-inset\)\);/);
+    expect(before).toMatch(/margin: 0 0 var\(--scale-x10\) calc\(-1 \* var\(--uaiui-docs-inset\)\);/);
     expect(before).toMatch(/background-color: var\(--surface-bg-accent-strong\);/);
     expect(chromeCss).not.toMatch(/border-top: var\(--border-width-default\) solid var\(--ui-border-divider\)/);
     expect(block(chromeCss, '.uaiui-docs .uaiui-docs__top-divider')).toMatch(/height: 3px;\s*background-color: var\(--surface-bg-accent-strong\);/);
@@ -344,6 +345,109 @@ describe('shell da documentação (PR O2, Figma 666:17)', () => {
 
   it('âncoras: no celular o h2 (com o divisor) não fica sob o cabeçalho sticky do site', () => {
     expect(chromeCss).toMatch(/@media \(max-width: 767px\) \{\s*\.uaiui-docs \.uaiui-docs__body > h2 \{\s*scroll-margin-top: calc\(var\(--header-mobile-height\) \+ var\(--scale-x2\)\);/);
+  });
+});
+
+describe('conteúdo das páginas (PR O3, Figma 666:17)', () => {
+  const pages = ['index', 'tokens', 'componentes/accordion', 'componentes/button', 'componentes/toast'];
+  const page = (name: string) => read(`../../pages/projetos/uaiui/${name}.astro`);
+  const sidebar = read('../../components/uaiui/DocsSidebar.astro');
+
+  it('callouts: "Quando usar" é --use e "Quando não usar" é --avoid, por modificador; os dois da Introdução e de Tokens ficam neutros', () => {
+    for (const name of ['componentes/accordion', 'componentes/button', 'componentes/toast']) {
+      const source = page(name);
+      expect(source, name).toMatch(/class="uaiui-docs__callout uaiui-docs__callout--use"><p><strong>Quando usar\./);
+      expect(source, name).toMatch(/class="uaiui-docs__callout uaiui-docs__callout--avoid"><p><strong>Quando não usar\./);
+    }
+    for (const name of ['index', 'tokens']) {
+      expect(page(name), name).toMatch(/<div class="uaiui-docs__callout"><p>/);
+      expect(page(name), name).not.toMatch(/callout--/);
+    }
+    // Todo callout de uma página tem um destes três rótulos: nenhum sem classe de significado.
+    for (const name of pages) {
+      for (const match of page(name).matchAll(/class="(uaiui-docs__callout[^"]*)"><p>(<strong>[^<]*<\/strong>)?/g)) {
+        const [, cls, label] = match;
+        if (label === '<strong>Quando usar.</strong>') expect(cls).toContain('--use');
+        else if (label === '<strong>Quando não usar.</strong>') expect(cls).toContain('--avoid');
+        else expect(cls).toBe('uaiui-docs__callout');
+      }
+    }
+  });
+
+  it('callouts: borda de 2px com 8px à esquerda em --border-neutral-strong; verde (quaternary/subtle), rosa (tertiary/subtle) e neutro (--ui-bg-panel)', () => {
+    const base = block(chromeCss, '.uaiui-docs .uaiui-docs__callout');
+    expect(base).toMatch(/border: var\(--border-width-default\) solid var\(--border-neutral-strong\);\s*border-left-width: var\(--scale-x2\);/);
+    expect(base).toMatch(/background-color: var\(--ui-bg-panel\);/);
+    expect(base).toMatch(/color: var\(--text-body-neutral-strong\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__callout--use')).toMatch(/background-color: var\(--surface-bg-quaternary-subtle\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__callout--avoid')).toMatch(/background-color: var\(--surface-bg-tertiary-subtle\);/);
+  });
+
+  it('forced-colors: a borda dos callouts (2px e 8px) fica em cor de sistema; o rótulo em texto leva o significado', () => {
+    expect(forced).toMatch(/\.uaiui-docs__callout \{\s*border-color: CanvasText;/);
+  });
+
+  it('tabela: borda externa de 2px, cabeçalho com borda forte embaixo, linhas pela borda de campo, colunas fluidas, código sem espaçamento entre letras', () => {
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table-wrap')).toMatch(/overflow-x: auto;\s*border: var\(--border-width-default\) solid var\(--ui-border-strong\);/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table th,\n.uaiui-docs .uaiui-docs__table td')).toMatch(/border-bottom: var\(--border-width-default\) solid var\(--ui-border-field\);/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table th')).toMatch(/border-bottom-color: var\(--ui-border-strong\);\s*background-color: var\(--ui-bg-panel\);/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table tr:last-child td')).toMatch(/border-bottom: 0;/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table code')).toMatch(/letter-spacing: 0;/);
+    // Sem larguras fixas nem percentuais nas colunas (o Figma tem 128/261/100/451).
+    expect(dsCss).not.toMatch(/th:nth-child\(\d\)/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table--props')).not.toMatch(/(^|[\s;])width:/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__table th')).not.toMatch(/(^|[\s;])width:/);
+    expect(dsCss).not.toMatch(/table-layout: fixed/);
+  });
+
+  it('tabela: continua rolável e com foco (região com tabindex e rótulo) nas duas tabelas', () => {
+    expect(read('../../components/uaiui/PropsTable.astro')).toMatch(/class="uaiui-docs__table-wrap" tabindex="0" role="region" aria-label=/);
+    expect(page('tokens')).toMatch(/class="uaiui-docs__table-wrap" tabindex="0" role="region" aria-label="Camadas de tokens"/);
+  });
+
+  it('ritmo: 40px acima e abaixo do divisor, 24px do título ao primeiro bloco, 16px entre blocos; título da página a 24px do exemplo e a 40px do divisor', () => {
+    const h2 = block(chromeCss, '.uaiui-docs .uaiui-docs__body > h2');
+    expect(h2).toMatch(/margin-top: var\(--scale-x6\);\s*margin-bottom: var\(--scale-x2\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__body')).toMatch(/gap: var\(--scale-x4\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__body > h2:first-child')).toMatch(/margin-top: var\(--scale-x4\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__content')).toMatch(/gap: var\(--scale-x6\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__pager')).toMatch(/margin-top: var\(--scale-x4\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__pager')).not.toMatch(/padding-top/);
+  });
+
+  it('padding-bottom do conteúdo: 64px no celular e 88px (--scale-x20) a partir de 768px', () => {
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__content')).toMatch(/padding: var\(--scale-x8\) var\(--uaiui-docs-gutter\) var\(--scale-x16\) var\(--uaiui-docs-inset\);/);
+    const tablet = chromeCss.slice(chromeCss.indexOf('@media (min-width: 768px)'));
+    expect(tablet).toMatch(/\.uaiui-docs__content \{\s*grid-column: 3;\s*padding-top: var\(--scale-x10\);\s*padding-bottom: var\(--scale-x20\);/);
+  });
+
+  it('h3 dos exemplos: o estilo do h2 em escala menor (20px no celular, 24px a partir de 768px)', () => {
+    const h3 = block(chromeCss, '.uaiui-docs .uaiui-docs__body h3');
+    expect(h3).toMatch(/color: var\(--text-body-primary-strong\);\s*font-family: var\(--font-family-title\);\s*font-weight: var\(--weight-700\);\s*font-size: var\(--scale-x5\);/);
+    expect(chromeCss).toMatch(/@media \(min-width: 768px\) \{[\s\S]*\.uaiui-docs \.uaiui-docs__body h3 \{\s*font-size: var\(--scale-x6\);/);
+  });
+
+  it('cards da Introdução: o visual dos cartões da paginação; hover só com mouse; nome em DM Sans SemiBold 20 em blue/6', () => {
+    const card = block(chromeCss, '.uaiui-docs .uaiui-docs__card');
+    expect(card).toMatch(/padding: var\(--scale-x4\);/);
+    expect(card).toMatch(/border: var\(--border-width-default\) solid var\(--border-accent-subtle\);/);
+    expect(card).toMatch(/background-color: var\(--surface-bg-off-white-primary\);/);
+    expect(card).toMatch(/box-shadow: var\(--shadow-layout-accent\);/);
+    expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__card:hover \{\s*background-color: var\(--surface-bg-accent-subtle\);/);
+    const name = block(chromeCss, '.uaiui-docs .uaiui-docs__body .uaiui-docs__card h3');
+    expect(name).toMatch(/color: var\(--text-body-accent-strong\);\s*font-family: var\(--font-family-body\);\s*font-weight: var\(--weight-600\);\s*font-size: var\(--scale-x5\);/);
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__card p')).toMatch(/color: var\(--text-body-neutral-strong\);\s*font-size: var\(--scale-x4\);/);
+  });
+
+  it('busca do menu: texto visível "Buscar" e aria-label "Buscar na documentação" (o nome acessível começa pelo texto visível); a lupa do celular mantém o dela', () => {
+    expect(sidebar).toMatch(/uaiui-docs__search-open--full"\s+aria-label="Buscar na documentação"/);
+    expect(sidebar).toMatch(/<span class="uaiui-docs__search-text">Buscar<\/span>/);
+    expect(sidebar).toMatch(/uaiui-docs__search-open--icon"\s+aria-label="Buscar na documentação"/);
+    expect('Buscar na documentação'.startsWith('Buscar')).toBe(true);
+  });
+
+  it('a amostra de cores de Tokens e temas não muda de visual', () => {
+    expect(block(chromeCss, '.uaiui-docs .uaiui-docs__swatch-color')).toMatch(/width: 72px;\s*height: 40px;\s*border: var\(--border-width-default\) solid var\(--ui-border-strong\);/);
   });
 });
 
@@ -396,6 +500,13 @@ describe('contraste do shell, a partir dos primitivos (texto 4,5:1; borda e indi
     ['h1 e h2', 'text-body-primary-strong', 'surface-bg-neutral-subtle'],
     ['subtítulo da área', 'text-body-neutral-strong', 'surface-bg-off-white-primary'],
     ['linha de apoio', 'text-body-neutral-strong', 'surface-bg-neutral-subtle'],
+    ['callout "Quando usar" (verde)', 'text-body-neutral-strong', 'surface-bg-quaternary-subtle'],
+    ['callout "Quando não usar" (rosa)', 'text-body-neutral-strong', 'surface-bg-tertiary-subtle'],
+    ['h3 dos exemplos', 'text-body-primary-strong', 'surface-bg-neutral-subtle'],
+    ['nome do card (blue/6)', 'text-body-accent-strong', 'surface-bg-off-white-primary'],
+    ['nome do card no hover', 'text-body-accent-strong', 'surface-bg-accent-subtle'],
+    ['descrição do card', 'text-body-neutral-strong', 'surface-bg-off-white-primary'],
+    ['descrição do card no hover', 'text-body-neutral-strong', 'surface-bg-accent-subtle'],
   ];
   it.each(text)('%s: %s sobre %s, ao menos 4,5:1', (_label, fg, bg) => {
     expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5);
@@ -406,6 +517,9 @@ describe('contraste do shell, a partir dos primitivos (texto 4,5:1; borda e indi
     ['borda da paginação', 'border-accent-subtle', 'surface-bg-neutral-subtle'],
     ['borda da busca', 'border-neutral-strong', 'surface-bg-off-white-primary'],
     ['borda da tag "novo"', 'tag-border-subtle', 'surface-bg-off-white-primary'],
+    ['borda do callout verde', 'border-neutral-strong', 'surface-bg-quaternary-subtle'],
+    ['borda do callout rosa', 'border-neutral-strong', 'surface-bg-tertiary-subtle'],
+    ['borda do card', 'border-accent-subtle', 'surface-bg-neutral-subtle'],
   ];
   it.each(nonText)('%s: %s sobre %s, ao menos 3:1', (_label, fg, bg) => {
     expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
@@ -414,5 +528,41 @@ describe('contraste do shell, a partir dos primitivos (texto 4,5:1; borda e indi
   it('o item atual não muda no hover (blue/5 sobre purple-2 daria menos de 4,5:1) e os divisores azuis ficam abaixo de 3:1 (decorativos, registrados no design-notes)', () => {
     expect(ratio('text-label-accent', 'button-bg-primary-outline-hovered')).toBeLessThan(4.5);
     expect(ratio('surface-bg-accent-strong', 'surface-bg-off-white-primary')).toBeLessThan(3);
+  });
+});
+
+describe('contraste da tabela, a partir dos tokens do wrapper (tema claro: texto 4,5:1; bordas 3:1)', () => {
+  const wrapper = readFileSync(createRequire(import.meta.url).resolve('uaiui-ds/tokens-wrapper.css'), 'utf-8');
+  const light = wrapper.slice(wrapper.indexOf('.uaiui {'), wrapper.indexOf('.uaiui[data-uaiui-theme="dark"]'));
+
+  function hex(name: string): string {
+    const value = light.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1].trim();
+    if (!value) throw new Error(`token do wrapper sem valor: ${name}`);
+    const ref = value.match(/^var\(--([\w-]+)\)$/);
+    return ref ? hex(ref[1]) : value;
+  }
+
+  function luminance(name: string) {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex(name).slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  const ratio = (fg: string, bg: string) => {
+    const [hi, lo] = [luminance(fg), luminance(bg)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  it.each([
+    ['texto das células', 'ui-fg-default', 'ui-bg-page'],
+    ['texto do cabeçalho', 'ui-fg-default', 'ui-bg-panel'],
+  ])('%s: %s sobre %s, ao menos 4,5:1', (_label, fg, bg) => {
+    expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it.each([
+    ['linhas (--ui-border-field) sobre a página', 'ui-border-field', 'ui-bg-page'],
+    ['borda externa e cabeçalho (--ui-border-strong)', 'ui-border-strong', 'ui-bg-page'],
+  ])('%s: ao menos 3:1', (_label, fg, bg) => {
+    expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
   });
 });

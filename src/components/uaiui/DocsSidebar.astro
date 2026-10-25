@@ -50,12 +50,13 @@ const listId = 'uaiui-docs-pages';
     <button
       type="button"
       class="uaiui-docs__search-open uaiui-docs__search-open--full"
+      aria-label="Buscar na documentação"
       aria-haspopup="dialog"
       aria-keyshortcuts="Control+K Meta+K"
       data-search-open
     >
       <DocsIcon name="search" />
-      <span class="uaiui-docs__search-text">Buscar na documentação</span>
+      <span class="uaiui-docs__search-text">Buscar</span>
       <kbd class="uaiui-docs__kbd" hidden>Ctrl K</kbd>
     </button>
     {docsNavGroups.map((group, index) => (
