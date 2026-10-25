@@ -37,8 +37,11 @@ function announce(message: string) {
 }
 
 if (root) {
-  // Densidade: sem atributo é Desktop. O script inline do layout já aplicou a escolha salva.
-  root.querySelectorAll<HTMLInputElement>('input[name="uaiui-density"]').forEach((input) => {
+  // Densidade: sem atributo é Desktop. Cada exemplo tem o seu grupo de rádios (name
+  // próprio); a escolha vale para a página toda, então o script marca a mesma
+  // opção em todos os grupos. O script inline do layout já aplicou a escolha salva.
+  const densityInputs = [...root.querySelectorAll<HTMLInputElement>('input[type="radio"][name$="-densidade"]')];
+  densityInputs.forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return;
       if (input.value === 'desktop') {
@@ -48,6 +51,8 @@ if (root) {
         root.setAttribute('data-uaiui-density', input.value);
         store.set('uaiui-density', input.value);
       }
+      for (const other of densityInputs) other.checked = other.value === input.value;
+      announce(`Densidade da página: ${input.closest('label')?.textContent?.trim() ?? input.value}.`);
     });
   });
 

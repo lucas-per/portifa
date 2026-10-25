@@ -1,15 +1,19 @@
 /*
-  Shell da documentação do UaiUI (/projetos/uaiui/). Porte do site de docs do
-  uaiui-ds v0.2.0 (src/styles/site.css), redesenhado pelo Figma (666:17 e
-  667:178), sem os globais de lá (*, html, body, a, h1–h4, :focus-visible).
+  Chrome da documentação do UaiUI (/projetos/uaiui/): cabeçalho da área, menu
+  lateral, conteúdo (títulos, corpo, callouts, cards), paginação, busca e o
+  controle de densidade de cada exemplo. Porte do site de docs do uaiui-ds
+  v0.2.0 (src/styles/site.css), redesenhado pelo Figma (666:17 e 667:178), sem
+  os globais de lá (*, html, body, a, h1–h4, :focus-visible). O exemplo, o
+  bloco de código e as tabelas (a zona do DS) ficam em uaiui-docs-ds.css.
 
   Regras deste arquivo (guardadas por uaiui-docs.test.ts):
   - todo seletor começa por .uaiui-docs, o mesmo elemento do wrapper .uaiui
     do DS (tokens em uaiui-ds/tokens-wrapper.css);
-  - cores só por tokens do wrapper (--ui-*, --interface-function-*); nada fixo;
+  - cores por tokens do wrapper (--ui-*, --interface-function-*) ou por tokens
+    semânticos do site (--surface-*, --text-*, --border-*, --icon-*, --button-*,
+    --tag-*, --shadow-*); nunca primitivos (--blue-5…) nem cor fixa;
   - tipografia do site (fontes e escala em src/styles/tokens/);
-  - sombras na escala do DS: --shadow-offset-component (2px) e
-    --shadow-offset-layout (4px), não a escala de forma do site (3 e 5px);
+  - sombras: as do DS (--shadow-offset-layout, 4px) ou as do site;
   - espaçamentos em múltiplos de 4 (spacing-scale.test.ts).
 */
 
@@ -78,9 +82,7 @@
 }
 
 .uaiui-docs .uaiui-docs__tools {
-  display: flex;
-  flex-direction: column;
-  gap: var(--scale-x4);
+  display: none;
 }
 
 /* ---------- Busca (botão) ---------- */
@@ -142,50 +144,57 @@
   padding: 0;
 }
 
-/* ---------- Densidade (fieldset com rádios nativos) ---------- */
+/* ---------- Densidade, dentro de cada exemplo (Figma 704:751) ----------
+   Fica no painel Preview, abaixo do palco (some com a aba Código). Fieldset
+   com rádios nativos (o <input> cobre a opção e fica invisível); cada exemplo
+   tem o seu grupo, com name próprio, e o script os mantém sincronizados. As
+   opções são o botão ghost do site (tokens do site): 46px de altura (8 + 24 +
+   8 e a borda de 3px) mais o sublinhado de 2px; o ativo tem texto accent e o
+   sublinhado border-accent-subtle. */
 
 .uaiui-docs .uaiui-docs__density {
   min-width: 0;
   margin: 0;
-  padding: 0;
+  padding: 0 var(--scale-x4) var(--scale-x6);
   border: 0;
 }
 
 .uaiui-docs .uaiui-docs__density-legend {
-  padding: 0 0 var(--scale-x2);
+  padding: 0 0 var(--scale-base);
+  color: var(--text-body-neutral-subtle);
   font-family: var(--font-family-label);
   font-weight: var(--weight-700);
   font-size: var(--scale-x3);
   line-height: var(--line-height-none);
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
 .uaiui-docs .uaiui-docs__segments {
   display: flex;
   flex-wrap: wrap;
-  border: var(--border-width-default) solid var(--ui-border-strong);
 }
 
-/* Cada opção tem 44px de alvo (o Figma desktop desenha 40, com a borda por
-   dentro); o <input> cobre a opção inteira e fica invisível. */
 .uaiui-docs .uaiui-docs__segment {
   position: relative;
-  display: flex;
-  flex: 1 1 0;
-  align-items: center;
-  justify-content: center;
-  /* Larguras iguais (Figma 667:231); com o texto ampliado, a opção que não
-     cabe vai para a linha de baixo em vez de estourar a tela. */
-  min-width: max-content;
-  min-height: 44px;
-  padding: 0 var(--scale-x4);
+  display: block;
+  padding: 0 var(--scale-x3);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.uaiui-docs .uaiui-docs__segment-text {
+  display: block;
+  padding: var(--scale-x2) 0;
+  border: 3px solid transparent;
+  color: var(--text-label-primary);
   font-family: var(--font-family-label);
   font-weight: var(--weight-700);
-  font-size: 0.875rem;
-  line-height: var(--line-height-none);
+  font-size: var(--scale-x4);
+  line-height: var(--scale-x6);
+  letter-spacing: 0;
   text-transform: uppercase;
   white-space: nowrap;
-  cursor: pointer;
 }
 
 .uaiui-docs .uaiui-docs__segment-input {
@@ -198,16 +207,21 @@
   cursor: pointer;
 }
 
+/* Hover só com mouse e só nas opções não marcadas: o texto accent sobre o
+   roxo do hover daria 2,96:1. */
 @media (hover: hover) {
-  .uaiui-docs .uaiui-docs__segment:hover {
-    background-color: var(--interface-function-ghost-action-background);
-    color: var(--interface-function-ghost-action-txtOn);
+  .uaiui-docs .uaiui-docs__segment:not(:has(.uaiui-docs__segment-input:checked)):hover .uaiui-docs__segment-text {
+    border-color: var(--button-border-primary-subtle);
+    background-color: var(--button-bg-primary-outline-hovered);
   }
 }
 
 .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked) {
-  background-color: var(--interface-function-primary-normal-background);
-  color: var(--interface-function-primary-normal-txtOn);
+  border-bottom-color: var(--border-accent-subtle);
+}
+
+.uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked) .uaiui-docs__segment-text {
+  color: var(--text-label-accent);
 }
 
 .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:focus-visible) {
@@ -492,113 +506,6 @@
   background-color: var(--ui-bg-panel);
 }
 
-/* Tabela: rola na horizontal no celular; a região recebe foco pelo teclado. */
-.uaiui-docs .uaiui-docs__table-wrap {
-  overflow-x: auto;
-  border: var(--border-width-default) solid var(--ui-border-strong);
-}
-
-.uaiui-docs .uaiui-docs__table {
-  width: 100%;
-  min-width: 560px;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-  line-height: var(--line-height-comfortable);
-}
-
-.uaiui-docs .uaiui-docs__table th,
-.uaiui-docs .uaiui-docs__table td {
-  padding: var(--scale-x3) var(--scale-x4);
-  border-bottom: var(--border-width-default) solid var(--ui-border-divider);
-  text-align: left;
-  vertical-align: top;
-}
-
-.uaiui-docs .uaiui-docs__table th {
-  background-color: var(--ui-bg-panel);
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-700);
-  font-size: var(--scale-x3);
-  line-height: var(--line-height-regular);
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.uaiui-docs .uaiui-docs__table tr:last-child td {
-  border-bottom: 0;
-}
-
-/* Bloco de código: monocromático (Figma), fundo e texto invertidos do tema. */
-.uaiui-docs .uaiui-docs__code {
-  border: var(--border-width-default) solid var(--ui-fg-default);
-  background-color: var(--ui-fg-default);
-  color: var(--ui-bg-page);
-  box-shadow: var(--uaiui-docs-layout-shadow);
-}
-
-.uaiui-docs .uaiui-docs__code-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--scale-x4);
-  padding-left: var(--scale-x4);
-  border-bottom: var(--border-width-default) solid var(--ui-fg-muted);
-}
-
-.uaiui-docs .uaiui-docs__code-lang {
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-700);
-  font-size: var(--scale-x3);
-  line-height: var(--line-height-none);
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.uaiui-docs .uaiui-docs__copy {
-  margin-left: auto;
-  min-height: 44px;
-  padding: 0 var(--scale-x4);
-  border: 0;
-  background-color: var(--ui-bg-page);
-  color: var(--ui-fg-default);
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-700);
-  font-size: 0.875rem;
-  line-height: var(--line-height-none);
-  letter-spacing: 0;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-@media (hover: hover) {
-  .uaiui-docs .uaiui-docs__copy:hover {
-    background-color: var(--interface-function-ghost-action-background);
-    color: var(--interface-function-ghost-action-txtOn);
-  }
-}
-
-/* O anel de fora sumiria sobre a barra escura: aqui ele fica por dentro do botão claro. */
-.uaiui-docs .uaiui-docs__copy:focus-visible {
-  outline-offset: calc(-2 * var(--focus-ring-width));
-}
-
-.uaiui-docs .uaiui-docs__code pre {
-  margin: 0;
-  padding: var(--scale-x4);
-  overflow: auto;
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-400);
-  font-size: 0.875rem;
-  line-height: 1.6;
-  letter-spacing: 0;
-}
-
-.uaiui-docs .uaiui-docs__code pre:focus-visible {
-  outline-color: var(--ui-bg-page);
-  outline-offset: calc(-1 * var(--focus-ring-width));
-}
-
 /* Cards da Introdução (seção "Componentes", entra com as páginas da PR B). */
 .uaiui-docs .uaiui-docs__cards {
   display: grid;
@@ -655,155 +562,6 @@
   width: 72px;
   height: 40px;
   border: var(--border-width-default) solid var(--ui-border-strong);
-}
-
-/* ---------- Exemplo: Preview / Código (Figma 666:133 e 667:242) ---------- */
-
-.uaiui-docs .uaiui-docs__example {
-  border: var(--border-width-default) solid var(--ui-border-strong);
-  background-color: var(--ui-bg-page);
-  box-shadow: var(--uaiui-docs-layout-shadow);
-  /* Os componentes do DS trazem a própria tipografia: nada do corpo da página
-     (espaçamento entre letras, caixa) pode vazar para dentro do preview. */
-  letter-spacing: 0;
-  line-height: normal;
-  text-transform: none;
-  overflow-wrap: normal;
-}
-
-.uaiui-docs .uaiui-docs__example-bar {
-  display: flex;
-  background-color: var(--ui-bg-panel);
-  border-bottom: var(--border-width-default) solid var(--ui-border-strong);
-}
-
-.uaiui-docs .uaiui-docs__tabs {
-  display: flex;
-  flex-wrap: wrap;
-  min-width: 0;
-}
-
-/* Aba de 44px (o site de docs do DS tinha 36), indicador de 4px na cor da marca. */
-.uaiui-docs .uaiui-docs__tab {
-  position: relative;
-  min-height: 44px;
-  padding: 0 var(--scale-x4);
-  border: 0;
-  border-right: var(--border-width-default) solid var(--ui-border-strong);
-  background-color: transparent;
-  color: var(--ui-fg-default);
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-700);
-  font-size: 0.875rem;
-  line-height: var(--line-height-none);
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-@media (hover: hover) {
-  .uaiui-docs .uaiui-docs__tab:hover {
-    background-color: var(--interface-function-ghost-action-background);
-    color: var(--interface-function-ghost-action-txtOn);
-  }
-}
-
-.uaiui-docs .uaiui-docs__tab[aria-selected='true'] {
-  background-color: var(--ui-bg-page);
-  color: var(--ui-fg-default);
-}
-
-.uaiui-docs .uaiui-docs__tab[aria-selected='true']::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: var(--scale-base);
-  background-color: var(--ui-brand-band);
-}
-
-.uaiui-docs .uaiui-docs__tab:focus-visible {
-  outline-offset: calc(-2 * var(--focus-ring-width));
-}
-
-.uaiui-docs .uaiui-docs__example [role='tabpanel'][hidden] {
-  display: none;
-}
-
-/* Palco: o componente na densidade escolhida. Sem overflow próprio (rolagem
-   interna precisaria de foco pelo teclado): o que não cabe quebra linha. */
-.uaiui-docs .uaiui-docs__stage {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--scale-x4);
-  padding: var(--scale-x6) var(--scale-x4);
-  background-color: var(--ui-bg-page);
-}
-
-.uaiui-docs .uaiui-docs__stage--col {
-  flex-direction: column;
-  /* Sem quebra: num contêiner flex que quebra linha, a largura da coluna vem do
-     item mais largo (o toast de 400px) e ele passaria da tela. */
-  flex-wrap: nowrap;
-  align-items: stretch;
-}
-
-/* Botão sozinho numa coluna (o "Mostrar aviso" do toast) não estica. */
-.uaiui-docs .uaiui-docs__stage--col > .uai-button {
-  align-self: flex-start;
-}
-
-/* Região viva vazia (o toast ainda não entrou): fica na árvore de acessibilidade,
-   mas sem a folga do gap, que só aparece quando há aviso. */
-.uaiui-docs .uaiui-docs__stage--col > [aria-live]:empty {
-  margin-top: calc(-1 * var(--scale-x4));
-}
-
-/* O código dentro do exemplo usa a moldura do exemplo. */
-.uaiui-docs .uaiui-docs__code--bare {
-  border: 0;
-  box-shadow: none;
-}
-
-.uaiui-docs .uaiui-docs__code--bare pre {
-  max-height: 520px;
-}
-
-/* Tabela de props: larguras do Figma (666:166) e nota do celular. */
-.uaiui-docs .uaiui-docs__table--props {
-  min-width: 640px;
-  overflow-wrap: normal;
-}
-
-/* As larguras do Figma incluem o padding das células. */
-.uaiui-docs .uaiui-docs__table--props th {
-  box-sizing: border-box;
-}
-
-.uaiui-docs .uaiui-docs__table--props th:nth-child(1) {
-  width: 128px;
-}
-
-.uaiui-docs .uaiui-docs__table--props th:nth-child(2) {
-  width: 208px;
-}
-
-.uaiui-docs .uaiui-docs__table--props th:nth-child(3) {
-  width: 100px;
-}
-
-.uaiui-docs .uaiui-docs__table code {
-  font-family: var(--font-family-label);
-  font-weight: var(--weight-400);
-  font-size: var(--scale-x3);
-  letter-spacing: 0;
-}
-
-.uaiui-docs .uaiui-docs__table-note {
-  color: var(--ui-fg-muted);
-  font-size: 0.875rem;
-  line-height: var(--line-height-comfortable);
 }
 
 /* ---------- Pager ---------- */
@@ -995,7 +753,7 @@
   }
 
   .uaiui-docs .uaiui-docs__tools {
-    flex-direction: row;
+    display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--scale-x6);
@@ -1010,14 +768,8 @@
     display: none;
   }
 
-  /* Legenda à esquerda dos segmentos, como no Figma (666:81). */
-  .uaiui-docs .uaiui-docs__density-legend {
-    float: left;
-    display: flex;
-    align-items: center;
-    height: 48px;
-    margin-right: var(--scale-x3);
-    padding: 0;
+  .uaiui-docs .uaiui-docs__density {
+    padding: 0 var(--scale-x6) var(--scale-x8);
   }
 
   .uaiui-docs .uaiui-docs__shell {
@@ -1057,14 +809,6 @@
     font-size: var(--scale-x7);
   }
 
-  .uaiui-docs .uaiui-docs__code-bar {
-    padding-left: var(--scale-x6);
-  }
-
-  .uaiui-docs .uaiui-docs__code pre {
-    padding: var(--scale-x5) var(--scale-x6);
-  }
-
   .uaiui-docs .uaiui-docs__pager {
     flex-direction: row;
     justify-content: space-between;
@@ -1076,16 +820,6 @@
 
   .uaiui-docs .uaiui-docs__pager-title {
     font-size: var(--scale-x5);
-  }
-}
-
-@media (min-width: 768px) {
-  .uaiui-docs .uaiui-docs__stage {
-    padding: var(--scale-x8) var(--scale-x6);
-  }
-
-  .uaiui-docs .uaiui-docs__table-note {
-    display: none;
   }
 }
 
@@ -1186,7 +920,6 @@
 }
 
 @media (forced-colors: active) {
-  .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked),
   .uaiui-docs .uaiui-docs__nav-link[aria-current='page'],
   .uaiui-docs .uaiui-docs__search-results [aria-selected='true'] a {
     forced-color-adjust: none;
@@ -1198,9 +931,26 @@
     border-left-color: Highlight;
   }
 
-  .uaiui-docs .uaiui-docs__tab[aria-selected='true']::after {
+  /* Densidade: as bordas transparentes viram CanvasText nesse modo, então a
+     da opção não marcada volta a Canvas; a marcada fica com Highlight no
+     texto e no sublinhado. */
+  .uaiui-docs .uaiui-docs__segment:not(:has(.uaiui-docs__segment-input:checked)) {
+    border-bottom-color: Canvas;
+  }
+
+  .uaiui-docs .uaiui-docs__segment-text {
+    border-color: Canvas;
+  }
+
+  .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked) {
     forced-color-adjust: none;
-    background-color: Highlight;
+    border-bottom-color: Highlight;
+  }
+
+  .uaiui-docs .uaiui-docs__segment:has(.uaiui-docs__segment-input:checked) .uaiui-docs__segment-text {
+    forced-color-adjust: none;
+    border-color: Canvas;
+    color: Highlight;
   }
 
   /* A borda transparente vira CanvasText nesse modo; a do item não atual some de novo. */
@@ -1213,9 +963,9 @@
     .uaiui-docs .uaiui-docs__nav-link:not([aria-current]):hover {
       border-color: var(--ui-border-strong);
     }
-  }
 
-  .uaiui-docs .uaiui-docs__code-bar {
-    border-bottom-color: CanvasText;
+    .uaiui-docs .uaiui-docs__segment:not(:has(.uaiui-docs__segment-input:checked)):hover .uaiui-docs__segment-text {
+      border-color: ButtonText;
+    }
   }
 }

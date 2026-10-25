@@ -59,6 +59,7 @@ const toolRuntimeVars: Record<string, string[]> = {
  */
 const uaiuiPaths = [
   'styles/tools/uaiui-docs.css',
+  'styles/tools/uaiui-docs-ds.css',
   'components/uaiui/',
   'layouts/UaiuiDocsLayout.astro',
   'pages/projetos/uaiui/',

@@ -6,16 +6,17 @@
  * componente na página dele): as outras páginas do site não o carregam.
  *
  * Wrapper: .uaiui (tokens do DS, uaiui-ds/tokens-wrapper.css) e .uaiui-docs
- * (shell, src/styles/tools/uaiui-docs.css), no mesmo elemento. Sem
+ * (shell: uaiui-docs.css, o chrome, e uaiui-docs-ds.css, a zona do DS: exemplo,
+ * código e tabelas), no mesmo elemento. Só este layout importa os dois. Sem
  * data-uaiui-theme: a área segue o tema claro do site.
  */
 import 'uaiui-ds/tokens-wrapper.css';
 import '../styles/tools/uaiui-code-font.css';
 import '../styles/tools/uaiui-docs.css';
+import '../styles/tools/uaiui-docs-ds.css';
 import BaseLayout from './BaseLayout.astro';
 import DocsSidebar from '../components/uaiui/DocsSidebar.astro';
 import DocsSearch from '../components/uaiui/DocsSearch.astro';
-import DocsDensity from '../components/uaiui/DocsDensity.astro';
 import DocsIcon from '../components/uaiui/DocsIcon.astro';
 import { getDocsPage } from '../config/uaiui-nav';
 
@@ -60,7 +61,6 @@ if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.ur
           <span class="uaiui-docs__search-text">Buscar na documentação</span>
           <kbd class="uaiui-docs__kbd" aria-hidden="true">Ctrl K</kbd>
         </button>
-        <DocsDensity />
       </div>
     </div>
 
@@ -107,6 +107,17 @@ if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.ur
 
     <p id="uaiui-docs-live" class="uaiui-docs__sr-only" role="status"></p>
     <DocsSearch />
+    <script is:inline>
+      // Marca, em todos os controles de densidade dos exemplos, a opção salva (a
+      // que o script do início do wrapper já aplicou): antes da pintura, sem piscar.
+      (function () {
+        var saved = document.currentScript.parentElement.getAttribute('data-uaiui-density');
+        if (!saved) return;
+        document.currentScript.parentElement.querySelectorAll('input[name$="-densidade"]').forEach(function (input) {
+          input.checked = input.value === saved;
+        });
+      })();
+    </script>
   </div>
 </BaseLayout>
 

@@ -1,11 +1,22 @@
 ---
 /**
- * Controle de densidade (Figma 666:81 / 667:229). Muda data-uaiui-density no
- * wrapper .uaiui: sem atributo é Desktop (o padrão), "mobile" e "compact" são
- * os outros modos dos tokens do DS. A escolha fica em localStorage
- * (uaiui-density); o script inline logo depois dos rádios marca a opção salva
- * antes da pintura, e o do wrapper (UaiuiDocsLayout) já aplicou o atributo.
+ * Controle de densidade de um exemplo (Figma 704:751). Muda data-uaiui-density
+ * no wrapper .uaiui: sem atributo é Desktop (o padrão), "mobile" e "compact"
+ * são os outros modos dos tokens do DS. Cada exemplo tem o seu grupo de rádios
+ * (name próprio: rádios de exemplos diferentes com o mesmo name virariam um
+ * grupo só e quebrariam o Tab e as setas); a escolha vale para a página toda,
+ * os grupos ficam sincronizados por script (docs.ts) e ela fica em
+ * localStorage (uaiui-density). O script inline no fim do UaiuiDocsLayout
+ * marca a opção salva antes da pintura, e o do início do wrapper já aplicou o
+ * atributo.
  */
+interface Props {
+  /** name dos rádios: único por exemplo (vem do id estável dele). */
+  name: string;
+}
+
+const { name } = Astro.props;
+
 const densityOptions = [
   { value: 'desktop', label: 'Desktop' },
   { value: 'mobile', label: 'Mobile' },
@@ -21,20 +32,12 @@ const densityOptions = [
         <input
           class="uaiui-docs__segment-input"
           type="radio"
-          name="uaiui-density"
+          name={name}
           value={option.value}
           checked={option.value === 'desktop'}
         />
-        {option.label}
+        <span class="uaiui-docs__segment-text">{option.label}</span>
       </label>
     ))}
   </div>
-  <script is:inline>
-    (function () {
-      var saved = document.currentScript.closest('.uaiui').getAttribute('data-uaiui-density');
-      if (!saved) return;
-      var input = document.currentScript.parentElement.querySelector('input[value="' + saved + '"]');
-      if (input) input.checked = true;
-    })();
-  </script>
 </fieldset>

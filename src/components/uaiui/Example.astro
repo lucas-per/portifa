@@ -4,9 +4,11 @@
  * 666:133). O mesmo HTML vai ao preview e à aba Código. Quando o preview
  * precisa de mais que o HTML (o botão "Mostrar aviso" do toast), ele vem no
  * slot "preview" e `code` é o que a pessoa copia. Os ids são estáveis
- * (utils/stable-id.ts), não aleatórios.
+ * (utils/stable-id.ts), não aleatórios. A densidade fica dentro do painel
+ * Preview, abaixo do palco (Figma 704:751); o name dos rádios sai do id.
  */
 import CodeBlock from './CodeBlock.astro';
+import DocsDensity from './DocsDensity.astro';
 import { stableId } from '../../utils/stable-id';
 
 interface Props {
@@ -37,6 +39,7 @@ const hasPreviewSlot = Astro.slots.has('preview');
     ) : (
       <div class:list={['uaiui-docs__stage', { 'uaiui-docs__stage--col': column }]} set:html={code} />
     )}
+    <DocsDensity name={`${id}-densidade`} />
   </div>
   <div role="tabpanel" id={`${id}-cp`} aria-labelledby={`${id}-c`} hidden>
     <CodeBlock code={code} bare />
