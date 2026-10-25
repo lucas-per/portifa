@@ -34,7 +34,10 @@
   --border-neutral-subtle: var(--grey-3);
   --border-neutral-medium: var(--grey-5);
   --border-neutral-strong: var(--grey-8);
-  --border-accent-subtle: var(--blue-3);
+  /* border-accent-subtle e tag-border-subtle (mais abaixo) estão escurecidos
+     (blue-5 e red-6) para as bordas chegarem a 3:1; o nome "subtle" ficou.
+     Ver design-notes.md (PR M). O Figma ainda tem blue/3 e red/3. */
+  --border-accent-subtle: var(--blue-5);
   --border-accent-strong: var(--blue-4);
   --border-primary-subtle: var(--purple-3);
   --border-primary-strong: var(--purple-6);
@@ -90,7 +93,7 @@
   /* Tag */
   --tag-bg-primary: var(--red-6);
   --tag-bg-secondary: var(--red-2);
-  --tag-border-subtle: var(--red-3);
+  --tag-border-subtle: var(--red-6);
   --tag-border-strong: var(--red-5);
 
   /* Sombras duras (neo-brutalismo — sem blur, deslocadas) */
@@ -99,7 +102,7 @@
   --shadow-comp-accent: 3px 3px 0 0 var(--blue-3);
   --shadow-comp-primary: 3px 3px 0 0 var(--purple-3);
   --shadow-layout-accent: 5px 5px 0 0 var(--blue-4);
-  --shadow-layout-img: 5px 5px 0 0 var(--red-3);
+  --shadow-layout-img: 5px 5px 0 0 var(--red-4);
 
   /* Sombra dos botões no hover: mesmo offset de --shadow-comp-* (3px) somado
      ao deslocamento do hover (2px, ver Button.astro) = 5px. Sem essa soma o

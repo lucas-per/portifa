@@ -48,7 +48,7 @@ describe('semantics.css', () => {
     expectDeclares('border-neutral-subtle', 'var(--grey-3)');
     expectDeclares('border-neutral-medium', 'var(--grey-5)');
     expectDeclares('border-neutral-strong', 'var(--grey-8)');
-    expectDeclares('border-accent-subtle', 'var(--blue-3)');
+    expectDeclares('border-accent-subtle', 'var(--blue-5)');
     expectDeclares('border-accent-strong', 'var(--blue-4)');
     expectDeclares('border-primary-subtle', 'var(--purple-3)');
     expectDeclares('border-primary-strong', 'var(--purple-6)');
@@ -102,7 +102,7 @@ describe('semantics.css', () => {
     expectDeclares('button-border-neutral-invisible', 'var(--grey-1-transparent)');
     expectDeclares('tag-bg-primary', 'var(--red-6)');
     expectDeclares('tag-bg-secondary', 'var(--red-2)');
-    expectDeclares('tag-border-subtle', 'var(--red-3)');
+    expectDeclares('tag-border-subtle', 'var(--red-6)');
     expectDeclares('tag-border-strong', 'var(--red-5)');
   });
 
@@ -112,7 +112,7 @@ describe('semantics.css', () => {
     expect(css).toMatch(/--shadow-comp-accent:\s*3px 3px 0 0 var\(--blue-3\)\s*;/);
     expect(css).toMatch(/--shadow-comp-primary:\s*3px 3px 0 0 var\(--purple-3\)\s*;/);
     expect(css).toMatch(/--shadow-layout-accent:\s*5px 5px 0 0 var\(--blue-4\)\s*;/);
-    expect(css).toMatch(/--shadow-layout-img:\s*5px 5px 0 0 var\(--red-3\)\s*;/);
+    expect(css).toMatch(/--shadow-layout-img:\s*5px 5px 0 0 var\(--red-4\)\s*;/);
   });
 
   it('declara a sombra de hover dos botões (offset base + deslocamento do hover)', () => {

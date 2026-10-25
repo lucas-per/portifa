@@ -123,14 +123,15 @@ const ratio = image.width / image.height;
      borda de 2px somaria 4px à largura da imagem. */
   .case-context__media :global(img) {
     box-sizing: border-box;
-    border: 2px solid var(--border-neutral-strong);
+    border: 2px solid var(--tag-border-subtle);
     box-shadow: var(--shadow-layout-img);
   }
 
-  /* Sobre a imagem, sem ocupar altura (Figma: top 4, left 8). */
+  /* Sobre a imagem, sem ocupar altura (Figma desktop: top 8, left 8; o
+     Figma mobile ainda tem top 4, mas o CSS é um só para os dois). */
   .case-context__tag {
     position: absolute;
-    top: var(--scale-base);
+    top: var(--scale-x2);
     left: var(--scale-x2);
     display: flex;
   }
