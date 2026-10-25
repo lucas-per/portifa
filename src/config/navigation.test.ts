@@ -5,8 +5,8 @@ describe('macroSections', () => {
   it('lista as 4 macro-seções previstas no PRD (seção 2), na ordem da arquitetura de informação', () => {
     expect(macroSections.map((section) => section.key)).toEqual([
       'portfolio',
-      'color-decomposer',
       'uaiui',
+      'color-decomposer',
       'artigos',
       'projetos',
       'fotos',
@@ -26,27 +26,44 @@ describe('macroSections', () => {
 describe('getEnabledSections', () => {
   it('retorna só as seções habilitadas', () => {
     const enabled = getEnabledSections();
-    expect(enabled.map((section) => section.key)).toEqual(['portfolio', 'color-decomposer', 'uaiui']);
+    expect(enabled.map((section) => section.key)).toEqual(['portfolio', 'uaiui', 'color-decomposer']);
     expect(enabled[0].path).toBe('/');
   });
 });
 
 describe('getHeaderSections', () => {
-  it('traz a Paletaria e o UaiUI, nessa ordem, com rótulo completo, rótulo curto e caminho', () => {
+  it('traz o UaiUI DS e a Paletaria, nessa ordem, com rótulo completo, rótulo curto e caminho', () => {
     expect(getHeaderSections()).toEqual([
+      expect.objectContaining({
+        key: 'uaiui',
+        label: 'UaiUI DS',
+        shortLabel: 'UaiUI DS',
+        path: '/projetos/uaiui/',
+      }),
       expect.objectContaining({
         key: 'color-decomposer',
         label: 'Paletaria',
         shortLabel: 'Paletaria',
         path: '/projetos/paletaria/',
       }),
-      expect.objectContaining({
-        key: 'uaiui',
-        label: 'UaiUI',
-        shortLabel: 'UaiUI',
-        path: '/projetos/uaiui/',
-      }),
     ]);
+  });
+
+  it('guarda de ordem: UaiUI DS antes da Paletaria (Figma 98:398, 695:953 e 676:514)', () => {
+    expect(getHeaderSections().map((section) => section.key)).toEqual(['uaiui', 'color-decomposer']);
+  });
+
+  it('só o UaiUI DS tem nome acessível próprio; a Paletaria segue sem aria-label', () => {
+    const [uaiui, decomposer] = getHeaderSections();
+    expect(uaiui.accessibleName).toBe('UaiUI DS, design system');
+    expect(decomposer.accessibleName).toBeUndefined();
+  });
+
+  it('o rótulo não vem em caixa alta no texto: a caixa alta é do CSS', () => {
+    for (const section of getHeaderSections()) {
+      expect(section.label, section.key).not.toBe(section.label.toUpperCase());
+      if (section.shortLabel) expect(section.shortLabel, section.key).not.toBe(section.shortLabel.toUpperCase());
+    }
   });
 
   it('não repete a home, que já é o logo', () => {

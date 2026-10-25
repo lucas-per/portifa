@@ -36,7 +36,8 @@
   --border-neutral-strong: var(--grey-8);
   /* border-accent-subtle e tag-border-subtle (mais abaixo) estão escurecidos
      (blue-5 e red-6) para as bordas chegarem a 3:1; o nome "subtle" ficou.
-     Ver design-notes.md (PR M). O Figma ainda tem blue/3 e red/3. */
+     Ver design-notes.md (PR M). Figma e código alinhados em 2026-10-25: as
+     variáveis do Figma apontam para blue/5 e red/6. */
   --border-accent-subtle: var(--blue-5);
   --border-accent-strong: var(--blue-4);
   --border-primary-subtle: var(--purple-3);
