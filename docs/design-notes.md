@@ -584,7 +584,7 @@ Figma, página "UaiUI": `666:17` (desktop, página de Button, usada como referê
 
 **Cabeçalho desktop:**
 - Link "UaiUI" ao lado de Paletaria (`macroSections`, `inHeader`). **Decisão do Lucas:** não há campo novo em `navigation.ts`; `inHeader` passa a significar "barra do desktop e menu do mobile", e a barra do mobile não tem mais links de seção. ~~Não há campo novo.~~ **Atualizado na PR N (site 1.3.13):** o rótulo é "UaiUI DS", vem antes da Paletaria e ganhou o campo `accessibleName` (seção "Cabeçalho: UaiUI DS primeiro", no fim deste arquivo).
-- Logo completo, padding de 88px e 56px entre links e botões a partir de **1184px** (antes 1160): com Paletaria e UaiUI o cabeçalho precisa de 1140px, mais 15px da barra de rolagem. Abaixo disso, logo reduzido, padding de 20px e **32px** entre links e botões (decisão do Lucas; com 56px sobravam 3px em 768). Folga medida (largura útil menos a necessária, com a barra de rolagem de 15px): 27px em 768, 283px em 1024, 442px em 1183 e 29px em 1184.
+- Logo completo, padding de 88px e 56px entre links e botões a partir de **1184px** (antes 1160): com Paletaria e o rótulo antigo "UaiUI" o cabeçalho precisava de 1140px, mais 15px da barra de rolagem (com "UaiUI DS" são 1176px: ver a seção da PR N, no fim). Abaixo disso, logo reduzido, padding de 20px e **32px** entre links e botões (decisão do Lucas; com 56px sobravam 3px em 768). Folga medida com o rótulo antigo (largura útil menos a necessária, com a barra de rolagem de 15px): 27px em 768, 283px em 1024, 442px em 1183 e 29px em 1184; os valores atuais estão na tabela da PR N.
 - Os links do desktop têm 24px de altura (Figma 605:861); a área de clique cresce 10px para cima e para baixo (`::before`), sem mudar o layout, e chega a 44px.
 
 **Cabeçalho mobile e menu (Figma 254:1007, 676:514 e 676:3863):**
@@ -761,3 +761,26 @@ Figma `98:398` (header-desktop, link-uaiui `664:363`), `695:953` (menu mobile, l
 - **Nome acessível (decisão do Lucas):** "UaiUI DS, design system", para expandir a sigla. Campo novo e opcional `accessibleName` em `MacroSection` (decisão de configuração do Lucas; só ele existe de novo), lido por `getHeaderLinkText` e válido no desktop e no menu mobile. A Paletaria segue sem `aria-label`. O nome começa pelo texto visível (WCAG 2.5.3, rótulo no nome), o que um teste confere para toda seção do cabeçalho, sem diferença de caixa. O leitor de tela ainda lê "UaiUI DS" antes de "design system"; não foi testado com leitor de tela.
 - **Ordem do Tab com o menu aberto (medida):** logo, X, Área de pagamentos, Redesign de produto, UaiUI DS, Paletaria, GitHub, LinkedIn e e-mail. O e-mail da barra fica fora do Tab com o menu aberto.
 - **Versão:** 1.3.12 para 1.3.13.
+
+**Folga do cabeçalho desktop com "UaiUI DS" e o gap de 16px (PR N, decisão do Lucas: opção A).** "UAIUI DS" tem 96px (antes "UAIUI", 60px): +36px. O cabeçalho passa a precisar de **762px** no tablet (768 a 1183px) e de **1176px** a partir de 1184px. Medido (Playwright, Chromium; largura máxima de `.site-header__inner` contra a largura útil da página; barra de 15px é a do Chromium no Linux):
+
+| Largura | Rótulo antigo (com / sem barra) | UaiUI DS, gap 32px (com / sem) | **UaiUI DS, gap 16px (com / sem)** |
+|---|---|---|---|
+| 768 | 27 / 42 | −9 / 6 | **7 / 22** |
+| 820 | 79 / 94 | 43 / 58 | **59 / 74** |
+| 1024 | 283 / 298 | 247 / 262 | **263 / 278** |
+| 1183 | 442 / 457 | 406 / 421 | **422 / 437** |
+| 1184 | 29 / 44 | −7 / 8 | **9 / 24** |
+| 1191 | 36 / 51 | 0 / 15 | **16 / 31** |
+| 1216 | 61 / 76 | 25 / 40 | **41 / 56** |
+| 1280 | 125 / 140 | 89 / 104 | **105 / 120** |
+| 1440 | 285 / 300 | 249 / 264 | **265 / 280** |
+
+Com barra de 17px (Windows), tire 2px de cada valor "com barra": 5px em 768, 7px em 1184 e 14px em 1191.
+
+- **Falha sem a correção:** não havia rolagem horizontal. O "Sobre mim" encolhia e quebrava em duas linhas (70px de altura contra 54px) e o cabeçalho crescia 16px, em 768px (−9px) e em 1184px (−7px), com barra.
+- **Decisão:** o `gap` de `.site-header__inner` passou de 32px para 16px (`var(--scale-x4)`), uma só linha, nas duas faixas. Não há B (subir o ponto de 1184px, que também define o padding de 88px da UaiUI docs), C (40px entre links e botões), D (padding de 80px) nem T2 a T4 (gaps do tablet).
+- **O 32px era só o mínimo entre o logo e os links:** o `space-between` reparte o resto, então em 1440px a distância é a mesma de antes (os botões não se mexem: "Sobre mim" e "Contato" ficam nas mesmas posições antes e depois, em 768, 1184, 1191 e 1440px). A distância visual só cai nas pontas de cada faixa: 23px com barra de 15px e 21px com 17px em 768px (eram 32px mínimos), e 25px em 1184px; ela volta aos 32px ou mais a partir de uns 777px e 1191px.
+- **Medido na build:** "Sobre mim" em uma linha (54px de altura) em 768 (barras de 15px, de 17px e sem barra), 777, 1184, 1191 e 1440px; o cabeçalho mantém 127px de altura a partir de 1184px (123px no tablet, como antes) e `scrollWidth` igual ao `clientWidth` em todas as larguras. `aria-current` (página e "true" nas páginas internas da UaiUI) e o sublinhado seguem como estavam.
+- **Fora do escopo:** o cabeçalho desktop **já transbordava a 200% de texto** (raiz a 200%, em todas as larguras: folga de −194px a −767px com o rótulo antigo), e continua transbordando (−219px a −807px; o novo rótulo soma 72px e o gap de 16px devolve 32px). Não foi tratado nesta PR.
+- **Menu mobile (320 e 360px, 100% e 200%):** "UAIUI DS" tem 76,8x16px (153,6x32px a 200%), os links têm 44px (88px a 200%), o painel não ganhou rolagem horizontal (`scrollWidth` igual ao `clientWidth`) e o documento fica igual ao da `main`.

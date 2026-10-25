@@ -70,7 +70,13 @@ const email = getContact('email');
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--scale-x8);
+    /* Mínimo entre o logo e as ações; o space-between reparte o resto, então
+       a distância só cai abaixo do que 32px dariam nas pontas de cada faixa
+       (768 a ~777px e 1184 a ~1191px, com barra de rolagem de 15px). Com
+       UaiUI DS e Paletaria o cabeçalho precisa de 762px (tablet) e 1176px
+       (a partir de 1184px); com 32px aqui faltavam 9px e 7px, e o "Sobre mim"
+       quebrava em duas linhas. */
+    gap: var(--scale-x4);
     box-sizing: border-box;
     max-width: 1440px;
     margin: 0 auto;
@@ -90,7 +96,7 @@ const email = getContact('email');
 
   /* Figma row-btns (605:1165): 56px entre os links e os botões. Abaixo do
      ponto de quebra do logo completo (tablet, sem frame no Figma), 32px: com
-     Paletaria e UaiUI, 56px deixariam só 3px de folga em 768px. */
+     UaiUI DS e Paletaria, 56px não caberiam em 768px. */
   .site-header__actions {
     display: flex;
     gap: var(--scale-x8);
@@ -111,8 +117,8 @@ const email = getContact('email');
   }
 
   /* Logo completo, padding de 88px e 56px entre links e botões (Figma
-     98:398) a partir de 1184px: com Paletaria e UaiUI o cabeçalho precisa
-     de 1140px, mais 15px da barra de rolagem, mais folga. Abaixo disso, logo
+     98:398) a partir de 1184px: com UaiUI DS e Paletaria o cabeçalho precisa
+     de 1176px, mais 15px da barra de rolagem, mais folga. Abaixo disso, logo
      reduzido (o do mobile), padding de 20px e 32px entre links e botões. */
   @media (min-width: 1184px) {
     .site-header__inner {
