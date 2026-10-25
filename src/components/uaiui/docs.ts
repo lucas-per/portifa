@@ -185,36 +185,6 @@ if (root) {
     }, 1600);
   });
 
-  // "Nesta página": montado a partir dos h2 com id do corpo; a seção visível fica com aria-current.
-  const toc = root.querySelector<HTMLElement>('[data-toc]');
-  const heads = [...root.querySelectorAll<HTMLElement>('.uaiui-docs__body > h2[id]')];
-  if (toc && heads.length) {
-    const list = toc.querySelector('ul')!;
-    for (const head of heads) {
-      const item = document.createElement('li');
-      const link = document.createElement('a');
-      link.href = `#${head.id}`;
-      link.textContent = head.textContent;
-      item.append(link);
-      list.append(item);
-    }
-    toc.hidden = false;
-    const links = [...list.querySelectorAll('a')];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          for (const link of links) {
-            if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'true');
-            else link.removeAttribute('aria-current');
-          }
-        }
-      },
-      { rootMargin: '0px 0px -70% 0px' },
-    );
-    heads.forEach((head) => observer.observe(head));
-  }
-
   // Busca (Ctrl/⌘ + K)
   const dialog = root.querySelector<HTMLDialogElement>('[data-search]');
   if (dialog) {

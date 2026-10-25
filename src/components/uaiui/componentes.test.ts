@@ -50,11 +50,10 @@ describe('Accordion: títulos do preview', () => {
     expect(accordion).toMatch(/const single = item\('h3'/);
   });
 
-  it('os títulos do preview não têm id: "Nesta página" só monta com os h2 com id do corpo', () => {
+  it('os títulos do preview não têm id: os ids (âncoras #id) são só dos h2 do corpo da página', () => {
     const template = accordion.match(/const item = [\s\S]*?<\/div>`;/)?.[0] ?? '';
     expect(template).toMatch(/<\$\{level\}>/);
     expect(template).not.toMatch(/<\$\{level\}[^>]*id=/);
-    expect(script).toContain(`'.uaiui-docs__body > h2[id]'`);
   });
 
   it('botão com aria-expanded e aria-controls, painel com hidden quando fechado', () => {

@@ -34,11 +34,10 @@ describe('densidade dentro de cada exemplo (Figma 704:751)', () => {
     expect(density).toMatch(/type="radio"/);
   });
 
-  it('o cabeçalho da área não tem mais a densidade; a busca fica', () => {
+  it('o cabeçalho da área não tem a densidade nem a busca (a busca vive no menu)', () => {
     expect(layout).not.toMatch(/DocsDensity/);
-    const tools = layout.match(/<div class="uaiui-docs__tools">[\s\S]*?\n {6}<\/div>/)?.[0] ?? '';
-    expect(tools).toMatch(/data-search-open/);
-    expect(tools).not.toMatch(/density|Densidade/i);
+    expect(layout).not.toMatch(/data-search-open/);
+    expect(layout).not.toMatch(/uaiui-docs__tools/);
   });
 
   it('as páginas não trazem controle de densidade próprio: só o Example o tem, então Introdução e Tokens ficam sem', () => {

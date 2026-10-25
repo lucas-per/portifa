@@ -22,7 +22,11 @@ const SHAPE_CLASSES = new Set([
   'case-accordion__divider',
   'case-discovery__timeline-line',
   'case-layout__divider',
+  'uaiui-docs__top-divider',
 ]);
+
+/** Pseudo-elementos de 3px (divisor curto entre seções e linha vertical do menu da UaiUI): só esses seletores, não a classe toda. */
+const SHAPE_SELECTORS = new Set(['.uaiui-docs .uaiui-docs__body > h2::before', '.uaiui-docs .uaiui-docs__nav::after']);
 
 /**
  * Violações que já existiam quando a regra entrou. A lista só pode encolher:
@@ -121,7 +125,7 @@ function violations() {
     const relative = file.slice(srcDir.length).replace(/\\/g, '/');
     for (const { selector, prop, value } of declarations(cssOf(file))) {
       if (!DIMENSION.test(prop)) continue;
-      if (selector.split(',').every((s) => classesOf(s).some((c) => SHAPE_CLASSES.has(c)))) continue;
+      if (selector.split(',').every((s) => SHAPE_SELECTORS.has(s.trim()) || classesOf(s).some((c) => SHAPE_CLASSES.has(c)))) continue;
       const bad = value
         .replace(/!important/, '')
         .split(/\s+/)
