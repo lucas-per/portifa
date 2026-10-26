@@ -77,6 +77,11 @@ const email = getContact('email');
        (a partir de 1184px); com 32px aqui faltavam 9px e 7px, e o "Sobre mim"
        quebrava em duas linhas. */
     gap: var(--scale-x4);
+    /* Texto ampliado (200%): os gaps, o padding e os botões crescem em rem e
+       o logo não, então logo e ações não cabem na mesma linha. Só quebra
+       quando falta espaço: a 100% a conta de cima (762px e 1176px) fecha e
+       nada muda de lugar. Linha 1 o logo, linha 2 as ações. */
+    flex-wrap: wrap;
     box-sizing: border-box;
     max-width: 1440px;
     margin: 0 auto;
@@ -99,21 +104,35 @@ const email = getContact('email');
      UaiUI DS e Paletaria, 56px não caberiam em 768px. */
   .site-header__actions {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--scale-x8);
+    /* Com texto ampliado e quebra de linha, 16px entre as linhas (os 32px de
+       cima são só entre colunas). */
+    row-gap: var(--scale-x4);
     align-items: center;
   }
 
   .site-header__pages {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--scale-x8);
+    row-gap: var(--scale-x4);
     align-items: center;
   }
 
   /* Figma row-cta (605:1042): 32px entre "Sobre mim" e "Contato". */
   .site-header__cta {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--scale-x8);
+    row-gap: var(--scale-x4);
     align-items: center;
+  }
+
+  /* O botão não quebra o texto: sem isso, a 200% o flex o espreme e "Sobre
+     mim" vira 3 linhas. Quem quebra é a linha (flex-wrap acima). */
+  .site-header__cta :global(.button) {
+    white-space: nowrap;
   }
 
   /* Logo completo, padding de 88px e 56px entre links e botões (Figma

@@ -20,9 +20,13 @@
 .uaiui-docs {
   /* Gutter (cabeçalho da área, menu e lado direito do conteúdo) e recuo do conteúdo
      à esquerda, que é também o quanto o divisor das seções sai para a esquerda:
-     mudam por largura (tablet e desktop abaixo). */
-  --uaiui-docs-gutter: var(--scale-x5);
-  --uaiui-docs-inset: var(--scale-x5);
+     mudam por largura (tablet e desktop abaixo). O min() com vw só atua com
+     texto ampliado em tela estreita: 20px é 6,25vw a 320px, então a 100% o
+     valor é sempre o do token; a 200% (40px) o respiro cai para 6,25vw e a
+     coluna do conteúdo não perde 80px em 320px. Nessa situação o valor
+     calculado, em larguras intermediárias, pode não ser múltiplo de 4. */
+  --uaiui-docs-gutter: min(var(--scale-x5), 6.25vw);
+  --uaiui-docs-inset: min(var(--scale-x5), 6.25vw);
   --uaiui-docs-layout-shadow: var(--shadow-offset-layout) var(--shadow-offset-layout) 0 0 var(--ui-shadow-color);
   /* O fundo da área é o do site (off-white); só o conteúdo ganha o neutral/subtle. */
   color: var(--ui-fg-default);
