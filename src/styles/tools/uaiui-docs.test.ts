@@ -566,3 +566,32 @@ describe('contraste da tabela, a partir dos tokens do wrapper (tema claro: texto
     expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
   });
 });
+
+describe('chrome a texto ampliado (PR Q): respiro lateral e palco com min() em vw', () => {
+  const primitives = read('../tokens/primitives.css');
+  const tokenPx = (name: string) => parseFloat(primitives.match(new RegExp(`--${name}:\\s*([\\d.]+)rem`))![1]) * 16;
+  const vwOf = (value: string) => parseFloat(value.match(/min\(var\(--[\w-]+\), ([\d.]+)vw\)/)![1]);
+
+  it('o respiro lateral (gutter e recuo) é min(token de 20px, 6,25vw): 20px a 320px, então só atua com texto ampliado', () => {
+    const root = block(chromeCss, '.uaiui-docs');
+    expect(root).toMatch(/--uaiui-docs-gutter: min\(var\(--scale-x5\), 6\.25vw\);/);
+    expect(root).toMatch(/--uaiui-docs-inset: min\(var\(--scale-x5\), 6\.25vw\);/);
+    expect((vwOf('min(var(--scale-x5), 6.25vw)') * 320) / 100).toBe(tokenPx('scale-x5'));
+  });
+
+  it('a partir de 1184px o respiro continua o token de 88px, sem min()', () => {
+    expect(chromeCss).toMatch(/@media \(min-width: 1184px\) \{\s*\.uaiui-docs \{\s*--uaiui-docs-gutter: var\(--scale-x20\);\s*--uaiui-docs-inset: var\(--scale-x12\);/);
+  });
+
+  it('o padding lateral do palco no celular é min(token de 16px, 5vw): 16px a 320px; a partir de 768px não muda', () => {
+    const stage = block(dsCss, '.uaiui-docs .uaiui-docs__stage');
+    expect(stage).toMatch(/padding: var\(--scale-x6\) min\(var\(--scale-x4\), 5vw\) var\(--scale-x8\);/);
+    expect((vwOf('min(var(--scale-x4), 5vw)') * 320) / 100).toBe(tokenPx('scale-x4'));
+    expect(dsCss).toMatch(/@media \(min-width: 768px\) \{\s*\.uaiui-docs \.uaiui-docs__stage \{\s*padding: var\(--scale-x8\) var\(--scale-x6\) var\(--scale-x12\);/);
+  });
+
+  it('nenhum valor em px solto no respiro nem no padding do palco (o limite é em vw)', () => {
+    expect(block(chromeCss, '.uaiui-docs')).not.toMatch(/--uaiui-docs-(gutter|inset): [^;]*\d+px/);
+    expect(block(dsCss, '.uaiui-docs .uaiui-docs__stage')).not.toMatch(/padding: [^;]*\d+px/);
+  });
+});

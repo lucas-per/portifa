@@ -39,3 +39,40 @@ describe('cabeçalho desktop (folga com UaiUI DS e Paletaria)', () => {
     expect(rule('.site-header__inner')).not.toMatch(/gap: \d+px/);
   });
 });
+
+describe('cabeçalho desktop a texto ampliado (200%): quebra só quando falta espaço', () => {
+  it('o contêiner e os três grupos (ações, links, botões) quebram linha', () => {
+    for (const selector of ['.site-header__inner', '.site-header__actions', '.site-header__pages', '.site-header__cta']) {
+      expect(rule(selector), selector).toMatch(/flex-wrap: wrap;/);
+    }
+  });
+
+  it('entre linhas, 16px (var(--scale-x4)); os 32px e 56px de coluna continuam', () => {
+    for (const selector of ['.site-header__actions', '.site-header__pages', '.site-header__cta']) {
+      expect(rule(selector), selector).toMatch(/row-gap: var\(--scale-x4\);/);
+    }
+    // O gap do contêiner (16px) já vale nas duas direções: sem row-gap próprio.
+    expect(rule('.site-header__inner')).not.toMatch(/row-gap/);
+    expect(rule('.site-header__pages')).toMatch(/gap: var\(--scale-x8\);/);
+  });
+
+  it('o texto dos botões não quebra (quem quebra é a linha) e o do link também não', () => {
+    expect(style).toMatch(/\.site-header__cta :global\(\.button\) \{\s*white-space: nowrap;\s*\}/);
+    const link = readFileSync(new URL('./HeaderLink.astro', import.meta.url), 'utf-8');
+    expect(link).toMatch(/white-space: nowrap;/);
+  });
+
+  it('a ordem do DOM é a visual: logo, links, botões (a quebra não reordena nada)', () => {
+    const markup = header.slice(0, header.indexOf('<style>'));
+    const at = (needle: string) => markup.indexOf(needle);
+    expect(at('site-header__logo ')).toBeLessThan(at('site-header__pages'));
+    expect(at('site-header__pages')).toBeLessThan(at('site-header__cta'));
+    expect(style).not.toMatch(/\border:\s*-?\d/);
+    expect(style).not.toMatch(/flex-direction:\s*(row|column)-reverse/);
+  });
+
+  it('o cabeçalho desktop não é sticky: rola com a página (só o mobile é)', () => {
+    expect(rule('.site-header')).not.toMatch(/position:/);
+    expect(style).not.toMatch(/position:\s*(sticky|fixed)/);
+  });
+});

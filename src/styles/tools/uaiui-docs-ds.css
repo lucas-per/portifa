@@ -209,7 +209,10 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: var(--scale-x4);
-  padding: var(--scale-x6) var(--scale-x4) var(--scale-x8);
+  /* Laterais: 16px é 5vw a 320px, então o min() só atua com texto ampliado
+     (32px a 200%): o palco não perde 32px de largura. Ver o respiro lateral em
+     uaiui-docs.css. */
+  padding: var(--scale-x6) min(var(--scale-x4), 5vw) var(--scale-x8);
   background-color: var(--ui-bg-page);
 }
 
