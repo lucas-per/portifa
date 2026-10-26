@@ -964,7 +964,7 @@ A dependência passou de `github:lucas-per/uaiui-ds#v0.3.3` para `#v0.3.4` (`pnp
 | 150% | 414 | 302 | 85 → 184 | sim | não | dentro | 4 → 7 (562 → 430) |
 | 150% | 480 | 353 | 136 (igual) | não | não | dentro (igual) | igual |
 | 200% | 320 | 229 | 0 → 145 | sim | sim | 25px fora → dentro; página 1px a mais → 0 | 1 → 4 (2908 → 808) |
-| 200% | 360 | 260 | 0 → 176 | sim | sim | 6px fora → dentro | 1 → 5 (2908 → 760) |
+| 200% | 360 | 260 | 0 → 176 | sim | sim | dentro (6px de folga → 34) | 1 → 5 (2908 → 760) |
 | 200% | 414 | 302 | 14 → 146 | sim | não | dentro | 1 → 4 (2908 → 736) |
 | 200% | 480 | 353 | 65 → 197 | sim | não | dentro | 2 → 6 (1276 → 592) |
 
