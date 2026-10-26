@@ -18,8 +18,8 @@ importers:
         specifier: ^0.35.4
         version: 0.35.4(@types/node@22.20.1)
       uaiui-ds:
-        specifier: github:lucas-per/uaiui-ds#v0.3.3
-        version: https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/1ad90a943c25005bcb54f76120cce9e4b16ccffd
+        specifier: github:lucas-per/uaiui-ds#v0.3.4
+        version: https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/0e8ba4195222f1f1e9df40ceff382143f9951416
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.10
@@ -1492,9 +1492,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  uaiui-ds@https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/1ad90a943c25005bcb54f76120cce9e4b16ccffd:
-    resolution: {gitHosted: true, integrity: sha512-yvd/pfnB8ySaf2ERImaCrygTzPR3JUVETsZIGu59Sg/2afTp7Q6/rOMCPuwi23bOB7CtBiBVUna7ZyumxkJXMw==, tarball: https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/1ad90a943c25005bcb54f76120cce9e4b16ccffd}
-    version: 0.3.3
+  uaiui-ds@https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/0e8ba4195222f1f1e9df40ceff382143f9951416:
+    resolution: {gitHosted: true, integrity: sha512-APzIfmMtNtjYlIK7bEsKaoBDjXQ5CaQJpHabtRi2Jl24RoahKamSDoQpCbcOkFy6qVRIGSrrBX2wZ5M9f52+pQ==, tarball: https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/0e8ba4195222f1f1e9df40ceff382143f9951416}
+    version: 0.3.4
     engines: {node: '>=22.12.0'}
 
   ufo@1.6.4:
@@ -3227,7 +3227,7 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  uaiui-ds@https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/1ad90a943c25005bcb54f76120cce9e4b16ccffd: {}
+  uaiui-ds@https://codeload.github.com/lucas-per/uaiui-ds/tar.gz/0e8ba4195222f1f1e9df40ceff382143f9951416: {}
 
   ufo@1.6.4: {}
 

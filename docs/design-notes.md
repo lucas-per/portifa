@@ -947,3 +947,33 @@ A 200% de texto (`html { font-size: 200% }`, sem zoom de página) o cabeçalho d
 **Com a 1.4.2 no ar:** a 100% nada muda. Com texto ampliado, o cabeçalho do site passa a quebrar em linhas (logo, links, botões) em vez de passar da tela, e o Toast da UaiUI ganha largura em telas estreitas.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Toast a texto ampliado: uaiui-ds v0.3.4 (site 1.4.3)
+
+A dependência passou de `github:lucas-per/uaiui-ds#v0.3.3` para `#v0.3.4` (`pnpm-lock.yaml` com o commit `0e8ba41`). **Diff entre as duas versões do pacote instalado:** só dois arquivos mudam, `package.json` (o número da versão) e `src/styles/components/toast.css`; `button.css` (que entra na página do Toast), `tokens-wrapper.css` e os demais componentes ficaram iguais, e nenhum token mudou. As três mudanças do `toast.css`, todas para o reflow (WCAG 1.4.10): `.uai-toast__body` ganha `flex-wrap: wrap`; `.uai-toast__content` passa de `flex: 1` para `flex: 1 1 4rem` (4rem é a largura mínima antes de a linha quebrar); `.uai-toast__body > .uai-icon-button { margin-inline-start: auto; }` (o fechar desce para a linha de baixo, alinhado ao fim). O site não escreve CSS por cima do toast do pacote (teste novo, `toast-dependencia.test.ts`, que também fixa a versão e as três regras).
+
+**Comportamento do botão de fechar:** a 100% fica ao lado do texto, como antes (nenhuma diferença). Com texto ampliado ou tela estreita, quando o conteúdo ficaria com menos de 4rem de largura, o fechar desce para a linha de baixo, alinhado ao fim. A **150%** ele já desce em 320, 360 e 414px (onde antes cabia ao lado, com o texto espremido em 12, 43 e 85px); isso é intencional e muda o visual nessas larguras; a 150% e 480px continua ao lado. A **200%** desce em 320, 360, 414 e 480px. A 320px e 200% o ícone também fica sozinho na linha (o conteúdo, de 145px, vai para a linha de baixo, antes do fechar); a 360px e 200% idem. O DS informa que o toast só mantém ícone e texto juntos a partir de 283px de toast a 200% (213px a 150%) e que o menor toast sem escape a 200% tem 192px.
+
+**Medido (Chromium, `html { font-size }`; antes é a `main` com a v0.3.3; 6 toasts por configuração, os 5 tons e o aviso do preview; coluna do toast = largura útil menos o chrome da 1.4.2):**
+
+| Texto | Largura | Toast | Conteúdo (antes → depois) | Fechar desce | Ícone sozinho | Fechar fora do toast (antes → depois) | Texto |
+|---|---|---|---|---|---|---|---|
+| 100% | 320 / 360 / 414 / 480 | 229 / 269 / 323 / 389 | 83 / 123 / 177 / 243 (igual) | não | não | dentro (igual) | igual |
+| 150% | 320 | 229 | 12 → 111 | sim | não | dentro | 1 → 4 letras por linha ou mais (altura 2182 → 553) |
+| 150% | 360 | 260 | 43 → 142 | sim | não | dentro | 2 → 5 (1030 → 481) |
+| 150% | 414 | 302 | 85 → 184 | sim | não | dentro | 4 → 7 (562 → 430) |
+| 150% | 480 | 353 | 136 (igual) | não | não | dentro (igual) | igual |
+| 200% | 320 | 229 | 0 → 145 | sim | sim | 25px fora → dentro; página 1px a mais → 0 | 1 → 4 (2908 → 808) |
+| 200% | 360 | 260 | 0 → 176 | sim | sim | 6px fora → dentro | 1 → 5 (2908 → 760) |
+| 200% | 414 | 302 | 14 → 146 | sim | não | dentro | 1 → 4 (2908 → 736) |
+| 200% | 480 | 353 | 65 → 197 | sim | não | dentro | 2 → 6 (1276 → 592) |
+
+"Texto" é o menor número de letras por linha do título ou da mensagem (uma letra por linha deixava o aviso ilegível). Nenhuma configuração rola a página na horizontal (`scrollWidth` igual a `clientWidth`). **O palco de 229px de coluna a 320px e 200% se manteve** (o chrome da 1.4.2 não mudou) e o texto fica legível: de 4 a 13 letras por linha, linhas inteiras; uma palavra mais comprida que a linha ("transferência", em 145px a 32px) quebra no meio, pelo `overflow-wrap: anywhere` do próprio DS. Teclado a 200% e 320px: Tab vai do botão do aviso ("Desfazer") ao fechar, na ordem do DOM e visual (o fechar é o último nos dois); Esc e o clique no fechar que desceu tiram o aviso e devolvem o foco a "Mostrar aviso". O fechar continua com 108px a 200%.
+
+**A 100% o Toast é idêntico ao da `main`:** geometria (posição, largura, altura, cor e fonte) de todos os elementos dos exemplos igual em 320, 360, 414, 480, 768, 1024 e 1440px, e cada toast (5 tons, 7 larguras, 35 capturas) igual pixel a pixel. As outras páginas da UaiUI, a Home, os cases e a Paletaria ficam iguais a 100%, 150% e 200% (168 configurações, 8 páginas; só a Paletaria variou entre duas rodadas, sem relação com a mudança, e na repetição deu zero). O que muda a 100% na página do Toast é só o bloco "Código" do CSS do componente, que mostra o arquivo do pacote e ganhou 9 linhas (1440px: o bloco de 771 para 861px, empurrando o que vem depois).
+
+**Divergências entre o Figma e o código:** o Figma não tem o Toast a texto ampliado nem em tela estreita; o comportamento é do pacote. **Escala de 4:** nenhuma exceção nova (o CSS do site não mudou). **Versão do site:** 1.4.2 para 1.4.3. A confirmação em produção fica para depois do merge.
+
+**Com a 1.4.3 no ar:** a 100% nada muda no Toast; com texto ampliado ou tela estreita o botão de fechar desce para a linha de baixo e o texto do aviso deixa de ser espremido (em 320 a 414px e 200% o texto chegava a uma letra por linha); o código de exemplo do CSS do Toast mostra as três regras novas.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
