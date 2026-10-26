@@ -141,5 +141,23 @@ const { intro, topics, consolidation } = Astro.props;
     .case-discovery-topics__figure {
       width: 100%;
     }
+
+    /* border-box: sem reset no projeto, a borda de 2px somaria 4px à largura
+       e a imagem invadiria o respiro de 20px da direita (ver CaseContext).
+       Só no mobile: a partir de 768px a miniatura fica como está. */
+    .case-discovery-topics__figure :global(img) {
+      box-sizing: border-box;
+    }
+  }
+
+  /* Abaixo de 360px, a largura do frame mobile do Figma: o título do card
+     ("encaminhamentos", sem ponto de quebra, 217px em 24px Bold) pede 269px de
+     card e a coluna útil a 320px tem 265px, então a coluna inteira estourava
+     4px. Com 20px de padding (--scale-x5) em vez de 24px o card cabe, sem
+     quebrar a palavra. A partir de 360px nada muda. */
+  @media (max-width: 359px) {
+    .case-discovery-topics__consolidation {
+      padding: var(--scale-x5);
+    }
   }
 </style>

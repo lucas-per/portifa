@@ -130,5 +130,13 @@ const { intro, flows } = Astro.props;
       flex-direction: column;
       align-items: stretch;
     }
+
+    /* border-box: o projeto não tem reset de box-sizing, então sem isso a
+       borda de 2px somaria 4px à largura e a imagem invadiria o respiro de
+       20px da direita (mesma regra de CaseContext). Só no mobile: a partir
+       de 768px as imagens ficam como estão. */
+    .case-delivery-flows__images :global(img) {
+      box-sizing: border-box;
+    }
   }
 </style>
