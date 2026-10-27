@@ -1117,3 +1117,42 @@ Nada piora em nenhuma das 8 páginas (A e B); Home, Paletaria e UaiUI ficam igua
 **Com a 1.4.6 no ar:** a 100%, de 768 a 775px a coluna dos cases fica até 6,7px mais estreita (o menu vai para a margem calculada); fora disso nada muda. Com texto ampliado, os cases não rolam mais na horizontal de 320 a 1087px: no celular a coluna tem a largura da tela, no tablet ela encolhe com respiros menores, e textos, selos e destaques quebram dentro da coluna. De 1088px em diante continua o Resumo em 3 colunas.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Paletaria a texto ampliado (site 1.4.7)
+
+Última das quatro PRs do plano R (R4). Medido a 200% nos cenários A (`html { font-size: 200% }`) e B (`--blink-settings=defaultFontSize=32`), em 8 larguras (320 a 1920px) e 9 estados: vazio, aba "Tons", última aba, detalhe aberto, HEX inválido, Exportar, Ajuda, modo escuro e AAA.
+
+**Diagnóstico (main):** de 320 a 414px, nos dois cenários, a página rolava 211, 171 e 117px (a Ajuda, 134, 94 e 40). Os grids de coluna única do formulário tinham coluna `auto` e cresciam até o conteúdo; o HEX tinha `13rem` fixo (416px a 200%); botões e alternadores eram `nowrap` com altura fixa. A 768px os dois cenários já davam 0. Cenário B de 768px em diante dava 0.
+
+**O que mudou (`src/styles/tools/color-decomposer.css`, registrado no cabeçalho de mudanças da integração):**
+- `grid-template-columns: minmax(0, 1fr)` nos grids de coluna única: `.rail`, `.rail__body`, `.group`, `.field`, `.tune`, `.tune__body`, `.tune__row`, `.tune__actions`, `.dialog__body` e os da Ajuda (`.help__inner`, `.help__section`, `.help__toc`, `.help__faq`, `.help__list`, `.help__a`, `.code`).
+- HEX: `.hexrow` em flex com wrap; a mini paleta `flex: 0 1 13rem` e o campo `flex: 1 1 3rem; min-width: 3rem`. Com texto ampliado o campo desce para a linha de baixo; a 100% a largura é a mesma (a menor, com barra de 17px a 320px, é 57px).
+- `.btn` e `.segmented`: `height` vira `min-height` (mesmo valor: 44px; o `.btn--sm` mantém os 36px que já tinha), `white-space: normal` e `overflow-wrap: anywhere`. O `.detail__close` e o `.sample__tag` seguem `nowrap` a 100%.
+- `overflow-wrap: anywhere` nos rótulos, valores e títulos (`.field__label`, `.segmented__item span`, `.value__label`, `.value__hex`, `.switch__label`, `.dialog__title`, `.help__*`); `flex-wrap` no `.tune__label` (valor ao lado do nome).
+- Painel de detalhes: `container-type: inline-size` e `@container (max-width: 14rem)` empilham o título e "Fechar detalhes", o texto da amostra e a etiqueta, e as linhas "Superfície / Texto sobre a superfície / Borda" (`.values` em coluna única; com o grid de 3 colunas o texto ficava com largura 0 e saía um caractere por linha). **Por que contêiner e em `rem`:** `flex-wrap` nesses dois flex descia a etiqueta a 100% em 320px (a página ficava 21 e 59px mais alta, achado do protótipo) e só encolher dava colunas de um caractere. A consulta em `rem` nunca dispara a 100% (o painel tem no mínimo 227px, contra 224px do limite) e dispara a 200% (448px). Não é ponto novo de layout em px nem muda o `matchMedia`.
+
+- Lista de níveis: `container-type: inline-size` na `.cell` e `@container (max-width: 16rem)` (256px a 100%; a menor largura é 267px, então nunca dispara a 100%; a 200% dispara até 512px). Dentro dela o botão de copiar fica numa linha própria, abaixo do texto: o `.swatch` ganha `flex-wrap`, `padding-right: .75rem` e `padding-bottom: calc(var(--control) + .75rem)` (o botão fica sobre essa reserva) e o `.swatch__meta` alinha à esquerda, de modo que número, "Aa", hex e razão aparecem inteiros. Sem a consulta o botão (88px a 200%) cobria o hex e a razão, defeito que a main já tinha. Padding e botão só mudam dentro da consulta. O contêiner não pode ser estilizado pela própria consulta, por isso o fundo da linha é o do `.swatch` (o `.cell` não ganha fundo).
+
+- Diálogo Exportar: `.fieldset { min-width: 0 }` e `overflow-wrap: anywhere` no `.radio`. O `fieldset` tem `min-width: min-content` por padrão e os rótulos dos formatos faziam o diálogo rolar na horizontal a 320px e 200% (131px na main, 7px antes desta correção, 0 agora). O título "Exportar tokens" quebra no meio da palavra a 320px e 200% (o conteúdo do diálogo tem 120px): aceito, como no resto do site.
+
+**Alvos de toque:** com o texto em duas linhas, `.btn`, `.segmented`, abas e interruptor mantêm no mínimo 44px de altura (o `.btn--sm`, 36px, como hoje).
+
+**Limite L2 (decisão do Lucas, opção a): cenário A de 901px em diante (1024 a 1920px).** Os pontos de 901px (`56.3125rem`) e 1280px (`80rem`) são em `rem` e não acompanham o `html { font-size: 200% }`, então o layout lado a lado liga cedo e a lista (`24.5rem` = 784px) quase ocupa a largura toda; o detalhe fica com 0 a 63px. Mesma família dos pontos em `rem` do backlog (L2/S2/C2). Não mexi em ponto existente, em `matchMedia` nem apliquei `minmax(0, …)` ao detalhe. No cenário B (texto ampliado do navegador) o ponto escala e fica limpo. Melhora parcial registrada como limite: o `container-type` tirou o tamanho mínimo do conteúdo do detalhe e o estouro nesse limite caiu (1024: 456 para 193px; 1184: 296 para 33; 1440: 890 para 627; 1920: 410 para 147), sem resolver.
+
+**A 200% (excesso do documento em px, main → 1.4.7):**
+- A e B, 320 / 360 / 414px: 211 / 171 / 117 → **0** (vazio, abas, detalhe, erro, Exportar, escuro, AAA); Ajuda 134 / 94 / 40 → **0**.
+- 768px: 0 → 0, nos dois cenários. B de 1024 a 1920px: 0 → 0.
+- A de 1024 a 1920px: limite acima (melhora parcial, nenhuma piora).
+- Nenhuma piora em nenhum estado, largura ou cenário.
+
+**Limite a 320px e 200%: rótulo do interruptor "Texto com tom da cor".** No painel de detalhes o rótulo fica espremido em 4 linhas ao lado da trilha de 88px. Está dentro do painel, sem corte nem sobreposição (a única "sobreposição" que a medição acusa é o `input` invisível do interruptor, que é o alvo de toque). Decisão do Lucas: deixar como está.
+
+**Texto coberto ou cortado a 200% (320, 360 e 414px, 7 estados, A e B):** sobreposições geométricas de texto com texto ou com controle, main → 1.4.7: 385 → 0 reais (3 restantes: o `input` do interruptor). Nenhuma nova. Antes da consulta da lista, o hex e a razão ficavam atrás do botão de copiar em todos os níveis.
+
+**A 100%:** 0 diferenças. 224 configurações (8 páginas × 14 larguras × barra de 15 e 17px); Paletaria nos 6 estados (vazio, aba, detalhe, erro, Exportar, Ajuda) × 14 larguras × barra de 15 e 17px (168); e barra de 0px em 899, 900, 901, 902, 1278, 1279, 1280 e 1281px (48). Pixels: capturas de página inteira dos 5 estados em 320, 414, 768, 1024 e 1440px, main × 1.4.7, idênticas fora do texto da versão no rodapé. O `container-type` (que muda a largura intrínseca e cria contexto de empilhamento) não alterou nada.
+
+**Divergência Figma × código:** o Figma da Paletaria (1440 e 360) não tem a tela a 200%; o comportamento é do código. A 100% o código segue o Figma e não mudou. Teste novo: `paletaria-texto-ampliado.test.ts`. **Versão:** 1.4.6 para 1.4.7.
+
+**Com a 1.4.7 no ar:** a 100% nada muda. Com texto ampliado, a Paletaria e a Ajuda não rolam mais na horizontal no celular (320 a 414px): campos, alternadores e botões ocupam a largura da tela e o texto quebra dentro deles (o campo HEX desce para baixo da mini paleta; o painel de detalhes empilha o título e a etiqueta). Segue o limite do cenário A de 901px em diante.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
