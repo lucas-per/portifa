@@ -1044,3 +1044,76 @@ Forma a 200%: de 768 a 959px, 2×2 com o e-mail quebrado em duas linhas (rodapé
 **Com a 1.4.5 no ar:** a 100% nada muda. Com texto ampliado, o rodapé não passa mais da página de 768 a 959px e de 992px em diante: os botões descem para linhas, alinhados com o conteúdo, e o e-mail quebra em duas linhas na grade 2×2.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Cases a texto ampliado: esqueleto e componentes (site 1.4.6)
+
+Terceira das quatro PRs do plano R (R3). Medido a 200% nos cenários A (`html { font-size: 200% }`) e B (`--blink-settings=defaultFontSize=32`); os cases só usam media queries em `px`, então os dois dão os mesmos números (salvo 1px no Redesign, ver abaixo).
+
+**Causas (a 200%):**
+- **Celular (até 767px):** `.case-layout` tem `align-items: flex-start`, então a coluna de conteúdo encolhia ao conteúdo e crescia até o elemento mais largo (documento de 514 a 598px a 320px). Componentes:
+  - card do Resumo com trilha `auto`;
+  - texto das fases do Discovery sem `min-width: 0`;
+  - tópicos da Jornada e linha do Contexto com `align-items: flex-start`;
+  - destaque do Impacto com `min-width: 200px` mais 48px de padding;
+  - selo de teste ("Hierarquia…") sem quebra;
+  - `h3` do tipo `text-body-lg-strong` sem `break-word`;
+  - cabeçalho com "1 minuto" e breadcrumb sem `flex-wrap`.
+- **Tablet (768 a 1087px):** menu lateral de 234px (fixo), margem de 96px, respiro direito de 176px e recuo das seções de 96px; a coluna (`min-width: auto`) não encolhia abaixo da seção mais larga (tópicos da Jornada, 702px a 768px).
+- **De 1088px em diante:** o Resumo em 3 colunas `minmax(min-content, 1fr)` (limite aceito, abaixo).
+
+**Mudanças (sem token novo, sem ponto novo, sem mudar DOM, textos, imagens ou `uaiui-ds`):**
+- **`BaseLayout.astro`:** o seletor da 1.4.4 ganha `h1` a `h6` (`break-word`, não muda o tamanho mínimo).
+- **`[slug].astro`:**
+  - até 767px, `.case-layout__content` com `align-self: stretch` e `min-width: 0`;
+  - de 768 a 1087px (pontos que já existiam), `min-width: 0` e `padding-right: min(var(--scale-x20), 11.5vw)`.
+- **`SideMenu.astro`:** de 768 a 1087px, `margin-right: min(var(--scale-x12), 6.25vw)`.
+- **10 seções** (Resumo, Contexto, Problema, Discovery, tópicos, Delivery, fluxos, Impacto, Visão de futuro e o "Ir para o topo"): de 768 a 1087px, `padding-left: min(var(--scale-x12), 6.25vw)`.
+- **`CaseSummary.astro`:** até 1087px, `.case-summary__col { grid-template-columns: minmax(0, 1fr) }`.
+- **`CaseDiscovery.astro`:** até 1087px, `.case-discovery__phase-content { min-width: 0 }`.
+- **`CaseDiscoveryTopics.astro` e `CaseContext.astro`:** até 767px, `align-items: stretch` no tópico e na linha.
+- **`CaseContext.astro`:** de 768 a 1087px, o selo LEGADA fica a `min(var(--scale-x2), 1.05vw)` das bordas da imagem. A 200% a imagem fica com 120px e o selo, a 16px, passava 2,4px dela; 1,05vw de 768px já é 8,06px, então a 100% o valor é sempre 8px.
+- **`CaseImpact.astro`:** `min-width: min(200px, 100% - var(--scale-x12) - 4px)`; a 100% a linha tem no mínimo 263px e o valor é sempre 200px.
+- **`TestResultBadge.astro`:** `box-sizing: border-box`, `max-width: 100%` e `overflow-wrap: anywhere`. O rótulo é texto solto (item anônimo do flex) e só com `anywhere` deixa de exigir a palavra inteira; o selo só existe nos cases e a 100% os rótulos cabem numa linha.
+- **`CaseHeader.astro`:** `flex-wrap: wrap` no breadcrumb e na meta.
+
+**Os `min()` com `vw`:** a 100% são sempre o token (6,25vw de 768px é 48px, 11,5vw é 88,3px); com o rem dobrado, eles param no `vw` e devolvem largura à coluna (a 200%, 323px de coluna a 768px e 501px a 1024px). **Nesse estado, em larguras intermediárias, o valor calculado pode não ser múltiplo de 4** (mesmo critério da 1.4.2); `spacing-scale.test.ts` segue verde sem exceção nova.
+
+**Exceção aceita a 100% (decisão do Lucas, opção a):** de 768 a 775px a coluna dos cases já era mais larga que a sua parte. A largura mínima das seções (Contexto no Redesign, tópicos na Jornada) a segurava e o menu ficava com 25 a 31,7px de margem em vez da calculada (31,4 a 32px). Com `min-width: 0` a coluna encolhe até essa conta: fica até 6,7px mais estreita e algumas linhas descem (página mais alta). Medido, main → 1.4.6:
+
+| Case | Barra | Larguras que mudam | Margem do menu (768px) | Coluna (768px) | Altura da página (768px) |
+|---|---|---|---|---|---|
+| Redesign | 15px | 768 a 773 | 26,88 → 31,56 | 355,2 → 350,36 | 15224 → 15420 |
+| Redesign | 17px | 768 a 775 | 24,95 → 31,39 | 355,2 → 348,53 | 15224 → 15415 |
+| Jornada | 15px | 768 a 770 | 29,02 → 31,56 | 353 → 350,36 | 18056 → 18262 |
+| Jornada | 17px | 768 a 772 | 27,08 → 31,39 | 353 → 348,53 | 18056 → 18317 |
+| GoSafe DS | 15 e 17px | nenhuma | — | — | — |
+| Os três | 0px (barra sobreposta, iPad e celular) | nenhuma | — | — | — |
+
+Na última largura de cada faixa a diferença é de 0,3px de coluna. Fora dessa faixa, nada muda a 100%:
+- 224 configurações (8 páginas × 14 larguras × barra de 15 e de 17px): só as 4 de 768px acima mudam;
+- varredura dos três cases de 768 a 800px de 1 em 1 com barra de 0, 15 e 17px: só as 22 da tabela;
+- de 808 a 1080px de 8 em 8 mais 1087 e 1088px, com barra de 15 e de 17px: 0 de 222.
+
+**A 200% (excesso do documento em px, produção → 1.4.6; A e B):**
+
+| Página | 320 | 360 | 414 | 768 | 1024 | 1184 | 1440 | 1920 |
+|---|---|---|---|---|---|---|---|---|
+| Redesign | 209 → 0 | 169 → 0 | 115 → 0 | 355 (B: 356) → 0 | 101 (B: 100) → 0 | 451 | 195 | 15 |
+| GoSafe DS | 94 → 0 | 54 → 0 | 0 | 101 → 0 | 0 | 483 | 227 | 47 |
+| Jornada | 293 → 0 | 269 → 0 | 215 → 0 | 455 → 0 | 199 → 0 | 527 | 271 | 91 |
+
+Nada piora em nenhuma das 8 páginas (A e B); Home, Paletaria e UaiUI ficam iguais. A diferença de 1px do Redesign a 768 e 1024px era entre os cenários A e B (estável em 5 carregamentos cada), não uma oscilação; agora os dois dão 0, e a imagem do Contexto fica com 120px.
+
+**O que ainda passa da coluna (não da página) a 200%:**
+- **Imagens do Discovery e do Delivery:** 4px, a borda de 2px que já soma à largura (divergência registrada na 1.4.1, fora desta PR).
+- **Botão "Voltar" do fim do case a 320px:** 8,2px. O botão tem 233px e a coluna, 225px de recuo para dentro. Ele entra no respiro direito, mas fica 32px dentro da tela, sem cortar nem sobrepor nada. Fica como está até a decisão do Lucas.
+
+**Limites aceitos:**
+- O Resumo em 3 colunas de 1088px em diante continua passando da página a 200% (Redesign 451/195/15px a 1184/1440/1920px, GoSafe 483/227/47, Jornada 527/271/91). A grade não quebra por largura mínima e trocá-la por flex perde a altura igual dos títulos. Vai para o backlog (S2, breakpoints em `rem`).
+- **"Páginas" da UaiUI:** a 320 e 360px com texto ampliado, a palavra "PÁGINAS" (101px) vaza do rótulo (49 e 84px), mas fica dentro do botão, na linha de cima, e não cobre a seta. Não mexer.
+
+**Divergência Figma × código:** o Figma não tem os cases a texto ampliado nem a 768px; o comportamento é do código. Teste novo: `case-texto-ampliado.test.ts`. **Versão:** 1.4.5 para 1.4.6.
+
+**Com a 1.4.6 no ar:** a 100%, de 768 a 775px a coluna dos cases fica até 6,7px mais estreita (o menu vai para a margem calculada); fora disso nada muda. Com texto ampliado, os cases não rolam mais na horizontal de 320 a 1087px: no celular a coluna tem a largura da tela, no tablet ela encolhe com respiros menores, e textos, selos e destaques quebram dentro da coluna. De 1088px em diante continua o Resumo em 3 colunas.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.

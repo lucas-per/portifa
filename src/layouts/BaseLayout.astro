@@ -77,8 +77,10 @@ const pageUrl = path ? new URL(path, 'https://lpereira.me').href : 'https://lper
       /* Texto ampliado: palavra maior que a caixa quebra em vez de vazar do
          cartão ou da página. break-word (não anywhere), como nas classes de
          título: não muda o tamanho mínimo dos itens flex e grid, então a 100%
-         nada se move. :where() deixa a especificidade de um seletor de tipo. */
-      :global(main :where(p, li, figcaption, dd, dt)) {
+         nada se move. :where() deixa a especificidade de um seletor de tipo.
+         Os títulos (h1 a h6) entram para os que não usam as classes de título
+         (ex.: os h3 em text-body-lg-strong dos cases). */
+      :global(main :where(p, li, figcaption, dd, dt, h1, h2, h3, h4, h5, h6)) {
         overflow-wrap: break-word;
       }
     </style>

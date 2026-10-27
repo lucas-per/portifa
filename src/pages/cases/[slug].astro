@@ -252,10 +252,33 @@ const readingTime = estimateReadingTime(data.content);
          de altura antes de crescer/encolher pro conteúdo real. */
       flex: 1;
       padding: var(--scale-x7) var(--scale-x5) var(--scale-x11) 0;
+      /* Texto ampliado: em coluna, o align-items: flex-start de
+         .case-layout faria a coluna encolher ao conteúdo e crescer até o
+         elemento mais largo (a 200%, 514 a 598px de documento a 320px).
+         Esticada, ela tem a largura da tela, como a 100% (o texto longo
+         já a enchia). */
+      align-self: stretch;
+      min-width: 0;
     }
 
     .case-layout__content-inner {
       max-width: none;
+    }
+  }
+
+  /* Tablet com texto ampliado (768 a 1087px, os pontos que já existiam):
+     a coluna pode encolher abaixo da seção mais larga (min-width: 0) e o
+     respiro direito vira min(88px, 11,5vw), como o recuo das seções e a
+     margem do menu (min(48px, 6,25vw)). A 100% os min() são sempre o token.
+     Exceção aceita pelo Lucas: de 768 a 775px, a 100%, a coluna já era mais
+     larga que a sua parte (a largura mínima das seções a segurava e o menu
+     ficava com 25 a 29px de margem em vez de 31,6px); com min-width: 0 ela
+     fica até 6,7px mais estreita e o menu vai para a margem calculada. Fora
+     dessa faixa, nada muda a 100% (ver design-notes, 1.4.6). */
+  @media (min-width: 768px) and (max-width: 1087px) {
+    .case-layout__content {
+      min-width: 0;
+      padding-right: min(var(--scale-x20), 11.5vw);
     }
   }
 </style>

@@ -90,6 +90,14 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
 
   /* No mobile, o menu lateral vira o accordion (CaseAccordion.astro,
      Figma node 299:673) — não encolhe, some abaixo do breakpoint. */
+  /* Tablet com texto ampliado (ver [slug].astro): a margem de 48px até o
+     divisor vira min(48px, 6,25vw); a 100% é sempre o token. */
+  @media (min-width: 768px) and (max-width: 1087px) {
+    .side-menu {
+      margin-right: min(var(--scale-x12), 6.25vw);
+    }
+  }
+
   @media (max-width: 767px) {
     .side-menu {
       display: none;

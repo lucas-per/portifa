@@ -27,5 +27,12 @@ const icon = { verified: verifiedIcon, warning: warningIcon, unavailable: unavai
     border: 3px solid var(--border-neutral-subtle);
     font-family: var(--font-family-body);
     color: var(--text-body-neutral-strong);
+    /* Texto ampliado: o selo não passa da linha e o rótulo quebra dentro
+       dele (anywhere: o rótulo é texto solto, item anônimo do flex, e só
+       assim deixa de exigir a palavra inteira). A 100% os rótulos cabem
+       numa linha. */
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 </style>
