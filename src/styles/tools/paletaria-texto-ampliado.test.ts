@@ -56,7 +56,20 @@ describe('Paletaria a texto ampliado (site 1.4.7)', () => {
     expect(q).toMatch(/\.cd \.detail__close, \.cd \.sample__tag \{ white-space: normal; overflow-wrap: anywhere;/);
     expect(rule('.cd .detail__close')).toMatch(/white-space: nowrap;/);
     expect(rule('.cd .sample__tag')).toMatch(/white-space: nowrap;/);
-    expect(css.match(/@container/g)).toHaveLength(1);
+    expect(q).toMatch(/\.cd \.values \{ grid-template-columns: minmax\(0, 1fr\); justify-items: start; \}/);
+    // a consulta vem depois das regras-base que ela sobrescreve (mesma especificidade)
+    expect(css.indexOf('@container (max-width: 14rem)')).toBeGreaterThan(css.indexOf('.cd .values {'));
+  });
+
+  it('lista de níveis: com menos de 16rem o botão de copiar vai para uma linha própria e o texto quebra (contêiner em rem, nunca dispara a 100%)', () => {
+    expect(rule('.cd .cell')).toMatch(/container-type: inline-size;/);
+    const q = css.slice(css.indexOf('@container (max-width: 16rem)'), css.indexOf('@container (max-width: 14rem)'));
+    expect(q).toMatch(/\.cd \.swatch \{ flex-wrap: wrap;[^}]*padding-bottom: calc\(var\(--control\) \+ \.75rem\);/);
+    expect(q).toMatch(/\.cd \.swatch__copy \{ align-self: end;/);
+    expect(q).toMatch(/\.cd \.swatch__meta \{ align-items: flex-start;/);
+    // padding e botão de copiar só mudam dentro da consulta
+    expect(rule('.cd .swatch')).toMatch(/padding: \.5rem calc\(var\(--pr\) \+ var\(--control\) \+ \.75rem\) \.5rem \.75rem;/);
+    expect(css.match(/@container/g)).toHaveLength(2);
   });
 
   it('nenhum ponto de quebra novo nem mudança no layout lado a lado (limite A ≥ 901px, família L2/S2/C2)', () => {

@@ -288,7 +288,7 @@
 /* Lista de níveis (Figma swatch-row 648:1062): item de 64 px = borda de 2 + conteúdo de 60 + borda de 2; a borda de um
    item é a do vizinho (sobreposição de 2), então 9 níveis dão 560 px. Conteúdo: padding de 8 (cima e baixo) e 12 (lados),
    gap de 4; o grupo da direita (texto e copiar) fica com o resto, com gap de 12. */
-.cd .cell { --pr: .75rem; position: relative; display: grid; grid-template-columns: minmax(0, 1fr); border: var(--bw) solid var(--fg); }
+.cd .cell { --pr: .75rem; position: relative; display: grid; grid-template-columns: minmax(0, 1fr); border: var(--bw) solid var(--fg); container-type: inline-size; }
 .cd .cell + .cell { margin-top: calc(var(--bw) * -1); }
 .cd .swatch {
   grid-area: 1 / 1; position: relative; display: flex; align-items: center; gap: .25rem; width: 100%; min-height: 3.75rem;
@@ -314,6 +314,15 @@
   background: var(--s); color: var(--t); border: var(--bw) solid currentColor; forced-color-adjust: none;
 }
 .cd .swatch__copy:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+/* Texto ampliado: a linha com menos de 16rem de conteúdo (256 px a 100%, a menor largura é 267 px) leva o botão de copiar para uma
+   linha própria, abaixo do texto (o swatch reserva o espaço no padding de baixo e o botão fica sobre ele), e o número, o "Aa", o
+   hex e a razão quebram de linha em vez de ficar atrás do botão. Consulta em rem: a 100% nunca dispara, a 200% dispara em 512 px.
+   O contêiner (.cell) não pode ser estilizado pela própria consulta, por isso o fundo é o do .swatch. */
+@container (max-width: 16rem) {
+  .cd .swatch { flex-wrap: wrap; row-gap: .25rem; padding-right: .75rem; padding-bottom: calc(var(--control) + .75rem); }
+  .cd .swatch__meta { align-items: flex-start; text-align: left; margin-left: 0; }
+  .cd .swatch__copy { align-self: end; margin: 0 var(--pr) .5rem 0; }
+}
 
 /* Selecionado no computador: uma forma só, o item com a ponta (64 px de altura, 28 px de avanço). O item não tem borda
    direita; a ponta sai do lado direito dele e o vão até o painel é de 28 px (56 px da coluna menos a ponta). Duas camadas
@@ -352,6 +361,13 @@
 .cd .sample__big { font-family: var(--font-title); font-size: 1.75rem; font-weight: 600; line-height: 1; }
 .cd .sample__small { font-size: 1rem; line-height: 1; }
 .cd .sample__tag { padding: .125rem .5rem; border: var(--bw) solid var(--t); background: var(--t); color: var(--s); font-family: var(--font-label); font-size: .75rem; font-weight: 700; line-height: 1; text-transform: uppercase; white-space: nowrap; }
+/* amostra, texto e botão de copiar em três colunas comuns às linhas */
+.cd .values { display: grid; grid-template-columns: 2rem minmax(0, 1fr) var(--control); align-items: center; gap: 1rem .75rem; }
+.cd .value { display: contents; }
+.cd .value__chip { width: 2rem; height: 2rem; background: var(--c); border: var(--bw) solid var(--fg); forced-color-adjust: none; }
+.cd .value__label { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
+.cd .value__hex { display: block; font-family: var(--font-label); font-weight: 700; line-height: 1.5; font-variant-numeric: tabular-nums; text-transform: uppercase; overflow-wrap: anywhere; }
+
 /* Texto ampliado: o painel (container) com menos de 14rem de conteúdo (224 px a 100%, a menor largura é 227 px) empilha o título e
    "Fechar detalhes", e o texto da amostra e a etiqueta; sem isso o botão e a etiqueta (nowrap) passavam da borda do painel.
    A consulta é em rem: a 100% nunca dispara, a 200% dispara em 448 px. Não é ponto novo de layout em px. */
@@ -359,13 +375,8 @@
 @container (max-width: 14rem) {
   .cd .detail__head, .cd .sample { flex-direction: column; align-items: flex-start; }
   .cd .detail__close, .cd .sample__tag { white-space: normal; overflow-wrap: anywhere; max-width: 100%; text-align: left; }
+  .cd .values { grid-template-columns: minmax(0, 1fr); justify-items: start; }
 }
-/* amostra, texto e botão de copiar em três colunas comuns às linhas */
-.cd .values { display: grid; grid-template-columns: 2rem minmax(0, 1fr) var(--control); align-items: center; gap: 1rem .75rem; }
-.cd .value { display: contents; }
-.cd .value__chip { width: 2rem; height: 2rem; background: var(--c); border: var(--bw) solid var(--fg); forced-color-adjust: none; }
-.cd .value__label { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
-.cd .value__hex { display: block; font-family: var(--font-label); font-weight: 700; line-height: 1.5; font-variant-numeric: tabular-nums; text-transform: uppercase; overflow-wrap: anywhere; }
 
 /* Switch ("Texto com tom da cor", Figma 658:1650): rótulo à esquerda, trilha de 44 x 24 px à direita, polegar de 12 px a 4 px
    da borda interna. O alvo é a linha inteira (44 px de altura). Ligado: o polegar vai para a direita e a trilha ganha a
