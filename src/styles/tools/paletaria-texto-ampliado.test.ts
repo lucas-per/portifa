@@ -72,6 +72,11 @@ describe('Paletaria a texto ampliado (site 1.4.7)', () => {
     expect(css.match(/@container/g)).toHaveLength(2);
   });
 
+  it('diálogo Exportar: o fieldset pode encolher (min-width: 0) e o rótulo dos formatos quebra', () => {
+    expect(rule('.cd .fieldset')).toMatch(/min-width: 0;/);
+    expect(rule('.cd .radio')).toMatch(/overflow-wrap: anywhere;/);
+  });
+
   it('nenhum ponto de quebra novo nem mudança no layout lado a lado (limite A ≥ 901px, família L2/S2/C2)', () => {
     expect(css.match(/@media \(min-width: 56\.3125rem\)/g)).toHaveLength(3);
     expect(css).toMatch(/\.cd \.stage \{ grid-template-columns: 24\.5rem minmax\(0, 1fr\);/);

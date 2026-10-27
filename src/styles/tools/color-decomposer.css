@@ -417,8 +417,8 @@
 .cd .dialog__title { font-family: var(--font-title); font-size: 1.375rem; font-weight: 700; overflow-wrap: anywhere; }
 .cd .dialog__actions { display: flex; gap: .5rem; flex-wrap: wrap; }
 .cd .dialog__status { min-height: 1.5rem; font-size: .875rem; font-weight: 600; }
-.cd .fieldset { border: 0; padding: 0; margin: 0; }
-.cd .radio { display: flex; align-items: center; gap: .625rem; min-height: var(--control); }
+.cd .fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.cd .radio { display: flex; align-items: center; gap: .625rem; min-height: var(--control); overflow-wrap: anywhere; }
 .cd .radio input { width: 1.25rem; height: 1.25rem; margin: 0; accent-color: var(--fg); }
 
 /* Celular e tablet estreito (até 900 px): uma coluna, detalhe em accordion */
