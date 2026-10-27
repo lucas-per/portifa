@@ -5,6 +5,10 @@
     viraram .cd, e * virou .cd * (escopo: color-decomposer.test.ts);
   - os @font-face saíram: as três fontes são as mesmas do site (fonts.css);
   - a regra html { -webkit-text-size-adjust } saiu: só vale no <html>.
+  - site 1.4.7 (texto ampliado a 200%, até 900px): os grids de coluna única e a Ajuda usam minmax(0, 1fr) (a coluna
+    `auto` crescia até a palavra mais longa); HEX em flex com wrap; botões e alternadores com min-height (mesmo valor) e
+    texto que quebra; overflow-wrap: anywhere nos rótulos; o painel de detalhes empilha título/Fechar e amostra/etiqueta com
+    uma consulta de contêiner em rem (14rem). A 100% nada se move. Ver design-notes.md.
   Fontes (design-notes.md): --font-title usa DM Sans (decisão do Lucas, 2026-10-16, como o app desenhava na prática);
   --font-heading usa a Plus Jakarta Sans só no título da página, em "Ajustes" e em "Paletas" (decisão do Lucas, 2026-10-19).
   Estrutura do Figma (2026-10-19, Decomposer / Paleta / Claro / 1440 e 360): Ajustes, divisor e Paletas lado a lado
@@ -91,10 +95,10 @@
 /* Botões */
 .cd .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  height: var(--control); padding: 0 1rem; border-radius: var(--r-control);
+  height: auto; min-height: var(--control); max-width: 100%; padding: 0 1rem; border-radius: var(--r-control);
   border: var(--bw) solid var(--fg); background: var(--bg); box-shadow: var(--shadow-comp); cursor: pointer;
   transition: transform .1s ease, box-shadow .1s ease;
-  font-family: var(--font-label); font-size: .875rem; font-weight: 700; text-transform: uppercase; line-height: 1.2; white-space: nowrap;
+  font-family: var(--font-label); font-size: .875rem; font-weight: 700; text-transform: uppercase; line-height: 1.2; white-space: normal; overflow-wrap: anywhere;
 }
 /* Hover só com mouse: no toque ficaria preso no último botão tocado. Os resets de hover (ghost, desativado, ícone) vão em blocos
    próprios logo depois, e o :active vem depois de todos. */
@@ -124,7 +128,7 @@
 .cd .btn--quiet:active, .cd .btn--quiet[aria-pressed="true"], .cd .btn--quiet[aria-expanded="true"] { color: var(--fg); text-decoration: underline; }
 .cd .btn--quiet:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 /* Auto: botão pequeno, com 36 px de altura (decisão de design; exceção aos 44 px de toque) */
-.cd .btn--sm { height: 2.25rem; padding: 0 .75rem; font-size: .75rem; }
+.cd .btn--sm { height: auto; min-height: 2.25rem; padding: 0 .75rem; font-size: .75rem; }
 .cd .btn:disabled, .cd .btn[aria-disabled="true"] { opacity: .5; cursor: default; box-shadow: none; }
 .cd .btn:disabled:active, .cd .btn[aria-disabled="true"]:active { transform: none; box-shadow: none; }
 @media (hover: hover) {
@@ -141,12 +145,12 @@
 .cd .is-done .icon-done { display: block; }
 
 /* Alternadores (modo, contraste, sistema de níveis, cor do texto): opções de largura igual */
-.cd .segmented { display: flex; height: var(--control); border: var(--bw) solid var(--fg); border-radius: var(--r-control); padding: .125rem; gap: .125rem; }
+.cd .segmented { display: flex; min-height: var(--control); border: var(--bw) solid var(--fg); border-radius: var(--r-control); padding: .125rem; gap: .125rem; }
 .cd .segmented__item { position: relative; display: block; flex: 1 1 0; min-width: 0; cursor: pointer; }
 .cd .segmented__item input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .cd .segmented__item span {
   display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;
-  font-family: var(--font-label); font-size: .875rem; font-weight: 700; line-height: 1.2; text-transform: uppercase;
+  font-family: var(--font-label); font-size: .875rem; font-weight: 700; line-height: 1.2; text-transform: uppercase; overflow-wrap: anywhere;
 }
 .cd .segmented__item input:checked + span { background: var(--active-bg); color: var(--active-fg); }
 /* cor ativa parecida com o fundo (menos de 3 para 1): contorno de 2 px por dentro, para a opção ativa nunca ficar indistinguível */
@@ -174,14 +178,14 @@
 }
 
 /* Ajustes: sem caixa, direto sobre o fundo. Modo e contraste formam um grupo com a linha de ajuda do contraste. */
-.cd .rail { display: grid; gap: 2rem; align-content: start; }
+.cd .rail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; align-content: start; }
 .cd .rail__title { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; line-height: 1.24; letter-spacing: 0; }
-.cd .rail__body { display: grid; gap: 1.75rem; }
-.cd .group { display: grid; gap: .5rem; }
+.cd .rail__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+.cd .group { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; }
 .cd .pair { display: flex; gap: 1.25rem; }
 .cd .pair > .field { flex: 1 1 0; min-width: 0; }
-.cd .field { display: grid; gap: .5rem; }
-.cd .field__label { font-family: var(--font-label); font-weight: 700; font-size: .75rem; line-height: 1; text-transform: uppercase; }
+.cd .field { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+.cd .field__label { font-family: var(--font-label); font-weight: 700; font-size: .75rem; line-height: 1; text-transform: uppercase; overflow-wrap: anywhere; }
 .cd .field__label--main { font-size: .8125rem; line-height: 1.3; letter-spacing: .02em; }
 .cd .field__help { font-family: var(--font-label); font-weight: 700; font-size: .75rem; line-height: 1.3; text-transform: uppercase; color: var(--muted); }
 .cd .field__error { font-size: .8125rem; line-height: 1.4; color: var(--fg); font-weight: 600; padding-left: .625rem; border-left: var(--bw) solid var(--fg); }
@@ -194,7 +198,10 @@
 .cd .input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--fg); }
 
 /* Cor principal: mini paleta de 208 px e o campo de HEX no que sobra (152 px no computador, 112 px no celular) */
-.cd .hexrow { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: .5rem; align-items: start; }
+.cd .hexrow { display: flex; flex-wrap: wrap; gap: .5rem; align-items: flex-start; }
+.cd .hexrow > .mini { flex: 0 1 13rem; }
+/* o campo ocupa o resto da linha (152 px no computador, 112 no celular); com texto ampliado, em menos de 3rem, desce para a linha de baixo */
+.cd .hexrow > .input { flex: 1 1 3rem; min-width: 3rem; width: auto; }
 /* Mini paleta (Figma): 4 tons, o anel do nível da cor principal e 4 tons. O anel não é clicável: borda de 1 px e a cor
    em 28 px. A linha de baixo marca os tons quase iguais ao vizinho (amarelo), alinhada aos tons. */
 .cd .mini { display: grid; grid-template-columns: minmax(0, 1fr) 2.25rem minmax(0, 1fr); grid-template-rows: var(--control) auto; align-items: center; padding-inline: var(--bw); }
@@ -215,10 +222,10 @@
 .cd .mini__flags b.is-end { border-right-width: 2px; }
 
 /* Refinar cor principal: controles com 44 px de altura (alvo de toque) e 24 px entre eles */
-.cd .tune { display: grid; gap: 1rem; }
-.cd .tune__body { display: grid; gap: 1.5rem; }
-.cd .tune__row { display: grid; }
-.cd .tune__label { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-family: var(--font-label); font-weight: 700; font-size: .75rem; line-height: 1; text-transform: uppercase; }
+.cd .tune { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.cd .tune__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+.cd .tune__row { display: grid; grid-template-columns: minmax(0, 1fr); }
+.cd .tune__label { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; font-family: var(--font-label); font-weight: 700; font-size: .75rem; line-height: 1; text-transform: uppercase; }
 .cd .tune__label output { font-family: var(--font); font-weight: 600; font-size: .875rem; line-height: 1.72; letter-spacing: 1px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .cd .range { width: 100%; height: var(--control); margin: 0; -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; accent-color: var(--fg); }
 .cd .range::-webkit-slider-runnable-track { box-sizing: border-box; height: .5rem; border-radius: 0; border: var(--bw) solid var(--fg); background: var(--track, var(--panel)); }
@@ -227,7 +234,7 @@
 .cd .range::-webkit-slider-thumb { -webkit-appearance: none; width: 1.5rem; height: 1.5rem; margin-top: calc((.5rem - 2 * var(--bw) - 1.5rem) / 2); border-radius: 0; background: var(--bg); border: var(--bw) solid var(--fg); }
 .cd .range::-moz-range-thumb { box-sizing: border-box; width: 1.5rem; height: 1.5rem; border-radius: 0; background: var(--bg); border: var(--bw) solid var(--fg); }
 /* Auto à direita e, abaixo dele, o motivo quando está indisponível (o Figma não desenha o motivo) */
-.cd .tune__actions { display: grid; justify-items: end; gap: .5rem; }
+.cd .tune__actions { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: end; gap: .5rem; }
 .cd .tune__why { text-align: right; }
 .cd .tune__why:empty { display: none; }
 
@@ -336,7 +343,7 @@
 /* altura de linha 1: os alternadores têm 44 px (toque), não os 40 do Figma; assim o painel cabe nos 560 px da lista */
 .cd .detail__title { font-family: var(--font-title); font-size: 1.375rem; font-weight: 600; line-height: 1; }
 /* "Fechar detalhes" só no celular; o texto fica no topo do alvo de 44 px, alinhado ao título */
-.cd .detail__close { display: none; align-items: flex-start; padding-block: .125rem 0; }
+.cd .detail__close { display: none; align-items: flex-start; padding-block: .125rem 0; white-space: nowrap; }
 .cd .sample {
   display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; padding: 1rem;
   background: var(--s); color: var(--t); border: var(--bw) solid var(--edge); forced-color-adjust: none;
@@ -345,12 +352,20 @@
 .cd .sample__big { font-family: var(--font-title); font-size: 1.75rem; font-weight: 600; line-height: 1; }
 .cd .sample__small { font-size: 1rem; line-height: 1; }
 .cd .sample__tag { padding: .125rem .5rem; border: var(--bw) solid var(--t); background: var(--t); color: var(--s); font-family: var(--font-label); font-size: .75rem; font-weight: 700; line-height: 1; text-transform: uppercase; white-space: nowrap; }
+/* Texto ampliado: o painel (container) com menos de 14rem de conteúdo (224 px a 100%, a menor largura é 227 px) empilha o título e
+   "Fechar detalhes", e o texto da amostra e a etiqueta; sem isso o botão e a etiqueta (nowrap) passavam da borda do painel.
+   A consulta é em rem: a 100% nunca dispara, a 200% dispara em 448 px. Não é ponto novo de layout em px. */
+.cd .detail { container-type: inline-size; }
+@container (max-width: 14rem) {
+  .cd .detail__head, .cd .sample { flex-direction: column; align-items: flex-start; }
+  .cd .detail__close, .cd .sample__tag { white-space: normal; overflow-wrap: anywhere; max-width: 100%; text-align: left; }
+}
 /* amostra, texto e botão de copiar em três colunas comuns às linhas */
 .cd .values { display: grid; grid-template-columns: 2rem minmax(0, 1fr) var(--control); align-items: center; gap: 1rem .75rem; }
 .cd .value { display: contents; }
 .cd .value__chip { width: 2rem; height: 2rem; background: var(--c); border: var(--bw) solid var(--fg); forced-color-adjust: none; }
-.cd .value__label { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.2; }
-.cd .value__hex { display: block; font-family: var(--font-label); font-weight: 700; line-height: 1.5; font-variant-numeric: tabular-nums; text-transform: uppercase; }
+.cd .value__label { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
+.cd .value__hex { display: block; font-family: var(--font-label); font-weight: 700; line-height: 1.5; font-variant-numeric: tabular-nums; text-transform: uppercase; overflow-wrap: anywhere; }
 
 /* Switch ("Texto com tom da cor", Figma 658:1650): rótulo à esquerda, trilha de 44 x 24 px à direita, polegar de 12 px a 4 px
    da borda interna. O alvo é a linha inteira (44 px de altura). Ligado: o polegar vai para a direita e a trilha ganha a
@@ -366,7 +381,7 @@
 .cd .switch input:checked ~ .switch__track { background: var(--on-bg, var(--fg)); border-color: var(--fg); }
 .cd .switch input:checked ~ .switch__track::after { background: var(--on-fg, var(--bg)); transform: translate(1.25rem, -50%); }
 .cd .switch input:focus-visible ~ .switch__track { outline: 2px solid var(--ring); outline-offset: 2px; }
-.cd .switch__label { font-family: var(--font-label); font-weight: 700; font-size: .9375rem; line-height: 1.3; text-transform: uppercase; }
+.cd .switch__label { font-family: var(--font-label); font-weight: 700; font-size: .9375rem; line-height: 1.3; text-transform: uppercase; overflow-wrap: anywhere; }
 /* no painel de detalhes o toggle ocupa 24 px (a trilha, como no Figma 658:1353); o alvo de 44 px vai 10 px para cima e para baixo, sobre o espaço entre os blocos */
 .cd .detail .switch { min-height: 1.5rem; }
 .cd .detail .switch input { inset: -.625rem 0 auto 0; height: calc(100% + 1.25rem); }
@@ -387,8 +402,8 @@
   background: var(--bg); color: var(--fg);
 }
 .cd .dialog::backdrop { background: rgb(0 0 0 / .5); }
-.cd .dialog__body { display: grid; gap: 1.125rem; padding: 1.5rem; }
-.cd .dialog__title { font-family: var(--font-title); font-size: 1.375rem; font-weight: 700; }
+.cd .dialog__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.125rem; padding: 1.5rem; }
+.cd .dialog__title { font-family: var(--font-title); font-size: 1.375rem; font-weight: 700; overflow-wrap: anywhere; }
 .cd .dialog__actions { display: flex; gap: .5rem; flex-wrap: wrap; }
 .cd .dialog__status { min-height: 1.5rem; font-size: .875rem; font-weight: 600; }
 .cd .fieldset { border: 0; padding: 0; margin: 0; }
@@ -445,19 +460,19 @@
 
 /* Ajuda */
 .cd .help { max-width: 82rem; margin: 0 auto; padding: .5rem 1.5rem 3rem; }
-.cd .help__inner { display: grid; gap: 1.5rem; max-width: 44rem; }
+.cd .help__inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; max-width: 44rem; }
 .cd .help__back { justify-self: start; }
-.cd .help__title { font-family: var(--font-title); font-size: 2.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: -.015em; line-height: 1.1; }
+.cd .help__title { font-family: var(--font-title); font-size: 2.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: -.015em; line-height: 1.1; overflow-wrap: anywhere; }
 .cd .help__title:focus, .cd .help__h2:focus { outline: none; }
 .cd .help__title:focus-visible, .cd .help__h2:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
 .cd .help__intro { max-width: 60ch; }
-.cd .help__toc { display: grid; gap: .25rem; }
+.cd .help__toc { display: grid; grid-template-columns: minmax(0, 1fr); gap: .25rem; }
 .cd .help__toc-title { color: var(--muted); font-size: .875rem; }
 .cd .help__toc ul { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin: 0; padding: 0; list-style: none; }
-.cd .help__toc a { display: inline-flex; align-items: center; min-height: var(--control); font-weight: 600; color: var(--fg); text-underline-offset: .2em; }
-.cd .help__section { display: grid; gap: 1rem; padding-top: 1.5rem; border-top: var(--bw) solid var(--fg); }
-.cd .help__h2 { font-family: var(--font-title); font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
-.cd .help__h3 { margin-top: 1rem; font-family: var(--font-title); font-size: 1.125rem; font-weight: 700; line-height: 1.25; }
+.cd .help__toc a { overflow-wrap: anywhere; display: inline-flex; align-items: center; min-height: var(--control); font-weight: 600; color: var(--fg); text-underline-offset: .2em; }
+.cd .help__section { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-top: 1.5rem; border-top: var(--bw) solid var(--fg); }
+.cd .help__h2 { font-family: var(--font-title); font-size: 1.5rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.cd .help__h3 { margin-top: 1rem; font-family: var(--font-title); font-size: 1.125rem; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
 .cd .help__for { color: var(--muted); font-size: .875rem; }
 
 .cd .help__steps { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; counter-reset: step; }
@@ -470,13 +485,13 @@
 .cd .help__step-title { font-weight: 600; }
 .cd .help__steps li > span { grid-column: 2; }
 
-.cd .help__faq { display: grid; gap: .5rem; justify-items: start; }
-.cd .help__list { display: grid; width: 100%; }
+.cd .help__faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; justify-items: start; }
+.cd .help__list { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; }
 .cd .help__q { border-bottom: var(--bw) solid var(--fg); }
 .cd .help__q:first-child { border-top: var(--bw) solid var(--fg); }
 .cd .help__q > summary {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  min-height: 3.25rem; padding: .5rem 0; cursor: pointer; font-weight: 600; line-height: 1.35; list-style: none;
+  min-height: 3.25rem; padding: .5rem 0; cursor: pointer; font-weight: 600; line-height: 1.35; list-style: none; overflow-wrap: anywhere;
 }
 .cd .help__q > summary::-webkit-details-marker { display: none; }
 .cd .help__q > summary::after {
@@ -484,9 +499,9 @@
   transform: translateY(-.125rem) rotate(45deg); transition: transform .2s var(--ease);
 }
 .cd .help__q[open] > summary::after { transform: translateY(.125rem) rotate(-135deg); }
-.cd .help__a { display: grid; gap: .75rem; max-width: 60ch; padding: 0 0 1.25rem; line-height: 1.55; }
+.cd .help__a { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; max-width: 60ch; padding: 0 0 1.25rem; line-height: 1.55; }
 
-.cd .code { display: grid; gap: .5rem; margin: 0 0 .25rem; }
+.cd .code { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; margin: 0 0 .25rem; }
 .cd .code pre {
   margin: 0; padding: 1rem; overflow-x: auto; background: var(--panel); border: var(--bw) solid var(--fg); border-radius: var(--r-panel); box-shadow: var(--shadow-comp);
   font: 400 .875rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; tab-size: 2;

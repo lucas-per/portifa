@@ -1,7 +1,7 @@
 {
   "name": "portifa",
   "type": "module",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "engines": {
     "node": ">=22.12.0"
   },
