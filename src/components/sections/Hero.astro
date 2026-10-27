@@ -47,6 +47,10 @@ import avatar from '../../assets/home/avatar.png';
        browser inclui um "leading" acima do cap-height que o Figma não conta
        no bounding box do texto — compensa pra alinhar com o topo do avatar. */
     margin-top: calc((1 - var(--line-height-compact)) / 2 * 1em);
+    /* Texto ampliado: com o título em coluna (abaixo de 960px) a caixa não
+       passa da largura da linha e o break-word da classe quebra a palavra
+       mais longa ("transformando" tem 923px a 200%) em vez de vazar. */
+    max-width: 100%;
     color: var(--text-body-primary-strong);
   }
 
@@ -70,6 +74,24 @@ import avatar from '../../assets/home/avatar.png';
   @media (max-width: 959px) {
     .hero__headline {
       flex-direction: column;
+    }
+  }
+
+  /* A partir de 960px, com texto ampliado: o avatar desce para baixo do
+     título (mesmo gap, alinhado à esquerda, como abaixo de 960px) só quando
+     a palavra mais longa não cabe ao lado dele. A base min-content é o que
+     decide a quebra de linha; o min-width: 0 deixa o título, sozinho na
+     linha, ficar mais estreito que a palavra (que então quebra). A 100% a
+     palavra cabe (455 + 48 + 260px), nada quebra e o título cresce até o
+     mesmo tamanho de antes. */
+  @media (min-width: 960px) {
+    .hero__headline {
+      flex-wrap: wrap;
+    }
+
+    .hero__title {
+      flex-basis: min-content;
+      min-width: 0;
     }
   }
 

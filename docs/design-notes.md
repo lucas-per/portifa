@@ -977,3 +977,43 @@ A dependência passou de `github:lucas-per/uaiui-ds#v0.3.3` para `#v0.3.4` (`pnp
 **Com a 1.4.3 no ar:** a 100% nada muda no Toast; com texto ampliado ou tela estreita o botão de fechar desce para a linha de baixo e o texto do aviso deixa de ser espremido (em 320 a 414px e 200% o texto chegava a uma letra por linha); o código de exemplo do CSS do Toast mostra as três regras novas.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Home a texto ampliado: quebra de palavra, Hero, Skills e Sobre mim (site 1.4.4)
+
+Primeira das quatro PRs do plano R (R1; depois R2 rodapé, R3 esqueleto e componentes dos cases, R4 Paletaria). Medido a 200% em dois cenários: **A**, `html { font-size: 200% }` (o `rem` dobra, as media queries não mudam; equivale ao "só texto" do Firefox) e **B**, Chromium com `--blink-settings=defaultFontSize=32` (o `rem` dobra e as media queries em `rem` acompanham; equivale à fonte maior nas configurações do navegador). Na Home os dois dão os mesmos números, porque ela só usa media queries em `px`.
+
+**Decisão: o `typography.css` não muda.** A primeira tentativa trocou `overflow-wrap: break-word` por `anywhere` nas quatro classes de título (`.text-title-display`, `-h2`, `-h3`, `-h4`). `anywhere` reduz o tamanho mínimo dos itens flex e grid e **24 de 224 configurações mudavam a 100%** (8 páginas × 14 larguras × barra de 15 e de 17px): Sobre mim a 768px, Skills a 1152 e 1184px, Resumo e coluna de conteúdo dos cases de 768 a 1184px, com palavra quebrada no meio a 100% ("Sobr / e mim", "Colaboraç / ão", "Ferrament / as", "Resultado / s", "Resultad / o"). Os títulos continuam com `break-word`, que quebra a palavra só quando a caixa já é mais estreita que ela, sem mudar o tamanho mínimo. Decisão do Lucas.
+
+**O que mudou:**
+- **Corpo e listas (`BaseLayout.astro`):** `:global(main :where(p, li, figcaption, dd, dt)) { overflow-wrap: break-word; }`. `:where()` deixa a especificidade de um seletor de tipo, então qualquer classe que já defina `overflow-wrap` (o `anywhere` da Paletaria e da UaiUI) continua valendo. Resolve o texto que vazava do cartão nas Skills, nos Cases selecionados e no Sobre mim, e a legenda das imagens do case Jornada (`figcaption`, 66,7px fora do cartão de 768 a 1920px).
+- **Hero (`Hero.astro`):** `max-width: 100%` no título (em coluna, abaixo de 960px, a caixa não passa da linha e "transformando", com 923px a 200%, quebra). A partir de 960px (`@media (min-width: 960px)`, complemento do ponto de 959px, que não mudou): `flex-wrap: wrap` no `.hero__headline` e, no título, `flex-basis: min-content` e `min-width: 0`. A palavra mais longa decide a quebra: o avatar desce para baixo do título (mesmo gap, alinhado à esquerda, como abaixo de 960px) só quando ela não cabe ao lado dele. A 100% cabe (455 + 48 + 260px) e o título cresce até o mesmo tamanho de antes.
+- **Skills (`SkillsExpertise.astro`):** `flex-wrap: wrap` na linha de 4 colunas **só a partir de 1240px** (`@media (min-width: 1240px)`, ponto novo em px; não é token nem valor de espaçamento). A conta: as 4 colunas pedem no mínimo 1044px (924 das palavras mais longas dos títulos e 120 de gaps); o grid só chega a isso a partir de ~1236px com barra de 17px. Com `flex-wrap` em todas as larguras a linha quebrava em 3+1 já a 100% em 1152 e 1184px. Opção B do Lucas.
+- **Sobre mim (`AboutMe.astro`):** `flex-wrap: wrap` na linha (a partir de 768px); título em `flex: 0 1 var(--grid-col-4-width)` (antes `0 0`; não encolhe abaixo da palavra mais longa); texto em `flex: 1 1 0` (antes `1 1 auto`: com base `auto` a linha quebraria já a 100%, porque a base seria o `max-width` de 1024px) e `min-width: min(100%, 20rem)` (antes `0`). O piso de 20rem (320px a 100%) faz o texto descer para baixo do título quando título + gap + piso não cabem, em vez de ficar com 23px de largura; `min(100%, …)` deixa o piso nunca passar da linha. A 100% o texto tem no mínimo 406px (768px, barra de 17px) e o piso não atua; posição e tamanho do bloco idênticos.
+- **Cases selecionados:** só o item do corpo e listas.
+
+**A 100% nada muda:** geometria (x, y, largura e altura de todos os elementos) idêntica à da `main` em 224 configurações: Home, Paletaria, UaiUI (Introdução, Tokens e temas, Toast) e os três cases, em 320, 360, 414, 768, 959, 960, 1024, 1087, 1088, 1151, 1152, 1184, 1440 e 1920px, com barra de 15 e de 17px. Mais 18 na Home em volta do ponto novo (1232, 1236 a 1241, 1244 e 1280px).
+
+**A 200% (Home, A e B iguais; "fora da página / vazando do cartão", em px; antes → depois):**
+
+| Zona | 320 | 360 | 414 | 768 | 1024 | 1184 | 1440 | 1920 |
+|---|---|---|---|---|---|---|---|---|
+| Documento (`scrollWidth − clientWidth`) | 248 → 0 | 208 → 0 | 154 → 0 | 353 (rodapé) | 628 (rodapé) | 1079 (Skills e rodapé) | 823 → 212 (rodapé) | 575 → 0 |
+| Título do Hero e avatar | 248,5 → 0 | 208,5 → 0 | 154,5 → 0 | 345,9 → 0 | 445,9 → 0 | 285,9 → 0 | 29,9 → 0 | 0 |
+| Cases selecionados | 14,7 / 104,7 → 0 | 64,7 → 0 | 10,7 → 0 | 0 | 0 | 168,1 → 0 | 82,8 → 0 | 77,8 → 0 |
+| Skills | 29,2 / 119,2 → 0 | 79,2 → 0 | 25,2 → 0 | 18,7 / 244,7 → 0 | 116,7 → 0 | 1078,8 (igual, limite) | 822,8 → 0 | 575,3 → 0 |
+| Sobre mim | 40,4 → 0 | 0 | 0 | 82,7 / 258,7 → 0 | 2,7 → 0 | 0 | 0 | 0 |
+
+Avatar a 200%: embaixo do título de 1024 a 1920px (a 100%, ao lado de 960px em diante, como antes). Skills a 200%: 2+2 a 1440 e 1920px. Sobre mim a 200%: texto embaixo do título de 768 a 1184px e ao lado a 1440 e 1920px (735 e 750px de texto). Nas outras sete páginas nada piora (A e B) e o documento fica igual; o que sobra é da R2 (rodapé), R3 (cases) e R4 (Paletaria). No case Jornada a legenda das imagens deixa de vazar (66,7px → 0 de 768 a 1920px) e o texto fora da página na seção de Discovery cai (768: 345,7 → 276,8; 1024: 89,7 → 20,8; 1184: 204,7 → 133,1).
+
+**Aceitações e limites (decisões do Lucas):**
+- **Palavra quebrada no meio a 200%** quando é maior que a linha, como no Toast: "transformand / o" no Hero a 320 a 414px, títulos e itens das Skills, textos dos Cases selecionados. A 100% nenhuma palavra quebra.
+- **Skills de 1152 a 1239px a 200% ficam como antes** (a linha de 4 colunas passa da página: 1078,8px a 1184px), sem piorar. Vai para o backlog junto com a troca dos pontos de 959, 1087 e 1151px por `rem` (L2, S2 e C2).
+- **Skills de 768 a 1151px a 200%** (grid 2×2, ponto de 1151px intacto): cada coluna fica com cerca de 65px de texto a 768px e 193px a 1024px. Os títulos já quebravam letra a letra antes; os itens, que vazavam por cima do cartão vizinho, agora quebram dentro da coluna. Melhorar exige mexer no 2×2 ou no padding da coluna (fora desta PR).
+
+**Divergência conhecida (fora desta PR):** de 1152 a ~1236px, a 100%, as 4 colunas das Skills passam da borda do conteúdo e entram no respiro da direita (a 1184px os cartões terminam em x 1132 e o texto da página em 1081). O Figma só tem 1440px; o lado a mudar é o código. O Lucas decide sobre a opção C (subir o ponto do 2×2 de 1151 para 1239px) numa PR própria depois da R.
+
+**Escala de 4:** nenhuma exceção nova; `min(100%, 20rem)` é 320px a 100% e `spacing-scale.test.ts` segue verde sem mudar `KNOWN_EXCEPTIONS`. Teste novo: `home-texto-ampliado.test.ts`. **Versão:** 1.4.3 para 1.4.4.
+
+**Com a 1.4.4 no ar:** a 100% nada muda. Com texto ampliado, a Home não rola mais na horizontal em 320, 360, 414 e 1920px (de 768 a 1440px sobra o rodapé, e a 1184px também as Skills); o avatar desce para baixo do título quando falta espaço; as Skills quebram em 2+2 a partir de 1240px; o texto do Sobre mim desce para baixo do título; e palavras que não cabem na linha quebram em vez de vazar do cartão.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.

@@ -192,6 +192,20 @@ const tools = [
     }
   }
 
+  /* A partir de 1240px, com texto ampliado: a linha de 4 colunas (cada uma
+     no mínimo do tamanho da palavra mais longa do título) não cabe e as
+     colunas descem para a linha de baixo em vez de passar da página. A 100%
+     as quatro pedem no mínimo 1044px (924 de colunas e 120 de gaps) e o grid
+     só chega a isso a partir de ~1236px (barra de 17px): antes de 1240px o
+     flex-wrap quebraria a linha já a 100%, por isso o ponto. De 1152 a 1239px
+     fica como antes (as colunas passam da borda do conteúdo; ver
+     design-notes, divergência conhecida). */
+  @media (min-width: 1240px) {
+    .skills__grid {
+      flex-wrap: wrap;
+    }
+  }
+
   @media (max-width: 767px) {
     .skills__inner {
       padding: var(--scale-x12) var(--scale-x5);

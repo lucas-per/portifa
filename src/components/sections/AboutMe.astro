@@ -64,18 +64,23 @@
   }
 
   /* Acompanha a largura do card do Skills & Expertise logo acima
-     (mesma fórmula de grid implícito — ver --grid-col-4-width).
-     flex-shrink: 0 porque o texto ao lado (parágrafo longo, sem
-     largura fixa) senão disputa espaço com o título via flex-shrink
-     padrão e o espreme abaixo do valor calculado. */
+     (mesma fórmula de grid implícito — ver --grid-col-4-width). Pode
+     encolher (flex-shrink: 1), mas não abaixo da palavra mais longa
+     ("Sobre"): o texto ao lado nunca o espreme, porque a linha quebra
+     (flex-wrap, a partir de 768px) antes disso. */
   .about-me__title {
     box-sizing: border-box;
-    flex: 0 0 var(--grid-col-4-width);
+    flex: 0 1 var(--grid-col-4-width);
   }
 
+  /* Base 0 e piso de 20rem (320px a 100%): o texto ocupa o resto da linha,
+     como antes; com texto ampliado, quando título + gap + 20rem não cabem,
+     o texto desce para baixo do título em vez de ficar com 23px de largura.
+     min(100%, ...) deixa o piso nunca passar da linha. A 100% o texto tem
+     no mínimo 406px (768px de tela, barra de 17px), então o piso não atua. */
   .about-me__text {
-    flex: 1 1 auto;
-    min-width: 0;
+    flex: 1 1 0;
+    min-width: min(100%, 20rem);
     max-width: 1024px;
     color: var(--text-body-neutral-strong);
   }
@@ -111,6 +116,7 @@
   @media (min-width: 768px) {
     .about-me__inner {
       flex-direction: row;
+      flex-wrap: wrap;
       align-items: flex-start;
       gap: var(--scale-x11);
     }

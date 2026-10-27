@@ -73,6 +73,14 @@ const pageUrl = path ? new URL(path, 'https://lpereira.me').href : 'https://lper
         margin: 0;
         background-color: var(--surface-bg-off-white-primary);
       }
+
+      /* Texto ampliado: palavra maior que a caixa quebra em vez de vazar do
+         cartão ou da página. break-word (não anywhere), como nas classes de
+         título: não muda o tamanho mínimo dos itens flex e grid, então a 100%
+         nada se move. :where() deixa a especificidade de um seletor de tipo. */
+      :global(main :where(p, li, figcaption, dd, dt)) {
+        overflow-wrap: break-word;
+      }
     </style>
   </head>
   <body>
