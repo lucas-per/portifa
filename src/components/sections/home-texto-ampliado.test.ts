@@ -25,7 +25,7 @@ function block(css: string, start: string) {
 
 describe('quebra de palavra a texto ampliado (break-word, nunca anywhere)', () => {
   it('corpo e listas dentro de <main> quebram a palavra que não cabe, com especificidade de seletor de tipo', () => {
-    const rule = block(layout, ':global(main :where(p, li, figcaption, dd, dt))');
+    const rule = block(layout, ':global(main :where(p, li, figcaption, dd, dt, h1, h2, h3, h4, h5, h6))');
     expect(rule).toMatch(/overflow-wrap: break-word;/);
   });
 

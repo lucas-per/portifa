@@ -66,8 +66,11 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
     padding: var(--scale-x12) var(--scale-x20);
   }
 
+  /* flex-wrap (aqui e na meta): com texto ampliado, os itens descem para a
+     linha de baixo em vez de passar da tela ("1 minuto" a 320px). */
   .case-header__breadcrumb {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--scale-base);
     align-items: center;
     color: var(--text-body-neutral-subtle);
@@ -96,6 +99,7 @@ const { title, status, tags, publishedDate, readingTime } = Astro.props;
 
   .case-header__meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--scale-x2);
     color: var(--text-body-neutral-subtle);

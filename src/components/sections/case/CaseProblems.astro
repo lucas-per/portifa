@@ -75,6 +75,15 @@ const { intro, hypothesis, hypothesisCard, risksIntro, risks, kpis } = Astro.pro
     padding-left: var(--scale-x6);
   }
 
+  /* Tablet com texto ampliado (ver [slug].astro): o recuo de 48px vira
+     min(48px, 6,25vw). A 100% é sempre o token (6,25vw de 768px já é 48px);
+     com o rem dobrado ele para em 6,25vw e devolve largura à coluna. */
+  @media (min-width: 768px) and (max-width: 1087px) {
+    .case-problems {
+      padding-left: min(var(--scale-x12), 6.25vw);
+    }
+  }
+
   @media (max-width: 767px) {
     .case-problems {
       /* 20px (Figma): o inset vive aqui dentro, não em

@@ -136,6 +136,23 @@ const ratio = image.width / image.height;
     display: flex;
   }
 
+  /* Tablet com texto ampliado (ver [slug].astro): o recuo de 48px vira
+     min(48px, 6,25vw). A 100% é sempre o token (6,25vw de 768px já é 48px);
+     com o rem dobrado ele para em 6,25vw e devolve largura à coluna. */
+  @media (min-width: 768px) and (max-width: 1087px) {
+    .case-context {
+      padding-left: min(var(--scale-x12), 6.25vw);
+    }
+
+    /* Texto ampliado: a imagem fica estreita (cerca de 120px a 200%) e o
+       selo, a 16px da borda, passava 2,4px da imagem. O afastamento vira
+       min(8px, 1,05vw): a 100% é sempre 8px (1,05vw de 768px é 8,06px). */
+    .case-context__tag {
+      top: min(var(--scale-x2), 1.05vw);
+      left: min(var(--scale-x2), 1.05vw);
+    }
+  }
+
   @media (max-width: 767px) {
     .case-context {
       /* 20px (Figma, node 275:491 "col-context"): o inset vive aqui
@@ -147,6 +164,9 @@ const ratio = image.width / image.height;
     /* Empilhado: imagem abaixo do texto, na largura total. */
     .case-context__row {
       flex-direction: column;
+      /* Texto ampliado: o texto tem a largura da seção em vez de crescer
+         até a palavra mais longa; a 100% o texto longo já enchia a linha. */
+      align-items: stretch;
     }
 
     /* min-width vence o width inline (desktop) sem !important. */

@@ -241,6 +241,24 @@ const { intro, phases, exploration, pd, tests, consolidation } = Astro.props;
     gap: var(--scale-x3);
   }
 
+  /* Tablet com texto ampliado (ver [slug].astro): o recuo de 48px vira
+     min(48px, 6,25vw). A 100% é sempre o token (6,25vw de 768px já é 48px);
+     com o rem dobrado ele para em 6,25vw e devolve largura à coluna. */
+  /* Texto ampliado, até 1087px: o texto de cada fase pode encolher abaixo
+     da palavra mais longa (quebra dentro da linha do tempo em vez de
+     empurrar a seção para fora da coluna). A 100% a linha cabe. */
+  @media (max-width: 1087px) {
+    .case-discovery__phase-content {
+      min-width: 0;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1087px) {
+    .case-discovery {
+      padding-left: min(var(--scale-x12), 6.25vw);
+    }
+  }
+
   @media (max-width: 767px) {
     .case-discovery {
       /* 20px (Figma): o inset vive aqui dentro, não em
