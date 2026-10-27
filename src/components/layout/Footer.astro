@@ -154,11 +154,22 @@ const dividerLines = Array.from({ length: 4 });
      mesmo que os dois divisores fixos + gap davam). A coluna da esquerda
      alinha à esquerda e a da direita à direita do bloco. */
   @media (min-width: 768px) and (max-width: 959px) {
+    /* Texto ampliado: colunas minmax(0, auto) (a grade pode encolher abaixo do
+       tamanho natural dos botões; a 100% elas ficam no tamanho natural, igual
+       a antes), rótulo com quebra (o e-mail, sem espaço, passa a quebrar em
+       duas linhas só quando não cabe) e respiro lateral min(88px, 11,5vw):
+       11,5vw de 768px já é 88,3px, então a 100% o valor é sempre o token; com
+       o rem dobrado (176px) ele cai para 11,5vw. Fora da escala de 4 só com
+       texto ampliado (mesmo critério da 1.4.2). */
     .site-footer__buttons-content {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
       row-gap: var(--scale-x4);
-      padding: 0 var(--scale-x20);
+      padding: 0 min(var(--scale-x20), 11.5vw);
+    }
+
+    .site-footer__buttons-content :global(.button__label) {
+      overflow-wrap: anywhere;
     }
 
     .site-footer__buttons-content > :first-child,
@@ -170,6 +181,43 @@ const dividerLines = Array.from({ length: 4 });
     .site-footer__buttons-content > :nth-child(4),
     .site-footer__buttons-content > :nth-child(8) {
       justify-self: end;
+    }
+  }
+
+  /* A partir de 992px, com texto ampliado: a linha de 4 botões (64px de
+     divisor, 4 botões e 64px de divisor, com 8 gaps) não cabe e os botões
+     descem para uma segunda linha em vez de passar da página. O ponto é
+     992px porque, a 100%, a linha pede 971px (192 de gaps, 128 de divisores
+     fixos e 651 de botões) mais 17px de barra de rolagem = 988px: com
+     flex-wrap desde 960px a linha quebraria já a 100% (o rodapé de 960px
+     passa de 122 para 174px). De 960 a 991px fica como antes (limite
+     aceito; backlog dos breakpoints em rem).
+     Os dois divisores fixos das pontas saem do fluxo (absolutos, nas
+     bordas, centrados na altura) e viram padding de 64px + gap, o mesmo
+     espaço de antes (88px a 100%): assim a segunda linha de botões alinha
+     com a primeira, em vez de começar na borda da janela. */
+  @media (min-width: 992px) {
+    .site-footer__buttons-content {
+      position: relative;
+      flex-wrap: wrap;
+      row-gap: var(--scale-x4);
+      padding-inline: calc(64px + var(--scale-x6));
+    }
+
+    .site-footer__dividers--fixed {
+      position: absolute;
+      inset-block: 0;
+      width: 64px;
+      height: fit-content;
+      margin-block: auto;
+    }
+
+    .site-footer__dividers--fixed:first-child {
+      inset-inline-start: 0;
+    }
+
+    .site-footer__dividers--fixed:last-child {
+      inset-inline-end: 0;
     }
   }
 

@@ -1017,3 +1017,30 @@ Avatar a 200%: embaixo do título de 1024 a 1920px (a 100%, ao lado de 960px em 
 **Com a 1.4.4 no ar:** a 100% nada muda. Com texto ampliado, a Home não rola mais na horizontal em 320, 360, 414 e 1920px (de 768 a 1440px sobra o rodapé, e a 1184px também as Skills); o avatar desce para baixo do título quando falta espaço; as Skills quebram em 2+2 a partir de 1240px; o texto do Sobre mim desce para baixo do título; e palavras que não cabem na linha quebram em vez de vazar do cartão.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Rodapé a texto ampliado (site 1.4.5)
+
+Segunda das quatro PRs do plano R (R2). O rodapé (`footer.site-footer`, só a partir de 768px; abaixo disso vale o `FooterMobile`, que já cabia) passava da largura útil a 200% em todas as páginas: 353px a 768px, 162 a 959, 692 a 960, 628 a 1024, 468 a 1184 e 212 a 1440 (cenários A, `html { font-size: 200% }`, e B, `--blink-settings=defaultFontSize=32`, deram os mesmos números: o rodapé só usa media queries em `px`). Causa: de 960px em diante, uma linha única (2 divisores fixos de 64px, 8 gaps de 48px e os botões, de 387, 272, 233 e 233px, no tamanho mínimo) pede 1637px e não quebra; de 768 a 959px, a grade 2×2 pede 1106px (e-mail de 387px + LinkedIn de 272px + gaps + padding).
+
+**Mudanças (`Footer.astro`, sem token novo, sem mexer no DOM, nos textos ou no `uaiui-ds`):**
+- **De 992px em diante:** `flex-wrap: wrap` e `row-gap: var(--scale-x4)` no `.site-footer__buttons-content`. **Ponto novo, 992px em px, decisão do Lucas** (não é token nem valor de espaçamento): a 100% a linha de 4 botões pede 971px (192 de gaps, 128 de divisores fixos e 651 de botões) mais 17px de barra de rolagem = 988px. Com `flex-wrap` desde 960px a linha quebraria já a 100% (o rodapé de 960px passa de 122 para 174px de altura, medido); a 992px, a 100%, nada muda.
+- **Divisores das pontas e alinhamento da segunda linha:** no experimento só com `flex-wrap`, a segunda linha de botões começava em x = 0 enquanto o conteúdo começava em x = 112 (os divisores fixos de 64px e o gap ficavam só na primeira linha). Agora os dois divisores fixos saem do fluxo (`position: absolute`, nas bordas, centrados na altura) e o conteúdo ganha `padding-inline: calc(64px + var(--scale-x6))`: o mesmo espaço de antes (88px a 100%; 112px a 200%). Assim todas as linhas começam em x = 112. Os divisores do meio crescem entre os botões de cada linha; quando uma linha começa por um divisor do meio (1024px: GitHub e Baixar CV), o divisor de 3px aparece antes do botão, e a segunda linha de botões fica recuada por ele. **Divisor decorativo órfão aceito como limite do caso extremo.**
+- **De 768 a 959px (a grade 2×2 continua; os pontos de 768 e 959px não mudaram):** colunas `minmax(0, auto) minmax(0, 1fr) minmax(0, auto)` (a grade pode encolher abaixo do tamanho natural dos botões; a 100% as colunas ficam no tamanho natural), rótulo dos botões com `overflow-wrap: anywhere` (o e-mail, sem espaço, passa a quebrar em duas linhas só quando não cabe; o nome acessível e o DOM não mudam) e respiro lateral `min(var(--scale-x20), 11.5vw)`. 11,5vw de 768px já é 88,3px, então a 100% o valor é sempre o token (88px); com o rem dobrado (176px) ele cai para 11,5vw (88px a 768px, 110px a 959px). **Nesse estado, em larguras intermediárias, o valor calculado pode não ser múltiplo de 4** (mesmo critério registrado na 1.4.2); `spacing-scale.test.ts` não avalia `min()` com `vw` e segue verde sem exceção nova.
+
+**A 100% nada muda:** geometria (x, y, largura e altura de todos os elementos) idêntica à da `main` em 256 configurações: 8 páginas (Home, Paletaria, UaiUI Introdução, Tokens e Toast, três cases) × 16 larguras (as 14 de sempre mais 991 e 992px) × barra de 15 e de 17px. Alvos dos botões com 46px de altura a 100% e 70px a 200%.
+
+**A 200% (rodapé; excesso da página em px, produção → R2; A e B iguais; todas as páginas, 8 páginas × 11 larguras):**
+
+| Largura | 320 | 360 | 414 | 768 | 960 | 991 | 992 | 1024 | 1184 | 1440 | 1920 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Rodapé fora da página | 0 | 0 | 0 | 353 → 0 | 692 (igual) | 661 (igual) | 660 → 0 | 628 → 0 | 468 → 0 | 212 → 0 | 0 |
+
+Forma a 200%: de 768 a 959px, 2×2 com o e-mail quebrado em duas linhas (rodapé de 298 a 394px de altura); de 992 a 1023px, 3 linhas (e-mail; LinkedIn e GitHub; Baixar CV), todas alinhadas em x = 112; a 1024 e 1184px, 2 linhas de 2 botões; a 1440px, 3 botões na primeira linha e Baixar CV na segunda, a 1920px os 4 numa linha. Nada piora em nenhuma das 8 páginas (A e B). O documento da Home a 1184px continua em 1079px, mas por causa das Skills (limite aceito na R1).
+
+**Aceitações e limites (decisões do Lucas):** de 960 a 991px a 200% o rodapé continua passando da página (692 e 661px): não se baixa o ponto de 992px para não mudar nada a 100%; vai para o backlog dos breakpoints em `rem` (L2). E-mail quebrado no meio em duas linhas de 768 a 959px a 200% (a grade 2×2 não foi reescrita).
+
+**Divergência Figma × código:** o Figma só tem o rodapé a 1440px (e o mobile a 360px) e não tem o estado ampliado; o comportamento é do código. Teste novo: `footer-texto-ampliado.test.ts`. **Versão:** 1.4.4 para 1.4.5.
+
+**Com a 1.4.5 no ar:** a 100% nada muda. Com texto ampliado, o rodapé não passa mais da página de 768 a 959px e de 992px em diante: os botões descem para linhas, alinhados com o conteúdo, e o e-mail quebra em duas linhas na grade 2×2.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
