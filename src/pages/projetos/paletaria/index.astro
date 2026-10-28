@@ -23,7 +23,8 @@ const description =
      --header-mobile-height (HeaderMobile.astro). Sem esta folga, o foco e os
      atalhos da Ajuda (scrollIntoView) param com o alvo escondido sob ele
      (WCAG 2.4.11). */
-  @media (max-width: 767px) {
+  /* Até 887px: o ponto é o do cabeçalho (o mobile vale até 887px, Header.astro). */
+  @media (max-width: 887px) {
     html {
       scroll-padding-top: calc(var(--header-mobile-height) + var(--scale-x2));
     }

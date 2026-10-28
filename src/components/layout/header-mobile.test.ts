@@ -26,11 +26,12 @@ describe('menu do cabeçalho mobile (painel de tela cheia)', () => {
     expect(header).toMatch(/panel\.hidden = !open/);
   });
 
-  it('fecha com Esc (devolvendo o foco), ao escolher um link e ao passar para o cabeçalho desktop (768px)', () => {
+  it('fecha com Esc (devolvendo o foco), ao escolher um link e ao passar para o cabeçalho desktop (888px, o ponto do cabeçalho)', () => {
     expect(header).toMatch(/event\.key !== 'Escape'/);
     expect(header).toMatch(/toggle\.focus\(\)/);
     expect(header).toMatch(/closest\('a'\)/);
-    expect(header).toMatch(/matchMedia\('\(min-width: 768px\)'\)/);
+    expect(header).toMatch(/matchMedia\('\(min-width: 888px\)'\)/);
+    expect(header).toMatch(/@media \(max-width: 887px\) \{\s*\.site-header-mobile \{\s*display: flex;/);
   });
 
   it('com o menu aberto o resto da página fica inert (e volta ao fechar), sem prender o foco', () => {

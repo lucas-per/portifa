@@ -13,3 +13,15 @@ import AboutMe from '../components/sections/AboutMe.astro';
   <Divider />
   <AboutMe />
 </BaseLayout>
+
+<style is:global>
+  /* De 768 a 887px o cabeçalho do site é o mobile, que é sticky (o ponto do
+     cabeçalho, Header.astro): sem esta folga, as âncoras da Home (#sobre-mim)
+     param com o título sob ele. Abaixo de 768px o problema já existia e fica
+     para depois (backlog no design-notes, site 1.5.0). */
+  @media (min-width: 768px) and (max-width: 887px) {
+    html {
+      scroll-padding-top: calc(var(--header-mobile-height) + var(--scale-x2));
+    }
+  }
+</style>
