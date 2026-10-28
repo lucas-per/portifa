@@ -1184,3 +1184,51 @@ Nada piora em nenhuma das 8 páginas (A e B); Home, Paletaria e UaiUI ficam igua
 **Versão:** 1.4.8 para 1.4.9.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Cabeçalho: dropdown "Cases" e novos pontos de troca (site 1.5.0)
+
+**O que é:** o item "Cases" no cabeçalho desktop, antes de UaiUI DS e Paletaria (Figma 728:369, "Header — Cases (dropdown)"). Abre um painel com os cases publicados, na ordem da Home (`getMenuCases`, a mesma fonte do menu mobile): hoje Área de pagamentos e Redesign de produto; o GoSafe DS entra quando deixar de ser coming-soon. Componente: `HeaderCases.astro`. O "Cases" não é macro-seção (`navigation.ts`), então não vira link no menu mobile, que já tem o grupo Cases (Figma 695:953) e não muda.
+
+**Marcação:** `<details>`/`<summary>` (padrão disclosure, não `role="menu"`). Sem JavaScript o conteúdo continua acessível: abre e fecha com clique, Enter e Espaço, e os links ficam na ordem do DOM. O Chrome expõe o `summary` como botão de abrir e fechar (`expanded` false/true) com o nome "Cases", que é o texto visível (WCAG 2.5.3; a seta é `aria-hidden`). Não há `aria-controls`, que o padrão não exige. O script só acrescenta: Esc fecha e devolve o foco ao `summary`; clique fora e Tab para fora do conjunto fecham; fecha ao passar para o cabeçalho mobile e ao voltar do cache do histórico. Abre só por clique ou teclado, nunca por hover. Na página de um case, o item dele tem `aria-current="page"` e o gatilho `aria-current="true"` (sublinhado e blue/6, como os links do cabeçalho).
+
+**Visual (medido igual ao Figma em 1440px):** gatilho de 88 x 24px ("CASES" 60px, 8px, seta de 20px; área de clique de 44px), 32px até "UaiUI DS". Painel 16px abaixo do gatilho, alinhado pela esquerda dele, 264 x 108px: borda de 2px `--border-accent-subtle`, sombra `--shadow-layout-accent`, 8px em cima e embaixo, largura pelo conteúdo. Itens de 260 x 44px, 16px nas laterais, Desktop/Label/MD em `--text-label-accent`. O painel passa por cima da borda de 5px do cabeçalho, como no Figma, e fica acima dos elementos sticky da página (`z-index: 20`). Sem animação (a seta só gira 180° aberta).
+
+**Contrastes (WCAG):** hover do item (só com mouse): `--text-body-accent-strong` (blue-6) sobre `--surface-bg-accent-medium` (blue-2) 4,63:1 (o Figma diz 4,62; arredondamento a partir do OKLCH); o blue-5 sobre blue-2 daria 3,19:1. Item normal: blue-5 sobre off-white 4,47:1, texto grande (20px bold), que pede 3:1, como os links do cabeçalho. Foco (`--border-focus-strong`, red-6): 4,97:1 sobre off-white e 3,55:1 sobre blue-2; por fora no gatilho e por dentro dos itens. Cores forçadas: a borda do painel continua (`CanvasText`), a sombra some, e o hover usa `Highlight`.
+
+**Classes do Umami (convenção, sem evento novo):** gatilho `clickable-menu-cases`; itens `clickable-link-internal-case-<id>`, as mesmas do menu mobile.
+
+**Pontos de troca do cabeçalho (medidos):** com "Cases" o cabeçalho soma 120px (88 + 32). Larguras: logo reduzido 54px, logo completo 308px; ações 756px (padding de 20px) e 780px (padding de 88px, o `row-btns` do Figma).
+
+| Faixa | Precisa (gap de 32px) | + barra de 15px | Ponto | Gap mínimo na borda |
+|---|---|---|---|---|
+| Logo reduzido | 20 + 54 + 32 + 756 + 20 = 882px | 897px | 888px | 23px |
+| Logo completo | 88 + 308 + 32 + 780 + 88 = 1296px | 1311px | 1304px | 25px |
+
+A folga é a de antes (o ponto 9px e 7px abaixo de "precisa + 15"; o gap de 16px do contêiner garante que nada quebre). **Menu hambúrguer até 887px, logo reduzido de 888 a 1303px, logo completo a partir de 1304px.** São pontos do cabeçalho; os 767/768px do corpo, do rodapé, dos cases e da UaiUI não mudaram. Os mesmos valores estão em `Header.astro`, `HeaderMobile.astro` (CSS e o `matchMedia` que fecha o menu), `HeaderCases.astro`, `SideMenu.astro`, `uaiui-docs.css`, `paletaria/index.astro` e `index.astro`; o `Header.test.ts` garante isso.
+
+**Larguras em que o cabeçalho muda:** de 768 a 887px vira o cabeçalho mobile (sticky, 83px em vez de 123px); de 1184 a 1303px, logo reduzido, padding de 20px e 32px entre links e botões (123px de altura em vez de 127px); a partir de 888px ganha o "Cases". Abaixo de 768px e a partir de 1304px (fora o item novo) nada muda.
+
+**A faixa de 768 a 887px (cabeçalho mobile, sticky):** o que dependia de o cabeçalho rolar com a página passou a descontar a altura dele (`--header-mobile-height` + a folga de antes):
+- Cases: o menu lateral (sticky) cola em 83 + 24px, e as âncoras dele param abaixo do cabeçalho (`scroll-padding-top`). O accordion do celular continua só até 767px.
+- UaiUI: o menu lateral cola em 83 + 40px, com a altura máxima descontando o cabeçalho; o `scroll-margin-top` dos h2 vale até 887px.
+- Paletaria: o `scroll-padding-top` vale até 887px.
+- Home: `scroll-padding-top` só na faixa (ex.: `#sobre-mim` a 800px para em 91px, abaixo do cabeçalho de 83px).
+- O `matchMedia('(min-width: 768px)')` do `CaseContext` é do corpo e não muda.
+Na faixa, como no celular, o cabeçalho não tem "Sobre mim" (aceito).
+
+**Alinhamento com o conteúdo de 1184 a 1303px (registro; o corpo não muda nesta PR):** o cabeçalho tem 20px de padding, e a borda do conteúdo não acompanha. Medido em 1184, 1240 e 1303px, borda esquerda do conteúdo menos a do logo (na main era 0, -12 a -22, -72 e -4):
+- Home: +68px (conteúdo em 88px; à direita, o "Contato" passa 68px do conteúdo).
+- Cases: +46 a +56px (o menu lateral em 66 a 76px).
+- UaiUI: +64px (padding de 88px a partir de 1184px; o comentário em `uaiui-docs.css` foi corrigido).
+- Rodapé: +68px (88px a partir de 992px).
+- Paletaria: -4px (a ferramenta vai de 16px; na main ficava 72px à esquerda do logo completo, agora quase alinha).
+Alinhar o corpo em 1304px fica para outra PR.
+
+**Medições:** geometria do corpo a 100% com a posição vertical normalizada pela altura do cabeçalho: 10 páginas x 21 larguras (as 14 de sempre mais 767, 887, 888, 1183, 1184, 1303 e 1304) x barra de 15 e 17px (420 configurações), 0 diferenças de layout e sem rolagem horizontal. Em 18 delas o hash difere sem o layout mudar: na Paletaria (768, 887, 1184, 1280 e 1303px) é o link de pular "Ir para os tons", que fica fora da tela em posição relativa à página (a mesma nas duas versões); em Área de pagamentos e Redesign a 768 e 887px é o estado do menu lateral: com o cabeçalho 40px mais baixo, o "Resumo" já entra na faixa do IntersectionObserver ao carregar e ganha o destaque de ativo (sem a classe de ativo, a geometria é idêntica; na main acontece o mesmo ao rolar 40px). Texto a 200% (cenários A e B, 8 páginas x 10 larguras): nenhuma piora em relação à main; o painel aberto (a 200% tem 524px, com o gatilho na segunda linha do cabeçalho) não passa da tela e não cria rolagem. A rolagem que já existia nos cases a 1280px e na Paletaria a 1024px (cenário A) segue igual. Testes: `header-cases.test.ts` (novo), `Header.test.ts`, `header-mobile.test.ts`, `navigation.test.ts`.
+
+**Backlog:** abaixo de 768px as âncoras da Home (`#sobre-mim`) param com o título sob o cabeçalho sticky (já era assim; não mudou nesta PR).
+
+**Versão:** 1.4.9 para 1.5.0.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+

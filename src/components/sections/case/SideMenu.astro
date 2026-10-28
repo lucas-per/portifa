@@ -103,6 +103,20 @@ import { caseSideMenuItems as items } from '../../../utils/case-side-menu-items'
       display: none;
     }
   }
+
+  /* De 768 a 887px o menu lateral aparece, mas o cabeçalho do site é o
+     mobile, que é sticky (o ponto do cabeçalho, Header.astro): o menu cola
+     abaixo dele, com os mesmos 24px, e o salto das âncoras para abaixo dele
+     (o accordion, que faz essa conta no celular, só existe até 767px). */
+  @media (min-width: 768px) and (max-width: 887px) {
+    .side-menu {
+      top: calc(var(--header-mobile-height) + var(--scale-x6));
+    }
+
+    :global(html) {
+      scroll-padding-top: calc(var(--header-mobile-height) + var(--scale-x2));
+    }
+  }
 </style>
 
 <script>
