@@ -25,8 +25,8 @@ const ENUMS = {
 };
 const HEX = /^#[0-9a-f]{6}$/;
 
-export function parseHash(hash, systemMode) {
-  const s = { ...DEFAULTS, mode: systemMode };
+export function parseHash(hash) {
+  const s = { ...DEFAULTS };
   const p = new URLSearchParams(hash.replace(/^#/, ''));
   for (const key of Object.keys(DEFAULTS)) {
     if (!p.has(key)) continue;
@@ -39,12 +39,11 @@ export function parseHash(hash, systemMode) {
   return s;
 }
 
-export function serialize(state, systemMode) {
+export function serialize(state) {
   const p = new URLSearchParams();
   for (const [key, def] of Object.entries(DEFAULTS)) {
     const v = state[key];
-    const baseline = key === 'mode' ? systemMode : def;
-    if (v === baseline) continue;
+    if (v === def) continue;
     if (typeof v === 'string' && v.startsWith('#')) p.set(key, v.slice(1));
     else p.set(key, String(v));
   }
