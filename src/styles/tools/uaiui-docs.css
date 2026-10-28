@@ -977,10 +977,9 @@
 }
 
 /* Padding de 88px, menu de 360px e recuo de 48px do conteúdo (Figma 666:91) a
-   partir de 1184px. Até a 1.4.9 era o mesmo ponto em que o cabeçalho do site
-   passava ao logo completo; desde a 1.5.0 o cabeçalho troca em 1304px e, entre
-   1184 e 1303px, a UaiUI tem 88px sob um cabeçalho de 20px. Alinhar os dois
-   fica para outra PR (design-notes, site 1.5.0). */
+   partir de 1184px, o mesmo ponto do padding de 88px do cabeçalho do site
+   (Header.astro). Desde a 1.5.0 o logo completo do cabeçalho só entra em
+   1304px, mas o padding continua em 1184px: a UaiUI segue alinhada com ele. */
 @media (min-width: 1184px) {
   .uaiui-docs {
     --uaiui-docs-gutter: var(--scale-x20);

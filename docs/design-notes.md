@@ -1197,7 +1197,7 @@ Nada piora em nenhuma das 8 páginas (A e B); Home, Paletaria e UaiUI ficam igua
 
 **Classes do Umami (convenção, sem evento novo):** gatilho `clickable-menu-cases`; itens `clickable-link-internal-case-<id>`, as mesmas do menu mobile.
 
-**Pontos de troca do cabeçalho (medidos):** com "Cases" o cabeçalho soma 120px (88 + 32). Larguras: logo reduzido 54px, logo completo 308px; ações 756px (padding de 20px) e 780px (padding de 88px, o `row-btns` do Figma).
+**Pontos de troca do cabeçalho (medidos):** com "Cases" o cabeçalho soma 120px (88 + 32). Larguras: logo reduzido 54px, logo completo 308px; ações 756px (32px entre links e botões) e 780px (56px, o `row-btns` do Figma).
 
 | Faixa | Precisa (gap de 32px) | + barra de 15px | Ponto | Gap mínimo na borda |
 |---|---|---|---|---|
@@ -1206,7 +1206,7 @@ Nada piora em nenhuma das 8 páginas (A e B); Home, Paletaria e UaiUI ficam igua
 
 A folga é a de antes (o ponto 9px e 7px abaixo de "precisa + 15"; o gap de 16px do contêiner garante que nada quebre). **Menu hambúrguer até 887px, logo reduzido de 888 a 1303px, logo completo a partir de 1304px.** São pontos do cabeçalho; os 767/768px do corpo, do rodapé, dos cases e da UaiUI não mudaram. Os mesmos valores estão em `Header.astro`, `HeaderMobile.astro` (CSS e o `matchMedia` que fecha o menu), `HeaderCases.astro`, `SideMenu.astro`, `uaiui-docs.css`, `paletaria/index.astro` e `index.astro`; o `Header.test.ts` garante isso.
 
-**Larguras em que o cabeçalho muda:** de 768 a 887px vira o cabeçalho mobile (sticky, 83px em vez de 123px); de 1184 a 1303px, logo reduzido, padding de 20px e 32px entre links e botões (123px de altura em vez de 127px); a partir de 888px ganha o "Cases". Abaixo de 768px e a partir de 1304px (fora o item novo) nada muda.
+**Larguras em que o cabeçalho muda:** de 768 a 887px vira o cabeçalho mobile (sticky, 83px em vez de 123px); de 1184 a 1303px, logo reduzido e 32px entre links e botões, com o padding de 88px da main (123px de altura em vez de 127px); a partir de 888px ganha o "Cases". Abaixo de 768px e a partir de 1304px (fora o item novo) nada muda.
 
 **A faixa de 768 a 887px (cabeçalho mobile, sticky):** o que dependia de o cabeçalho rolar com a página passou a descontar a altura dele (`--header-mobile-height` + a folga de antes):
 - Cases: o menu lateral (sticky) cola em 83 + 24px, e as âncoras dele param abaixo do cabeçalho (`scroll-padding-top`). O accordion do celular continua só até 767px.
@@ -1216,13 +1216,12 @@ A folga é a de antes (o ponto 9px e 7px abaixo de "precisa + 15"; o gap de 16px
 - O `matchMedia('(min-width: 768px)')` do `CaseContext` é do corpo e não muda.
 Na faixa, como no celular, o cabeçalho não tem "Sobre mim" (aceito).
 
-**Alinhamento com o conteúdo de 1184 a 1303px (registro; o corpo não muda nesta PR):** o cabeçalho tem 20px de padding, e a borda do conteúdo não acompanha. Medido em 1184, 1240 e 1303px, borda esquerda do conteúdo menos a do logo (na main era 0, -12 a -22, -72 e -4):
-- Home: +68px (conteúdo em 88px; à direita, o "Contato" passa 68px do conteúdo).
-- Cases: +46 a +56px (o menu lateral em 66 a 76px).
-- UaiUI: +64px (padding de 88px a partir de 1184px; o comentário em `uaiui-docs.css` foi corrigido).
-- Rodapé: +68px (88px a partir de 992px).
-- Paletaria: -4px (a ferramenta vai de 16px; na main ficava 72px à esquerda do logo completo, agora quase alinha).
-Alinhar o corpo em 1304px fica para outra PR.
+**Alinhamento com o conteúdo de 1184 a 1303px:** o padding de 88px do cabeçalho continua a partir de 1184px, como na main (`@media (min-width: 1184px)` próprio em `Header.astro`); o `@media (min-width: 1304px)` só troca o logo e o gap das ações. A borda do logo volta a acompanhar a do conteúdo. Conta: 54 + 756 + 16 + 2 x 88 = 1002px, mais 15px da barra = 1017px; folga medida em 1184px (distância entre o logo e as ações menos o gap de 16px) de **167px com barra de 15px e 165px com 17px** (na main, com o logo completo, eram 9 e 7px). Medido em 1183, 1184, 1240, 1303 e 1304px, borda esquerda do conteúdo menos a do logo, igual à main em todas:
+- Home e rodapé: 0 (a 1183px, +68, como na main: o padding de 88px do corpo começa antes).
+- Cases: -22 a -12px (o menu lateral; -13 a 1303px com barra de 17px, como na main).
+- UaiUI: -4px.
+- Paletaria: -72px, como na main (a ferramenta vai de 16px). Durante a PR, com o padding de 20px, ficava em -4px.
+Na primeira versão desta PR o padding de 88px só entrava em 1304px e o logo ficava 68px à esquerda da Home e do rodapé (64px na UaiUI, 46 a 56px nos cases) entre 1184 e 1303px; corrigido antes do merge. A 100%, "Sobre mim" em uma linha (54px), o cabeçalho com 123px nessa faixa e sem rolagem horizontal, fechado ou com o painel aberto, com barra de 15 e de 17px. A 200% (cenários A e B, 5 páginas x 5 larguras x 2 barras), nada muda em relação à versão anterior da PR: mesma altura do cabeçalho (385px), nada dele passa da tela e a rolagem que já existia na main (Home a 1183 e 1184px, cases, Paletaria a 1303 e 1304px no cenário A) é a mesma.
 
 **Medições:** geometria do corpo a 100% com a posição vertical normalizada pela altura do cabeçalho: 10 páginas x 21 larguras (as 14 de sempre mais 767, 887, 888, 1183, 1184, 1303 e 1304) x barra de 15 e 17px (420 configurações), 0 diferenças de layout e sem rolagem horizontal. Em 18 delas o hash difere sem o layout mudar: na Paletaria (768, 887, 1184, 1280 e 1303px) é o link de pular "Ir para os tons", que fica fora da tela em posição relativa à página (a mesma nas duas versões); em Área de pagamentos e Redesign a 768 e 887px é o estado do menu lateral: com o cabeçalho 40px mais baixo, o "Resumo" já entra na faixa do IntersectionObserver ao carregar e ganha o destaque de ativo (sem a classe de ativo, a geometria é idêntica; na main acontece o mesmo ao rolar 40px). Texto a 200% (cenários A e B, 8 páginas x 10 larguras): nenhuma piora em relação à main; o painel aberto (a 200% tem 524px, com o gatilho na segunda linha do cabeçalho) não passa da tela e não cria rolagem. A rolagem que já existia nos cases a 1280px e na Paletaria a 1024px (cenário A) segue igual. Testes: `header-cases.test.ts` (novo), `Header.test.ts`, `header-mobile.test.ts`, `navigation.test.ts`.
 

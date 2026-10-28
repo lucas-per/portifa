@@ -138,21 +138,26 @@ const email = getContact('email');
     white-space: nowrap;
   }
 
-  /* Logo completo, padding de 88px e 56px entre links e botões (Figma 98:398
-     e 728:369) a partir de 1304px. Medido (site 1.5.0): logo 308px, ações
-     780px (Cases 88 + 32 + UaiUI DS 96 + 32 + Paletaria 108, 56px, Sobre mim
-     162 + 32 + Contato 174), padding de 2 x 88px: 1264px mais o gap de 16px =
-     1280px, mais 15px da barra de rolagem = 1295px. 1304px deixa a mesma folga
-     de antes (o ponto era 1184px para 1176 + 15 = 1191, 7px abaixo; aqui 1296 +
-     15 = 1311, 7px abaixo). Abaixo disso, logo reduzido (o do mobile), padding
-     de 20px e 32px entre links e botões. O padding de 88px da UaiUI continua a
-     partir de 1184px (uaiui-docs.css): entre 1184 e 1303px ela não alinha com o
-     cabeçalho (design-notes, site 1.5.0). */
-  @media (min-width: 1304px) {
+  /* Padding de 88px (Figma 98:398) a partir de 1184px, como o corpo, o rodapé
+     e a UaiUI (uaiui-docs.css): a borda do logo acompanha a do conteúdo. Com o
+     logo reduzido 54px, ações 756px (ver abaixo) e o gap de 16px, o cabeçalho
+     precisa de 54 + 756 + 16 + 2 x 88 = 1002px, mais 15px da barra = 1017px;
+     em 1184px sobram 167px. */
+  @media (min-width: 1184px) {
     .site-header__inner {
       padding: var(--scale-x8) var(--scale-x20);
     }
+  }
 
+  /* Logo completo e 56px entre links e botões (Figma 98:398 e 728:369) a
+     partir de 1304px. Medido (site 1.5.0): logo 308px, ações 780px (Cases 88 +
+     32 + UaiUI DS 96 + 32 + Paletaria 108, 56px, Sobre mim 162 + 32 + Contato
+     174), padding de 2 x 88px: 1264px mais o gap de 16px = 1280px, mais 15px
+     da barra de rolagem = 1295px. 1304px deixa a mesma folga de antes (o ponto
+     era 1184px para 1176 + 15 = 1191, 7px abaixo; aqui 1296 + 15 = 1311, 7px
+     abaixo). Abaixo disso, logo reduzido (o do mobile) e 32px entre links e
+     botões; de 888 a 1183px, padding de 20px. */
+  @media (min-width: 1304px) {
     .site-header__actions {
       gap: var(--scale-x14);
     }

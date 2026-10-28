@@ -12,8 +12,8 @@ describe('cabeçalho desktop (folga com Cases, UaiUI DS e Paletaria)', () => {
     const inner = rule('.site-header__inner');
     expect(inner).toMatch(/gap: var\(--scale-x4\);/);
     expect(inner).toMatch(/justify-content: space-between;/);
-    // Sem gap próprio no @media de 1304px: o mesmo valor vale para as duas faixas.
-    const wide = style.slice(style.indexOf('@media (min-width: 1304px)'), style.indexOf('@media (max-width: 887px)'));
+    // Sem gap próprio nos @media de 1184 e 1304px: o mesmo valor vale para todas as faixas.
+    const wide = style.slice(style.indexOf('@media (min-width: 1184px)'), style.indexOf('@media (max-width: 887px)'));
     expect(wide.length).toBeGreaterThan(0);
     expect(wide).toMatch(/\.site-header__inner \{/);
     expect(wide).not.toMatch(/\.site-header__inner \{[^}]*gap:/);
@@ -26,11 +26,14 @@ describe('cabeçalho desktop (folga com Cases, UaiUI DS e Paletaria)', () => {
     expect(style).toMatch(/\.site-header__actions \{\s*gap: var\(--scale-x14\);/);
   });
 
-  it('padding de 20px no tablet e de 88px a partir de 1304px (logo completo); abaixo de 888px vale o mobile', () => {
+  it('padding de 20px de 888 a 1183px e de 88px a partir de 1184px, como o corpo; abaixo de 888px vale o mobile', () => {
     expect(rule('.site-header__inner')).toMatch(/padding: var\(--scale-x8\) var\(--scale-x5\);/);
-    expect(style).toMatch(/@media \(min-width: 1304px\) \{\s*\.site-header__inner \{\s*padding: var\(--scale-x8\) var\(--scale-x20\);/);
+    expect(style).toMatch(/@media \(min-width: 1184px\) \{\s*\.site-header__inner \{\s*padding: var\(--scale-x8\) var\(--scale-x20\);\s*\}\s*\}/);
+    // O @media de 1304px não mexe no padding (só logo e gap das ações).
+    const full = style.slice(style.indexOf('@media (min-width: 1304px)'), style.indexOf('@media (max-width: 887px)'));
+    expect(full).not.toMatch(/\.site-header__inner/);
     expect(style).toMatch(/@media \(max-width: 887px\) \{\s*\.site-header \{\s*display: none;/);
-    expect(style).not.toMatch(/1184px\)|767px\)/);
+    expect(style).not.toMatch(/767px\)/);
   });
 
   it('o logo não encolhe e a borda de 5px do cabeçalho continua', () => {
@@ -99,9 +102,12 @@ describe('pontos de troca do cabeçalho (site 1.5.0): os mesmos valores em todos
     }
   });
 
-  it('o logo completo vale a partir de 1304px (e só no Header)', () => {
-    expect(style).toMatch(/@media \(min-width: 1304px\)/);
-    expect(header).not.toMatch(/min-width: 1184px/);
+  it('o logo completo vale a partir de 1304px (e só no Header); 1184px no Header é só o padding', () => {
+    expect(style).toMatch(/@media \(min-width: 1304px\) \{\s*\.site-header__actions \{\s*gap: var\(--scale-x14\);\s*\}\s*\.site-header__logo-full \{\s*display: block;/);
+    const at1184 = style.match(/@media \(min-width: 1184px\) \{([\s\S]*?)\n  \}/)?.[1] ?? '';
+    expect(at1184).toMatch(/\.site-header__inner/);
+    expect(at1184).not.toMatch(/logo|actions/);
+    expect(header.match(/min-width: 1184px/g)).toHaveLength(1);
   });
 
   it('na faixa de 768 a 887px (cabeçalho mobile, sticky), o que depende dele desconta a altura do cabeçalho', () => {
