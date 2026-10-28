@@ -1156,3 +1156,15 @@ Nada piora em nenhuma das 8 páginas (A e B); Home, Paletaria e UaiUI ficam igua
 **Com a 1.4.7 no ar:** a 100% nada muda. Com texto ampliado, a Paletaria e a Ajuda não rolam mais na horizontal no celular (320 a 414px): campos, alternadores e botões ocupam a largura da tela e o texto quebra dentro deles (o campo HEX desce para baixo da mini paleta; o painel de detalhes empilha o título e a etiqueta). Segue o limite do cenário A de 901px em diante.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+### Paletaria sempre abre no modo claro (site 1.4.8)
+
+**Decisão:** o modo padrão da Paletaria passa a ser `light` em qualquer aparelho, até o site ter uma opção de alternar claro/escuro.
+
+**Motivo:** a ferramenta usava `prefers-color-scheme` como modo inicial. Em quem tem o sistema no escuro, ela abria escura enquanto o resto do site ficava claro, sem que a pessoa pudesse mudar o site.
+
+**O que mudou:** `parseHash` e `serialize` (`state.js`) perderam o parâmetro `systemMode`; o `main.js` deixou de ler o modo do sistema (`systemMode()` saiu, sem outro uso). O seletor "Modo de cor" continua igual. O modo claro é o padrão e não aparece no endereço; `mode=dark` aparece e abre escuro; `mode=light` explícito abre claro. Nenhum outro chamador usava o segundo argumento (busca em `src`, testes e docs). Teste: `state.test.ts`. **Versão:** 1.4.7 para 1.4.8.
+
+**Links antigos:** um endereço sem `mode`, compartilhado de um sistema escuro, abria escuro e agora abre claro. Os que têm `mode=dark` não mudam. Aceito como custo da decisão.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.

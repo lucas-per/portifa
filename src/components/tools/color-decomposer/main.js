@@ -16,12 +16,11 @@ import { DEFAULTS, parseHash, serialize } from './state.js';
 const NAME = 'marca';
 const $ = (id) => document.getElementById(id);
 const ROOT = document.querySelector('.cd');
-const systemMode = () => (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 const HEX6 = /^#?[0-9a-f]{6}$/i;
 const toHex = (v) => (HEX6.test(v.trim()) ? `#${v.trim().replace('#', '').toLowerCase()}` : null);
 const up = (hex) => hex.toUpperCase();
 
-let state = parseHash(location.hash, systemMode());
+let state = parseHash(location.hash);
 let current = null; // último resultado válido: { theme, preset }
 let lastError = '';
 let tune = null; // { L, C, h, hex }: valores dos controles de claridade, intensidade e matiz
@@ -624,7 +623,7 @@ function applyView({ focus = false } = {}) {
 function bindHelp() {
   $('open-help').addEventListener('click', () => {
     state.view = 'ajuda';
-    const hash = serialize(state, systemMode());
+    const hash = serialize(state);
     try { history.pushState(null, '', hash || location.pathname + location.search); helpPushed = true; } catch { helpPushed = false; }
     applyView({ focus: true });
   });
@@ -636,7 +635,7 @@ function bindHelp() {
     applyView({ focus: true });
   });
   addEventListener('popstate', () => {
-    state.view = parseHash(location.hash, systemMode()).view;
+    state.view = parseHash(location.hash).view;
     helpPushed = false;
     applyView({ focus: true });
   });
@@ -650,7 +649,7 @@ function render() {
   renderAlerts();
   renderMini();
   renderRibbon();
-  const hash = serialize(state, systemMode());
+  const hash = serialize(state);
   history.replaceState(null, '', hash || location.pathname + location.search);
 }
 

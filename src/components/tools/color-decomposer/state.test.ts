@@ -5,9 +5,13 @@ import { DEFAULTS, parseHash, serialize } from './state.js';
 // enviado antes da mudança para o site precisa abrir igual aqui.
 
 describe('parseHash', () => {
-  it('sem hash, usa os padrões e o modo do sistema', () => {
-    expect(parseHash('', 'light')).toEqual({ ...DEFAULTS, mode: 'light' });
-    expect(parseHash('', 'dark')).toEqual({ ...DEFAULTS, mode: 'dark' });
+  it('sem hash, usa os padrões, com o modo claro (o sistema não conta)', () => {
+    expect(parseHash('')).toEqual({ ...DEFAULTS, mode: 'light' });
+  });
+
+  it('o modo do endereço vale, claro ou escuro', () => {
+    expect(parseHash('#mode=dark').mode).toBe('dark');
+    expect(parseHash('#mode=light').mode).toBe('light');
   });
 
   it('o "Manter minha cor exata" saiu do estado', () => {
@@ -17,7 +21,6 @@ describe('parseHash', () => {
   it('lê um ajuste completo', () => {
     const s = parseHash(
       '#color=1a73e8&preset=aplica&strategy=brand-tint&level=AAA&mode=dark&tab=neutrals&sel=300&view=ajuda',
-      'light',
     );
     expect(s).toEqual({
       color: '#1a73e8',
@@ -32,7 +35,7 @@ describe('parseHash', () => {
   });
 
   it('ignora valores inválidos e mantém o padrão', () => {
-    const s = parseHash('#color=zzzzzz&preset=outro&tab=cores&mode=sepia&exact=sim&view=config', 'light');
+    const s = parseHash('#color=zzzzzz&preset=outro&tab=cores&mode=sepia&exact=sim&view=config');
     expect(s).toEqual({ ...DEFAULTS, mode: 'light' });
   });
 
@@ -42,38 +45,37 @@ describe('parseHash', () => {
       '#strategy=custom-tint&order=startLight&overlap=500&darkChroma=100&borderPalette=20&borderNeutrals=2' +
         '&failure=warn&customLight=111111&customDark=eeeeee&customFallback=brand-tint&neutralsOwn=1' +
         '&neutralsBase=445566&neutralsRef=200&txt=1&support=fcfbf2&normal=brand&vivid=1',
-      'light',
     );
     expect(s).toEqual({ ...DEFAULTS, mode: 'light' });
   });
 
   // PR 8: `exact` e `lvl` (da cor exata e do Auto antigo) são ignorados, sem erro e sem aviso
   it('exact e lvl antigos são ignorados', () => {
-    expect(parseHash('#color=fcfbf2&lvl=20&exact=1', 'light')).toEqual({ ...DEFAULTS, mode: 'light', color: '#fcfbf2' });
-    expect(parseHash('#lvl=abc&exact=0', 'light')).toEqual({ ...DEFAULTS, mode: 'light' });
+    expect(parseHash('#color=fcfbf2&lvl=20&exact=1')).toEqual({ ...DEFAULTS, mode: 'light', color: '#fcfbf2' });
+    expect(parseHash('#lvl=abc&exact=0')).toEqual({ ...DEFAULTS, mode: 'light' });
   });
 
   it('corta a seleção em 40 caracteres', () => {
-    expect(parseHash(`#sel=${'x'.repeat(60)}`, 'light').sel).toHaveLength(40);
+    expect(parseHash(`#sel=${'x'.repeat(60)}`).sel).toHaveLength(40);
   });
 });
 
 describe('serialize', () => {
   it('no estado padrão, o hash fica vazio', () => {
-    expect(serialize({ ...DEFAULTS, mode: 'dark' }, 'dark')).toBe('');
+    expect(serialize({ ...DEFAULTS })).toBe('');
   });
 
-  it('o modo só entra quando difere do sistema', () => {
-    expect(serialize({ ...DEFAULTS, mode: 'dark' }, 'light')).toBe('#mode=dark');
-    expect(serialize({ ...DEFAULTS, mode: 'light' }, 'dark')).toBe('#mode=light');
+  it('o modo só entra quando é escuro (o claro é o padrão)', () => {
+    expect(serialize({ ...DEFAULTS, mode: 'dark' })).toBe('#mode=dark');
+    expect(serialize({ ...DEFAULTS, mode: 'light' })).toBe('');
   });
 
   it('grava cores sem #', () => {
-    expect(serialize({ ...DEFAULTS, mode: 'light', color: '#1a73e8' }, 'light')).toBe('#color=1a73e8');
+    expect(serialize({ ...DEFAULTS, mode: 'light', color: '#1a73e8' })).toBe('#color=1a73e8');
   });
 
   it('volta ao mesmo hash depois de ler (ida e volta)', () => {
     const hash = '#color=1a73e8&preset=aplica&level=AAA&mode=dark&tab=behavior&sel=normal&view=ajuda';
-    expect(serialize(parseHash(hash, 'light'), 'light')).toBe(hash);
+    expect(serialize(parseHash(hash))).toBe(hash);
   });
 });
