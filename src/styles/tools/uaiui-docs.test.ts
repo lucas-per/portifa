@@ -149,14 +149,14 @@ describe('as duas zonas do CSS: chrome (tokens do site permitidos) e DS (só o w
     const shadows = collectDeclarations(chromeCss).filter((d) => d.prop === 'box-shadow' || d.prop.endsWith('-shadow'));
     expect(shadows.length).toBeGreaterThan(0);
     for (const { value } of shadows) {
-      if (value === 'none' || value === 'var(--uaiui-docs-layout-shadow)' || /^var\(--shadow-(comp|layout)-[\w-]+\)$/.test(value)) continue;
+      if (value === 'none' || value === 'var(--uaiui-docs-layout-shadow)' || value === 'var(--uaiui-docs-pager-shadow-hover)' || /^var\(--shadow-(comp|layout)-[\w-]+\)$/.test(value)) continue;
       expect(value).toBe('var(--shadow-offset-layout) var(--shadow-offset-layout) 0 0 var(--ui-shadow-color)');
     }
   });
 
   it('a densidade (chrome) usa os tokens do site do botão ghost: texto, hover e sublinhado', () => {
     expect(chromeCss).toMatch(/\.uaiui-docs__segment-text \{[^}]*color: var\(--text-label-primary\);/);
-    expect(chromeCss).toMatch(/background-color: var\(--button-bg-primary-outline-hovered\);/);
+    expect(chromeCss).toMatch(/__segment:not\(:has\(\.uaiui-docs__segment-input:checked\)\):hover \.uaiui-docs__segment-text \{\s*border-color: var\(--button-border-accent-medium\);\s*background-color: var\(--surface-bg-accent-medium\);/);
     expect(chromeCss).toMatch(/\.uaiui-docs__segment:has\(\.uaiui-docs__segment-input:checked\) \{\s*border-bottom-color: var\(--border-accent-subtle\);/);
     expect(chromeCss).toMatch(/color: var\(--text-label-accent\);/);
   });
@@ -317,12 +317,12 @@ describe('shell da documentação (PR O2, Figma 666:17)', () => {
     expect(forced).toMatch(/\.uaiui-docs__nav-text \{\s*border-color: Canvas;/);
   });
 
-  it('menu: itens em JetBrains Mono Bold 16 maiúsculas (--text-label-primary); o ativo em blue/6, sem hover próprio; hover purple-2 só com mouse', () => {
+  it('menu: itens em JetBrains Mono Bold 16 maiúsculas (--text-label-primary); o ativo em blue/6, sem hover próprio; hover blue-2 só com mouse', () => {
     const text = block(chromeCss, '.uaiui-docs .uaiui-docs__nav-text');
     expect(text).toMatch(/font-family: var\(--font-family-label\);[\s\S]*font-weight: var\(--weight-700\);[\s\S]*font-size: var\(--scale-x4\);[\s\S]*text-transform: uppercase;/);
     expect(block(chromeCss, '.uaiui-docs .uaiui-docs__nav-link')).toMatch(/color: var\(--text-label-primary\);/);
     expect(block(chromeCss, ".uaiui-docs .uaiui-docs__nav-link[aria-current='page']")).toMatch(/color: var\(--text-body-accent-strong\);/);
-    expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__nav-link:not\(\[aria-current='page'\]\):hover \.uaiui-docs__nav-text \{\s*border-color: var\(--button-border-primary-subtle\);\s*background-color: var\(--button-bg-primary-outline-hovered\);/);
+    expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__nav-link:not\(\[aria-current='page'\]\):hover \.uaiui-docs__nav-text \{\s*border-color: var\(--button-border-accent-medium\);\s*background-color: var\(--surface-bg-accent-medium\);/);
   });
 
   it('tag "novo": a secondary outlined do site', () => {
@@ -332,7 +332,7 @@ describe('shell da documentação (PR O2, Figma 666:17)', () => {
     expect(badge).toMatch(/color: var\(--text-label-extra-1\);/);
   });
 
-  it('paginação: borda accent, sombra de 5px do site, rótulo e título em blue/6, hover accent/subtle só com mouse', () => {
+  it('paginação: borda accent, sombra de 5px do site, rótulo e título em blue/6, hover accent/subtle e movimento dos botões só com mouse', () => {
     const link = block(chromeCss, '.uaiui-docs .uaiui-docs__pager-link');
     expect(link).toMatch(/border: var\(--border-width-default\) solid var\(--border-accent-subtle\);/);
     expect(link).toMatch(/background-color: var\(--surface-bg-off-white-primary\);/);
@@ -340,6 +340,10 @@ describe('shell da documentação (PR O2, Figma 666:17)', () => {
     expect(block(chromeCss, '.uaiui-docs .uaiui-docs__pager-kicker')).toMatch(/color: var\(--text-body-accent-strong\);/);
     expect(block(chromeCss, '.uaiui-docs .uaiui-docs__pager-title')).toMatch(/color: var\(--text-body-accent-strong\);/);
     expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__pager-link:hover \{\s*background-color: var\(--surface-bg-accent-subtle\);/);
+    expect(chromeCss).toMatch(/@media \(hover: hover\) \{\s*\.uaiui-docs \.uaiui-docs__pager-link:hover \{[^}]*box-shadow: var\(--uaiui-docs-pager-shadow-hover\);\s*transform: translate\(-2px, -2px\);/);
+    expect(chromeCss).toMatch(/--uaiui-docs-pager-shadow-hover: 7px 7px 0 0 var\(--border-accent-strong\);/);
+    expect(chromeCss).toMatch(/\.uaiui-docs__pager-link:active \{\s*box-shadow: none;\s*transform: translate\(1px, 1px\);/);
+    expect(chromeCss).toMatch(/@media \(prefers-reduced-motion: no-preference\) \{\s*\.uaiui-docs \.uaiui-docs__pager-link \{\s*transition: transform var\(--motion-duration-press\) ease, box-shadow var\(--motion-duration-press\) ease;/);
     expect(chromeCss).toMatch(/\.uaiui-docs__pager-link \{\s*width: 240px;\s*max-width: 100%;/);
   });
 
@@ -487,14 +491,14 @@ describe('contraste do shell, a partir dos primitivos (texto 4,5:1; borda e indi
 
   const text: Array<[string, string, string]> = [
     ['item do menu', 'text-label-primary', 'surface-bg-off-white-primary'],
-    ['item do menu no hover (purple-2)', 'text-label-primary', 'button-bg-primary-outline-hovered'],
+    ['item do menu no hover (blue-2)', 'text-label-primary', 'surface-bg-accent-medium'],
     ['item atual do menu (blue/6)', 'text-body-accent-strong', 'surface-bg-off-white-primary'],
     ['rótulo e título da paginação (blue/6)', 'text-body-accent-strong', 'surface-bg-off-white-primary'],
     ['rótulo e título da paginação no hover', 'text-body-accent-strong', 'surface-bg-accent-subtle'],
     ['rótulo de grupo do menu', 'text-body-neutral-subtle', 'surface-bg-off-white-primary'],
     ['busca (texto)', 'text-body-neutral-subtle', 'surface-bg-neutral-subtle'],
-    ['busca no hover (purple-2)', 'text-body-neutral-strong', 'button-bg-primary-outline-hovered'],
-    ['ícone da busca no hover (purple-2)', 'icon-neutral-3', 'button-bg-primary-outline-hovered'],
+    ['busca no hover (blue-2)', 'text-body-neutral-strong', 'surface-bg-accent-medium'],
+    ['ícone da busca no hover (blue-2)', 'icon-neutral-3', 'surface-bg-accent-medium'],
     ['tag "novo"', 'text-label-extra-1', 'tag-bg-secondary'],
     ['título da área', 'text-body-primary-strong', 'surface-bg-off-white-primary'],
     ['h1 e h2', 'text-body-primary-strong', 'surface-bg-neutral-subtle'],
@@ -525,8 +529,8 @@ describe('contraste do shell, a partir dos primitivos (texto 4,5:1; borda e indi
     expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
   });
 
-  it('o item atual não muda no hover (blue/5 sobre purple-2 daria menos de 4,5:1) e os divisores azuis ficam abaixo de 3:1 (decorativos, registrados no design-notes)', () => {
-    expect(ratio('text-label-accent', 'button-bg-primary-outline-hovered')).toBeLessThan(4.5);
+  it('o item atual não muda no hover (blue/5 sobre blue-2 daria 3,19:1, menos de 4,5:1) e os divisores azuis ficam abaixo de 3:1 (decorativos, registrados no design-notes)', () => {
+    expect(ratio('text-label-accent', 'surface-bg-accent-medium')).toBeLessThan(4.5);
     expect(ratio('surface-bg-accent-strong', 'surface-bg-off-white-primary')).toBeLessThan(3);
   });
 });

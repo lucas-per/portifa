@@ -28,6 +28,9 @@
   --uaiui-docs-gutter: min(var(--scale-x5), 6.25vw);
   --uaiui-docs-inset: min(var(--scale-x5), 6.25vw);
   --uaiui-docs-layout-shadow: var(--shadow-offset-layout) var(--shadow-offset-layout) 0 0 var(--ui-shadow-color);
+  /* Sombra do Anterior/Próxima no hover: os 5px de --shadow-layout-accent somados aos 2px do deslocamento
+     (mesma conta de --shadow-comp-*-hover, ver Button.astro); mesma cor (blue-4). Sem token no site. */
+  --uaiui-docs-pager-shadow-hover: 7px 7px 0 0 var(--border-accent-strong);
   /* O fundo da área é o do site (off-white); só o conteúdo ganha o neutral/subtle. */
   color: var(--ui-fg-default);
   font-family: var(--font-family-body);
@@ -153,7 +156,7 @@
 
 @media (hover: hover) {
   .uaiui-docs .uaiui-docs__search-open--full:hover {
-    background-color: var(--button-bg-primary-outline-hovered);
+    background-color: var(--surface-bg-accent-medium);
     color: var(--icon-neutral-3);
   }
 
@@ -241,11 +244,11 @@
 }
 
 /* Hover só com mouse e só nas opções não marcadas: o texto accent sobre o
-   roxo do hover daria 2,96:1. */
+   azul do hover (blue-2) daria 3,19:1. */
 @media (hover: hover) {
   .uaiui-docs .uaiui-docs__segment:not(:has(.uaiui-docs__segment-input:checked)):hover .uaiui-docs__segment-text {
-    border-color: var(--button-border-primary-subtle);
-    background-color: var(--button-bg-primary-outline-hovered);
+    border-color: var(--button-border-accent-medium);
+    background-color: var(--surface-bg-accent-medium);
   }
 }
 
@@ -410,11 +413,11 @@
   overflow-wrap: anywhere;
 }
 
-/* Só nos itens não marcados: o texto accent sobre o roxo do hover daria 2,96:1. */
+/* Só nos itens não marcados: o texto accent sobre o azul do hover (blue-2) daria 3,19:1. */
 @media (hover: hover) {
   .uaiui-docs .uaiui-docs__nav-link:not([aria-current='page']):hover .uaiui-docs__nav-text {
-    border-color: var(--button-border-primary-subtle);
-    background-color: var(--button-bg-primary-outline-hovered);
+    border-color: var(--button-border-accent-medium);
+    background-color: var(--surface-bg-accent-medium);
   }
 }
 
@@ -675,10 +678,25 @@
   color: var(--icon-accent);
 }
 
+/* Mesmo movimento dos botões (Button.astro): no hover o cartão sobe 2px e a sombra cresce 2px, então ela fica
+   parada na tela; ao pressionar desce 1px e a sombra some. Border e sombra no mesmo elemento (sem costura). */
+@media (prefers-reduced-motion: no-preference) {
+  .uaiui-docs .uaiui-docs__pager-link {
+    transition: transform var(--motion-duration-press) ease, box-shadow var(--motion-duration-press) ease;
+  }
+}
+
 @media (hover: hover) {
   .uaiui-docs .uaiui-docs__pager-link:hover {
     background-color: var(--surface-bg-accent-subtle);
+    box-shadow: var(--uaiui-docs-pager-shadow-hover);
+    transform: translate(-2px, -2px);
   }
+}
+
+.uaiui-docs .uaiui-docs__pager-link:active {
+  box-shadow: none;
+  transform: translate(1px, 1px);
 }
 
 .uaiui-docs .uaiui-docs__pager-link--next {
