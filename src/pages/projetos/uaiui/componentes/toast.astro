@@ -60,7 +60,7 @@ const rows = [
 ];
 ---
 
-<UaiuiDocsLayout lead="Aviso curto que aparece depois de uma ação ou de um evento e some sozinho: salvou, falhou, nova versão. Não bloqueia a tela.">
+<UaiuiDocsLayout lead="Aviso curto que aparece depois de uma ação ou de um evento: salvou, falhou, nova versão. Não bloqueia a tela.">
   <Example code={demoCode} column label="Toast com ação">
     <Fragment slot="preview">
       <button type="button" class="uai-button" data-type="outlined" data-toast-show>Mostrar aviso</button>
@@ -95,11 +95,12 @@ const rows = [
   <ul>
     <li>Neutral, success e info entram na região <code>aria-live="polite"</code>; warning e error, na região <code>role="alert"</code>. O toast em si não leva <code>role</code>: o anúncio vem da região, uma vez só.</li>
     <li>Não rouba o foco. A ação precisa ser alcançável pelo teclado.</li>
-    <li>Some sozinho depois de pelo menos 5 s (mais tempo para mensagem longa). Não fecha enquanto o foco ou o ponteiro estiverem sobre ele. Esc fecha o aviso com foco.</li>
-    <li>Com ação, warning ou error, só fecha quando a pessoa fechar.</li>
+    <li>Fica na tela até a pessoa fechar. Fechar sozinho é opcional: depois de pelo menos 5 s (mais tempo para mensagem longa), só em aviso sem ação, nos tons neutral, success e info, e com a mesma informação disponível em outro lugar da tela.</li>
+    <li>Não fecha enquanto o foco ou o ponteiro estiverem sobre ele. Esc fecha o aviso com foco.</li>
     <li>Sempre dá para fechar pelo botão. Nunca use o toast como único lugar de uma informação essencial ou de um erro.</li>
-    <li>Posição: canto inferior, no fim da tela no Desktop; no Mobile, largura total com margem de 16 px. Não cobre a ação principal da página. Vários avisos empilham com 16 px, o mais novo por último.</li>
+    <li>Posição: canto superior em telas largas; em telas estreitas, no topo, com largura total e margem de 16 px. Não cobre a ação principal da página. Vários avisos empilham com 16 px, o mais novo no topo da pilha.</li>
     <li>Entrada de 100 ms, só em opacidade; a saída não é animada pelo CSS. Sem animação com redução de movimento.</li>
+    <li>Com texto muito ampliado ou em tela estreita, o botão de fechar desce para a linha de baixo.</li>
   </ul>
   <h3>Contraste</h3>
   <p>Texto acima de 16:1 em todos os tons, no Claro e no Escuro. Ícone e borda acima de 3:1. A barra lateral do warning no Claro tem 1,8:1, mas é reforço: o ícone e a borda já carregam o sinal.</p>

@@ -9,9 +9,9 @@ const strip = (text: string) => text.replace(/\/\*[\s\S]*?\*\//g, '');
 const toastCss = strip(readFileSync(createRequire(import.meta.url).resolve('uaiui-ds/components/toast.css'), 'utf-8'));
 const rule = (selector: string) => toastCss.match(new RegExp(`${selector.replace(/[.>]/g, '\\$&')} \\{([^}]*)\\}`))?.[1] ?? '';
 
-describe('uaiui-ds v0.3.4: o toast quebra linha com texto ampliado (reflow, WCAG 1.4.10)', () => {
-  it('a dependência aponta para a tag v0.3.4', () => {
-    expect(pkg.dependencies['uaiui-ds']).toBe('github:lucas-per/uaiui-ds#v0.3.4');
+describe('uaiui-ds v0.4.0: o toast quebra linha com texto ampliado (reflow, WCAG 1.4.10)', () => {
+  it('a dependência aponta para a tag v0.4.0', () => {
+    expect(pkg.dependencies['uaiui-ds']).toBe('github:lucas-per/uaiui-ds#v0.4.0');
   });
 
   it('o corpo do toast quebra linha', () => {

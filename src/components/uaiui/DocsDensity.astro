@@ -1,8 +1,8 @@
 ---
 /**
  * Controle de densidade de um exemplo (Figma 704:751). Muda data-uaiui-density
- * no wrapper .uaiui: sem atributo é Desktop (o padrão), "mobile" e "compact"
- * são os outros modos dos tokens do DS. Cada exemplo tem o seu grupo de rádios
+ * no wrapper .uaiui: sem atributo é Confortável (comfortable), "standard"
+ * (Padrão) e "compact" (Compacto) são os outros modos dos tokens do DS. Cada exemplo tem o seu grupo de rádios
  * (name próprio: rádios de exemplos diferentes com o mesmo name virariam um
  * grupo só e quebrariam o Tab e as setas); a escolha vale para a página toda,
  * os grupos ficam sincronizados por script (docs.ts) e ela fica em
@@ -18,8 +18,8 @@ interface Props {
 const { name } = Astro.props;
 
 const densityOptions = [
-  { value: 'desktop', label: 'Desktop' },
-  { value: 'mobile', label: 'Mobile' },
+  { value: 'comfortable', label: 'Confortável' },
+  { value: 'standard', label: 'Padrão' },
   { value: 'compact', label: 'Compacto' },
 ] as const;
 ---
@@ -34,7 +34,7 @@ const densityOptions = [
           type="radio"
           name={name}
           value={option.value}
-          checked={option.value === 'desktop'}
+          checked={option.value === 'comfortable'}
         />
         <span class="uaiui-docs__segment-text">{option.label}</span>
       </label>

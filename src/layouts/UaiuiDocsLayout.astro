@@ -33,12 +33,16 @@ if (!current) throw new Error(`Página do UaiUI fora de uaiui-nav.ts: ${Astro.ur
 <BaseLayout title={`${current.title} · UaiUI DS`} description={current.description} path={current.href}>
   <div class="uaiui uaiui-docs">
     <script is:inline>
-      // Densidade salva aplicada antes da pintura (sem piscar). Sem armazenamento, fica o padrão (Desktop).
+      // Densidade salva aplicada antes da pintura (sem piscar). Sem armazenamento, fica sem atributo (Confortável). "mobile" é o valor da v0.3.x do DS: vira "standard" e a chave é regravada.
       (function () {
         var wrapper = document.currentScript.parentElement;
         try {
           var saved = localStorage.getItem('uaiui-density');
-          if (saved === 'mobile' || saved === 'compact') wrapper.setAttribute('data-uaiui-density', saved);
+          if (saved === 'mobile') {
+            saved = 'standard';
+            localStorage.setItem('uaiui-density', saved);
+          }
+          if (saved === 'standard' || saved === 'compact') wrapper.setAttribute('data-uaiui-density', saved);
         } catch (e) {}
       })();
     </script>

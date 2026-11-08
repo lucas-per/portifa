@@ -37,14 +37,14 @@ function announce(message: string) {
 }
 
 if (root) {
-  // Densidade: sem atributo é Desktop. Cada exemplo tem o seu grupo de rádios (name
+  // Densidade: sem atributo é Confortável (comfortable). Cada exemplo tem o seu grupo de rádios (name
   // próprio); a escolha vale para a página toda, então o script marca a mesma
   // opção em todos os grupos. O script inline do layout já aplicou a escolha salva.
   const densityInputs = [...root.querySelectorAll<HTMLInputElement>('input[type="radio"][name$="-densidade"]')];
   densityInputs.forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return;
-      if (input.value === 'desktop') {
+      if (input.value === 'comfortable') {
         root.removeAttribute('data-uaiui-density');
         store.remove('uaiui-density');
       } else {

@@ -25,12 +25,13 @@ describe('densidade dentro de cada exemplo (Figma 704:751)', () => {
     expect(script).not.toMatch(/name="uaiui-density"/);
   });
 
-  it('o fieldset tem legenda "Densidade" e as três opções do DS (Desktop, Mobile, Compacto), Desktop marcada', () => {
+  it('o fieldset tem legenda "Densidade" e as três opções do DS (Confortável, Padrão, Compacto), Confortável marcada', () => {
     expect(density).toMatch(/<legend[^>]*>Densidade<\/legend>/);
-    expect(density).toMatch(/value: 'desktop', label: 'Desktop'/);
-    expect(density).toMatch(/value: 'mobile', label: 'Mobile'/);
+    expect(density).toMatch(/value: 'comfortable', label: 'Confortável'/);
+    expect(density).toMatch(/value: 'standard', label: 'Padrão'/);
     expect(density).toMatch(/value: 'compact', label: 'Compacto'/);
-    expect(density).toMatch(/checked=\{option\.value === 'desktop'\}/);
+    expect(density).not.toMatch(/value: 'desktop'|value: 'mobile'/);
+    expect(density).toMatch(/checked=\{option\.value === 'comfortable'\}/);
     expect(density).toMatch(/type="radio"/);
   });
 
@@ -53,13 +54,37 @@ describe('densidade dentro de cada exemplo (Figma 704:751)', () => {
     }
   });
 
-  it('o script sincroniza todos os grupos, guarda a escolha (desktop remove a chave) e avisa no role="status"', () => {
+  it('o script sincroniza todos os grupos, guarda a escolha (comfortable remove a atributo e a chave) e avisa no role="status"', () => {
     expect(script).toMatch(/input\[type="radio"\]\[name\$="-densidade"\]/);
     expect(script).toMatch(/for \(const other of densityInputs\) other\.checked = other\.value === input\.value;/);
     expect(script).toMatch(/store\.set\('uaiui-density', input\.value\)/);
     expect(script).toMatch(/store\.remove\('uaiui-density'\)/);
+    expect(script).toMatch(/input\.value === 'comfortable'/);
     expect(script).toMatch(/announce\(`Densidade da página: /);
     expect(layout).toMatch(/id="uaiui-docs-live" class="uaiui-docs__sr-only" role="status"/);
+  });
+
+  it('o valor salvo "mobile" (v0.3.x do DS) vira standard e a chave é regravada dentro do try; qualquer outro valor fica sem atributo', () => {
+    const inline = layout.match(/<script is:inline>[\s\S]*?<\/script>/)?.[0] ?? '';
+    const tryBlock = inline.match(/try \{([\s\S]*?)\} catch/)?.[1] ?? '';
+    expect(tryBlock).toMatch(/saved === 'mobile'/);
+    expect(tryBlock).toMatch(/saved = 'standard';\s*localStorage\.setItem\('uaiui-density', saved\);/);
+    expect(tryBlock).toMatch(/saved === 'standard' \|\| saved === 'compact'/);
+    expect(tryBlock).not.toMatch(/desktop|comfortable/);
+    // Roda o script com um armazenamento falso: o que fica no wrapper e na chave.
+    const run = (initial: string | null) => {
+      const store = new Map<string, string>(initial === null ? [] : [['uaiui-density', initial]]);
+      const attrs = new Map<string, string>();
+      const localStorage = { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) };
+      const document = { currentScript: { parentElement: { setAttribute: (k: string, v: string) => void attrs.set(k, v) } } };
+      new Function('document', 'localStorage', inline.replace(/<\/?script[^>]*>/g, ''))(document, localStorage);
+      return { attr: attrs.get('data-uaiui-density') ?? null, saved: store.get('uaiui-density') ?? null };
+    };
+    expect(run('mobile')).toEqual({ attr: 'standard', saved: 'standard' });
+    expect(run('standard')).toEqual({ attr: 'standard', saved: 'standard' });
+    expect(run('compact')).toEqual({ attr: 'compact', saved: 'compact' });
+    expect(run('desktop')).toEqual({ attr: null, saved: 'desktop' });
+    expect(run(null)).toEqual({ attr: null, saved: null });
   });
 
   it('a escolha salva é aplicada antes da pintura: o atributo no início do wrapper e os rádios no fim', () => {
