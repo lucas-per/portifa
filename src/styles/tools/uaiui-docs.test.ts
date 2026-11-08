@@ -347,8 +347,8 @@ describe('shell da documentação (PR O2, Figma 666:17)', () => {
     expect(chromeCss).toMatch(/\.uaiui-docs__pager-link \{\s*width: 240px;\s*max-width: 100%;/);
   });
 
-  it('âncoras: no celular o h2 (com o divisor) não fica sob o cabeçalho sticky do site', () => {
-    expect(chromeCss).toMatch(/@media \(max-width: 767px\) \{\s*\.uaiui-docs \.uaiui-docs__body > h2 \{\s*scroll-margin-top: calc\(var\(--header-mobile-height\) \+ var\(--scale-x2\)\);/);
+  it('âncoras: até 887px (cabeçalho mobile, sticky) o h2 (com o divisor) não fica sob o cabeçalho do site', () => {
+    expect(chromeCss).toMatch(/@media \(max-width: 887px\) \{\s*\.uaiui-docs \.uaiui-docs__body > h2 \{\s*scroll-margin-top: calc\(var\(--header-mobile-height\) \+ var\(--scale-x2\)\);/);
   });
 });
 

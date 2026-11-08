@@ -837,9 +837,10 @@
   color: var(--ui-fg-muted);
 }
 
-/* ---------- Celular: o divisor de uma âncora não fica sob o cabeçalho sticky do site ---------- */
+/* ---------- Até 887px: o divisor de uma âncora não fica sob o cabeçalho sticky do site ----------
+   O ponto é o do cabeçalho (o mobile vale até 887px, Header.astro), não o 767/768px do corpo. */
 
-@media (max-width: 767px) {
+@media (max-width: 887px) {
   .uaiui-docs .uaiui-docs__body > h2 {
     scroll-margin-top: calc(var(--header-mobile-height) + var(--scale-x2));
   }
@@ -964,8 +965,21 @@
   }
 }
 
-/* Padding de 88px a partir do mesmo ponto em que o cabeçalho do site passa ao
-   logo completo; menu de 360px e recuo de 48px do conteúdo (Figma 666:91). */
+/* De 768 a 887px o menu lateral já está aberto ao lado do conteúdo, mas o
+   cabeçalho do site é o mobile, que é sticky: o menu cola abaixo dele, com os
+   mesmos 40px, e a altura máxima desconta o cabeçalho. */
+@media (min-width: 768px) and (max-width: 887px) {
+  .uaiui-docs .uaiui-docs__sidebar,
+  .uaiui-docs .uaiui-docs__sidebar[hidden] {
+    top: calc(var(--header-mobile-height) + var(--scale-x10));
+    max-height: calc(100vh - var(--header-mobile-height) - 80px);
+  }
+}
+
+/* Padding de 88px, menu de 360px e recuo de 48px do conteúdo (Figma 666:91) a
+   partir de 1184px, o mesmo ponto do padding de 88px do cabeçalho do site
+   (Header.astro). Desde a 1.5.0 o logo completo do cabeçalho só entra em
+   1304px, mas o padding continua em 1184px: a UaiUI segue alinhada com ele. */
 @media (min-width: 1184px) {
   .uaiui-docs {
     --uaiui-docs-gutter: var(--scale-x20);

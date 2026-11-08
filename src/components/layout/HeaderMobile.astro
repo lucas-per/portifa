@@ -96,7 +96,7 @@ const menuId = 'site-menu-mobile';
       if ((event.target as HTMLElement).closest('a')) setOpen(false);
     });
 
-    window.matchMedia('(min-width: 768px)').addEventListener('change', (event) => {
+    window.matchMedia('(min-width: 888px)').addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
     });
 
@@ -245,7 +245,9 @@ const menuId = 'site-menu-mobile';
     outline-offset: 2px;
   }
 
-  @media (max-width: 767px) {
+  /* Até 887px: o ponto é o do cabeçalho desktop (a conta está em Header.astro),
+     não o 767/768px do corpo. */
+  @media (max-width: 887px) {
     .site-header-mobile {
       display: flex;
     }

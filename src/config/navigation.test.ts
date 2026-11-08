@@ -66,6 +66,11 @@ describe('getHeaderSections', () => {
     }
   });
 
+  it('"Cases" não é macro-seção: o dropdown do desktop (HeaderCases.astro) não vira link no menu mobile, que tem o grupo próprio', () => {
+    expect(macroSections.some((section) => /^cases?$/i.test(section.key) || /^cases$/i.test(section.label))).toBe(false);
+    expect(getHeaderSections()).toHaveLength(2);
+  });
+
   it('não repete a home, que já é o logo', () => {
     expect(getHeaderSections().some((section) => section.path === '/')).toBe(false);
   });
