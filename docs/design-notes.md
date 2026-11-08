@@ -1231,3 +1231,23 @@ Na primeira versão desta PR o padding de 88px só entrava em 1304px e o logo fi
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
 
+
+### T1: uaiui-ds v0.4.0 (site 1.5.1)
+
+A dependência passou de `#v0.3.4` para `github:lucas-per/uaiui-ds#v0.4.0` (`pnpm-lock.yaml` atualizado; o `name` continua `uaiui-ds` e os caminhos de CSS são os mesmos). **Diff do pacote instalado:** só mudam `package.json`, `tokens.css` e `tokens-wrapper.css`; `button.css`, `accordion.css` e `toast.css` ficaram iguais. Os tokens foram reordenados e o seletor de densidade `mobile` virou `standard`. Conferido por script (valores de cada token em cada seletor, com `mobile` lido como `standard`): **0 diferenças de valor**, então nenhum exemplo muda de aparência. Nenhum CSS do site mudou. Não migrei para `@uaiui/ds` nem para a 0.6.0.
+
+**Decisões do Lucas:**
+1. **Rótulos do seletor em português:** Confortável, Padrão, Compacto. O `value` e o `data-uaiui-density` ficam em inglês (`comfortable`, `standard`, `compact`). Sem atributo é `comfortable`, não o Padrão; por isso, nos textos, "sem atributo" e não "o padrão". `comfortable` remove o atributo e a chave salva (`docs.ts`).
+2. **Valor salvo:** se for `mobile` (valor da v0.3.x), o script inline do `UaiuiDocsLayout` aplica `standard` e regrava a chave como `standard`, dentro do `try`. `standard` e `compact` seguem como estão; qualquer outro valor (por exemplo `desktop`) cai em `comfortable`, sem atributo. Teste novo em `densidade.test.ts` que roda o script com um armazenamento falso.
+3. **Toast:** texto da página sincronizado com a v0.4.0 (fica na tela até a pessoa fechar; fechamento automático opcional, a partir de 5 s, só em aviso sem ação nos tons neutral, success e info e com a informação em outro lugar; não fecha com foco ou ponteiro sobre ele; Esc fecha; posição no canto superior em telas largas e, em telas estreitas, no topo com largura total e margem de 16 px; avisos empilham com 16 px, o mais novo no topo; com texto muito ampliado ou tela estreita o fechar desce para a linha de baixo). O lead perdeu "e some sozinho". Os exemplos de tons continuam com "voltam em 2 segundos".
+4. **O toast continua sem `role`** (seção do Toast acima): o anúncio vem da região viva da página.
+
+**Divergências com a página do DS (o Lucas leva ao chat da UaiUI):**
+- **`role` no toast:** a página do DS ensina `role="status"` / `role="alert"` no próprio toast. O Portifa mantém o toast sem `role`, com a região viva fora dele.
+- **"Saída de 100 ms":** o texto do DS fala em entrada e saída de 100 ms, mas o `toast.css` da v0.4.0 só tem a entrada (`uai-toast-in`, com `prefers-reduced-motion: reduce` sem animação). Mantive "Entrada de 100 ms, só em opacidade; a saída não é animada pelo CSS".
+
+`toast-dependencia.test.ts` passou a fixar a tag `v0.4.0`. As linhas 575 e 801 deste arquivo são histórico e não foram alteradas.
+
+**Versão:** 1.5.0 para 1.5.1.
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
