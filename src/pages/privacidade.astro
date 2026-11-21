@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Política de Privacidade — Lucas Pereira';
+const description =
+  'Política de privacidade do aplicativo pessoal de sincronização com o Google Drive, criado por Lucas Pereira.';
+---
+
+<BaseLayout title={title} description={description} path="/privacidade/">
+  <div class="privacy">
+    <article class="privacy__content">
+      <h1 class="text-title-h2">Política de Privacidade</h1>
+      <p class="text-body-md">Este aplicativo é de uso pessoal e foi criado por Lucas Pereira para sincronizar arquivos entre o computador do próprio autor e o Google Drive dele, usando o rclone.</p>
+      <p class="text-body-md"><strong>Dados acessados:</strong> o aplicativo acessa apenas arquivos do Google Drive da conta do autor, com a única finalidade de sincronizá-los.</p>
+      <p class="text-body-md"><strong>Coleta e compartilhamento:</strong> nenhum dado é coletado, armazenado em servidores do autor ou compartilhado com terceiros. Os dados trafegam somente entre o computador do autor e o Google.</p>
+      <p class="text-body-md"><strong>Contato:</strong> <a class="privacy__link" href="mailto:lavpereirah@gmail.com">lavpereirah@gmail.com</a></p>
+      <p class="text-body-md"><strong>Última atualização:</strong> <time datetime="2026-11-21">21 de novembro de 2026</time>.</p>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .privacy {
+    padding: var(--scale-x12) var(--scale-x6);
+    color: var(--text-body-neutral-strong);
+  }
+  .privacy__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--scale-x6);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .privacy__link {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+  }
+  .privacy__link:focus-visible {
+    outline: 3px solid var(--border-focus-strong);
+    outline-offset: 2px;
+  }
+  @media (min-width: 768px) {
+    .privacy {
+      padding: var(--scale-x16) var(--scale-x20);
+    }
+  }
+</style>
