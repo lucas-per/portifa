@@ -1251,3 +1251,20 @@ A dependência passou de `#v0.3.4` para `github:lucas-per/uaiui-ds#v0.4.0` (`pnp
 **Versão:** 1.5.0 para 1.5.1.
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+
+### Página de Política de Privacidade (site 1.5.2)
+
+**Rota:** `/privacidade/` (`src/pages/privacidade.astro`, com o `BaseLayout` e `path="/privacidade/"`, que vira o canonical e o og:url).
+
+**Motivo:** o Google exige o link de uma política de privacidade para publicar o app OAuth pessoal (rclone com o Google Drive). O texto é o do Lucas (título e cinco parágrafos, com os rótulos em negrito e a data em `<time datetime="2026-11-21">`) e não deve ser reescrito.
+
+**Fora dos menus e do sitemap:** a página não entra em `navigation.ts` nem em `contact.ts` (cabeçalho, menu mobile e rodapé não a mostram). O site não tem sitemap nem `robots.txt`, e nenhum foi criado. **Sem `noindex`:** o Google precisa acessar a página.
+
+**Com e sem a barra final:** o build é o padrão (directory) e gera `privacidade/index.html`. `/privacidade/` responde 200; `/privacidade` é redirecionada pela Cloudflare Pages para `/privacidade/`. Como o site não tem `404.html`, um endereço errado continua devolvendo a home com 200.
+
+**Escala de 4, sem exceção nova:** só tokens existentes: `--scale-x12` (48px) e `--scale-x6` (24px) no padding e no gap; `--scale-x16` (64px) e `--scale-x20` (88px) a partir de 768px; `text-underline-offset` de 4px e foco de 3px com offset de 2px. Texto em `--text-body-neutral-strong`; o único elemento interativo é o link de e-mail, com foco visível em `--border-focus-strong`.
+
+**Versão:** 1.5.1 para 1.5.2 (só o `package.json`; o `pnpm-lock.yaml` não guarda a versão do projeto).
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
