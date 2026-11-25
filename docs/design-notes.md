@@ -1268,3 +1268,27 @@ A dependência passou de `#v0.3.4` para `github:lucas-per/uaiui-ds#v0.4.0` (`pnp
 **Versão:** 1.5.1 para 1.5.2 (só o `package.json`; o `pnpm-lock.yaml` não guarda a versão do projeto).
 
 **Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
+
+
+### Redirecionamento da UaiUI para uaiui.lpereira.me (site 1.5.3)
+
+**O que é:** `public/_redirects` (novo) manda `/projetos/uaiui/*` para a documentação nova, em https://uaiui.lpereira.me.
+
+**Motivo:** a documentação da UaiUI saiu do Portifa e agora vive no próprio domínio. Os links antigos precisam continuar levando ao conteúdo equivalente, com o `#fragmento` preservado pelo navegador (os ids dos `h2` das 5 páginas casam nas páginas novas).
+
+**As duas regras, nesta ordem, em 302:**
+
+```
+/projetos/uaiui https://uaiui.lpereira.me/ 302
+/projetos/uaiui/* https://uaiui.lpereira.me/:splat 302
+```
+
+A primeira cobre a URL sem a barra final, que `/projetos/uaiui/*` provavelmente não casa. Mapeamento: `/projetos/uaiui/` para `/`, `/projetos/uaiui/tokens/` para `/tokens/`, `/projetos/uaiui/componentes/{accordion,button,toast}/` para `/componentes/{accordion,button,toast}/`.
+
+**302 provisório:** vale até a PR 2, que troca para 301 depois da validação em produção e muda o item "UaiUI DS" do cabeçalho.
+
+**O que não muda:** as páginas antigas em `src/pages/projetos/uaiui/` (o redirect da Cloudflare tem prioridade sobre os arquivos estáticos), o cabeçalho, `navigation.ts`, os testes, a dependência `uaiui-ds`, `/projetos/paletaria/`, `/privacidade/`, os cases e a home.
+
+**Versão:** 1.5.2 para 1.5.3 (só o `package.json`; o `pnpm-lock.yaml` não guarda a versão do projeto).
+
+**Lembrete:** atualizar este arquivo (`docs/design-notes.md`) também no projeto do Claude Desktop.
